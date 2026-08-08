@@ -1,0 +1,4 @@
+# Demo de prospection — pas encore validee par la cliente.
+# A remplacer par un robots.txt ouvert + sitemap le jour de la mise en ligne.
+User-agent: *
+Disallow: /
