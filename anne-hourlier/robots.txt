@@ -1,6 +1,0 @@
-# DEMO DE PROSPECTION — pas encore validee par le praticien.
-# Le site porte son nom, ses textes, son adresse et son certificat : il ne
-# doit pas etre indexe tant qu'il n'a pas donne son accord.
-# A remplacer par un robots.txt ouvert + le sitemap le jour de la mise en ligne.
-User-agent: *
-Disallow: /
