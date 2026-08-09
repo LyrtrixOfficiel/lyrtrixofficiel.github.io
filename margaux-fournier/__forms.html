@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Formulaire — déclaration Netlify</title>
+  </head>
+  <body>
+    <!--
+      Cette page n'est jamais visitee. Netlify detecte les formulaires en
+      analysant le HTML **statique** au deploiement : un formulaire rendu par
+      React lui est invisible. Ce fichier lui declare donc les champs.
+      Les `name` doivent rester identiques a ceux envoyes par
+      src/lib/formulaire.ts — sinon Netlify rejette la soumission.
+    -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input type="text" name="nom" />
+      <input type="email" name="email" />
+      <input type="tel" name="telephone" />
+      <textarea name="message"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
+  </body>
+</html>
