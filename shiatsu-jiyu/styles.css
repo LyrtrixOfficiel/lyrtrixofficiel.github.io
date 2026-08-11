@@ -1,33 +1,45 @@
 /* ------------------------------------------------------------------ *
  * Shiatsu Jiyu — Julie Marguier, Knoeringue
  *
- * La direction artistique n'est pas inventee : elle est prise sur son
- * flyer et son logo. Le creme #FFF3E1 et l'orange #FF7613 sont releves
- * au pixel sur ses fichiers, et les illustrations au trait sont les
- * siennes, decoupees dans le flyer. C'est ce qui fait que le site
- * ressemble a sa marque et pas a un gabarit.
+ * TOUT VIENT DE SES FICHIERS.
  *
- * Son brief : « epure, simple comme Apple, naturel, chaleureux ». D'ou
- * beaucoup de blanc, peu de regles, de grands corps de texte en graisse
- * legere, et une seule couleur d'accent.
+ * Le creme #FFF3E1 et l'orange #FF7613 sont releves au pixel sur son
+ * flyer. Le bloc de marque — le rond de pinceau, SHIATSU, la baseline —
+ * est le sien, decoupe dans le flyer qu'elle a fait imprimer. Les
+ * illustrations au trait aussi. Rien n'est invente, rien n'est genere :
+ * c'est sa charte, remise en page.
+ *
+ * Son brief : « epure, simple comme Apple, naturel, chaleureux ».
+ * D'ou trois partis pris :
+ *   - des aplats orange flous en fond, comme les taches de son flyer,
+ *     qui donnent de la profondeur sans jamais gener la lecture ;
+ *   - du verre : panneaux translucides, flou d'arriere-plan, filet de
+ *     lumiere sur l'arete haute — c'est la matiere d'Apple ;
+ *   - une seule couleur d'accent et beaucoup de vide.
  * ------------------------------------------------------------------ */
 
 :root {
   --creme: #fff3e1;
-  --creme-fonce: #fbe8d3;
+  --creme-clair: #fffaf1;
   --orange: #ff7613;
   --orange-doux: #ffb877;
   --vert: #1f3a31;
-  --encre: #1a1a18;
-  --gris: #6f6a63;
-  --blanc: #fffaf3;
+  --encre: #17140f;
+  --gris: #6a625a;
+  --gris-clair: #8d857c;
 
-  --serre: 1100px;
+  --serre: 1140px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Le verre : trois couches. Un fond translucide, un flou de ce qu'il y
+     a derriere, et un filet clair sur l'arete haute qui simule l'epaisseur.
+     Sans ce filet, un panneau translucide ressemble a un aplat sale. */
+  --verre-fond: rgba(255, 255, 255, 0.52);
+  --verre-bord: rgba(255, 255, 255, 0.75);
+  --verre-ombre: 0 20px 50px -20px rgba(94, 60, 20, 0.22);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
@@ -35,249 +47,235 @@ body {
   font-weight: 300;
   color: var(--encre);
   background: var(--creme);
-  line-height: 1.7;
+  line-height: 1.72;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
+.serre { max-width: var(--serre); margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
 
-.serre { max-width: var(--serre); margin: 0 auto; padding: 0 28px; }
-
-/* --- titres ------------------------------------------------------- */
-h1, h2, h3 { font-weight: 300; letter-spacing: -0.02em; line-height: 1.12; }
-h1 { font-size: clamp(2.6rem, 6.5vw, 5rem); }
-h2 { font-size: clamp(2rem, 4.4vw, 3.2rem); }
-h3 { font-size: 1.35rem; font-weight: 400; letter-spacing: -0.01em; }
-
-.sur-titre {
-  font-size: 0.72rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--orange);
-  font-weight: 500;
-  margin-bottom: 22px;
+/* --- les aplats de fond -------------------------------------------- */
+/* Son flyer est construit sur de grandes formes orange aux bords libres.
+   On les reprend, tres floutees et tres etalees : l'oeil percoit la
+   couleur, jamais la forme, et le texte reste sur un fond calme. */
+.fond { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+/* Trois quarts d'opacite en moins par rapport au premier essai : a 0,3 la
+   page entiere virait a l'orange, le creme disparaissait, et le bloc de
+   marque — qui porte le fond creme du flyer — se decoupait en rectangle
+   au milieu. Le creme doit rester la couleur du site ; l'orange n'est
+   qu'une lueur dans les angles. */
+.aplat { position: absolute; border-radius: 50%; filter: blur(110px); }
+.aplat.a { width: 40vw; height: 40vw; top: -18vw; right: -14vw; background: rgba(255, 118, 19, 0.13); }
+.aplat.b { width: 34vw; height: 34vw; top: 46vh; left: -18vw; background: rgba(255, 145, 60, 0.09); }
+.aplat.c { width: 30vw; height: 30vw; bottom: -16vw; right: 6vw; background: rgba(255, 184, 119, 0.12); }
+.grain {
+  position: absolute; inset: 0; opacity: 0.5;
+  background-image: radial-gradient(rgba(31, 58, 49, 0.045) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
+
+/* --- typographie --------------------------------------------------- */
+h1, h2, h3 { font-weight: 300; letter-spacing: -0.025em; line-height: 1.12; }
+h2 { font-size: clamp(2.05rem, 4.6vw, 3.3rem); }
+h3 { font-size: 1.32rem; font-weight: 400; letter-spacing: -0.01em; }
+
+/* Le sur-titre etait trop pale pour se detacher. Il porte maintenant un
+   trait, une graisse plus forte et l'orange plein. */
+.sur-titre {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 0.74rem; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--orange); font-weight: 500; margin-bottom: 24px;
+}
+.sur-titre::before { content: ''; width: 30px; height: 1.5px; background: var(--orange); }
 
 .chapeau {
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-  color: var(--gris);
-  max-width: 46ch;
-  line-height: 1.75;
+  font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+  color: var(--gris); max-width: 48ch; line-height: 1.78;
 }
 
-/* --- barre de navigation ------------------------------------------ */
-.nav {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(255, 243, 225, 0.86);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s;
-}
-.nav.pose { border-bottom-color: rgba(31, 58, 49, 0.09); }
-.nav .serre {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 76px;
-}
-.nav-marque { display: flex; align-items: center; gap: 14px; }
-/* Le logo fourni a un fond blanc opaque. Plutot que de le detourer a la
-   serpe et d'abimer les traits fins des feuilles, on l'assume : une
-   pastille blanche sur le creme se lit comme un choix, pas comme un
-   defaut. Elle sera remplacee par la version vectorielle a la livraison. */
-.pastille {
-  display: grid; place-items: center;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: #fff; overflow: hidden;
-  box-shadow: 0 2px 10px rgba(31, 58, 49, 0.07);
-  flex: none;
-}
-.pastille img { width: 92%; height: auto; }
-.nav-marque .nom {
-  font-size: 0.82rem; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--vert); font-weight: 500;
-}
-.nav-liens { display: flex; align-items: center; gap: 34px; }
-.nav-liens a { font-size: 0.92rem; color: var(--vert); transition: color 0.2s; }
-.nav-liens a:hover { color: var(--orange); }
-
+/* --- boutons ------------------------------------------------------- */
 .bouton {
   display: inline-flex; align-items: center; gap: 10px;
   background: var(--orange); color: #fff;
-  padding: 13px 26px; border-radius: 999px;
-  font-size: 0.92rem; font-weight: 500; letter-spacing: 0.01em;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
-  box-shadow: 0 4px 18px rgba(255, 118, 19, 0.22);
+  padding: 14px 28px; border-radius: 999px;
+  font-size: 0.94rem; font-weight: 500;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  box-shadow: 0 6px 22px -6px rgba(255, 118, 19, 0.6);
 }
-.bouton:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255, 118, 19, 0.3); }
-.bouton.creux {
-  background: transparent; color: var(--vert);
-  box-shadow: inset 0 0 0 1px rgba(31, 58, 49, 0.22);
+.bouton:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(255, 118, 19, 0.65); }
+.bouton.verre {
+  background: var(--verre-fond); color: var(--vert);
+  backdrop-filter: blur(18px) saturate(150%); -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: inset 0 1px 0 var(--verre-bord), 0 6px 20px -10px rgba(94, 60, 20, 0.4);
 }
-.bouton.creux:hover { box-shadow: inset 0 0 0 1px var(--orange); color: var(--orange); }
+.bouton.verre:hover { color: var(--orange); }
 
-/* --- taches organiques -------------------------------------------- */
-/* Le flyer est construit sur des aplats orange aux bords libres. On les
-   reprend en fond, tres largement etales, pour poser la meme respiration
-   sans jamais gener la lecture. */
-.tache {
-  position: absolute; border-radius: 50%;
-  filter: blur(0.5px); pointer-events: none; z-index: 0;
+/* --- barre de navigation ------------------------------------------- */
+.nav { position: sticky; top: 0; z-index: 50; padding: 14px 0; transition: padding 0.4s var(--ease); }
+.nav .serre {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; padding: 10px 14px 10px 18px; border-radius: 999px;
+  background: transparent; transition: background 0.45s var(--ease), box-shadow 0.45s var(--ease);
 }
+.nav.pose .serre {
+  background: var(--verre-fond);
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
+}
+.nav-marque { display: flex; align-items: center; gap: 13px; }
+.pastille {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%;
+  background: #fff; overflow: hidden; flex: none;
+  box-shadow: 0 2px 12px rgba(94, 60, 20, 0.12);
+}
+.pastille img { width: 92%; }
+.nav-marque .nom {
+  font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--vert); font-weight: 500;
+}
+.nav-liens { display: flex; align-items: center; gap: 30px; }
+.nav-liens a { font-size: 0.92rem; color: var(--vert); font-weight: 400; transition: color 0.2s; }
+.nav-liens a:hover { color: var(--orange); }
 
 /* --- accueil ------------------------------------------------------- */
-.accueil { position: relative; padding: clamp(70px, 11vw, 130px) 0 clamp(60px, 9vw, 110px); overflow: hidden; }
-.accueil .serre { position: relative; z-index: 2; }
-.accueil-grille {
-  display: grid; grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(30px, 5vw, 70px); align-items: center;
+.accueil {
+  padding: clamp(50px, 8vw, 90px) 0 clamp(60px, 8vw, 100px); text-align: center;
+  /* Un voile creme au centre, qui s'efface vers les bords. Le bloc de
+     marque porte le fond creme du flyer : pose sur une zone teintee
+     d'orange, son rectangle se voyait. Ici il tombe sur du creme pur et
+     le raccord disparait, pendant que les angles gardent leur lueur. */
+  background: radial-gradient(58% 52% at 50% 40%, var(--creme) 52%, rgba(255, 243, 225, 0) 100%);
 }
-.accueil h1 { margin-bottom: 26px; }
-.accueil h1 em { font-style: normal; color: var(--orange); }
-.accueil .chapeau { margin-bottom: 38px; }
-.accueil-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.accueil .lieu {
+  font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--gris-clair); margin-bottom: 34px;
+}
+.marque-titre { max-width: min(660px, 88%); margin: 0 auto 34px; mix-blend-mode: multiply; }
+.accueil .chapeau { margin: 0 auto 40px; text-align: center; }
+.accueil-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
-.accueil-visuel { position: relative; }
-.accueil-visuel img { width: 100%; mix-blend-mode: multiply; }
-.accueil-tache {
-  position: absolute; inset: 14% -6% 6% 10%;
-  background: var(--orange); opacity: 0.14;
-  border-radius: 58% 42% 46% 54% / 44% 52% 48% 56%;
-  z-index: -1;
+/* Le bandeau de reperes, en verre, pose a cheval sur la section suivante. */
+.reperes {
+  margin-top: clamp(50px, 7vw, 80px);
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--verre-fond); border-radius: 24px; overflow: hidden;
+  backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
 }
-
-.bandeau-signes {
-  margin-top: clamp(46px, 7vw, 84px);
-  padding-top: 30px;
-  border-top: 1px solid rgba(31, 58, 49, 0.1);
-  display: flex; flex-wrap: wrap; gap: 14px 46px;
-  font-size: 0.86rem; color: var(--gris);
-}
-.bandeau-signes b { color: var(--vert); font-weight: 500; }
+.repere { padding: 28px 26px; text-align: center; }
+.repere + .repere { border-left: 1px solid rgba(255, 255, 255, 0.6); }
+.repere b { display: block; font-weight: 500; font-size: 1.02rem; color: var(--encre); }
+.repere span { font-size: 0.86rem; color: var(--gris); }
 
 /* --- sections ------------------------------------------------------ */
-section { position: relative; }
-.pan { padding: clamp(70px, 10vw, 130px) 0; }
-.pan-clair { background: var(--blanc); }
+.pan { padding: clamp(72px, 10vw, 128px) 0; position: relative; }
 
 .phrase-forte {
-  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
-  font-weight: 300; line-height: 1.35; letter-spacing: -0.02em;
-  max-width: 20ch;
+  font-size: clamp(1.7rem, 3.6vw, 2.7rem);
+  font-weight: 300; line-height: 1.32; letter-spacing: -0.025em; max-width: 19ch;
 }
 .phrase-forte b { font-weight: 400; color: var(--orange); }
+.deux { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(34px, 6vw, 84px); align-items: center; }
 
-.deux { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(34px, 6vw, 88px); align-items: center; }
+/* --- panneaux de verre --------------------------------------------- */
+.verre {
+  background: var(--verre-fond); border-radius: 26px;
+  backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
+  box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
+}
 
-/* --- moments ------------------------------------------------------- */
+/* --- moments -------------------------------------------------------- */
 .moments {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: clamp(20px, 3vw, 40px); margin-top: clamp(44px, 6vw, 70px);
+  gap: clamp(18px, 2.4vw, 30px); margin-top: clamp(46px, 6vw, 72px);
 }
-/* LES CARTES SONT CREME, PAS BLANCHES.
-   Les illustrations viennent de son flyer et arrivent avec leur fond
-   creme. Sur une carte blanche, ce fond se voyait en rectangle net
-   autour de chaque dessin : `multiply` n'y peut rien, creme multiplie
-   par blanc reste creme. On met donc la carte a la couleur du dessin
-   et le raccord devient invisible. */
 .moment {
-  background: var(--creme); border-radius: 22px;
-  border: 1px solid rgba(31, 58, 49, 0.1);
-  padding: 34px 32px 38px;
-  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), border-color 0.5s var(--ease);
+  padding: 32px 30px 36px;
+  transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease);
 }
-.moment:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 118, 19, 0.35);
-  box-shadow: 0 16px 40px rgba(31, 58, 49, 0.07);
-}
+.moment:hover { transform: translateY(-5px); box-shadow: inset 0 1px 0 var(--verre-bord), 0 28px 60px -24px rgba(94, 60, 20, 0.34); }
+/* Les illustrations arrivent avec le fond creme du flyer. `multiply` le
+   fait disparaitre sur le verre clair sans avoir a les detourer. */
 .moment img {
-  width: 150px; height: 128px; object-fit: contain; object-position: left center;
-  margin-bottom: 24px;
+  width: 142px; height: 120px; object-fit: contain; object-position: left center;
+  mix-blend-mode: multiply; margin-bottom: 22px;
+  /* Le fond creme du flyer laissait un rectangle net autour du dessin sur
+     le verre. Un fondu radial en efface le bord sans avoir a detourer les
+     traits fins, qu'un detourage automatique abimait. */
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
 }
 .moment h3 { margin-bottom: 10px; }
 .moment p { font-size: 0.95rem; color: var(--gris); }
 
-/* --- seances ------------------------------------------------------- */
-.seances { margin-top: 58px; display: flex; flex-direction: column; }
+/* --- seances -------------------------------------------------------- */
+.seances { margin-top: clamp(44px, 6vw, 66px); padding: clamp(14px, 3vw, 34px) clamp(22px, 4vw, 46px); }
 .seance {
-  display: grid; grid-template-columns: 1fr auto;
-  gap: 26px; align-items: baseline;
-  padding: 34px 0;
-  border-top: 1px solid rgba(31, 58, 49, 0.12);
-  transition: padding-left 0.4s var(--ease);
+  display: grid; grid-template-columns: 1fr auto; gap: 26px; align-items: baseline;
+  padding: 30px 0;
+  transition: padding-left 0.45s var(--ease);
 }
-.seance:last-child { border-bottom: 1px solid rgba(31, 58, 49, 0.12); }
-.seance:hover { padding-left: 12px; }
-.seance-nom { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
-/* La couleur est posee explicitement : sans elle, le titre prenait l'orange
-   d'ailleurs dans la cascade, et quatre titres oranges d'affilee sortent du
-   « epure » demande. L'orange reste sur la duree seule. */
-.seance-nom h3 {
-  font-size: clamp(1.4rem, 2.4vw, 1.95rem); font-weight: 300; color: var(--encre);
-}
+.seance + .seance { border-top: 1px solid rgba(31, 58, 49, 0.13); }
+.seance:hover { padding-left: 10px; }
+.seance-nom { display: flex; align-items: baseline; gap: 15px; flex-wrap: wrap; }
+.seance-nom h3 { font-size: clamp(1.35rem, 2.3vw, 1.9rem); font-weight: 300; color: var(--encre); }
 .seance-duree {
-  font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase;
+  font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--orange); font-weight: 500;
 }
-.seance p { font-size: 0.95rem; color: var(--gris); margin-top: 8px; max-width: 52ch; }
-.seance-prix { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 300; white-space: nowrap; }
-.seance-prix span { font-size: 0.95rem; color: var(--gris); }
+.seance p { font-size: 0.94rem; color: var(--gris); margin-top: 7px; max-width: 54ch; }
+.seance-prix { font-size: clamp(1.5rem, 2.6vw, 2.05rem); font-weight: 300; white-space: nowrap; }
+.seance-prix span { font-size: 0.9rem; color: var(--gris); }
+.note-tarifs { margin-top: 24px; font-size: 0.85rem; color: var(--gris-clair); }
 
-.note-tarifs { margin-top: 26px; font-size: 0.85rem; color: var(--gris); }
-
-/* --- julie --------------------------------------------------------- */
-.julie-visuel { position: relative; display: flex; justify-content: center; }
-.julie-visuel img { width: min(340px, 80%); mix-blend-mode: multiply; }
+/* --- julie ---------------------------------------------------------- */
+.julie-visuel { position: relative; display: grid; place-items: center; padding: 30px; }
+.julie-visuel img { width: min(300px, 78%); mix-blend-mode: multiply; position: relative; z-index: 1; }
 .julie-cercle {
-  position: absolute; width: min(400px, 92%); aspect-ratio: 1;
-  border: 1px solid rgba(255, 118, 19, 0.3); border-radius: 50%;
-  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  position: absolute; width: min(360px, 92%); aspect-ratio: 1;
+  border: 1.5px solid rgba(255, 118, 19, 0.32); border-radius: 50%;
 }
 
-/* --- contact ------------------------------------------------------- */
-.contact-grille { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(34px, 6vw, 80px); }
-.coord { display: flex; flex-direction: column; gap: 26px; margin-top: 34px; }
+/* --- contact --------------------------------------------------------- */
+.contact-grille { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 70px); }
+.coord { display: flex; flex-direction: column; gap: 24px; margin-top: 34px; }
 .coord-ligne { display: flex; gap: 18px; align-items: flex-start; }
 .coord-ligne .etiq {
-  font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--gris); min-width: 92px; padding-top: 4px;
+  font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gris-clair); min-width: 96px; padding-top: 5px; font-weight: 500;
 }
-.coord-ligne .val { font-size: 1.08rem; color: var(--encre); }
+.coord-ligne .val { font-size: 1.06rem; }
 .coord-ligne .val a:hover { color: var(--orange); }
 .coord-ligne .val small { display: block; font-size: 0.86rem; color: var(--gris); margin-top: 2px; }
 
 .carte-appel {
-  background: var(--vert); color: #fff;
-  border-radius: 26px; padding: clamp(34px, 5vw, 54px);
+  background: var(--vert); color: #fff; border-radius: 26px;
+  padding: clamp(34px, 5vw, 54px); position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: center;
-  position: relative; overflow: hidden;
 }
 .carte-appel h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: 14px; }
-.carte-appel p { color: rgba(255, 255, 255, 0.75); font-size: 0.98rem; margin-bottom: 30px; }
+.carte-appel p { color: rgba(255, 255, 255, 0.72); font-size: 0.98rem; margin-bottom: 30px; }
 .carte-appel .bouton { align-self: flex-start; }
-.carte-appel .tache-int {
-  position: absolute; width: 320px; height: 320px; right: -110px; bottom: -140px;
-  background: var(--orange); opacity: 0.18; border-radius: 50%;
+.carte-appel::after {
+  content: ''; position: absolute; width: 340px; height: 340px;
+  right: -120px; bottom: -150px; border-radius: 50%;
+  background: var(--orange); opacity: 0.22; filter: blur(10px);
 }
 
-/* --- pied ---------------------------------------------------------- */
-.pied { padding: 60px 0 44px; border-top: 1px solid rgba(31, 58, 49, 0.1); }
-.pied .serre { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
-.pied img { height: 62px; width: auto; }
-.pied-liens { display: flex; gap: 26px; font-size: 0.86rem; color: var(--gris); }
+/* --- pied ------------------------------------------------------------ */
+.pied { padding: 56px 0 44px; }
+.pied .serre:first-child {
+  display: flex; flex-wrap: wrap; gap: 22px; justify-content: space-between; align-items: center;
+  padding-bottom: 30px; border-bottom: 1px solid rgba(31, 58, 49, 0.12);
+}
+.pied-liens { display: flex; gap: 24px; font-size: 0.87rem; color: var(--gris); flex-wrap: wrap; }
 .pied-liens a:hover { color: var(--orange); }
-.avertissement {
-  margin-top: 34px; padding-top: 24px;
-  border-top: 1px solid rgba(31, 58, 49, 0.08);
-  font-size: 0.78rem; color: var(--gris); line-height: 1.7; max-width: 78ch;
-}
+.avertissement { margin-top: 26px; font-size: 0.78rem; color: var(--gris-clair); line-height: 1.7; max-width: 80ch; }
 
-/* --- apparition ---------------------------------------------------- */
-/* Une seule animation sur tout le site, discrete, et desactivee pour qui
-   demande moins de mouvement. Un site « epure » ne clignote pas. */
-.monte { opacity: 0; transform: translateY(22px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+/* --- apparition ------------------------------------------------------ */
+.monte { opacity: 0; transform: translateY(24px); transition: opacity 0.95s var(--ease), transform 0.95s var(--ease); }
 .monte.vu { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -285,12 +283,13 @@ section { position: relative; }
   html { scroll-behavior: auto; }
 }
 
-/* --- ecrans etroits ------------------------------------------------ */
+/* --- ecrans etroits --------------------------------------------------- */
 @media (max-width: 900px) {
-  .accueil-grille, .deux, .contact-grille { grid-template-columns: 1fr; }
-  .accueil-visuel { order: -1; max-width: 320px; margin: 0 auto 10px; }
-  .moments { grid-template-columns: 1fr; gap: 1px; }
+  .deux, .contact-grille { grid-template-columns: 1fr; }
+  .moments { grid-template-columns: 1fr; }
+  .reperes { grid-template-columns: 1fr; }
+  .repere + .repere { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.6); }
   .nav-liens a:not(.bouton) { display: none; }
-  .seance { grid-template-columns: 1fr; gap: 10px; }
-  .julie-visuel { margin-top: 30px; }
+  .seance { grid-template-columns: 1fr; gap: 8px; }
+  .aplat { filter: blur(70px); }
 }
