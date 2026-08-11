@@ -1,12 +1,12 @@
 /* =========================================================================
-   Shiatsu Jiyū — feuille de style.
+   Shiatsu Jiyū, feuille de style.
 
    Trois partis pris, et tout le reste en decoule.
 
    1. LE VERRE EST DU VERRE, PAS UN FLOU.
       Un `backdrop-filter: blur()` fait du verre depoli : on ne voit plus
       rien derriere. Le verre d'Apple ne trouble pas l'arriere-plan, il le
-      DEVIE — les bords d'un galet de verre decalent ce qui passe dessous.
+      DEVIE : les bords d'un galet de verre decalent ce qui passe dessous.
       C'est un filtre SVG (`feDisplacementMap`) nourri par une carte de
       deviation, fabriquee par `refraction.mjs`. Voir `.verre`.
 
@@ -149,7 +149,7 @@ body::after {
    LE VERRE LIQUIDE
 
    .verre           le corps translucide et le flou
-   .verre::before   la couche de REFRACTION — le filtre SVG qui devie
+   .verre::before   la couche de REFRACTION, le filtre SVG qui devie
                     l'arriere-plan sur les bords. Si le navigateur ne sait
                     pas faire, la propriete est simplement ignoree et il
                     reste un verre depoli tout a fait correct.
@@ -275,7 +275,7 @@ body.pointe .halo { opacity: 1; }
 
 /* =========================================================================
    LA BARRE DE NAVIGATION
-   Une pastille de verre flottante. Elle se resserre au defilement — encore
+   Une pastille de verre flottante. Elle se resserre au defilement, encore
    une animation liee au scroll, pas un ecouteur d'evenement.
    ========================================================================= */
 .nav {
@@ -577,7 +577,7 @@ body.pointe .halo { opacity: 1; }
    refraction cesse alors d'echantillonner la page et se met a
    echantillonner SON PROPRE CONTENU, qu'elle repeint floute par-dessus le
    texte. Et cela ne disparait pas a la fin de l'animation, puisque le
-   filtre calcule reste `blur(0px)` — un filtre quand meme. Sur la carte
+   filtre calcule reste `blur(0px)`, un filtre quand meme. Sur la carte
    d'appel posee sur la video des bougies, il ne restait plus un mot
    lisible : seuls les boutons, qui ont leur propre fond, s'en sortaient.
    Le verre monte donc sans flou. */
@@ -619,7 +619,8 @@ body.pointe .halo { opacity: 1; }
    ========================================================================= */
 .eclat-zone { view-timeline-name: --phrase; view-timeline-axis: block; }
 .eclat {
-  font-size: clamp(1.65rem, 4.4vw, 3.3rem);
+  --n: 30;                       /* nombre de mots, pose par le generateur */
+  font-size: clamp(1.6rem, 4.4vw, 3.3rem);
   font-weight: 500; letter-spacing: -.035em; line-height: 1.25;
   text-wrap: balance;
 }
@@ -629,8 +630,16 @@ body.pointe .halo { opacity: 1; }
     animation: allumer linear both;
     animation-timeline: --phrase;
     /* `cover` et pas `contain` : une phrase plus haute que la fenetre n'est
-       jamais « contenue », la plage serait vide et rien ne s'allumerait. */
-    animation-range: cover calc(26% + var(--i) * 1.5%) cover calc(38% + var(--i) * 1.5%);
+       jamais « contenue », la plage serait vide et rien ne s'allumerait.
+
+       La fin de chaque mot est calculee A PARTIR DU NOMBRE DE MOTS, pour
+       que le dernier s'allume vers 55 % de la course, c'est a dire quand la
+       phrase est encore au milieu de l'ecran. Avec un pas fixe, une phrase
+       longue finissait de s'allumer une fois deja sortie par le haut : on
+       ne voyait jamais la fin de l'animation. */
+    animation-range:
+      cover calc(14% + var(--i) * (30% / var(--n)))
+      cover calc(27% + var(--i) * (30% / var(--n)));
   }
 }
 @keyframes allumer {
@@ -829,24 +838,97 @@ body.pointe .halo { opacity: 1; }
 /* =========================================================================
    ADAPTATIONS
    ========================================================================= */
+.bouton .court { display: none; }
+
 @media (max-width: 900px) {
   .deux, .contact-grille { grid-template-columns: 1fr; }
   .colle { position: static; }
   .nav-liens > a:not(.bouton) { display: none; }
+  .nav .bouton .long { display: none; }
+  .nav .bouton .court { display: inline; }
   .coord-ligne { grid-template-columns: 1fr; gap: 5px; }
   .tarif { grid-template-columns: 1fr; gap: 14px; }
   .tarif-prix { justify-self: start; }
   .etape { grid-template-columns: 1fr; gap: 6px; }
   .etape::before { padding-top: 0; }
-  .ouverture { height: 170vh; }
+  .pan { padding: clamp(60px, 12vw, 96px) 0; }
+
+  /* LE FILM QUI S'OUVRE, SUR TELEPHONE.
+     En plein ecran vertical, un film en 16/9 est recadre si durement qu'il
+     ne reste qu'un gros plan flou : sur l'accueil, on ne voyait plus qu'un
+     morceau de galet. Ici le cadre garde une forme paysage et ne gagne que
+     de la largeur. L'image reste entiere. */
+  .ouverture { height: 165vh; }
+  .ouverture-film {
+    width: min(92%, 620px); height: auto; aspect-ratio: 4 / 3;
+  }
+  .ouverture-texte { padding: 20px 18px; gap: 9px; }
+  .ouverture-texte h2 { font-size: clamp(1.45rem, 6.4vw, 2.1rem); }
+  .ouverture-texte p { font-size: .92rem; }
 }
-@media (max-width: 560px) {
+@supports (animation-timeline: view()) {
+  @media (max-width: 900px) {
+    .ouverture-film { animation-name: ouvrirLarge; }
+  }
+}
+@keyframes ouvrirLarge {
+  from { width: min(92%, 620px); border-radius: var(--rond-l); }
+  to   { width: 100vw;           border-radius: 0; }
+}
+
+@media (max-width: 640px) {
   :root { --marge: 18px; --rond: 24px; --rond-l: 30px; }
-  .entree { padding-top: 114px; }
+
+  /* L'ACCUEIL SUR TELEPHONE.
+     Le panneau prend forcement toute la largeur : s'il reste aussi opaque
+     que sur ordinateur, il masque le film en entier et il ne reste qu'un
+     rectangle creme. On l'allege, on le raccourcit, et la hauteur cesse
+     d'etre forcee a un ecran plein. */
+  .entree { min-height: auto; padding: 112px 0 76px; }
+  .entree-panneau {
+    padding: 28px 22px 30px;
+    background: linear-gradient(150deg, rgba(255,252,246,.34), rgba(255,246,235,.16) 52%, rgba(255,238,220,.30));
+    backdrop-filter: blur(26px) saturate(200%) brightness(1.05);
+    -webkit-backdrop-filter: blur(26px) saturate(200%);
+  }
+  .embleme { width: 74px; margin-bottom: 16px; }
+  .entree h1 { font-size: clamp(2.8rem, 15vw, 4rem); }
+  .baseline { font-size: 1.02rem; margin-top: 12px; }
+  .entree .chapeau { font-size: .96rem; line-height: 1.6; margin-top: 16px; }
+
+  /* Deux boutons cote a cote deviennent illisibles sous 400 pixels : on les
+     empile, pleine largeur, pour qu'ils restent des cibles franches. */
+  .actions { flex-direction: column; align-items: stretch; margin-top: 26px; }
+  .actions .bouton { justify-content: center; padding: 16px 22px; }
+
+  /* Les trois reperes empiles faisaient trois bandeaux pleine largeur. En
+     rangee qui glisse, ils tiennent sur une ligne et se lisent au pouce. */
+  .reperes {
+    flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start;
+    scroll-snap-type: x proximity;
+    padding-inline: var(--marge); margin-inline: calc(var(--marge) * -1);
+    scrollbar-width: none;
+  }
+  .reperes::-webkit-scrollbar { display: none; }
+  .repere { flex: none; scroll-snap-align: center; font-size: .82rem; padding: 10px 16px; }
+
+  .descendre { display: none; }
+  .entete { padding: 124px 0 56px; }
+  .entete h1 { font-size: clamp(2.4rem, 12vw, 3.4rem); }
+  .eclat { font-size: clamp(1.5rem, 7vw, 2.4rem); }
+  .tarif { padding: 22px 22px; }
+  .carte { padding: 26px 22px 28px; }
+  .appel-carte { padding: 34px 24px; }
+  .coord-ligne { padding: 18px 22px; }
+  .pied-haut { gap: 18px; }
 }
-@media (max-width: 380px) {
-  .nav-marque .nom { display: none; }
-  .barre-basse a { font-size: .74rem; }
+@media (max-width: 400px) {
+  /* Le nom reste : le masquer laissait un grand vide entre l'embleme et le
+     bouton, et la barre n'avait plus l'air de tenir ensemble. */
+  .nav-marque img { width: 32px; }
+  .nav-marque .nom { font-size: .93rem; }
+  .nav .bouton { padding: 10px 16px; font-size: .85rem; }
+  .barre-basse a { font-size: .75rem; }
 }
 
 /* Pas d'ecran tactile : pas de halo qui traine. */
