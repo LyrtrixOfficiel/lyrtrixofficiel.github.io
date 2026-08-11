@@ -1,390 +1,865 @@
-/* ------------------------------------------------------------------ *
- * Shiatsu Jiyu — Julie Marguier, Knoeringue
- *
- * TOUT VIENT DE SES FICHIERS.
- *
- * Le creme #FFF3E1 et l'orange #FF7613 sont releves au pixel sur son
- * flyer. Le bloc de marque — le rond de pinceau, SHIATSU, la baseline —
- * est le sien, decoupe dans le flyer qu'elle a fait imprimer. Les
- * illustrations au trait aussi. Rien n'est invente, rien n'est genere :
- * c'est sa charte, remise en page.
- *
- * Son brief : « epure, simple comme Apple, naturel, chaleureux ».
- * D'ou trois partis pris :
- *   - des aplats orange flous en fond, comme les taches de son flyer,
- *     qui donnent de la profondeur sans jamais gener la lecture ;
- *   - du verre : panneaux translucides, flou d'arriere-plan, filet de
- *     lumiere sur l'arete haute — c'est la matiere d'Apple ;
- *   - une seule couleur d'accent et beaucoup de vide.
- * ------------------------------------------------------------------ */
+/* =========================================================================
+   Shiatsu Jiyū — feuille de style.
+
+   Trois partis pris, et tout le reste en decoule.
+
+   1. LE VERRE EST DU VERRE, PAS UN FLOU.
+      Un `backdrop-filter: blur()` fait du verre depoli : on ne voit plus
+      rien derriere. Le verre d'Apple ne trouble pas l'arriere-plan, il le
+      DEVIE — les bords d'un galet de verre decalent ce qui passe dessous.
+      C'est un filtre SVG (`feDisplacementMap`) nourri par une carte de
+      deviation, fabriquee par `refraction.mjs`. Voir `.verre`.
+
+   2. LES ANIMATIONS SONT PILOTEES PAR LE DEFILEMENT, PAS PAR UNE MINUTERIE.
+      `animation-timeline: view()` lie la progression d'une animation a la
+      position de l'element dans la fenetre. Pas de JavaScript, pas
+      d'IntersectionObserver, et surtout : ca tourne sur le fil du
+      compositeur, donc c'est fluide meme sur un telephone d'occasion.
+      Un repli en JS existe pour les navigateurs qui ne savent pas encore.
+
+   3. IL Y A DE LA VIDEO PARTOUT, MAIS ELLE NE PARLE JAMAIS PLUS FORT QUE
+      LE TEXTE. Quatre films, un par chapitre, toujours derriere du verre.
+
+   Palette : creme, blanc, et l'orange de son logo. Rien d'autre.
+   ========================================================================= */
+
+@property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 
 :root {
-  --creme: #fff3e1;
-  --creme-clair: #fffaf1;
-  --orange: #ff7613;
-  --orange-doux: #ffb877;
-  --vert: #1f3a31;
-  --encre: #17140f;
-  --gris: #6a625a;
-  --gris-clair: #8d857c;
+  /* --- couleurs --- */
+  --creme:      #fff8ef;
+  --creme-fond: #fdf2e4;
+  --blanc:      #ffffff;
+  --encre:      #3d2213;
+  --encre-doux: #7c5a44;
+  --encre-pale: #a98d78;
 
-  --serre: 1140px;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --orange:      #e2711d;
+  --orange-vif:  #f2913c;
+  --orange-clair:#fbd9b4;
+  --orange-nuit: #a8480c;
 
-  /* Le verre : trois couches. Un fond translucide, un flou de ce qu'il y
-     a derriere, et un filet clair sur l'arete haute qui simule l'epaisseur.
-     Sans ce filet, un panneau translucide ressemble a un aplat sale. */
-  --verre-fond: rgba(255, 255, 255, 0.52);
-  --verre-bord: rgba(255, 255, 255, 0.75);
-  --verre-ombre: 0 20px 50px -20px rgba(94, 60, 20, 0.22);
+  /* --- rythme --- */
+  --serre: 1180px;
+  --marge: 28px;
+  --rond: 30px;
+  --rond-l: 42px;
+
+  /* --- courbes --- */
+  --sortie: cubic-bezier(.16, 1, .3, 1);
+  --doux:   cubic-bezier(.4, 0, .2, 1);
+
+  color-scheme: light;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
-  font-family: 'Poppins', -apple-system, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 300;
+  font: 400 17px/1.65 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   color: var(--encre);
-  background: var(--creme);
-  line-height: 1.72;
-  -webkit-font-smoothing: antialiased;
+  background: var(--creme-fond);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-img { max-width: 100%; display: block; }
+img, video { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
-.serre { max-width: var(--serre); margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
 
-/* --- les aplats de fond -------------------------------------------- */
-/* Son flyer est construit sur de grandes formes orange aux bords libres.
-   On les reprend, tres floutees et tres etalees : l'oeil percoit la
-   couleur, jamais la forme, et le texte reste sur un fond calme. */
-.fond { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-/* Trois quarts d'opacite en moins par rapport au premier essai : a 0,3 la
-   page entiere virait a l'orange, le creme disparaissait, et le bloc de
-   marque — qui porte le fond creme du flyer — se decoupait en rectangle
-   au milieu. Le creme doit rester la couleur du site ; l'orange n'est
-   qu'une lueur dans les angles. */
-.aplat { position: absolute; border-radius: 50%; filter: blur(110px); }
-.aplat.a { width: 40vw; height: 40vw; top: -18vw; right: -14vw; background: rgba(255, 118, 19, 0.13); }
-.aplat.b { width: 34vw; height: 34vw; top: 46vh; left: -18vw; background: rgba(255, 145, 60, 0.09); }
-.aplat.c { width: 30vw; height: 30vw; bottom: -16vw; right: 6vw; background: rgba(255, 184, 119, 0.12); }
-.grain {
-  position: absolute; inset: 0; opacity: 0.5;
-  background-image: radial-gradient(rgba(31, 58, 49, 0.045) 1px, transparent 1px);
-  background-size: 4px 4px;
+::selection { background: var(--orange); color: #fff; }
+
+.serre { position: relative; width: min(100% - var(--marge) * 2, var(--serre)); margin-inline: auto; }
+
+/* =========================================================================
+   TYPOGRAPHIE
+   Grand, serre, et un mot en italique serif quand il faut respirer.
+   ========================================================================= */
+h1, h2, h3 { font-weight: 500; letter-spacing: -.035em; line-height: 1.04; text-wrap: balance; }
+
+h1 { font-size: clamp(3rem, 9vw, 7rem); }
+h2 { font-size: clamp(2.1rem, 5.2vw, 4.1rem); }
+h3 { font-size: clamp(1.15rem, 2.2vw, 1.5rem); letter-spacing: -.02em; line-height: 1.22; }
+
+em, .serif {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -.005em;
+  color: var(--orange);
 }
 
-/* --- typographie --------------------------------------------------- */
-h1, h2, h3 { font-weight: 300; letter-spacing: -0.025em; line-height: 1.12; }
-h2 { font-size: clamp(2.05rem, 4.6vw, 3.3rem); }
-h3 { font-size: 1.32rem; font-weight: 400; letter-spacing: -0.01em; }
-
-/* Le sur-titre etait trop pale pour se detacher. Il porte maintenant un
-   trait, une graisse plus forte et l'orange plein. */
 .sur-titre {
-  display: inline-flex; align-items: center; gap: 12px;
-  font-size: 0.74rem; letter-spacing: 0.26em; text-transform: uppercase;
-  color: var(--orange); font-weight: 500; margin-bottom: 24px;
+  font-size: .74rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--orange);
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.sur-titre::before { content: ''; width: 30px; height: 1.5px; background: var(--orange); }
+.sur-titre::before {
+  content: ''; width: 26px; height: 1px; background: currentColor; opacity: .5; flex: none;
+}
+.centre .sur-titre { justify-content: center; }
 
 .chapeau {
-  font-size: clamp(1.02rem, 1.5vw, 1.18rem);
-  color: var(--gris); max-width: 48ch; line-height: 1.78;
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  line-height: 1.68;
+  color: var(--encre-doux);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.chapeau b, .chapeau strong { color: var(--encre); font-weight: 600; }
+
+/* =========================================================================
+   LE GRAIN
+   Une trame de bruit tres faible sur toute la page. Invisible si on la
+   cherche, mais sans elle les aplats creme ont l'air d'etre en plastique.
+   ========================================================================= */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9999;
+  opacity: .26; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
 }
 
-/* --- boutons ------------------------------------------------------- */
-.bouton {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--orange); color: #fff;
-  padding: 14px 28px; border-radius: 999px;
-  font-size: 0.94rem; font-weight: 500;
-  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-  box-shadow: 0 6px 22px -6px rgba(255, 118, 19, 0.6);
+/* =========================================================================
+   LA JAUGE DE LECTURE
+   Une ligne orange en haut, qui avance avec le defilement. Zero JS :
+   l'animation est liee au scroll du document.
+   ========================================================================= */
+.jauge {
+  position: fixed; inset: 0 0 auto 0; height: 2px; z-index: 200;
+  background: linear-gradient(90deg, var(--orange-vif), var(--orange));
+  transform-origin: 0 50%; transform: scaleX(0);
 }
-.bouton:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(255, 118, 19, 0.65); }
-.bouton.verre {
-  background: var(--verre-fond); color: var(--vert);
-  backdrop-filter: blur(18px) saturate(150%); -webkit-backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: inset 0 1px 0 var(--verre-bord), 0 6px 20px -10px rgba(94, 60, 20, 0.4);
+@supports (animation-timeline: scroll()) {
+  .jauge {
+    animation: avancer linear both;
+    animation-timeline: scroll(root block);
+  }
 }
-.bouton.verre:hover { color: var(--orange); }
+@keyframes avancer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* --- barre de navigation ------------------------------------------- */
-.nav { position: sticky; top: 0; z-index: 50; padding: 14px 0; transition: padding 0.4s var(--ease); }
-.nav .serre {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 20px; padding: 10px 14px 10px 18px; border-radius: 999px;
-  background: transparent; transition: background 0.45s var(--ease), box-shadow 0.45s var(--ease);
-}
-.nav.pose .serre {
-  background: var(--verre-fond);
-  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
-}
-.nav-marque { display: flex; align-items: center; gap: 13px; }
-/* Plus de pastille blanche : le logo est detoure pour de bon (lumakey sur
-   la luminance, la ou colorkey echouait), il se pose donc directement sur
-   le fond. Un rond blanc autour d'un logo, ca fait autocollant. */
-.pastille { display: grid; place-items: center; width: 46px; height: 46px; flex: none; }
-.pastille img { width: 100%; height: auto; }
-.nav-marque .nom {
-  font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--vert); font-weight: 500;
-}
-.nav-liens { display: flex; align-items: center; gap: 30px; }
-.nav-liens a { font-size: 0.92rem; color: var(--vert); font-weight: 400; transition: color 0.2s; }
-.nav-liens a:hover { color: var(--orange); }
+/* =========================================================================
+   LE VERRE LIQUIDE
 
-/* --- accueil ------------------------------------------------------- */
-.accueil {
-  position: relative; isolation: isolate; text-align: center;
-  min-height: min(94vh, 900px);
-  display: flex; flex-direction: column; justify-content: center;
-  padding: clamp(96px, 12vw, 140px) 0 clamp(46px, 6vw, 70px);
-  overflow: hidden;
-}
-
-/* LE FOND ANIME.
-   Genere pour elle, dans ses couleurs : des voiles ambres qui derivent
-   dans du creme. Le centre reste pale et vide, c'est la que le texte se
-   pose. `poster` couvre le temps de chargement, et la video est muette
-   et sans controle : c'est une matiere, pas un contenu. */
-.fond-video {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; z-index: -2;
-}
-/* LE VOILE NE DOIT PAS TUER LA VIDEO.
-   Premiere version : 0,88 d'opacite au centre. La video etait bien la,
-   elle jouait, et on ne voyait qu'un degrade creme — j'avais peint
-   par-dessus. Le panneau de verre porte deja le contraste du texte : le
-   voile n'a plus qu'a raccorder le bas de la video au creme de la page. */
-.voile {
-  position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg,
-    rgba(255, 243, 225, 0.06) 0%,
-    rgba(255, 243, 225, 0.10) 55%,
-    rgba(255, 243, 225, 0.7) 88%,
-    var(--creme) 100%);
-}
-
-/* LE PANNEAU DE VERRE.
-   Trois couches : un fond translucide, un flou de ce qui passe derriere,
-   et une arete claire en haut qui donne l'epaisseur. Sans cette arete un
-   panneau translucide ressemble a un aplat sale. */
-.panneau {
-  max-width: 780px; margin: 0 auto;
-  padding: clamp(38px, 5vw, 62px) clamp(26px, 5vw, 64px) clamp(34px, 4.5vw, 54px);
-  border-radius: 34px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.4));
-  backdrop-filter: blur(26px) saturate(170%); -webkit-backdrop-filter: blur(26px) saturate(170%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.35),
-    0 30px 70px -30px rgba(120, 70, 20, 0.34);
-}
-
-/* `height: auto` est obligatoire : l'attribut `height` du HTML sert a
-   reserver la place avant chargement, mais sans cette regle il reste la
-   hauteur appliquee, et l'embleme s'etirait sur 960 pixels de haut pour
-   150 de large. */
-.embleme {
-  width: clamp(104px, 13vw, 150px); height: auto;
-  margin: 0 auto clamp(16px, 2vw, 24px);
-  /* Le logo fourni a un fond blanc opaque, qui se voyait en carre sur le
-     verre. `multiply` le fait disparaitre : blanc multiplie par le panneau
-     clair rend le panneau, et seuls les traits restent. */
-  mix-blend-mode: multiply;
-}
-
-/* Le titre est du texte, pas une image : net partout, et lisible par
-   Google. La graisse legere et l'interlettrage large reprennent le
-   lettrage de son flyer. */
-.accueil h1 { display: block; }
-.accueil .mot {
-  display: block;
-  font-size: clamp(3.1rem, 9vw, 6.4rem); font-weight: 300;
-  letter-spacing: 0.008em; line-height: 0.98; text-transform: uppercase;
-  color: var(--encre);
-}
-.accueil .baseline {
-  display: block; margin-top: clamp(10px, 1.4vw, 16px);
-  font-size: clamp(0.98rem, 1.9vw, 1.32rem); font-weight: 300;
-  color: var(--gris); letter-spacing: 0.005em;
-}
-.accueil .chapeau { margin: clamp(26px, 3.4vw, 38px) auto clamp(28px, 3.4vw, 38px); text-align: center; }
-.accueil-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-
-.accueil .lieu {
-  margin-top: clamp(26px, 3vw, 38px);
-  font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
-  color: var(--gris-clair);
-}
-
-/* Le bandeau de reperes, en verre, pose a cheval sur la section suivante. */
-.reperes {
-  margin-top: clamp(50px, 7vw, 80px);
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  background: var(--verre-fond); border-radius: 24px; overflow: hidden;
-  backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
-  box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
-}
-.repere { padding: 28px 26px; text-align: center; }
-.repere + .repere { border-left: 1px solid rgba(255, 255, 255, 0.6); }
-.repere b { display: block; font-weight: 500; font-size: 1.02rem; color: var(--encre); }
-.repere span { font-size: 0.86rem; color: var(--gris); }
-
-/* --- entete des pages interieures ---------------------------------- */
-/* La meme video que l'accueil, en bandeau court : les pages d'un site se
-   reconnaissent a ce qu'elles partagent, et c'est ce fond qui fait la
-   famille. */
-.entete {
-  position: relative; isolation: isolate; overflow: hidden; text-align: center;
-  padding: clamp(120px, 15vw, 190px) 0 clamp(56px, 7vw, 92px);
-}
-.entete h1 {
-  font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 300; letter-spacing: -0.03em;
-}
-.entete .chapeau { margin: 22px auto 0; text-align: center; }
-.entete .sur-titre { justify-content: center; }
-
-/* --- sections ------------------------------------------------------ */
-.pan { padding: clamp(72px, 10vw, 128px) 0; position: relative; }
-
-.lien-suite {
-  display: inline-flex; align-items: center; gap: 8px; margin-top: 26px;
-  font-size: 0.92rem; font-weight: 500; color: var(--orange);
-  border-bottom: 1px solid rgba(255, 118, 19, 0.35); padding-bottom: 2px;
-  transition: border-color 0.3s;
-}
-.lien-suite::after { content: '→'; transition: transform 0.35s var(--ease); }
-.lien-suite:hover { border-color: var(--orange); }
-.lien-suite:hover::after { transform: translateX(4px); }
-.note-tarifs .lien-suite { margin-top: 0; margin-left: 14px; }
-
-/* La page courante se signale dans la barre. */
-.nav-liens a.ici { color: var(--orange); }
-
-.phrase-forte {
-  font-size: clamp(1.7rem, 3.6vw, 2.7rem);
-  font-weight: 300; line-height: 1.32; letter-spacing: -0.025em; max-width: 19ch;
-}
-.phrase-forte b { font-weight: 400; color: var(--orange); }
-.deux { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(34px, 6vw, 84px); align-items: center; }
-
-/* --- panneaux de verre --------------------------------------------- */
+   .verre           le corps translucide et le flou
+   .verre::before   la couche de REFRACTION — le filtre SVG qui devie
+                    l'arriere-plan sur les bords. Si le navigateur ne sait
+                    pas faire, la propriete est simplement ignoree et il
+                    reste un verre depoli tout a fait correct.
+   .verre::after    l'arete lumineuse : un lisere blanc en haut a gauche
+                    qui s'eteint en bas. C'est ce reflet, plus que le flou,
+                    qui fait lire « epaisseur ».
+   ========================================================================= */
 .verre {
-  background: var(--verre-fond); border-radius: 26px;
-  backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
-  box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--rond);
+  background:
+    linear-gradient(150deg, rgba(255,255,255,.72), rgba(255,255,255,.44) 46%, rgba(255,246,235,.60));
+  backdrop-filter: blur(22px) saturate(185%) brightness(1.04);
+  -webkit-backdrop-filter: blur(22px) saturate(185%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 -1px 0 rgba(255,255,255,.35) inset,
+    0 2px 6px -2px rgba(120,60,15,.10),
+    0 32px 64px -34px rgba(120,60,15,.38);
+}
+.verre > * { position: relative; z-index: 1; }
+.verre::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  backdrop-filter: url(#refraction);
+  -webkit-backdrop-filter: url(#refraction);
+}
+.verre::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(145deg,
+    rgba(255,255,255,.95) 0%,
+    rgba(255,255,255,.30) 34%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,214,168,.55) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.verre.haut::before  { backdrop-filter: url(#refraction-haut); }
+.verre.barre::before { backdrop-filter: url(#refraction-barre); }
+
+/* Le verre pose au-dessus d'une video : on remonte la dominante creme pour
+   qu'il reste lisible sans s'alourdir. */
+.verre.sur-film {
+  background: linear-gradient(150deg, rgba(255,252,246,.46), rgba(255,246,235,.26) 52%, rgba(255,238,220,.42));
+  backdrop-filter: blur(30px) saturate(200%) brightness(1.06);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
 }
 
-/* --- moments -------------------------------------------------------- */
-.moments {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: clamp(18px, 2.4vw, 30px); margin-top: clamp(46px, 6vw, 72px);
+/* =========================================================================
+   LE HALO QUI SUIT LE CURSEUR
+   Deux variables mises a jour au pointeur ; tout le reste est du CSS.
+   ========================================================================= */
+.halo {
+  position: fixed; z-index: 1; pointer-events: none;
+  width: 460px; height: 460px; left: 0; top: 0;
+  translate: calc(var(--sx, 50vw) - 230px) calc(var(--sy, 50vh) - 230px);
+  background: radial-gradient(circle, rgba(242,145,60,.17), rgba(242,145,60,0) 62%);
+  opacity: 0; transition: opacity .6s var(--doux);
 }
-.moment {
-  padding: 32px 30px 36px;
-  transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease);
-}
-.moment:hover { transform: translateY(-5px); box-shadow: inset 0 1px 0 var(--verre-bord), 0 28px 60px -24px rgba(94, 60, 20, 0.34); }
-/* Les illustrations arrivent avec le fond creme du flyer. `multiply` le
-   fait disparaitre sur le verre clair sans avoir a les detourer. */
-.moment img {
-  width: 142px; height: 120px; object-fit: contain; object-position: left center;
-  mix-blend-mode: multiply; margin-bottom: 22px;
-  /* Le fond creme du flyer laissait un rectangle net autour du dessin sur
-     le verre. Un fondu radial en efface le bord sans avoir a detourer les
-     traits fins, qu'un detourage automatique abimait. */
-  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
-}
-.moment h3 { margin-bottom: 10px; }
-.moment p { font-size: 0.95rem; color: var(--gris); }
+body.pointe .halo { opacity: 1; }
 
-/* --- seances -------------------------------------------------------- */
-.seances { margin-top: clamp(44px, 6vw, 66px); padding: clamp(14px, 3vw, 34px) clamp(22px, 4vw, 46px); }
-.seance {
-  display: grid; grid-template-columns: 1fr auto; gap: 26px; align-items: baseline;
-  padding: 30px 0;
-  transition: padding-left 0.45s var(--ease);
+/* =========================================================================
+   LES BOUTONS
+   Un balayage lumineux passe dessus au survol, et le bouton se decale
+   legerement vers le pointeur (les variables viennent du JS).
+   ========================================================================= */
+.bouton {
+  --tx: 0px; --ty: 0px;
+  position: relative;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  font-size: .96rem; font-weight: 500; letter-spacing: -.01em;
+  background: linear-gradient(140deg, var(--orange-vif), var(--orange) 60%, var(--orange-nuit));
+  color: #fff;
+  overflow: hidden;
+  translate: var(--tx) var(--ty);
+  box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 12px 28px -12px rgba(200,100,20,.75);
+  transition: translate .35s var(--sortie), box-shadow .35s var(--doux), scale .35s var(--sortie);
+  will-change: translate;
 }
-.seance + .seance { border-top: 1px solid rgba(31, 58, 49, 0.13); }
-.seance:hover { padding-left: 10px; }
-.seance-nom { display: flex; align-items: baseline; gap: 15px; flex-wrap: wrap; }
-.seance-nom h3 { font-size: clamp(1.35rem, 2.3vw, 1.9rem); font-weight: 300; color: var(--encre); }
-.seance-duree {
-  font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--orange); font-weight: 500;
+.bouton::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 32%, rgba(255,255,255,.55) 48%, transparent 64%);
+  translate: -130% 0;
+  transition: translate .75s var(--doux);
 }
-.seance p { font-size: 0.94rem; color: var(--gris); margin-top: 7px; max-width: 54ch; }
-.seance-prix { font-size: clamp(1.5rem, 2.6vw, 2.05rem); font-weight: 300; white-space: nowrap; }
-.seance-prix span { font-size: 0.9rem; color: var(--gris); }
-.note-tarifs { margin-top: 24px; font-size: 0.85rem; color: var(--gris-clair); }
+.bouton:hover { scale: 1.03; box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 20px 42px -14px rgba(200,100,20,.8); }
+.bouton:hover::after { translate: 130% 0; }
+.bouton:active { scale: .985; }
 
-/* --- julie ---------------------------------------------------------- */
-.julie-visuel { position: relative; display: grid; place-items: center; padding: 30px; }
-.julie-visuel img { width: min(300px, 78%); mix-blend-mode: multiply; position: relative; z-index: 1; }
-.julie-cercle {
-  position: absolute; width: min(360px, 92%); aspect-ratio: 1;
-  border: 1.5px solid rgba(255, 118, 19, 0.32); border-radius: 50%;
+.bouton.clair {
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  color: var(--encre);
+  box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 0 0 1px rgba(226,113,29,.16), 0 14px 30px -18px rgba(120,60,15,.5);
+}
+.bouton.clair:hover { background: rgba(255,255,255,.84); }
+
+/* Le lien-fleche : le trait se remplit, la fleche avance. */
+.suite {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-weight: 500; font-size: .97rem; color: var(--orange);
+  padding-bottom: 3px;
+  background-image: linear-gradient(var(--orange), var(--orange));
+  background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%;
+  transition: background-size .45s var(--sortie);
+}
+.suite svg { transition: translate .35s var(--sortie); }
+.suite:hover { background-size: 100% 1px; }
+.suite:hover svg { translate: 5px 0; }
+
+/* =========================================================================
+   LA BARRE DE NAVIGATION
+   Une pastille de verre flottante. Elle se resserre au defilement — encore
+   une animation liee au scroll, pas un ecouteur d'evenement.
+   ========================================================================= */
+.nav {
+  position: fixed; z-index: 100;
+  inset: 18px 0 auto 0;
+  display: flex; justify-content: center;
+  pointer-events: none;
+}
+.nav-boite {
+  pointer-events: auto;
+  display: flex; align-items: center; gap: clamp(8px, 2vw, 24px);
+  width: min(100% - 32px, 1000px);
+  padding: 11px 11px 11px 19px;
+  border-radius: 999px;
+  transform-origin: 50% 0;
+}
+@supports (animation-timeline: scroll()) {
+  .nav-boite {
+    animation: navSerre linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 260px;
+  }
+}
+/* On resserre la barre par une MISE A L'ECHELLE, pas en animant sa
+   largeur. Une largeur qui change a chaque image force un recalcul de
+   mise en page, et Chrome cesse alors de repeindre le contenu de
+   l'element floute : la pastille restait visible mais vide. `scale` se
+   joue sur le compositeur, sans toucher a la mise en page. */
+@keyframes navSerre {
+  from { scale: 1; }
+  to   { scale: .93; }
 }
 
-/* --- contact --------------------------------------------------------- */
-.contact-grille { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 70px); }
-.coord { display: flex; flex-direction: column; gap: 24px; margin-top: 34px; }
-.coord-ligne { display: flex; gap: 18px; align-items: flex-start; }
-.coord-ligne .etiq {
-  font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--gris-clair); min-width: 96px; padding-top: 5px; font-weight: 500;
-}
-.coord-ligne .val { font-size: 1.06rem; }
-.coord-ligne .val a:hover { color: var(--orange); }
-.coord-ligne .val small { display: block; font-size: 0.86rem; color: var(--gris); margin-top: 2px; }
+.nav-marque { display: flex; align-items: center; gap: 11px; margin-right: auto; }
+.nav-marque img { width: 38px; height: auto; mix-blend-mode: multiply; transition: rotate .8s var(--sortie); }
+.nav-marque:hover img { rotate: -8deg; }
+.nav-marque .nom { font-weight: 600; font-size: 1.02rem; letter-spacing: -.02em; white-space: nowrap; }
 
-.carte-appel {
-  background: var(--vert); color: #fff; border-radius: 26px;
-  padding: clamp(34px, 5vw, 54px); position: relative; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: center;
+.nav-liens { display: flex; align-items: center; gap: clamp(2px, 1.2vw, 6px); }
+.nav-liens > a:not(.bouton) {
+  position: relative;
+  padding: 9px 14px; border-radius: 999px;
+  font-size: .93rem; font-weight: 450; color: var(--encre-doux);
+  transition: color .3s var(--doux), background .3s var(--doux);
+  white-space: nowrap;
 }
-.carte-appel h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: 14px; }
-.carte-appel p { color: rgba(255, 255, 255, 0.72); font-size: 0.98rem; margin-bottom: 30px; }
-.carte-appel .bouton { align-self: flex-start; }
-.carte-appel::after {
-  content: ''; position: absolute; width: 340px; height: 340px;
-  right: -120px; bottom: -150px; border-radius: 50%;
-  background: var(--orange); opacity: 0.22; filter: blur(10px);
+.nav-liens > a:not(.bouton):hover { color: var(--encre); background: rgba(255,255,255,.55); }
+.nav-liens > a.ici { color: var(--encre); font-weight: 550; }
+.nav-liens > a.ici::after {
+  content: ''; position: absolute; left: 50%; bottom: 3px;
+  width: 4px; height: 4px; margin-left: -2px; border-radius: 50%;
+  background: var(--orange);
+}
+.nav .bouton { padding: 11px 20px; font-size: .9rem; }
+
+/* --- la barre du bas, sur telephone --------------------------------------
+   Sur petit ecran la pastille du haut n'a pas la place d'afficher les
+   liens : sans cette barre, les pages interieures sont tout simplement
+   inatteignables depuis un telephone. */
+.barre-basse { display: none; }
+@media (max-width: 900px) {
+  .barre-basse {
+    position: fixed; z-index: 100; inset: auto 0 14px 0;
+    display: flex; justify-content: center; pointer-events: none;
+  }
+  .barre-basse-boite {
+    pointer-events: auto;
+    display: flex; gap: 3px; padding: 6px;
+    width: min(100% - 24px, 470px);
+    border-radius: 999px;
+  }
+  .barre-basse a {
+    flex: 1; text-align: center; white-space: nowrap;
+    padding: 11px 4px; border-radius: 999px;
+    font-size: .8rem; font-weight: 500; color: var(--encre-doux);
+    transition: background .3s var(--doux), color .3s var(--doux);
+  }
+  .barre-basse a.ici {
+    color: #fff;
+    background: linear-gradient(140deg, var(--orange-vif), var(--orange) 70%, var(--orange-nuit));
+    box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 8px 18px -8px rgba(200,100,20,.8);
+  }
+  .pied { padding-bottom: 104px; }
 }
 
-/* --- pied ------------------------------------------------------------ */
-.pied { padding: 56px 0 44px; }
-.pied .serre:first-child {
-  display: flex; flex-wrap: wrap; gap: 22px; justify-content: space-between; align-items: center;
-  padding-bottom: 30px; border-bottom: 1px solid rgba(31, 58, 49, 0.12);
+/* =========================================================================
+   LES FONDS FILMES
+   La video remplit le bloc, un voile tres leger la calme, et elle se
+   deplace un peu moins vite que la page (parallaxe).
+   ========================================================================= */
+.film { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+.film video, .film img.tenant {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; object-position: center 58%;
+  filter: saturate(1.16) contrast(1.03);
 }
-.pied-liens { display: flex; gap: 24px; font-size: 0.87rem; color: var(--gris); flex-wrap: wrap; }
-.pied-liens a:hover { color: var(--orange); }
-.avertissement { margin-top: 26px; font-size: 0.78rem; color: var(--gris-clair); line-height: 1.7; max-width: 80ch; }
+@supports (animation-timeline: view()) {
+  .film video {
+    animation: derive linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+}
+@keyframes derive { from { scale: 1.14; translate: 0 -4%; } to { scale: 1.14; translate: 0 4%; } }
 
-/* --- apparition ------------------------------------------------------ */
-.monte { opacity: 0; transform: translateY(24px); transition: opacity 0.95s var(--ease), transform 0.95s var(--ease); }
-.monte.vu { opacity: 1; transform: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  .monte { opacity: 1; transform: none; transition: none; }
-  html { scroll-behavior: auto; }
+/* Le voile : assez pour poser le texte, jamais assez pour cacher le film.
+   (Une version precedente montait a 88 % d'opacite : la video tournait
+   sous un aplat creme, on ne la voyait pas du tout.) */
+.voile {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(120% 92% at 50% 40%, rgba(255,252,246,.30), rgba(255,248,239,.02) 60%),
+    linear-gradient(180deg, rgba(255,248,239,.34) 0%, rgba(255,248,239,0) 24%,
+                    rgba(255,248,239,0) 60%, rgba(253,242,228,.88) 93%, var(--creme-fond) 100%);
+}
+.voile.court {
+  background: linear-gradient(180deg, rgba(255,248,239,.42) 0%, rgba(255,248,239,.05) 40%,
+                              rgba(253,242,228,.9) 92%, var(--creme-fond) 100%);
 }
 
-/* --- ecrans etroits --------------------------------------------------- */
+/* =========================================================================
+   L'ACCUEIL
+   ========================================================================= */
+.entree {
+  position: relative;
+  min-height: 100svh;
+  display: grid; place-items: center;
+  padding: 130px 0 100px;
+  overflow: clip;
+}
+.entree .serre { z-index: 2; text-align: center; }
+
+/* Le bloc entier recule et s'efface quand on descend : le geste signature
+   des pages produit d'Apple. Il se declenche a la sortie, pas a l'entree. */
+@supports (animation-timeline: view()) {
+  .entree-bloc {
+    animation: reculer linear both;
+    animation-timeline: view();
+    animation-range: exit-crossing 0% exit-crossing 90%;
+  }
+}
+@keyframes reculer {
+  from { opacity: 1; scale: 1;   translate: 0 0;    filter: blur(0); }
+  to   { opacity: 0; scale: .88; translate: 0 -5vh; filter: blur(9px); }
+}
+
+.embleme {
+  width: clamp(88px, 10vw, 118px); height: auto;
+  margin: 0 auto 24px;
+  mix-blend-mode: multiply;
+  animation: flotter 9s ease-in-out infinite;
+}
+@keyframes flotter {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50%      { translate: 0 -9px; rotate: 1.4deg; }
+}
+
+/* Le titre apparait mot par mot, chacun venant de plus bas et de plus
+   flou que le precedent. */
+.titre-anime .mot { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .08em; }
+.titre-anime .mot > i {
+  display: inline-block; font-style: inherit;
+  animation: monterMot 1.2s var(--sortie) both;
+  animation-delay: calc(var(--i) * 95ms);
+}
+@keyframes monterMot {
+  from { translate: 0 108%; opacity: 0; filter: blur(10px); rotate: 2deg; }
+  to   { translate: 0 0;    opacity: 1; filter: blur(0);    rotate: 0deg; }
+}
+
+.entree h1 { margin-bottom: 4px; }
+.baseline {
+  display: block;
+  font-size: clamp(1.02rem, 2.3vw, 1.6rem);
+  letter-spacing: -.02em;
+  color: var(--encre-doux);
+  margin-top: 16px;
+  font-weight: 400;
+  animation: paraitre 1.1s var(--sortie) .6s both;
+}
+.entree .chapeau { margin: 20px auto 0; text-align: center; animation: paraitre 1.1s var(--sortie) .75s both; }
+@keyframes paraitre { from { opacity: 0; translate: 0 22px; filter: blur(6px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+
+.actions {
+  display: flex; flex-wrap: wrap; gap: 13px; justify-content: center;
+  margin-top: 32px;
+  animation: paraitre 1.1s var(--sortie) .9s both;
+}
+.entree-panneau {
+  padding: clamp(30px, 4.2vw, 50px) clamp(22px, 3.6vw, 52px);
+  width: min(100%, 780px); margin-inline: auto;
+}
+
+/* Les trois reperes, en pastilles de verre */
+.reperes {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 11px;
+  margin-top: 24px;
+}
+.repere {
+  padding: 12px 20px; border-radius: 999px;
+  font-size: .87rem; color: var(--encre-doux);
+  animation: paraitre 1s var(--sortie) both;
+  animation-delay: calc(1.05s + var(--i) * 110ms);
+  transition: translate .4s var(--sortie);
+}
+.repere:hover { translate: 0 -3px; }
+.repere b { color: var(--encre); font-weight: 550; }
+
+/* La fleche « on continue en bas » */
+.descendre {
+  position: absolute; left: 50%; bottom: 26px; z-index: 3;
+  translate: -50% 0;
+  display: grid; place-items: center; gap: 9px;
+  font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--encre-pale);
+  animation: paraitre 1s var(--sortie) 1.5s both;
+}
+.descendre i {
+  display: block; width: 1px; height: 40px;
+  background: linear-gradient(var(--orange), transparent);
+  animation: filer 2.2s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes filer {
+  0%   { scale: 1 0; opacity: 0; }
+  35%  { scale: 1 1; opacity: 1; }
+  100% { scale: 1 1; opacity: 0; transform-origin: bottom; }
+}
+
+/* =========================================================================
+   LE BANDEAU DEFILANT
+   ========================================================================= */
+.bandeau {
+  position: relative; z-index: 3;
+  padding: 20px 0;
+  border-block: 1px solid rgba(226,113,29,.16);
+  background: linear-gradient(90deg, rgba(255,248,239,.6), rgba(255,236,214,.8), rgba(255,248,239,.6));
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.ruban { display: flex; width: max-content; animation: glisser 38s linear infinite; }
+.ruban:hover { animation-play-state: paused; }
+.ruban b {
+  display: flex; align-items: center; gap: 28px;
+  padding-right: 28px;
+  font-size: clamp(.94rem, 1.4vw, 1.1rem); font-weight: 450; color: var(--encre-doux);
+  white-space: nowrap;
+}
+.ruban b::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); opacity: .55; flex: none; }
+@keyframes glisser { to { translate: -50% 0; } }
+
+/* =========================================================================
+   LES SECTIONS
+   ========================================================================= */
+.pan { position: relative; padding: clamp(78px, 10vw, 145px) 0; }
+.pan.serree { padding-block: clamp(54px, 7vw, 88px); }
+
+/* Les taches d'orange qui respirent au fond de la page. Elles bougent
+   lentement et en decalage, donc le fond n'est jamais deux fois le meme. */
+.pan.tache::before,
+.pan.tache::after {
+  content: ''; position: absolute; z-index: 0; border-radius: 50%;
+  filter: blur(70px); pointer-events: none;
+}
+.pan.tache::before {
+  width: 46vw; height: 46vw; max-width: 620px; max-height: 620px;
+  top: -8%; right: -10%;
+  background: radial-gradient(circle, rgba(242,145,60,.36), rgba(242,145,60,0) 70%);
+  animation: respirer 17s ease-in-out infinite;
+}
+.pan.tache::after {
+  width: 38vw; height: 38vw; max-width: 520px; max-height: 520px;
+  bottom: -12%; left: -12%;
+  background: radial-gradient(circle, rgba(251,217,180,.6), rgba(251,217,180,0) 70%);
+  animation: respirer 21s ease-in-out -6s infinite reverse;
+}
+@keyframes respirer {
+  0%, 100% { translate: 0 0 ; scale: 1; }
+  50%      { translate: -5% 7%; scale: 1.16; }
+}
+
+.deux {
+  display: grid; gap: clamp(30px, 5vw, 70px);
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+  align-items: start;
+}
+/* Un bloc colle ne peut pas porter lui-meme une animation liee a `view()` :
+   sa position dans la fenetre ne bouge plus une fois qu'il est accroche,
+   donc la progression reste bloquee et l'element ne s'affiche jamais. On
+   colle le conteneur, on anime l'enfant. */
+.colle { position: sticky; top: 122px; }
+.centre { text-align: center; display: grid; justify-items: center; gap: 18px; }
+
+/* --- l'apparition au defilement ----------------------------------------- */
+.rev { opacity: 0; translate: 0 44px; filter: blur(7px); }
+
+/* UN PANNEAU DE VERRE NE DOIT JAMAIS PORTER DE `filter`.
+   `filter` fait de l'element une « racine d'arriere-plan » : sa couche de
+   refraction cesse alors d'echantillonner la page et se met a
+   echantillonner SON PROPRE CONTENU, qu'elle repeint floute par-dessus le
+   texte. Et cela ne disparait pas a la fin de l'animation, puisque le
+   filtre calcule reste `blur(0px)` — un filtre quand meme. Sur la carte
+   d'appel posee sur la video des bougies, il ne restait plus un mot
+   lisible : seuls les boutons, qui ont leur propre fond, s'en sortaient.
+   Le verre monte donc sans flou. */
+.verre.rev { filter: none; }
+.verre.rev.vu { filter: none; }
+
+.rev.vu { opacity: 1; translate: 0 0; filter: blur(0);
+          transition: opacity .9s var(--sortie), translate .9s var(--sortie), filter .9s var(--sortie);
+          transition-delay: calc(var(--i, 0) * 90ms); }
+
+@supports (animation-timeline: view()) {
+  .rev {
+    animation: surgir linear both;
+    animation-timeline: view();
+    animation-range: entry 4% cover 27%;
+    transition: none;
+  }
+  /* Les elements d'une meme rangee doivent se decaler : on retarde leur
+     plage de defilement, puisqu'un delai n'a pas de sens sur une
+     minuterie qui est en fait une position. */
+  .rev[data-i='1'] { animation-range: entry 4% cover 34%; }
+  .rev[data-i='2'] { animation-range: entry 4% cover 41%; }
+  .rev[data-i='3'] { animation-range: entry 4% cover 48%; }
+  .verre.rev { animation-name: surgirNet; }
+}
+@keyframes surgir {
+  from { opacity: 0; translate: 0 52px; filter: blur(8px); }
+  to   { opacity: 1; translate: 0 0;    filter: blur(0); }
+}
+@keyframes surgirNet {
+  from { opacity: 0; translate: 0 52px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* =========================================================================
+   LA PHRASE QUI S'ALLUME
+   Chaque mot s'eclaire a son tour a mesure qu'on descend. La minuterie,
+   c'est la position de la phrase dans la fenetre.
+   ========================================================================= */
+.eclat-zone { view-timeline-name: --phrase; view-timeline-axis: block; }
+.eclat {
+  font-size: clamp(1.65rem, 4.4vw, 3.3rem);
+  font-weight: 500; letter-spacing: -.035em; line-height: 1.25;
+  text-wrap: balance;
+}
+.eclat w { color: rgba(169,141,120,.34); }
+@supports (animation-timeline: view()) {
+  .eclat w {
+    animation: allumer linear both;
+    animation-timeline: --phrase;
+    /* `cover` et pas `contain` : une phrase plus haute que la fenetre n'est
+       jamais « contenue », la plage serait vide et rien ne s'allumerait. */
+    animation-range: cover calc(26% + var(--i) * 1.5%) cover calc(38% + var(--i) * 1.5%);
+  }
+}
+@keyframes allumer {
+  from { color: rgba(169,141,120,.30); }
+  to   { color: var(--encre); }
+}
+.eclat w.chaud {
+  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  animation-name: allumerChaud;
+}
+@keyframes allumerChaud {
+  from { color: rgba(226,113,29,.28); }
+  to   { color: var(--orange); }
+}
+
+/* =========================================================================
+   LE FILM QUI S'OUVRE
+   Une carte arrondie qui s'elargit jusqu'au bord de l'ecran et perd ses
+   coins a mesure qu'on descend. Le bloc est colle, donc le film reste en
+   place pendant que le mouvement se joue.
+   ========================================================================= */
+.ouverture { position: relative; height: 200vh; }
+.ouverture-cadre {
+  position: sticky; top: 0;
+  height: 100svh;
+  display: grid; place-items: center;
+  overflow: clip;
+}
+.ouverture-film {
+  position: relative;
+  width: min(92%, 1180px); height: min(72svh, 640px);
+  border-radius: var(--rond-l);
+  overflow: hidden;
+  box-shadow: 0 40px 90px -40px rgba(120,60,15,.5);
+}
+@supports (animation-timeline: view()) {
+  .ouverture-film {
+    animation: ouvrir linear both;
+    animation-timeline: view();
+    animation-range: entry 62% cover 60%;
+  }
+}
+@keyframes ouvrir {
+  from { width: min(92%, 1180px); height: min(72svh, 640px); border-radius: var(--rond-l); }
+  to   { width: 100vw;            height: 100svh;            border-radius: 0; }
+}
+.ouverture-film video { width: 100%; height: 100%; object-fit: cover; }
+.ouverture-texte {
+  position: absolute; inset: auto 0 0 0; z-index: 2;
+  padding: clamp(26px, 5vw, 62px);
+  display: grid; gap: 13px; justify-items: start;
+  background: linear-gradient(0deg, rgba(61,34,19,.66), rgba(61,34,19,.18) 55%, transparent);
+  color: #fff;
+}
+.ouverture-texte h2 { color: #fff; max-width: 16ch; }
+.ouverture-texte p { color: rgba(255,255,255,.88); max-width: 46ch; }
+.ouverture-texte .sur-titre { color: var(--orange-clair); }
+
+/* =========================================================================
+   LES CARTES
+   ========================================================================= */
+.grille {
+  display: grid; gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(266px, 1fr));
+  margin-top: clamp(38px, 5vw, 60px);
+}
+
+.carte {
+  --rx: 0deg; --ry: 0deg;
+  padding: 30px 28px 32px;
+  display: grid; gap: 12px; align-content: start;
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .5s var(--sortie), box-shadow .5s var(--doux);
+  will-change: transform;
+}
+.carte:hover {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 42px 80px -34px rgba(120,60,15,.5);
+}
+.carte .vignette {
+  width: 62px; height: 62px; border-radius: 20px;
+  display: grid; place-items: center; overflow: hidden;
+  background: linear-gradient(140deg, var(--orange-clair), rgba(255,255,255,.55));
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+  margin-bottom: 4px;
+}
+.carte .vignette img {
+  width: 100%; height: 100%; object-fit: cover;
+  mix-blend-mode: multiply;
+  transition: scale .6s var(--sortie);
+}
+.carte:hover .vignette img { scale: 1.12; }
+.carte p { color: var(--encre-doux); font-size: .99rem; line-height: 1.62; }
+
+/* Les tarifs */
+.tarifs { display: grid; gap: 14px; margin-top: clamp(34px, 4.5vw, 52px); }
+.tarif {
+  display: grid; grid-template-columns: 1fr auto; gap: 26px; align-items: center;
+  padding: 24px 30px;
+  transition: translate .45s var(--sortie), box-shadow .45s var(--doux);
+}
+.tarif:hover { translate: 0 -4px; box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 38px 70px -34px rgba(120,60,15,.48); }
+.tarif-nom { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; }
+.tarif-duree {
+  font-size: .75rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--orange); padding: 4px 11px; border-radius: 999px;
+  background: rgba(226,113,29,.10); white-space: nowrap;
+}
+.tarif p { color: var(--encre-doux); font-size: .96rem; margin-top: 7px; max-width: 58ch; }
+.tarif-prix {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight: 500; letter-spacing: -.045em;
+  color: var(--encre); white-space: nowrap;
+}
+.tarif-prix span { font-size: .48em; color: var(--orange); margin-left: 2px; }
+.note { font-size: .88rem; color: var(--encre-pale); margin-top: 20px; }
+.note a { color: var(--orange); }
+
+/* Le deroule numerote */
+.etapes { display: grid; margin-top: 6px; counter-reset: e; }
+.etape {
+  display: grid; grid-template-columns: 54px 1fr; gap: 20px; align-items: start;
+  padding: 24px 4px;
+  border-top: 1px solid rgba(226,113,29,.16);
+}
+.etape::before {
+  counter-increment: e; content: counter(e, decimal-leading-zero);
+  font-size: .82rem; font-weight: 500; letter-spacing: .08em; color: var(--orange);
+  padding-top: 6px;
+}
+.etape h3 { margin-bottom: 7px; }
+.etape p { color: var(--encre-doux); font-size: 1rem; }
+
+/* =========================================================================
+   L'APPEL
+   ========================================================================= */
+.appel { position: relative; overflow: clip; padding: clamp(76px, 10vw, 128px) 0; }
+.appel-carte {
+  z-index: 2;
+  padding: clamp(38px, 6vw, 74px);
+  text-align: center;
+  display: grid; gap: 17px; justify-items: center;
+  border-radius: var(--rond-l);
+}
+.appel-carte h2 { max-width: 15ch; }
+.appel-carte p { color: var(--encre-doux); max-width: 48ch; }
+.appel-carte .actions { margin-top: 10px; animation: none; }
+
+/* =========================================================================
+   LE CONTACT
+   ========================================================================= */
+.contact-grille { display: grid; gap: 22px; grid-template-columns: 1.22fr .95fr; align-items: start; }
+.coord-ligne {
+  display: grid; grid-template-columns: 148px 1fr; gap: 20px; align-items: baseline;
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba(226,113,29,.14);
+}
+.coord-ligne:last-child { border-bottom: 0; }
+.coord .etiq { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); }
+.coord .val { font-size: 1.05rem; font-weight: 450; }
+.coord .val small { display: block; font-size: .88rem; color: var(--encre-pale); font-weight: 400; margin-top: 3px; }
+.coord .val a { border-bottom: 1px solid rgba(226,113,29,.35); transition: border-color .3s; }
+.coord .val a:hover { border-color: var(--orange); }
+
+/* =========================================================================
+   L'ENTETE DES PAGES INTERIEURES
+   ========================================================================= */
+.entete {
+  position: relative;
+  padding: clamp(146px, 19vh, 210px) 0 clamp(58px, 8vw, 96px);
+  overflow: clip;
+}
+.entete .serre { z-index: 2; display: grid; gap: 18px; }
+.entete h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); }
+
+/* =========================================================================
+   LE PIED
+   ========================================================================= */
+.pied {
+  position: relative;
+  padding: clamp(52px, 6vw, 78px) 0 34px;
+  background: linear-gradient(180deg, var(--creme-fond), #f8e7d3);
+  border-top: 1px solid rgba(226,113,29,.16);
+}
+.pied .serre + .serre { margin-top: 30px; }
+.pied-haut { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; justify-content: space-between; }
+.pied-liens { display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: .97rem; color: var(--encre-doux); }
+.pied-liens a { position: relative; padding-bottom: 2px; }
+.pied-liens a::after {
+  content: ''; position: absolute; inset: auto 0 0 0; height: 1px; background: var(--orange);
+  scale: 0 1; transform-origin: left; transition: scale .4s var(--sortie);
+}
+.pied-liens a:hover::after { scale: 1 1; }
+.avertissement { font-size: .82rem; line-height: 1.7; color: var(--encre-pale); max-width: 80ch; }
+
+/* =========================================================================
+   ADAPTATIONS
+   ========================================================================= */
 @media (max-width: 900px) {
   .deux, .contact-grille { grid-template-columns: 1fr; }
-  .moments { grid-template-columns: 1fr; }
-  .reperes { grid-template-columns: 1fr; }
-  .repere + .repere { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.6); }
-  .nav-liens a:not(.bouton) { display: none; }
-  .seance { grid-template-columns: 1fr; gap: 8px; }
-  .aplat { filter: blur(70px); }
+  .colle { position: static; }
+  .nav-liens > a:not(.bouton) { display: none; }
+  .coord-ligne { grid-template-columns: 1fr; gap: 5px; }
+  .tarif { grid-template-columns: 1fr; gap: 14px; }
+  .tarif-prix { justify-self: start; }
+  .etape { grid-template-columns: 1fr; gap: 6px; }
+  .etape::before { padding-top: 0; }
+  .ouverture { height: 170vh; }
+}
+@media (max-width: 560px) {
+  :root { --marge: 18px; --rond: 24px; --rond-l: 30px; }
+  .entree { padding-top: 114px; }
+}
+@media (max-width: 380px) {
+  .nav-marque .nom { display: none; }
+  .barre-basse a { font-size: .74rem; }
+}
+
+/* Pas d'ecran tactile : pas de halo qui traine. */
+@media (hover: none) { .halo { display: none; } }
+
+/* Quelqu'un qui a demande moins de mouvement a de bonnes raisons. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rev { opacity: 1; translate: 0; filter: none; }
+  .eclat w { color: var(--encre); }
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#fff3e1">
+<meta name="theme-color" content="#fdf2e4">
 <!-- DÉMONSTRATION : à retirer le jour où le site part en ligne pour de vrai. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Le shiatsu, comment ça se passe — Shiatsu Jiyū</title>
@@ -11,132 +11,195 @@
 <link rel="icon" href="./images/emblem.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
 </head>
-<body class="">
-<nav class="nav" id="nav">
-  <div class="serre">
+<body>
+<svg class="filtres" aria-hidden="true" focusable="false"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <filter id="refraction" x="0%" y="0%" width="100%" height="100%"
+            color-interpolation-filters="sRGB">
+      <feImage href="./images/refraction.png" preserveAspectRatio="none" result="carte"/>
+      <feDisplacementMap in="SourceGraphic" in2="carte" scale="42"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="refraction-barre" x="0%" y="0%" width="100%" height="100%"
+            color-interpolation-filters="sRGB">
+      <feImage href="./images/refraction-barre.png" preserveAspectRatio="none" result="carte"/>
+      <feDisplacementMap in="SourceGraphic" in2="carte" scale="26"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="refraction-haut" x="0%" y="0%" width="100%" height="100%"
+            color-interpolation-filters="sRGB">
+      <feImage href="./images/refraction-haut.png" preserveAspectRatio="none" result="carte"/>
+      <feDisplacementMap in="SourceGraphic" in2="carte" scale="38"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+<div class="jauge" aria-hidden="true"></div>
+<div class="halo" aria-hidden="true"></div>
+<nav class="nav">
+  <div class="nav-boite verre barre">
     <a href="./index.html" class="nav-marque">
-      <span class="pastille"><img src="./images/emblem.webp" alt=""></span>
+      <img src="./images/emblem.webp" alt="" width="120" height="105">
       <span class="nom">Shiatsu Jiyū</span>
     </a>
     <div class="nav-liens">
       <a href="./index.html">Accueil</a>
       <a href="./le-shiatsu.html" class="ici">Le shiatsu</a>
       <a href="./seances.html">Les séances</a>
-      <a href="./contact.html" class="bouton">Prendre rendez-vous</a>
+      <a href="./contact.html" class="bouton" data-aimant>Prendre rendez-vous</a>
     </div>
   </div>
 </nav>
+<main>
 
 <header class="entete">
-  <video class="fond-video" autoplay muted loop playsinline
-       poster="./images/fond.webp" aria-hidden="true">
-  <source src="./images/fond.mp4" type="video/mp4">
-</video>
-<div class="voile" aria-hidden="true"></div>
+  <div class="film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="./images/soie.webp">
+      <source src="./images/soie.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="voile court" aria-hidden="true"></div>
   <div class="serre">
-    <p class="sur-titre monte">Le shiatsu</p>
-    <h1 class="monte">Pression des doigts.</h1>
-    <p class="chapeau monte">Le shiatsu est né au Japon. Il travaille les mêmes points énergétiques que
-   l'acupuncture, mais avec les mains.</p>
+    <p class="sur-titre">Le shiatsu</p>
+    <h1 class="titre-anime"><span class="mot"><i style="--i:0">Pression</i></span> <span class="mot"><i style="--i:1">des</i></span> <span class="mot"><i style="--i:2">doigts.</i></span></h1>
+    <p class="chapeau baseline">Né au Japon. Les mêmes points énergétiques que l'acupuncture, mais avec les mains.</p>
   </div>
 </header>
 
-<section class="pan">
-  <div class="serre deux">
-    <div class="monte">
-      <p class="phrase-forte">Une séance, <b>pas à pas</b>.</p>
-    </div>
-    <div class="monte">
-      <p class="chapeau" style="margin-bottom:18px">
-        <b>On parle d'abord.</b> Quelques minutes pour savoir comment vous allez, ce qui
-        vous amène, et s'il y a quelque chose dont il faut que je tienne compte.
-      </p>
-      <p class="chapeau" style="margin-bottom:18px">
-        <b>Vous vous allongez, habillée.</b> Sur un futon, au sol. Prévoyez des vêtements
-        souples : rien ne se retire, rien ne s'huile.
-      </p>
-      <p class="chapeau" style="margin-bottom:18px">
-        <b>Je travaille avec les mains.</b> Les pouces, les paumes, parfois les coudes ou
-        les genoux. Je suis les lignes d'énergie et je m'arrête là où il faut. La pression
-        est franche mais jamais forcée : vous me dites si c'est trop.
-      </p>
-      <p class="chapeau">
-        <b>On termine en douceur.</b> Un temps pour revenir, et quelques mots. Beaucoup de
-        personnes s'endorment pendant la séance ; c'est plutôt bon signe.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="pan">
-  <div class="serre">
-    <div class="monte" style="max-width:54ch">
-      <p class="sur-titre">Quand venir</p>
-      <h2>Il n'y a pas besoin d'un motif précis.</h2>
-    </div>
-    <div class="moments">
-  <div class="moment verre monte">
-    <img src="./images/nuque.webp" alt="">
-    <h3>Quand le corps est tendu</h3>
-    <p>La nuque, les épaules, le dos. Les tensions qu'on finit par ne plus remarquer
-    tellement elles sont installées.</p>
-  </div>
-  <div class="moment verre monte">
-    <img src="./images/pied.webp" alt="">
-    <h3>Quand la tête ne s'arrête pas</h3>
-    <p>Les périodes chargées, le sommeil agité, la fatigue qui ne passe pas avec une
-    nuit de repos.</p>
-  </div>
-  <div class="moment verre monte">
-    <img src="./images/grossesse.webp" alt="">
-    <h3>Pendant la grossesse et après</h3>
-    <p>Un accompagnement doux, adapté à chaque étape, avant comme après la naissance.</p>
+<div class="bandeau" aria-hidden="true">
+  <div class="ruban">
+    <b>Shiatsu traditionnel</b><b>Sans aiguilles</b><b>Habillée, sur futon</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b><b>Fédération Française de Shiatsu</b><b>Shiatsu traditionnel</b><b>Sans aiguilles</b><b>Habillée, sur futon</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b><b>Fédération Française de Shiatsu</b>
   </div>
 </div>
-  </div>
-</section>
 
-<section class="pan">
+<section class="pan tache">
   <div class="serre deux">
-    <div class="julie-visuel monte">
-      <div class="julie-cercle"></div>
-      <img src="./images/main.webp" alt="">
-    </div>
-    <div class="monte">
-      <p class="sur-titre">Qui je suis</p>
-      <h2>Julie Marguier</h2>
-      <p class="chapeau" style="margin-top:22px">
-        Je suis praticienne en shiatsu traditionnel et je reçois à Knœringue, dans le
-        Haut-Rhin, à une vingtaine de minutes de Saint-Louis et de Bâle.
+    <div class="colle"><div class="rev">
+      <p class="sur-titre">Une séance</p>
+      <h2>Pas à pas,<br><em>sans surprise</em>.</h2>
+      <p class="chapeau" style="margin-top:24px">
+        Comptez une heure, un peu plus pour la séance Harmonie. Voici exactement ce qui
+        se passe, du moment où vous arrivez à celui où vous repartez.
       </p>
-      <p class="chapeau" style="margin-top:18px">
-        Je suis membre de la Fédération Française de Shiatsu Traditionnel, qui garantit un
-        cursus complet et une pratique encadrée.
-      </p>
-      <div class="accueil-actions" style="margin-top:32px">
-        <a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener" class="bouton verre">Me suivre sur Instagram</a>
+    </div></div>
+    <div class="etapes rev">
+      <div class="etape">
+        <div>
+          <h3>On parle d'abord</h3>
+          <p>Quelques minutes pour savoir comment vous allez, ce qui vous amène, et s'il y
+            a quelque chose dont il faut que je tienne compte.</p>
+        </div>
+      </div>
+      <div class="etape">
+        <div>
+          <h3>Vous vous allongez, habillée</h3>
+          <p>Sur un futon, au sol. Prévoyez des vêtements souples : rien ne se retire,
+            rien ne s'huile.</p>
+        </div>
+      </div>
+      <div class="etape">
+        <div>
+          <h3>Je travaille avec les mains</h3>
+          <p>Les pouces, les paumes, parfois les coudes ou les genoux. Je suis les lignes
+            d'énergie et je m'arrête là où il faut. La pression est franche mais jamais
+            forcée : vous me dites si c'est trop.</p>
+        </div>
+      </div>
+      <div class="etape">
+        <div>
+          <h3>On termine en douceur</h3>
+          <p>Un temps pour revenir, et quelques mots. Beaucoup de personnes s'endorment
+            pendant la séance ; c'est plutôt bon signe.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="pan">
+<section class="pan eclat-zone serree">
   <div class="serre">
-    <div class="carte-appel monte">
-      <h3>Une question avant de venir ?</h3>
-      <p>Appelez-moi, je réponds volontiers. C'est souvent plus simple que par écrit.</p>
-      <a href="tel:+33617111405" class="bouton">06 17 11 14 05</a>
+    <p class="eclat">
+      <w style="--i:0">Le</w> <w style="--i:1">shiatsu</w> <w style="--i:2">suit</w> <w style="--i:3">les</w> <w style="--i:4">mêmes</w> <w style="--i:5">lignes</w> <w style="--i:6">que</w> <w style="--i:7">l'acupuncture.</w> <w style="--i:8">Là</w> <w style="--i:9">où</w> <w style="--i:10">l'une</w> <w style="--i:11">pose</w> <w style="--i:12">une</w> <w style="--i:13">aiguille,</w> <w style="--i:14">l'autre</w> <w style="--i:15">pose</w> <w style="--i:16" class="chaud">un</w> <w style="--i:17" class="chaud">pouce.</w>
+    </p>
+  </div>
+</section>
+
+<section class="ouverture">
+  <div class="ouverture-cadre">
+    <div class="ouverture-film">
+      <video autoplay muted loop playsinline preload="metadata" poster="./images/bougies.webp" aria-hidden="true">
+        <source src="./images/bougies.mp4" type="video/mp4">
+      </video>
+      <div class="ouverture-texte">
+        <p class="sur-titre">Qui je suis</p>
+        <h2>Julie Marguier</h2>
+        <p>Praticienne en shiatsu traditionnel, membre de la Fédération Française de
+          Shiatsu Traditionnel — un cursus complet et une pratique encadrée.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<footer class="pied">
+<section class="pan tache">
   <div class="serre">
+    <div class="rev" style="max-width:54ch">
+      <p class="sur-titre">Quand venir</p>
+      <h2>Il n'y a pas besoin<br>d'un <em>motif précis</em>.</h2>
+    </div>
+    <div class="grille">
+  <article class="carte verre haut rev" data-i="0" data-incline>
+    <span class="vignette"><img src="./images/nuque.webp" alt="" width="120" height="120"></span>
+    <h3>Quand le corps est tendu</h3>
+    <p>La nuque, les épaules, le dos. Les tensions qu'on finit par ne plus remarquer
+    tellement elles sont installées.</p>
+  </article>
+  <article class="carte verre haut rev" data-i="1" data-incline>
+    <span class="vignette"><img src="./images/pied.webp" alt="" width="120" height="120"></span>
+    <h3>Quand la tête ne s'arrête pas</h3>
+    <p>Les périodes chargées, le sommeil agité, la fatigue qui ne passe pas avec une
+    nuit de repos.</p>
+  </article>
+  <article class="carte verre haut rev" data-i="2" data-incline>
+    <span class="vignette"><img src="./images/grossesse.webp" alt="" width="120" height="120"></span>
+    <h3>Pendant la grossesse et après</h3>
+    <p>Un accompagnement doux, adapté à chaque étape, avant comme après la naissance.</p>
+  </article>
+</div>
+    <div class="actions rev" style="justify-content:flex-start;margin-top:44px">
+      <a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener" class="bouton clair" data-aimant>Me suivre sur Instagram</a>
+    </div>
+  </div>
+</section>
+
+<section class="appel">
+  <div class="film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="./images/bougies.webp">
+      <source src="./images/bougies.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="voile court" aria-hidden="true"></div>
+  <div class="serre">
+    <div class="appel-carte verre sur-film rev">
+      <p class="sur-titre">Rendez-vous</p>
+      <h2>Une question avant de venir ?</h2>
+      <p>Appelez-moi, je réponds volontiers. C'est souvent plus simple que par écrit.</p>
+      <div class="actions">
+        <a href="tel:+33617111405" class="bouton" data-aimant>06 17 11 14 05</a>
+        <a href="mailto:shiatsu.jiyu@gmail.com" class="bouton clair" data-aimant>Écrire un message</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="pied">
+  <div class="serre pied-haut">
     <a href="./index.html" class="nav-marque">
-      <span class="pastille"><img src="./images/emblem.webp" alt=""></span>
+      <img src="./images/emblem.webp" alt="" width="120" height="105">
       <span class="nom">Shiatsu Jiyū</span>
     </a>
     <div class="pied-liens">
@@ -155,16 +218,74 @@
     </p>
   </div>
 </footer>
+<nav class="barre-basse" aria-label="Pages du site">
+  <div class="barre-basse-boite verre barre">
+    <a href="./index.html">Accueil</a>
+    <a href="./le-shiatsu.html" class="ici">Shiatsu</a>
+    <a href="./seances.html">Séances</a>
+    <a href="./contact.html">Contact</a>
+  </div>
+</nav>
 <script>
-  const nav = document.getElementById('nav');
-  addEventListener('scroll', () => nav.classList.toggle('pose', scrollY > 12), { passive: true });
-  const io = new IntersectionObserver((es) => {
-    for (const e of es) { if (!e.isIntersecting) continue; e.target.classList.add('vu'); io.unobserve(e.target); }
-  }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
-  document.querySelectorAll('.monte').forEach((el, i) => {
-    el.style.transitionDelay = `${Math.min(i % 3, 2) * 90}ms`;
-    io.observe(el);
-  });
+(() => {
+  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finPointeur = matchMedia('(hover: hover)').matches;
+
+  /* Le halo qui suit la souris. */
+  if (finPointeur && !calme) {
+    const halo = document.querySelector('.halo');
+    let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, tourne = false;
+    addEventListener('pointermove', (e) => {
+      x = e.clientX; y = e.clientY;
+      document.body.classList.add('pointe');
+      if (!tourne) { tourne = true; requestAnimationFrame(suivre); }
+    }, { passive: true });
+    function suivre() {
+      cx += (x - cx) * .12; cy += (y - cy) * .12;
+      halo.style.setProperty('--sx', cx + 'px');
+      halo.style.setProperty('--sy', cy + 'px');
+      if (Math.hypot(x - cx, y - cy) > .5) requestAnimationFrame(suivre); else tourne = false;
+    }
+  }
+
+  /* Les boutons aimantes : ils viennent un peu vers le pointeur. */
+  if (finPointeur && !calme) {
+    for (const b of document.querySelectorAll('[data-aimant]')) {
+      b.addEventListener('pointermove', (e) => {
+        const r = b.getBoundingClientRect();
+        b.style.setProperty('--tx', ((e.clientX - r.left - r.width / 2) * .22).toFixed(1) + 'px');
+        b.style.setProperty('--ty', ((e.clientY - r.top - r.height / 2) * .3).toFixed(1) + 'px');
+      });
+      b.addEventListener('pointerleave', () => {
+        b.style.setProperty('--tx', '0px'); b.style.setProperty('--ty', '0px');
+      });
+    }
+  }
+
+  /* Les cartes s'inclinent sous le pointeur. Trois degres, pas plus : au
+     dela ca devient un gadget et le texte devient penible a lire. */
+  if (finPointeur && !calme) {
+    for (const c of document.querySelectorAll('[data-incline]')) {
+      c.addEventListener('pointermove', (e) => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 6).toFixed(2) + 'deg');
+        c.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 6).toFixed(2) + 'deg');
+      });
+      c.addEventListener('pointerleave', () => {
+        c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg');
+      });
+    }
+  }
+
+  /* Repli pour les navigateurs qui n'ont pas encore les minuteries de
+     defilement : on retombe sur un observateur d'intersection. */
+  if (!CSS.supports('animation-timeline', 'view()')) {
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) { e.target.classList.add('vu'); io.unobserve(e.target); }
+    }, { threshold: .1, rootMargin: '0px 0px -70px' });
+    document.querySelectorAll('.rev').forEach((el) => io.observe(el));
+  }
+})();
 </script>
 </body>
 </html>
