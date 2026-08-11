@@ -45,24 +45,32 @@
 
 <!-- ============================== accueil ============================== -->
 <header class="accueil" id="haut">
+  <video class="fond-video" autoplay muted loop playsinline
+         poster="./images/fond.webp" aria-hidden="true">
+    <source src="./images/fond.mp4" type="video/mp4">
+  </video>
+  <div class="voile" aria-hidden="true"></div>
+
   <div class="serre">
-    <p class="lieu monte">Knœringue &middot; Haut-Rhin &middot; sur rendez-vous</p>
+    <div class="panneau monte">
+      <img class="embleme" src="./images/emblem.webp" alt=""
+           width="1100" height="960">
 
-    <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">
-      Shiatsu Jiyū — harmoniser le corps et l'esprit
-    </h1>
-    <img class="marque-titre monte" src="./images/titre.webp"
-         alt="Shiatsu — harmoniser le corps et l'esprit" width="1200" height="428">
+      <h1>
+        <span class="mot">Shiatsu</span>
+        <span class="baseline">Harmoniser le corps et l'esprit</span>
+      </h1>
 
-    <p class="chapeau monte">
-      Les mêmes points énergétiques que l'acupuncture, sans aiguilles,
-      simplement par la pression des doigts. Une heure pour soi, allongée et
-      habillée, où l'on ne vous demande rien d'autre que de respirer.
-    </p>
+      <p class="chapeau">
+        Les mêmes points énergétiques que l'acupuncture, sans aiguilles,
+        simplement par la pression des doigts. Une heure pour soi, allongée et
+        habillée, où l'on ne vous demande rien d'autre que de respirer.
+      </p>
 
-    <div class="accueil-actions monte">
-      <a href="tel:+33617111405" class="bouton">06 17 11 14 05</a>
-      <a href="#seances" class="bouton verre">Voir les séances</a>
+      <div class="accueil-actions">
+        <a href="tel:+33617111405" class="bouton">06 17 11 14 05</a>
+        <a href="#seances" class="bouton verre">Voir les séances</a>
+      </div>
     </div>
 
     <div class="reperes monte">
@@ -70,6 +78,8 @@
       <div class="repere"><b>30 à 90 minutes</b><span>sur rendez-vous</span></div>
       <div class="repere"><b>Habillée, sur futon</b><span>rien à retirer</span></div>
     </div>
+
+    <p class="lieu">Knœringue &middot; Haut-Rhin &middot; sur rendez-vous</p>
   </div>
 </header>
 

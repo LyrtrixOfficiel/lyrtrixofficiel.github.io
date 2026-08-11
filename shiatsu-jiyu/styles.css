@@ -141,20 +141,83 @@ h3 { font-size: 1.32rem; font-weight: 400; letter-spacing: -0.01em; }
 
 /* --- accueil ------------------------------------------------------- */
 .accueil {
-  padding: clamp(50px, 8vw, 90px) 0 clamp(60px, 8vw, 100px); text-align: center;
-  /* Un voile creme au centre, qui s'efface vers les bords. Le bloc de
-     marque porte le fond creme du flyer : pose sur une zone teintee
-     d'orange, son rectangle se voyait. Ici il tombe sur du creme pur et
-     le raccord disparait, pendant que les angles gardent leur lueur. */
-  background: radial-gradient(58% 52% at 50% 40%, var(--creme) 52%, rgba(255, 243, 225, 0) 100%);
+  position: relative; isolation: isolate; text-align: center;
+  min-height: min(94vh, 900px);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(96px, 12vw, 140px) 0 clamp(46px, 6vw, 70px);
+  overflow: hidden;
 }
-.accueil .lieu {
-  font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase;
-  color: var(--gris-clair); margin-bottom: 34px;
+
+/* LE FOND ANIME.
+   Genere pour elle, dans ses couleurs : des voiles ambres qui derivent
+   dans du creme. Le centre reste pale et vide, c'est la que le texte se
+   pose. `poster` couvre le temps de chargement, et la video est muette
+   et sans controle : c'est une matiere, pas un contenu. */
+.fond-video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: -2;
 }
-.marque-titre { max-width: min(660px, 88%); margin: 0 auto 34px; mix-blend-mode: multiply; }
-.accueil .chapeau { margin: 0 auto 40px; text-align: center; }
+/* Le voile ramene le creme de la marque par-dessus la video et garantit
+   le contraste du texte quel que soit le plan qui passe dessous. */
+.voile {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(62% 58% at 50% 46%, rgba(255, 243, 225, 0.88) 30%, rgba(255, 243, 225, 0.5) 72%, rgba(255, 243, 225, 0.2) 100%),
+    linear-gradient(180deg, rgba(255, 243, 225, 0.72) 0%, rgba(255, 243, 225, 0.35) 40%, var(--creme) 100%);
+}
+
+/* LE PANNEAU DE VERRE.
+   Trois couches : un fond translucide, un flou de ce qui passe derriere,
+   et une arete claire en haut qui donne l'epaisseur. Sans cette arete un
+   panneau translucide ressemble a un aplat sale. */
+.panneau {
+  max-width: 780px; margin: 0 auto;
+  padding: clamp(38px, 5vw, 62px) clamp(26px, 5vw, 64px) clamp(34px, 4.5vw, 54px);
+  border-radius: 34px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.4));
+  backdrop-filter: blur(26px) saturate(170%); -webkit-backdrop-filter: blur(26px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35),
+    0 30px 70px -30px rgba(120, 70, 20, 0.34);
+}
+
+/* `height: auto` est obligatoire : l'attribut `height` du HTML sert a
+   reserver la place avant chargement, mais sans cette regle il reste la
+   hauteur appliquee, et l'embleme s'etirait sur 960 pixels de haut pour
+   150 de large. */
+.embleme {
+  width: clamp(104px, 13vw, 150px); height: auto;
+  margin: 0 auto clamp(16px, 2vw, 24px);
+  /* Le logo fourni a un fond blanc opaque, qui se voyait en carre sur le
+     verre. `multiply` le fait disparaitre : blanc multiplie par le panneau
+     clair rend le panneau, et seuls les traits restent. */
+  mix-blend-mode: multiply;
+}
+
+/* Le titre est du texte, pas une image : net partout, et lisible par
+   Google. La graisse legere et l'interlettrage large reprennent le
+   lettrage de son flyer. */
+.accueil h1 { display: block; }
+.accueil .mot {
+  display: block;
+  font-size: clamp(3.1rem, 9vw, 6.4rem); font-weight: 300;
+  letter-spacing: 0.008em; line-height: 0.98; text-transform: uppercase;
+  color: var(--encre);
+}
+.accueil .baseline {
+  display: block; margin-top: clamp(10px, 1.4vw, 16px);
+  font-size: clamp(0.98rem, 1.9vw, 1.32rem); font-weight: 300;
+  color: var(--gris); letter-spacing: 0.005em;
+}
+.accueil .chapeau { margin: clamp(26px, 3.4vw, 38px) auto clamp(28px, 3.4vw, 38px); text-align: center; }
 .accueil-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+.accueil .lieu {
+  margin-top: clamp(26px, 3vw, 38px);
+  font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--gris-clair);
+}
 
 /* Le bandeau de reperes, en verre, pose a cheval sur la section suivante. */
 .reperes {
