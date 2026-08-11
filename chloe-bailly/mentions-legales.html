@@ -20,10 +20,23 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- polices -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Karla:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
+    <style>
+      html:root {
+        --font-display: 'Lora', 'Iowan Old Style', Georgia, serif;
+        --font-body: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      /* Le titre d'accueil est decoupe en un span par mot pour son animation,
+         et la regle `*` du gabarit reprend chaque span en fonte de texte. Le
+         plus gros texte du site n'etait donc pas dans la fonte de titre. Cette
+         ligne le repare sans reconstruire : `h1 *` pese plus que `*`. */
+      h1 *, h2 *, h3 *, .font-display * { font-family: inherit; }
+    </style>
+    <!-- /polices -->
     <script type="module" crossorigin src="./assets/main-C5G6DoEx.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/main-DuOQJMnZ.css">
   </head>
