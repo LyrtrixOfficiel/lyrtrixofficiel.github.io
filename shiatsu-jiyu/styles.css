@@ -125,12 +125,11 @@ h3 { font-size: 1.32rem; font-weight: 400; letter-spacing: -0.01em; }
   box-shadow: inset 0 1px 0 var(--verre-bord), var(--verre-ombre);
 }
 .nav-marque { display: flex; align-items: center; gap: 13px; }
-.pastille {
-  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%;
-  background: #fff; overflow: hidden; flex: none;
-  box-shadow: 0 2px 12px rgba(94, 60, 20, 0.12);
-}
-.pastille img { width: 92%; }
+/* Plus de pastille blanche : le logo est detoure pour de bon (lumakey sur
+   la luminance, la ou colorkey echouait), il se pose donc directement sur
+   le fond. Un rond blanc autour d'un logo, ca fait autocollant. */
+.pastille { display: grid; place-items: center; width: 46px; height: 46px; flex: none; }
+.pastille img { width: 100%; height: auto; }
 .nav-marque .nom {
   font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--vert); font-weight: 500;
@@ -157,13 +156,18 @@ h3 { font-size: 1.32rem; font-weight: 400; letter-spacing: -0.01em; }
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; z-index: -2;
 }
-/* Le voile ramene le creme de la marque par-dessus la video et garantit
-   le contraste du texte quel que soit le plan qui passe dessous. */
+/* LE VOILE NE DOIT PAS TUER LA VIDEO.
+   Premiere version : 0,88 d'opacite au centre. La video etait bien la,
+   elle jouait, et on ne voyait qu'un degrade creme — j'avais peint
+   par-dessus. Le panneau de verre porte deja le contraste du texte : le
+   voile n'a plus qu'a raccorder le bas de la video au creme de la page. */
 .voile {
   position: absolute; inset: 0; z-index: -1;
-  background:
-    radial-gradient(62% 58% at 50% 46%, rgba(255, 243, 225, 0.88) 30%, rgba(255, 243, 225, 0.5) 72%, rgba(255, 243, 225, 0.2) 100%),
-    linear-gradient(180deg, rgba(255, 243, 225, 0.72) 0%, rgba(255, 243, 225, 0.35) 40%, var(--creme) 100%);
+  background: linear-gradient(180deg,
+    rgba(255, 243, 225, 0.06) 0%,
+    rgba(255, 243, 225, 0.10) 55%,
+    rgba(255, 243, 225, 0.7) 88%,
+    var(--creme) 100%);
 }
 
 /* LE PANNEAU DE VERRE.
@@ -232,8 +236,36 @@ h3 { font-size: 1.32rem; font-weight: 400; letter-spacing: -0.01em; }
 .repere b { display: block; font-weight: 500; font-size: 1.02rem; color: var(--encre); }
 .repere span { font-size: 0.86rem; color: var(--gris); }
 
+/* --- entete des pages interieures ---------------------------------- */
+/* La meme video que l'accueil, en bandeau court : les pages d'un site se
+   reconnaissent a ce qu'elles partagent, et c'est ce fond qui fait la
+   famille. */
+.entete {
+  position: relative; isolation: isolate; overflow: hidden; text-align: center;
+  padding: clamp(120px, 15vw, 190px) 0 clamp(56px, 7vw, 92px);
+}
+.entete h1 {
+  font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 300; letter-spacing: -0.03em;
+}
+.entete .chapeau { margin: 22px auto 0; text-align: center; }
+.entete .sur-titre { justify-content: center; }
+
 /* --- sections ------------------------------------------------------ */
 .pan { padding: clamp(72px, 10vw, 128px) 0; position: relative; }
+
+.lien-suite {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 26px;
+  font-size: 0.92rem; font-weight: 500; color: var(--orange);
+  border-bottom: 1px solid rgba(255, 118, 19, 0.35); padding-bottom: 2px;
+  transition: border-color 0.3s;
+}
+.lien-suite::after { content: '→'; transition: transform 0.35s var(--ease); }
+.lien-suite:hover { border-color: var(--orange); }
+.lien-suite:hover::after { transform: translateX(4px); }
+.note-tarifs .lien-suite { margin-top: 0; margin-left: 14px; }
+
+/* La page courante se signale dans la barre. */
+.nav-liens a.ici { color: var(--orange); }
 
 .phrase-forte {
   font-size: clamp(1.7rem, 3.6vw, 2.7rem);

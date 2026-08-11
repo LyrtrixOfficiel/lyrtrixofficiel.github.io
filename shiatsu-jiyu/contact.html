@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff3e1">
+<!-- DÉMONSTRATION : à retirer le jour où le site part en ligne pour de vrai. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Prendre rendez-vous — Shiatsu Jiyū, Knœringue</title>
+<meta name="description" content="Prendre rendez-vous avec Julie Marguier, praticienne shiatsu à Knœringue (68220). Téléphone 06 17 11 14 05.">
+<link rel="icon" href="./images/emblem.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body class="">
+<nav class="nav" id="nav">
+  <div class="serre">
+    <a href="./index.html" class="nav-marque">
+      <span class="pastille"><img src="./images/emblem.webp" alt=""></span>
+      <span class="nom">Shiatsu Jiyū</span>
+    </a>
+    <div class="nav-liens">
+      <a href="./index.html">Accueil</a>
+      <a href="./le-shiatsu.html">Le shiatsu</a>
+      <a href="./seances.html">Les séances</a>
+      <a href="./contact.html" class="bouton">Prendre rendez-vous</a>
+    </div>
+  </div>
+</nav>
+
+<header class="entete">
+  <video class="fond-video" autoplay muted loop playsinline
+       poster="./images/fond.webp" aria-hidden="true">
+  <source src="./images/fond.mp4" type="video/mp4">
+</video>
+<div class="voile" aria-hidden="true"></div>
+  <div class="serre">
+    <p class="sur-titre monte">Me contacter</p>
+    <h1 class="monte">Un appel suffit.</h1>
+    <p class="chapeau monte">Dites-moi ce qui vous amène et le moment qui vous arrange, on trouve un créneau ensemble.</p>
+  </div>
+</header>
+
+<section class="pan">
+  <div class="serre contact-grille">
+    <div class="monte">
+      <div class="coord" style="margin-top:0">
+        <div class="coord-ligne">
+          <span class="etiq">Téléphone</span>
+          <span class="val"><a href="tel:+33617111405">06 17 11 14 05</a></span>
+        </div>
+        <div class="coord-ligne">
+          <span class="etiq">Courriel</span>
+          <span class="val"><a href="mailto:shiatsu.jiyu@gmail.com">shiatsu.jiyu@gmail.com</a></span>
+        </div>
+        <div class="coord-ligne">
+          <span class="etiq">Cabinet</span>
+          <span class="val">68220 Knœringue<small>Haut-Rhin, près de Saint-Louis et de Bâle</small></span>
+        </div>
+        <div class="coord-ligne">
+          <span class="etiq">Instagram</span>
+          <span class="val"><a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener">@shiatsu_jiyu</a></span>
+        </div>
+        <div class="coord-ligne">
+          <span class="etiq">Sur rendez-vous</span>
+          <span class="val">du lundi au samedi<small>appelez-moi pour convenir d'un horaire</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="carte-appel monte" style="margin:0">
+      <h3>Appeler maintenant</h3>
+      <p>Si je ne réponds pas, c'est que je suis en séance. Laissez un message, je vous
+        rappelle dans la journée.</p>
+      <a href="tel:+33617111405" class="bouton">06 17 11 14 05</a>
+    </div>
+  </div>
+</section>
+
+<footer class="pied">
+  <div class="serre">
+    <a href="./index.html" class="nav-marque">
+      <span class="pastille"><img src="./images/emblem.webp" alt=""></span>
+      <span class="nom">Shiatsu Jiyū</span>
+    </a>
+    <div class="pied-liens">
+      <a href="tel:+33617111405">06 17 11 14 05</a>
+      <a href="mailto:shiatsu.jiyu@gmail.com">shiatsu.jiyu@gmail.com</a>
+      <a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener">@shiatsu_jiyu</a>
+    </div>
+  </div>
+  <div class="serre">
+    <p class="avertissement">
+      Julie Marguier, entrepreneur individuel &middot; 68220 Knœringue &middot;
+      membre de la Fédération Française de Shiatsu Traditionnel.<br>
+      Le shiatsu est une pratique de bien-être. Il ne remplace en aucun cas un avis, un
+      diagnostic ou un traitement médical, et ne se substitue pas à un suivi par un
+      professionnel de santé.
+    </p>
+  </div>
+</footer>
+<script>
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('pose', scrollY > 12), { passive: true });
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) { if (!e.isIntersecting) continue; e.target.classList.add('vu'); io.unobserve(e.target); }
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
+  document.querySelectorAll('.monte').forEach((el, i) => {
+    el.style.transitionDelay = `${Math.min(i % 3, 2) * 90}ms`;
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
