@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr" data-page="accueil" style="background:var(--color-noir,#000)">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/svg+xml" href="./onde.svg" />
+    <link rel="canonical" href="https://lyrtrixofficiel.github.io/mathilde-normand/" />
+    <!-- DEMO DE PROSPECTION : a retirer le jour ou le client dit oui -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <title>hypnose à Versailles | Mathilde Normand</title>
+    <meta name="description" content="Mathilde Normand, hypnose à Versailles." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Mathilde Normand" />
+    <meta property="og:title" content="hypnose à Versailles | Mathilde Normand" />
+    <meta property="og:description" content="Mathilde Normand, hypnose à Versailles." />
+    <meta property="og:url" content="https://lyrtrixofficiel.github.io/mathilde-normand/" />
+
+    <!-- le poster du hero est le LCP : il part avant tout le reste -->
+    <link rel="preload" as="image" href="/video/hero-eau.webp" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- polices -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html:root {
+        --font-display: 'Playfair Display', 'Iowan Old Style', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      /* Le titre d'accueil est decoupe en un span par mot pour son animation,
+         et la regle `*` du gabarit reprend chaque span en fonte de texte. Le
+         plus gros texte du site n'etait donc pas dans la fonte de titre. Cette
+         ligne le repare sans reconstruire : `h1 *` pese plus que `*`. */
+      h1 *, h2 *, h3 *, .font-display * { font-family: inherit; }
+    </style>
+    <!-- /polices -->
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HealthAndBeautyBusiness",
+        "name": "Mathilde Normand",
+        "description": "Séance d'hypnose à Versailles.",
+        "url": "https://lyrtrixofficiel.github.io/mathilde-normand/",
+        "telephone": "+33768212779",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "",
+          "postalCode": "78000",
+          "addressLocality": "Versailles",
+          "addressCountry": "FR"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Prestations",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Séance d'hypnose" } }
+          ]
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/main-BuIirfO4.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-DuOQJMnZ.css">
+  </head>
+  <body style="background:var(--color-noir,#000)">
+    <div id="racine"></div>
+    <noscript>
+      <div style="padding:2rem;color:#fff;font-family:sans-serif">
+        <h1>Mathilde Normand — Versailles</h1>
+        <p>
+          Séance d'hypnose.<br />
+          78000 Versailles —
+          <a href="tel:+33768212779" style="color:#e0a25c">07 68 21 27 79</a>
+        </p>
+      </div>
+    </noscript>
+
+    <!--
+      Netlify envoie ses liens d'invitation vers la RACINE du site, avec le
+      jeton dans le fragment d'URL (#invite_token=...). On le fait suivre tel
+      quel a l'espace d'edition, qui sait quoi en faire. Sans ce renvoi,
+      cliquer sur l'invitation n'a aucun effet visible.
+
+      Aucun script tiers : trois lignes, et rien du tout pour un visiteur
+      normal.
+    -->
+    <script>
+      (function () {
+        var h = window.location.hash || '';
+        if (/(invite_token|recovery_token)=/.test(h)) {
+          window.location.replace('/admin' + h);
+        }
+      })();
+    </script>
+  </body>
+</html>
