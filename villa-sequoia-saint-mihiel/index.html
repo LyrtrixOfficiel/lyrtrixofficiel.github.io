@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f6f0">
+<!-- DÉMONSTRATION : page de présentation, à retirer si le site part en ligne. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Villa Séquoïa — Chambres d'hôtes à Saint-Mihiel</title>
+<meta name="description" content="Villa Séquoïa, chambres d'hôtes à saint-mihiel. 19 Avenue des Roches, 55300 Saint-Mihiel. Téléphone 06 76 73 39 28.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/gabarit/styles.css">
+</head>
+<body style="--fond:#f4f6f0;--encre:#22301f;--doux:#54654e;--pale:#8a9a84;--vif:#4a7c47;--clair:#d6e4cf;--nuit:#2f5730">
+
+<svg class="filtres" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+  <filter id="refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feImage href="/gabarit/refraction.png" preserveAspectRatio="none" result="c"/>
+    <feDisplacementMap in="SourceGraphic" in2="c" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<div class="jauge" aria-hidden="true"></div>
+
+<header class="entree">
+  <div class="film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="/gabarit/sejour.webp">
+      <source src="/gabarit/sejour.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="voile" aria-hidden="true"></div>
+  <div class="serre bloc">
+    <div class="panneau verre">
+      <p class="sur-titre">Chambres d'hôtes à Saint-Mihiel</p>
+      <h1>Villa Séquoïa</h1>
+      <p class="chapeau">Un lieu à voir avant de réserver.</p>
+      <div class="actions">
+        <a href="tel:+33676733928" class="bouton">06 76 73 39 28</a>
+        <a href="https://www.openstreetmap.org/?mlat=48.8956944&mlon=5.5439631#map=17/48.8956944/5.5439631" target="_blank" rel="noopener" class="bouton clair">Voir le plan</a>
+      </div>
+    </div>
+    <p class="lieu verre">19 Avenue des Roches, 55300 Saint-Mihiel</p>
+  </div>
+</header>
+
+<main>
+<section class="pan">
+  <div class="serre">
+    <p class="eclat rev">On ne réserve pas un séjour sans avoir vu où l'on dort. Une adresse à vous, c'est vos photos, vos tarifs et vos disponibilités montrés en entier, sans commission et sans intermédiaire.</p>
+  </div>
+</section>
+
+<section class="pan">
+  <div class="serre">
+    <p class="sur-titre rev">Ce que contiendra le site</p>
+    <h2 class="rev">Les rubriques,<br><em>et ce qu'on y met</em>.</h2>
+    <div class="grille">
+      <article class="carte verre rev" data-i="0">
+        <span class="numero">01</span>
+        <h3>Le logement</h3>
+        <p>Vos pièces, en photos et en mots : le nombre de couchages, ce qui est fourni, ce qu'il faut apporter.</p>
+      </article>
+      <article class="carte verre rev" data-i="1">
+        <span class="numero">02</span>
+        <h3>Les tarifs</h3>
+        <p>Vos prix par nuit et par saison, affichés clairement. Ce que les plateformes prennent en commission reste chez vous.</p>
+      </article>
+      <article class="carte verre rev" data-i="2">
+        <span class="numero">03</span>
+        <h3>La région</h3>
+        <p>Ce qu'il y a autour et qui donne envie de venir : les balades, les tables, les marchés.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="pan appel">
+  <div class="serre">
+    <div class="carte-appel verre rev">
+      <p class="sur-titre">Cette page</p>
+      <h2>C'est une maquette.</h2>
+      <p>Elle a été montée à partir de votre fiche publique : le nom, l'adresse et le téléphone sont les vôtres, le reste est une structure. Les photos, les textes et les couleurs seraient les vôtres aussi.</p>
+      <div class="actions">
+        <a href="tel:+33676733928" class="bouton">06 76 73 39 28</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="pied">
+  <div class="serre">
+    <p><b>Villa Séquoïa</b> · 19 Avenue des Roches, 55300 Saint-Mihiel · 06 76 73 39 28</p>
+    <p class="mention">Maquette de présentation réalisée par Matheo Schmitt. Les informations affichées proviennent d'OpenStreetMap, base de données ouverte sous licence ODbL. Cette page n'est pas le site officiel de l'établissement.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  if (CSS.supports('animation-timeline', 'view()')) return;
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) { e.target.classList.add('vu'); io.unobserve(e.target); }
+  }, { threshold: .1, rootMargin: '0px 0px -70px' });
+  document.querySelectorAll('.rev').forEach((el) => io.observe(el));
+})();
+</script>
+</body>
+</html>
