@@ -55,15 +55,17 @@
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; padding: 0; }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-  /* Aucune page ne doit pouvoir glisser lateralement. Un element fixe est
-     dimensionne sur la fenetre visuelle, barre de defilement comprise, alors
-     que le document, lui, ne l'a pas : la barre du haut depassait donc de la
-     largeur de l'ascenseur et ouvrait un defilement horizontal fantome. */
-  overflow-x: clip;
-}
+/* NE JAMAIS POSER overflow-x SUR LA RACINE.
+   Une version precedente y mettait `clip` pour rattraper un debordement de
+   la largeur de l'ascenseur, visible seulement sur ordinateur. Ca a coute
+   TOUTES les animations du site : des que la racine porte un overflow, les
+   minuteries de defilement (`animation-timeline: view()`) n'ont plus de
+   scrollport valide, elles restent inactives, et les elements gardent leur
+   etat de depart, c'est a dire invisibles. Le bas du site devenait
+   transparent et la phrase ne s'allumait plus.
+   Le debordement qu'on voulait corriger n'existe pas sur telephone : il n'y
+   a pas de barre de defilement. On ne corrige donc rien. */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   font: 400 17px/1.65 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -385,9 +387,19 @@ body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(
   transition-delay: calc(var(--i) * 55ms);
 }
 .menu-liens a.ici { color: var(--orange); }
+/* Le numero est la seule chose qu'on vient chercher en urgence dans ce
+   menu. En 1,2 rem il se lisait comme une note de bas de page. */
 .menu-liens .menu-tel {
-  margin-top: 26px; font-size: 1.2rem; color: var(--orange);
-  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  margin-top: 30px;
+  font-size: clamp(1.55rem, 7.5vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  color: #fff;
+  align-self: flex-start;
+  padding: 15px 26px;
+  border-radius: 999px;
+  background: linear-gradient(140deg, var(--orange-vif), var(--orange) 60%, var(--orange-nuit));
+  box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 14px 30px -14px rgba(200,100,20,.8);
 }
 body.menu-ouvert { overflow: hidden; }
 body.menu-ouvert .menu-fond { opacity: 1; }
@@ -580,7 +592,18 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .pan.serree { padding-block: clamp(54px, 7vw, 88px); }
 
 /* Les taches d'orange qui respirent au fond de la page. Elles bougent
-   lentement et en decalage, donc le fond n'est jamais deux fois le meme. */
+   lentement et en decalage, donc le fond n'est jamais deux fois le meme.
+
+   Elles debordent volontairement de la section, de dix pour cent de chaque
+   cote. Sans le `clip` ci-dessous, ce debordement ouvrait un defilement
+   horizontal de cinquante pixels sur toute la page. On le coupe ICI, sur la
+   section, et surtout pas sur la racine : `overflow` sur la racine se
+   propage a la fenetre, la fenetre cesse d'etre un conteneur de defilement
+   valide, et toutes les animations liees au defilement meurent avec elle.
+   `clip` plutot que `hidden` : il coupe sans creer de conteneur de
+   defilement, donc les blocs colles et les minuteries continuent de
+   fonctionner. */
+.pan.tache { overflow-x: clip; }
 .pan.tache::before,
 .pan.tache::after {
   content: ''; position: absolute; z-index: 0; border-radius: 50%;
@@ -733,16 +756,27 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   to   { width: 100vw;            height: 100svh;            border-radius: 0; }
 }
 .ouverture-film video { width: 100%; height: 100%; object-fit: cover; }
+/* LA LEGENDE DU FILM.
+   Elle etait en blanc sur un degrade sombre. Sur une image aussi claire que
+   ce galet dans l'eau, le blanc se posait sur du beige et devenait penible a
+   lire, en plus de jurer avec le reste du site ou tout le texte est encre
+   sur verre. Elle est donc sur verre elle aussi, comme partout ailleurs. */
 .ouverture-texte {
-  position: absolute; inset: auto 0 0 0; z-index: 2;
-  padding: clamp(26px, 5vw, 62px);
-  display: grid; gap: 13px; justify-items: start;
-  background: linear-gradient(0deg, rgba(61,34,19,.66), rgba(61,34,19,.18) 55%, transparent);
-  color: #fff;
+  position: absolute; z-index: 2;
+  inset: auto clamp(14px, 3vw, 34px) clamp(14px, 3vw, 34px) clamp(14px, 3vw, 34px);
+  width: fit-content; max-width: min(100% - clamp(28px, 6vw, 68px), 34rem);
+  padding: clamp(18px, 2.6vw, 28px) clamp(20px, 3vw, 34px);
+  border-radius: var(--rond);
+  display: grid; gap: 11px; justify-items: start;
+  background: linear-gradient(150deg, rgba(255,252,246,.80), rgba(255,244,230,.66));
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 26px 54px -30px rgba(120,60,15,.5);
+  color: var(--encre);
 }
-.ouverture-texte h2 { color: #fff; max-width: 16ch; }
-.ouverture-texte p { color: rgba(255,255,255,.88); max-width: 46ch; }
-.ouverture-texte .sur-titre { color: var(--orange-clair); }
+.ouverture-texte h2 { color: var(--encre); max-width: 16ch; font-size: clamp(1.5rem, 3.4vw, 2.6rem); }
+.ouverture-texte p { color: var(--encre-doux); max-width: 46ch; }
+.ouverture-texte .sur-titre { color: var(--orange); }
 
 /* =========================================================================
    LES CARTES
@@ -910,13 +944,13 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
      de deux pixels sans jamais l'avoir en plus grand. Il part maintenant a
      56 %, ce qui fait presque doubler sa largeur, et sa legende n'apparait
      qu'a la fin. L'ouverture se voit, et elle raconte quelque chose. */
-  .ouverture { height: 150vh; }
+  .ouverture { height: 132vh; }
   .ouverture-film {
     width: 56%; height: auto; aspect-ratio: 4 / 3;
   }
-  .ouverture-texte { padding: 18px 16px; gap: 7px; }
+  .ouverture-texte { gap: 8px; }
   .ouverture-texte h2 { font-size: clamp(1.35rem, 6vw, 2rem); }
-  .ouverture-texte p { font-size: .9rem; }
+  .ouverture-texte p { font-size: .92rem; }
   .ouverture-texte .sur-titre { font-size: .68rem; }
 }
 @supports (animation-timeline: view()) {
