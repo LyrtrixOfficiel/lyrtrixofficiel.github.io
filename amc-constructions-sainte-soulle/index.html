@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f4f6">
+<!-- DÉMONSTRATION : page de présentation, à retirer si le site part en ligne. -->
+<meta name="robots" content="noindex, nofollow">
+<title>AMC Constructions — Maçon à Sainte-Soulle</title>
+<meta name="description" content="AMC Constructions, maçon à sainte-soulle. 10 Impasse de l'Abreuvoir, 17220 Sainte-Soulle. Téléphone 06 59 99 17 51.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/gabarit/styles.css">
+</head>
+<body style="--fond:#f2f4f6;--encre:#1e2a33;--doux:#4e6272;--pale:#8698a5;--vif:#c2701c;--clair:#e6dbcb;--nuit:#8a4a10">
+
+<svg class="filtres" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+  <filter id="refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feImage href="/gabarit/refraction.png" preserveAspectRatio="none" result="c"/>
+    <feDisplacementMap in="SourceGraphic" in2="c" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<div class="jauge" aria-hidden="true"></div>
+
+<header class="entree">
+  <div class="film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="/gabarit/metier.webp">
+      <source src="/gabarit/metier.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="voile" aria-hidden="true"></div>
+  <div class="serre bloc">
+    <div class="panneau verre">
+      <p class="sur-titre">Maçon à Sainte-Soulle</p>
+      <h1>AMC Constructions</h1>
+      <p class="chapeau">Le travail se voit, encore faut-il le montrer.</p>
+      <div class="actions">
+        <a href="tel:+33659991751" class="bouton">06 59 99 17 51</a>
+        <a href="https://www.openstreetmap.org/?mlat=46.1911047&mlon=-1.0218072#map=17/46.1911047/-1.0218072" target="_blank" rel="noopener" class="bouton clair">Voir le plan</a>
+      </div>
+    </div>
+    <p class="lieu verre">10 Impasse de l'Abreuvoir, 17220 Sainte-Soulle</p>
+  </div>
+</header>
+
+<main>
+<section class="pan">
+  <div class="serre">
+    <p class="eclat rev">Un artisan se recommande de bouche à oreille, et la personne à qui on vous a recommandé cherche votre nom sur son téléphone. Si elle ne trouve rien, elle appelle le suivant.</p>
+  </div>
+</section>
+
+<section class="pan">
+  <div class="serre">
+    <p class="sur-titre rev">Ce que contiendra le site</p>
+    <h2 class="rev">Les rubriques,<br><em>et ce qu'on y met</em>.</h2>
+    <div class="grille">
+      <article class="carte verre rev" data-i="0">
+        <span class="numero">01</span>
+        <h3>Ce que vous faites</h3>
+        <p>La liste de vos travaux, dite avec vos mots. C'est ce que les gens tapent dans leur recherche.</p>
+      </article>
+      <article class="carte verre rev" data-i="1">
+        <span class="numero">02</span>
+        <h3>Vos chantiers</h3>
+        <p>Des photos avant et après. Rien ne convainc plus vite qu'un travail déjà fait.</p>
+      </article>
+      <article class="carte verre rev" data-i="2">
+        <span class="numero">03</span>
+        <h3>Votre secteur</h3>
+        <p>Les communes où vous vous déplacez, pour ne pas recevoir dix appels hors zone.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="pan appel">
+  <div class="serre">
+    <div class="carte-appel verre rev">
+      <p class="sur-titre">Cette page</p>
+      <h2>C'est une maquette.</h2>
+      <p>Elle a été montée à partir de votre fiche publique : le nom, l'adresse et le téléphone sont les vôtres, le reste est une structure. Les photos, les textes et les couleurs seraient les vôtres aussi.</p>
+      <div class="actions">
+        <a href="tel:+33659991751" class="bouton">06 59 99 17 51</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="pied">
+  <div class="serre">
+    <p><b>AMC Constructions</b> · 10 Impasse de l'Abreuvoir, 17220 Sainte-Soulle · 06 59 99 17 51</p>
+    <p class="mention">Maquette de présentation réalisée par Matheo Schmitt. Les informations affichées proviennent d'OpenStreetMap, base de données ouverte sous licence ODbL. Cette page n'est pas le site officiel de l'établissement.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  if (CSS.supports('animation-timeline', 'view()')) return;
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) { e.target.classList.add('vu'); io.unobserve(e.target); }
+  }, { threshold: .1, rootMargin: '0px 0px -70px' });
+  document.querySelectorAll('.rev').forEach((el) => io.observe(el));
+})();
+</script>
+</body>
+</html>
