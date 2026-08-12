@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=fa6a4de3">
+<link rel="stylesheet" href="./styles.css?v=3731db71">
 </head>
 <body>
 <svg class="filtres" aria-hidden="true" focusable="false"
@@ -53,8 +53,33 @@
       <a href="./contact.html" class="bouton" data-aimant><span
         class="long">Prendre rendez-vous</span><span class="court">Rendez-vous</span></a>
     </div>
+    <button class="burger" type="button" aria-label="Ouvrir le menu"
+            aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!--
+  LE MENU DU TELEPHONE.
+
+  Il y avait avant une barre posee en bas de l'ecran. Elle etait juste, et
+  invisible : a quatorze pixels du bord, elle passait DERRIERE la barre
+  d'outils de Safari sur iPhone. Un menu qu'on ne voit pas n'existe pas.
+
+  On revient donc la ou les gens le cherchent, en haut a droite, avec le
+  dessin que tout le monde reconnait.
+-->
+<div class="menu" id="menu" hidden>
+  <div class="menu-fond" aria-hidden="true"></div>
+  <nav class="menu-liens">
+    <a href="./index.html" style="--i:0">Accueil</a>
+    <a href="./le-shiatsu.html" style="--i:1">Le shiatsu</a>
+    <a href="./seances.html" class="ici" style="--i:2">Les séances</a>
+    <a href="./contact.html" style="--i:3">Contact</a>
+    <a href="tel:+33617111405" class="menu-tel" style="--i:4">06 17 11 14 05</a>
+  </nav>
+</div>
 <main>
 
 <header class="entete">
@@ -191,14 +216,6 @@
     </p>
   </div>
 </footer>
-<nav class="barre-basse" aria-label="Pages du site">
-  <div class="barre-basse-boite verre barre">
-    <a href="./index.html">Accueil</a>
-    <a href="./le-shiatsu.html">Shiatsu</a>
-    <a href="./seances.html" class="ici">Séances</a>
-    <a href="./contact.html">Contact</a>
-  </div>
-</nav>
 <script>
 (() => {
   const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -248,6 +265,24 @@
         c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg');
       });
     }
+  }
+
+  /* Le menu du telephone. */
+  {
+    const b = document.querySelector('.burger');
+    const m = document.getElementById('menu');
+    const basculer = (ouvert) => {
+      b.setAttribute('aria-expanded', String(ouvert));
+      b.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
+      if (ouvert) m.hidden = false;
+      requestAnimationFrame(() => document.body.classList.toggle('menu-ouvert', ouvert));
+      /* On attend la fin de la transition avant de retirer le menu du flux,
+         sinon il disparait d'un coup au lieu de s'effacer. */
+      if (!ouvert) setTimeout(() => { if (!document.body.classList.contains('menu-ouvert')) m.hidden = true; }, 420);
+    };
+    b.addEventListener('click', () => basculer(b.getAttribute('aria-expanded') !== 'true'));
+    m.addEventListener('click', (e) => { if (e.target.tagName === 'A' || e.target.classList.contains('menu-fond')) basculer(false); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') basculer(false); });
   }
 
   /* Repli pour les navigateurs qui n'ont pas encore les minuteries de

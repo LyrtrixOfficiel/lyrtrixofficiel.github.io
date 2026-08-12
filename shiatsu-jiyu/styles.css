@@ -55,7 +55,15 @@
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Aucune page ne doit pouvoir glisser lateralement. Un element fixe est
+     dimensionne sur la fenetre visuelle, barre de defilement comprise, alors
+     que le document, lui, ne l'a pas : la barre du haut depassait donc de la
+     largeur de l'ascenseur et ouvrait un defilement horizontal fantome. */
+  overflow-x: clip;
+}
 
 body {
   font: 400 17px/1.65 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -331,34 +339,68 @@ body.pointe .halo { opacity: 1; }
 }
 .nav .bouton { padding: 11px 20px; font-size: .9rem; }
 
-/* --- la barre du bas, sur telephone --------------------------------------
-   Sur petit ecran la pastille du haut n'a pas la place d'afficher les
-   liens : sans cette barre, les pages interieures sont tout simplement
-   inatteignables depuis un telephone. */
-.barre-basse { display: none; }
+/* --- LE MENU DU TELEPHONE ------------------------------------------------
+
+   Il y avait ici une barre posee en bas de l'ecran. Elle etait juste, et
+   invisible : a quatorze pixels du bord, elle passait DERRIERE la barre
+   d'outils de Safari sur iPhone. Le site avait donc un menu que personne ne
+   pouvait voir, ce qui revient a ne pas en avoir.
+
+   On revient au bouton en haut a droite, la ou on le cherche, et il ouvre
+   un panneau plein ecran. */
+.burger {
+  display: none;
+  width: 42px; height: 42px; flex: none;
+  border: 0; padding: 0 11px; background: none; cursor: pointer;
+  border-radius: 999px;
+  flex-direction: column; justify-content: center; gap: 5px;
+}
+.burger span {
+  display: block; height: 2px; width: 20px; border-radius: 2px;
+  background: var(--encre);
+  transition: transform .4s var(--sortie), opacity .25s var(--doux);
+}
+body.menu-ouvert .burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+body.menu-ouvert .burger span:nth-child(2) { opacity: 0; }
+body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.menu { position: fixed; inset: 0; z-index: 90; }
+.menu-fond {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(255,248,239,.86), rgba(253,236,216,.9));
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  opacity: 0; transition: opacity .4s var(--doux);
+}
+.menu-liens {
+  position: relative; height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 4px; padding: 0 var(--marge);
+}
+.menu-liens a {
+  font-size: clamp(1.9rem, 9vw, 2.6rem); font-weight: 500; letter-spacing: -.035em;
+  padding: 10px 0;
+  opacity: 0; translate: 0 24px;
+  transition: opacity .45s var(--sortie), translate .45s var(--sortie);
+  transition-delay: calc(var(--i) * 55ms);
+}
+.menu-liens a.ici { color: var(--orange); }
+.menu-liens .menu-tel {
+  margin-top: 26px; font-size: 1.2rem; color: var(--orange);
+  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+}
+body.menu-ouvert { overflow: hidden; }
+body.menu-ouvert .menu-fond { opacity: 1; }
+body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
+
 @media (max-width: 900px) {
-  .barre-basse {
-    position: fixed; z-index: 100; inset: auto 0 14px 0;
-    display: flex; justify-content: center; pointer-events: none;
-  }
-  .barre-basse-boite {
-    pointer-events: auto;
-    display: flex; gap: 3px; padding: 6px;
-    width: min(100% - 24px, 470px);
-    border-radius: 999px;
-  }
-  .barre-basse a {
-    flex: 1; text-align: center; white-space: nowrap;
-    padding: 11px 4px; border-radius: 999px;
-    font-size: .8rem; font-weight: 500; color: var(--encre-doux);
-    transition: background .3s var(--doux), color .3s var(--doux);
-  }
-  .barre-basse a.ici {
-    color: #fff;
-    background: linear-gradient(140deg, var(--orange-vif), var(--orange) 70%, var(--orange-nuit));
-    box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 8px 18px -8px rgba(200,100,20,.8);
-  }
-  .pied { padding-bottom: 104px; }
+  .burger { display: flex; }
+  .nav-boite { padding-right: 6px; }
+  /* Le bouton de rendez-vous sort de la barre sur telephone : a quatre
+     elements dans une pastille de 343 pixels, plus rien ne respire. Il
+     reste present deux fois dans l'ecran d'accueil, et le numero est en
+     gros dans le menu. */
+  .nav .bouton { display: none; }
 }
 
 /* =========================================================================
@@ -414,12 +456,16 @@ body.pointe .halo { opacity: 1; }
   .entree-bloc {
     animation: reculer linear both;
     animation-timeline: view();
-    animation-range: exit-crossing 0% exit-crossing 90%;
+    /* `exit 0%` commence des le premier pixel de defilement : le titre se
+       brouillait avant meme qu'on ait vraiment commence a descendre. On
+       laisse passer le premier tiers d'ecran net, et l'effacement se joue
+       sur le reste. */
+    animation-range: exit 34% exit 100%;
   }
 }
 @keyframes reculer {
   from { opacity: 1; scale: 1;   translate: 0 0;    filter: blur(0); }
-  to   { opacity: 0; scale: .88; translate: 0 -5vh; filter: blur(9px); }
+  to   { opacity: 0; scale: .92; translate: 0 -4vh; filter: blur(6px); }
 }
 
 .embleme {
@@ -854,26 +900,42 @@ body.pointe .halo { opacity: 1; }
   .pan { padding: clamp(60px, 12vw, 96px) 0; }
 
   /* LE FILM QUI S'OUVRE, SUR TELEPHONE.
-     En plein ecran vertical, un film en 16/9 est recadre si durement qu'il
-     ne reste qu'un gros plan flou : sur l'accueil, on ne voyait plus qu'un
-     morceau de galet. Ici le cadre garde une forme paysage et ne gagne que
-     de la largeur. L'image reste entiere. */
-  .ouverture { height: 165vh; }
+
+     Deux corrections. D'abord la forme : en plein ecran vertical, un film en
+     16/9 est recadre si durement qu'il ne reste qu'un gros plan flou. Le
+     cadre garde donc une forme paysage.
+
+     Ensuite l'amplitude. Il partait a 92 % de la largeur pour finir a 100 % :
+     huit pour cent de croissance, c'est a dire rien. On voyait l'image bouger
+     de deux pixels sans jamais l'avoir en plus grand. Il part maintenant a
+     56 %, ce qui fait presque doubler sa largeur, et sa legende n'apparait
+     qu'a la fin. L'ouverture se voit, et elle raconte quelque chose. */
+  .ouverture { height: 150vh; }
   .ouverture-film {
-    width: min(92%, 620px); height: auto; aspect-ratio: 4 / 3;
+    width: 56%; height: auto; aspect-ratio: 4 / 3;
   }
-  .ouverture-texte { padding: 20px 18px; gap: 9px; }
-  .ouverture-texte h2 { font-size: clamp(1.45rem, 6.4vw, 2.1rem); }
-  .ouverture-texte p { font-size: .92rem; }
+  .ouverture-texte { padding: 18px 16px; gap: 7px; }
+  .ouverture-texte h2 { font-size: clamp(1.35rem, 6vw, 2rem); }
+  .ouverture-texte p { font-size: .9rem; }
+  .ouverture-texte .sur-titre { font-size: .68rem; }
 }
 @supports (animation-timeline: view()) {
   @media (max-width: 900px) {
     .ouverture-film { animation-name: ouvrirLarge; }
+    .ouverture-texte {
+      animation: legende linear both;
+      animation-timeline: view();
+      animation-range: entry 88% cover 58%;
+    }
   }
 }
 @keyframes ouvrirLarge {
-  from { width: min(92%, 620px); border-radius: var(--rond-l); }
-  to   { width: 100vw;           border-radius: 0; }
+  from { width: 56%;   border-radius: var(--rond); }
+  to   { width: 100vw; border-radius: 0; }
+}
+@keyframes legende {
+  from { opacity: 0; translate: 0 14px; }
+  to   { opacity: 1; translate: 0 0; }
 }
 
 @media (max-width: 640px) {
@@ -901,16 +963,33 @@ body.pointe .halo { opacity: 1; }
   .actions { flex-direction: column; align-items: stretch; margin-top: 26px; }
   .actions .bouton { justify-content: center; padding: 16px 22px; }
 
-  /* Les trois reperes empiles faisaient trois bandeaux pleine largeur. En
-     rangee qui glisse, ils tiennent sur une ligne et se lisent au pouce. */
+  /* Un lien de vingt-neuf pixels de haut se rate au pouce. On ne change pas
+     sa taille de texte, on lui donne de la marge autour. */
+  .suite { padding-block: 10px; }
+
+  /* LES TROIS REPERES.
+     Empiles, ils faisaient trois bandeaux pleine largeur. En rangee qui
+     glisse, c'etait pire : on en voyait un entier, un coupe en deux, et le
+     troisieme nulle part. Personne ne devine qu'il faut pousser un bandeau
+     du doigt pour lire la suite.
+     Ils tiennent maintenant dans UNE seule carte de verre, trois lignes,
+     tout est lisible d'un coup et rien ne depasse. */
   .reperes {
-    flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start;
-    scroll-snap-type: x proximity;
-    padding-inline: var(--marge); margin-inline: calc(var(--marge) * -1);
-    scrollbar-width: none;
+    flex-direction: column; gap: 0;
+    border-radius: var(--rond);
+    padding: 4px 18px;
+    background: linear-gradient(150deg, rgba(255,255,255,.5), rgba(255,246,235,.34));
+    backdrop-filter: blur(22px) saturate(185%);
+    -webkit-backdrop-filter: blur(22px) saturate(185%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.85) inset, 0 20px 44px -28px rgba(120,60,15,.4);
   }
-  .reperes::-webkit-scrollbar { display: none; }
-  .repere { flex: none; scroll-snap-align: center; font-size: .82rem; padding: 10px 16px; }
+  .repere {
+    width: 100%; padding: 13px 0; border-radius: 0;
+    font-size: .87rem; text-align: left;
+    background: none; box-shadow: none; backdrop-filter: none;
+  }
+  .repere::before, .repere::after { display: none; }
+  .repere + .repere { border-top: 1px solid rgba(226,113,29,.16); }
 
   .descendre { display: none; }
   .entete { padding: 124px 0 56px; }
@@ -923,12 +1002,9 @@ body.pointe .halo { opacity: 1; }
   .pied-haut { gap: 18px; }
 }
 @media (max-width: 400px) {
-  /* Le nom reste : le masquer laissait un grand vide entre l'embleme et le
-     bouton, et la barre n'avait plus l'air de tenir ensemble. */
   .nav-marque img { width: 32px; }
   .nav-marque .nom { font-size: .93rem; }
-  .nav .bouton { padding: 10px 16px; font-size: .85rem; }
-  .barre-basse a { font-size: .75rem; }
+  .nav .bouton { padding: 10px 15px; font-size: .82rem; }
 }
 
 /* Pas d'ecran tactile : pas de halo qui traine. */
