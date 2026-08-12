@@ -475,9 +475,13 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
     animation-range: exit 34% exit 100%;
   }
 }
+/* Meme raison que pour `.rev` : le bloc d'accueil contient le panneau de
+   verre et les trois reperes. Un flou sur lui ferait de lui une racine
+   d'arriere-plan et viderait ces panneaux pendant tout le mouvement. Il
+   recule et s'efface, il ne se brouille plus. */
 @keyframes reculer {
-  from { opacity: 1; scale: 1;   translate: 0 0;    filter: blur(0); }
-  to   { opacity: 0; scale: .92; translate: 0 -4vh; filter: blur(6px); }
+  from { opacity: 1; scale: 1;   translate: 0 0; }
+  to   { opacity: 0; scale: .90; translate: 0 -5vh; }
 }
 
 .embleme {
@@ -515,7 +519,9 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   animation: paraitre 1.1s var(--sortie) .6s both;
 }
 .entree .chapeau { margin: 20px auto 0; text-align: center; animation: paraitre 1.1s var(--sortie) .75s both; }
-@keyframes paraitre { from { opacity: 0; translate: 0 22px; filter: blur(6px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+/* `paraitre` s'applique entre autres aux trois reperes, qui sont en verre
+   sur ordinateur. Pas de flou la non plus, pour la meme raison. */
+@keyframes paraitre { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0 0; } }
 
 .actions {
   display: flex; flex-wrap: wrap; gap: 13px; justify-content: center;
@@ -639,22 +645,29 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .centre { text-align: center; display: grid; justify-items: center; gap: 18px; }
 
 /* --- l'apparition au defilement ----------------------------------------- */
-.rev { opacity: 0; translate: 0 44px; filter: blur(7px); }
+.rev { opacity: 0; translate: 0 44px; }
 
-/* UN PANNEAU DE VERRE NE DOIT JAMAIS PORTER DE `filter`.
-   `filter` fait de l'element une « racine d'arriere-plan » : sa couche de
-   refraction cesse alors d'echantillonner la page et se met a
-   echantillonner SON PROPRE CONTENU, qu'elle repeint floute par-dessus le
-   texte. Et cela ne disparait pas a la fin de l'animation, puisque le
-   filtre calcule reste `blur(0px)`, un filtre quand meme. Sur la carte
-   d'appel posee sur la video des bougies, il ne restait plus un mot
-   lisible : seuls les boutons, qui ont leur propre fond, s'en sortaient.
-   Le verre monte donc sans flou. */
-.verre.rev { filter: none; }
-.verre.rev.vu { filter: none; }
+/* PLUS AUCUN `filter` DANS LES APPARITIONS.
 
-.rev.vu { opacity: 1; translate: 0 0; filter: blur(0);
-          transition: opacity .9s var(--sortie), translate .9s var(--sortie), filter .9s var(--sortie);
+   Le flou d'entree etait joli et il coutait bien trop cher. `filter` fait de
+   l'element une « racine d'arriere-plan » : tout `backdrop-filter` situe en
+   dessous cesse d'echantillonner la page et se met a echantillonner le
+   contenu de cette racine, qu'il repeint par-dessus le texte. Autrement dit,
+   n'importe quel panneau de verre place a l'INTERIEUR d'un bloc qui apparait
+   devenait un rectangle blanc.
+
+   J'avais d'abord traite le seul cas du verre qui porte lui-meme `.rev`. Ca
+   ne suffisait pas : la carte « Formation » est un panneau de verre a
+   l'interieur d'un `.rev`, et c'est le filtre du PARENT qui la vidait. Elle
+   restait blanche jusqu'a ce qu'on la touche, parce que le contact forcait un
+   repeint.
+
+   Les apparitions se font maintenant en opacite et en deplacement. Ni l'une
+   ni l'autre ne laisse de racine d'arriere-plan derriere elle une fois
+   l'animation finie. */
+
+.rev.vu { opacity: 1; translate: 0 0;
+          transition: opacity .9s var(--sortie), translate .9s var(--sortie);
           transition-delay: calc(var(--i, 0) * 90ms); }
 
 @supports (animation-timeline: view()) {
@@ -670,13 +683,8 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   .rev[data-i='1'] { animation-range: entry 4% cover 34%; }
   .rev[data-i='2'] { animation-range: entry 4% cover 41%; }
   .rev[data-i='3'] { animation-range: entry 4% cover 48%; }
-  .verre.rev { animation-name: surgirNet; }
 }
 @keyframes surgir {
-  from { opacity: 0; translate: 0 52px; filter: blur(8px); }
-  to   { opacity: 1; translate: 0 0;    filter: blur(0); }
-}
-@keyframes surgirNet {
   from { opacity: 0; translate: 0 52px; }
   to   { opacity: 1; translate: 0 0; }
 }
@@ -944,7 +952,22 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
      de deux pixels sans jamais l'avoir en plus grand. Il part maintenant a
      56 %, ce qui fait presque doubler sa largeur, et sa legende n'apparait
      qu'a la fin. L'ouverture se voit, et elle raconte quelque chose. */
-  .ouverture { height: 132vh; }
+  /* PLUS DE BLOC EPINGLE SUR TELEPHONE.
+
+     Le film etait tenu en place dans un cadre d'un ecran de haut, lui-meme
+     dans un conteneur plus grand. Resultat : avant, on defilait dans du vide
+     en attendant qu'il arrive ; apres, on defilait encore dans du vide avec
+     un film immobile a l'ecran. Et comme le film se trouvait DANS un bloc
+     colle, sa propre minuterie ne bougeait presque plus : c'est ce qui
+     donnait l'impression qu'il n'y avait aucune animation.
+
+     Il redevient un bloc normal, qui grandit en traversant l'ecran. Pas de
+     vide avant, pas de vide apres, et l'animation se joue vraiment. */
+  .ouverture { height: auto; }
+  .ouverture-cadre {
+    position: static; height: auto;
+    padding: clamp(20px, 5vw, 44px) 0;
+  }
   .ouverture-film {
     width: 56%; height: auto; aspect-ratio: 4 / 3;
   }
@@ -955,11 +978,14 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 }
 @supports (animation-timeline: view()) {
   @media (max-width: 900px) {
-    .ouverture-film { animation-name: ouvrirLarge; }
+    .ouverture-film {
+      animation-name: ouvrirLarge;
+      animation-range: entry 30% cover 52%;
+    }
     .ouverture-texte {
       animation: legende linear both;
       animation-timeline: view();
-      animation-range: entry 88% cover 58%;
+      animation-range: entry 60% cover 50%;
     }
   }
 }
@@ -967,9 +993,14 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   from { width: 56%;   border-radius: var(--rond); }
   to   { width: 100vw; border-radius: 0; }
 }
+/* La legende est elle aussi un panneau de verre. Animer son opacite la
+   rendait a demi transparente pendant toute la montee, texte compris : un
+   element dont l'opacite n'est pas 1 devient une racine d'arriere-plan, et
+   son propre `backdrop-filter` n'echantillonne plus rien. Elle monte donc
+   sans changer d'opacite. */
 @keyframes legende {
-  from { opacity: 0; translate: 0 14px; }
-  to   { opacity: 1; translate: 0 0; }
+  from { translate: 0 18px; }
+  to   { translate: 0 0; }
 }
 
 @media (max-width: 640px) {
@@ -1054,4 +1085,28 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   }
   .rev { opacity: 1; translate: 0; filter: none; }
   .eclat w { color: var(--encre); }
+}
+
+/* =========================================================================
+   LE PORTRAIT
+   Sur la page du shiatsu, le film reste dans son cadre au lieu de s'ouvrir
+   en plein ecran : le geste de l'accueil ne doit servir qu'une fois.
+   ========================================================================= */
+.portrait .deux { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: center; }
+.portrait-film {
+  position: relative; overflow: hidden;
+  border-radius: var(--rond-l);
+  aspect-ratio: 4 / 5;
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 40px 80px -40px rgba(120,60,15,.5);
+}
+.portrait-film video { width: 100%; height: 100%; object-fit: cover; }
+.portrait-film::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
+  background: linear-gradient(190deg, rgba(255,248,239,.14), transparent 45%);
+}
+@media (max-width: 900px) {
+  .portrait .deux { grid-template-columns: 1fr; }
+  .portrait-film { aspect-ratio: 4 / 3; }
 }

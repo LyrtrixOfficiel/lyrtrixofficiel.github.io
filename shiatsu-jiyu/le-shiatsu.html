@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=e2c6c355">
+<link rel="stylesheet" href="./styles.css?v=6de86730">
 </head>
 <body>
 <svg class="filtres" aria-hidden="true" focusable="false"
@@ -152,17 +152,35 @@
   </div>
 </section>
 
-<section class="ouverture">
-  <div class="ouverture-cadre">
-    <div class="ouverture-film">
+<!--
+  PAS LE MEME EFFET QUE SUR L'ACCUEIL.
+
+  Le film qui s'ouvre en plein ecran est un geste fort, et un geste fort ne
+  se repete pas : a la deuxieme fois il cesse d'etre une surprise et devient
+  une habitude de gabarit. Ici le film reste dans son cadre, a cote du texte,
+  et c'est le portrait qui porte la section.
+-->
+<section class="pan portrait">
+  <div class="serre deux">
+    <div class="portrait-film rev">
       <video autoplay muted loop playsinline preload="metadata" poster="./images/bougies.webp?v=83ce2a0b" aria-hidden="true">
         <source src="./images/bougies.mp4?v=257b525e" type="video/mp4">
       </video>
-      <div class="ouverture-texte">
-        <p class="sur-titre">Qui je suis</p>
-        <h2>Julie Marguier</h2>
-        <p>Praticienne en shiatsu traditionnel, membre de la Fédération Française de
-          Shiatsu Traditionnel, qui garantit un cursus complet et une pratique encadrée.</p>
+    </div>
+    <div class="rev" data-i="1">
+      <p class="sur-titre">Qui je suis</p>
+      <h2>Julie Marguier</h2>
+      <p class="chapeau" style="margin-top:22px">
+        Je reçois à Knœringue, dans le Haut-Rhin, à une vingtaine de minutes de
+        Saint-Louis et de Bâle. J'ai appris le shiatsu traditionnel et je continue de
+        me former : c'est une pratique qui ne s'arrête jamais vraiment d'être apprise.
+      </p>
+      <p class="chapeau" style="margin-top:16px">
+        Je suis membre de la <b>Fédération Française de Shiatsu Traditionnel</b>, qui
+        garantit un cursus complet et une pratique encadrée.
+      </p>
+      <div class="actions" style="justify-content:flex-start;margin-top:30px">
+        <a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener" class="bouton clair" data-aimant>Me suivre sur Instagram</a>
       </div>
     </div>
   </div>
@@ -193,9 +211,6 @@
     <p>Un accompagnement doux, adapté à chaque étape, avant comme après la naissance.</p>
   </article>
 </div>
-    <div class="actions rev" style="justify-content:flex-start;margin-top:44px">
-      <a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener" class="bouton clair" data-aimant>Me suivre sur Instagram</a>
-    </div>
   </div>
 </section>
 
