@@ -48,7 +48,10 @@ export function monterLaScene(toile, options = {}) {
   renderer.setClearColor(0x04060A, 1);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x04060A, 0.028);
+  /* Brouillard leger. A 0,028 la colonne disparaissait entierement : le
+     materiau est deja sombre, le fond est noir, et le brouillard achevait
+     d'effacer les tiges avant qu'on ne les voie. */
+  scene.fog = new THREE.FogExp2(0x04060A, 0.013);
 
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
   camera.position.set(0, 0, 9);
@@ -424,8 +427,13 @@ export function monterLaScene(toile, options = {}) {
     // Le defilement est amorti : la pousse ne saute jamais.
     lisse += (progression - lisse) * (sobre ? 1 : 0.07);
 
-    matTige.uniforms.uPousse.value = lisse;
-    matFeuille.uniforms.uPousse.value = lisse;
+    /* La pousse ne part pas de zero. A zero, aucun fragment n'etait dessine et
+       le hero s'ouvrait sur un ecran entierement noir : on annoncait une scene
+       vivante et on montrait du vide. Un huitieme de croissance des la
+       premiere image donne deja une colonne a regarder. */
+    const pousse = 0.13 + lisse * 0.87;
+    matTige.uniforms.uPousse.value = pousse;
+    matFeuille.uniforms.uPousse.value = pousse;
     matTige.uniforms.uTemps.value = t;
     matFeuille.uniforms.uTemps.value = t;
     matSpores.uniforms.uTemps.value = t;
@@ -436,11 +444,14 @@ export function monterLaScene(toile, options = {}) {
     sourisLisse.x += (souris.x - sourisLisse.x) * 0.045;
     sourisLisse.y += (souris.y - sourisLisse.y) * 0.045;
 
-    const y = -4 + lisse * HAUTEUR * 0.92;
+    /* La camera doit rester AU NIVEAU du front de pousse, pas au-dessus. Elle
+       montait auparavant de 55 unites quand les tiges n'en gagnaient qu'une
+       trentaine : elle regardait le vide au-dessus de la plante. */
+    const y = -3 + lisse * 34;
     camera.position.y = y;
     camera.position.x = Math.sin(lisse * 2.4) * 1.5 + sourisLisse.x * 1.1;
-    camera.position.z = 9 + Math.cos(lisse * 1.7) * 2.2;
-    camera.lookAt(sourisLisse.x * 0.9, y + 4.5 - sourisLisse.y * 0.9, 0);
+    camera.position.z = 10 + Math.cos(lisse * 1.7) * 2.2;
+    camera.lookAt(sourisLisse.x * 0.9, y + 2.0 - sourisLisse.y * 0.9, 0);
 
     groupe.rotation.y = lisse * 0.35;
 

@@ -134,7 +134,7 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
       vec2 d = uv - uSouris;
       d.x *= ratio;
       float pres = exp(-dot(d, d) * 26.0);
-      fuite += normalize(d + 0.0001) * pres * 0.035;
+      fuite += normalize(d + 0.0001) * pres * 0.016;
 
       // 3. fente des canaux
       float f = (uFente + pres * 1.4 + manque * 2.2) * 0.008;
@@ -222,7 +222,12 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
 
   /* ── 3. Etat et boucle ─────────────────────────────────────────────── */
   let forme = 0, formeCible = 1, fente = 0, fenteCible = 0;
-  let sx = 0.5, sy = 0.5, lx = 0.5, ly = 0.5;
+  /* Le curseur demarre TRES loin de la toile, et c'est capital. Initialise au
+     centre, le terme de repulsion `pres` valait 1 en plein milieu du mot des
+     la premiere image : les lettres se chevauchaient et on lisait KASNBA au
+     lieu de KAZURA. Le nom de la marque doit etre parfaitement lisible au
+     repos ; il ne se deforme que sous un geste reel. */
+  let sx = -9, sy = -9, lx = -9, ly = -9;
   let debut = performance.now();
   let visible = true;
 
