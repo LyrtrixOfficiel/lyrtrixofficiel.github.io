@@ -523,7 +523,7 @@ async function monterLEncreSiPresente() {
   if (supporteLeFluide()) {
     try {
       const { monterLEncre } = await import('./fluide.js');
-      const encre = monterLEncre(toile);
+      const encre = monterLEncre(toile, { texte: toile.dataset.texte || null });
       if (encre) {
         toile.dataset.mode = 'fluide';
         (window.kazura ||= {}).encre = encre;

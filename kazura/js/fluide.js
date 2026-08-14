@@ -27,7 +27,7 @@
    jouable sur une machine ordinaire.
    ========================================================================== */
 
-export function monterLEncre(toile) {
+export function monterLEncre(toile, options = {}) {
   const _fm = new URLSearchParams(location.search).get('mouvement');
   const sobre = _fm === '1' ? false : _fm === '0' ? true
               : matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -106,7 +106,11 @@ export function monterLEncre(toile) {
       vec2 d = vUv - uPoint;
       d.x *= uRatio;
       vec3 tache = exp(-dot(d, d) / uRayon) * uCouleur;
-      sortie = vec4(texture(uCible, vUv).xyz + tache, 1.0);
+      /* Borne. Sans elle l'encre s'accumule sans fin la ou le geste repasse :
+         l'equilibre entre injection et dissipation se situe vers 180, alors
+         que l'affichage sature des 0,32. On obtenait une tache blanche
+         brulee au lieu d'une volute. */
+      sortie = vec4(min(texture(uCible, vUv).xyz + tache, vec3(1.6)), 1.0);
     }`);
 
   /* Advection semi-lagrangienne : pour savoir ce qu'il y a ici maintenant, on
@@ -169,6 +173,21 @@ export function monterLEncre(toile) {
       float B = texture(uPression, vB).x;
       vec2 v = texture(uVitesse, vUv).xy - vec2(R - L, T - B);
       sortie = vec4(v, 0.0, 1.0);
+    }`);
+
+  /* Injection a travers un masque : au lieu d'une tache ronde, on depose la
+     couleur exactement la ou un dessin est opaque. C'est ce qui permet a
+     l'encre d'ECRIRE un mot, que le courant emporte ensuite. */
+  const P_MASQUE = programme(`#version 300 es
+    precision highp float;
+    in vec2 vUv;
+    out vec4 sortie;
+    uniform sampler2D uCible, uMasque;
+    uniform vec3  uCouleur;
+    uniform float uForce;
+    void main() {
+      float a = texture(uMasque, vUv).a;
+      sortie = vec4(min(texture(uCible, vUv).xyz + uCouleur * a * uForce, vec3(1.6)), 1.0);
     }`);
 
   const P_AFFICHAGE = programme(`#version 300 es
@@ -265,6 +284,70 @@ export function monterLEncre(toile) {
   let encre     = paire(RES_ENCRE, RES_ENCRE, gl.RGBA16F, gl.RGBA, gl.HALF_FLOAT, filtre);
   let divergence= cible(RES_SIM, RES_SIM, gl.R16F, gl.RED, gl.HALF_FLOAT, gl.NEAREST);
   let pression  = paire(RES_SIM, RES_SIM, gl.R16F, gl.RED, gl.HALF_FLOAT, gl.NEAREST);
+
+  /* ── Le mot ecrit a l'encre ────────────────────────────────────────── */
+  /* Un mot dessine dans une toile hors ecran devient un masque d'injection :
+     l'encre se depose exactement sur ses lettres, puis le courant l'emporte.
+     Le mot n'est jamais affiche tel quel, il n'existe que comme forme initiale
+     donnee au fluide.
+
+     Subtilite : la texture d'encre est carree alors que la toile est large. On
+     ecrit donc le mot PRE-COMPRIME horizontalement, pour qu'il retrouve ses
+     proportions une fois etire sur la toile. */
+  let masque = null;
+  const texteEncre = options.texte || null;
+
+  async function preparerLeMot() {
+    if (!texteEncre) return;
+    try { await document.fonts.load('800 200px Syne'); await document.fonts.ready; }
+    catch (e) { /* on ecrit quand meme */ }
+
+    const N = RES_ENCRE;
+    const c = document.createElement('canvas');
+    c.width = N; c.height = N;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, N, N);
+
+    let taille = N * 0.5;
+    ctx.font = `800 ${taille}px Syne, system-ui, sans-serif`;
+    const vise = N * 0.80 * Math.min(1, ratio);   // largeur visee, apres etirement
+    taille *= vise / Math.max(1, ctx.measureText(texteEncre).width / ratio);
+    taille = Math.min(taille, N * 0.34);
+
+    ctx.font = `800 ${taille}px Syne, system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff';
+    ctx.setTransform(1 / ratio, 0, 0, 1, N / 2, N / 2);  // compression horizontale
+    ctx.fillText(texteEncre, 0, 0);
+
+    masque = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, masque);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);   // sinon le mot est a l'envers
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+  }
+
+  function ecrireLeMot(force = 1) {
+    if (!masque || !P_MASQUE) return;
+    gl.useProgram(P_MASQUE.p);
+    gl.uniform2f(P_MASQUE.u.uPas, ...encre.pas);
+    gl.uniform1i(P_MASQUE.u.uCible, encre.lire.lier(0));
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, masque);
+    gl.uniform1i(P_MASQUE.u.uMasque, 1);
+    /* Le mot s'ecrit en JADE seul. Injecte avec autant de vert que de bleu,
+       il saturait les deux masques de l'affichage et ressortait blanc. Le
+       violet est reserve a ce que la main y ajoute : la marque ecrit, le
+       visiteur colore. */
+    gl.uniform3f(P_MASQUE.u.uCouleur, 0.04, 0.46, 0.05);
+    gl.uniform1f(P_MASQUE.u.uForce, force);
+    dessiner(encre.ecrire);
+    encre.echanger();
+  }
 
   /* ── Le doigt ──────────────────────────────────────────────────────── */
   const doigt = { x: .5, y: .5, dx: 0, dy: 0, appuie: false, deja: false };
@@ -479,6 +562,11 @@ export function monterLEncre(toile) {
     dessiner(null);
   }
 
+  /* Le mot se reecrit regulierement. Le premier jet arrive vite pour que la
+     section ne soit jamais vide, puis il revient toutes les quinze secondes,
+     le temps que le courant ait fini d'emporter le precedent. */
+  let prochainMot = 0.6;
+
   function image() {
     const maintenant = performance.now();
     const dt = Math.min((maintenant - dernier) / 1000, 1 / 30);
@@ -486,6 +574,10 @@ export function monterLEncre(toile) {
     t += dt;
 
     if (visible) {
+      if (masque && t >= prochainMot) {
+        ecrireLeMot(1);
+        prochainMot = t + 15;
+      }
       if (doigt.appuie) {
         injecter(doigt.x, doigt.y, doigt.dx, doigt.dy);
         doigt.dx *= 0.7; doigt.dy *= 0.7;
@@ -501,6 +593,11 @@ export function monterLEncre(toile) {
 
   /* En mode sobre, on laisse la caresse deposer quelques volutes puis on
      s'arrete : une image fixe, mais pas un rectangle noir. */
+  // La preparation du mot est asynchrone (chargement de la police).
+  preparerLeMot().then(() => {
+    if (sobre && masque) { ecrireLeMot(1); for (let k = 0; k < 30; k++) simuler(1 / 60); afficher(); }
+  });
+
   if (sobre) {
     composerImageFixe();
     afficher();
@@ -510,6 +607,7 @@ export function monterLEncre(toile) {
       rafraichir: afficher,
       recomposer() { composerImageFixe(); afficher(); },
       pas(dt = 1 / 60) { simuler(dt); afficher(); },
+      ecrire(f = 1) { ecrireLeMot(f); afficher(); },
       sonder, bilan
     };
   }
@@ -522,6 +620,7 @@ export function monterLEncre(toile) {
        (onglet masque, navigateur pilote). Meme raison d'etre que
        `window.kazura.pas`. */
     pas(dt = 1 / 60) { caresser(dt); simuler(dt); afficher(); },
+    ecrire(f = 1) { ecrireLeMot(f); afficher(); },
     sonder, bilan
   };
 }

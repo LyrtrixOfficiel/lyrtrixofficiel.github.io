@@ -1,7 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <rect width="120" height="120" rx="26" fill="#04060A"/>
-  <g fill="none" stroke="#10B981" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M35 24 L35 96"/>
-    <path d="M88 24 C68 41 51 51 44 60 C51 69 68 79 88 96"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Le sceau Kazura, jade sur encre. Dessine pour rester lisible a seize
+       pixels dans un onglet : des aplats, aucune ligne fine, et la nervure des
+       folioles creusee en vide plutot que tracee en trait. -->
+  <rect width="100" height="100" rx="22" fill="#04060A"/>
+  <g fill="#6EE7B7" fill-rule="evenodd" transform="translate(50 50) scale(.84) translate(-50 -50)">
+    <path d="M50 2a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0 6a42 42 0 1 1 0 84 42 42 0 1 1 0-84z"/>
+    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z"/>
+    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(120 50 50)"/>
+    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(240 50 50)"/>
+    <circle cx="50" cy="50" r="4.6"/>
   </g>
 </svg>

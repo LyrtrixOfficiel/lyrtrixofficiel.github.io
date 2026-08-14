@@ -74,6 +74,21 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 ::selection { background: var(--violet); color: #fff; }
 
+/* ── Ce que le script deplace a chaque image ──────────────────────────── */
+/* AUCUNE TRANSITION ICI, jamais. Ces elements recoivent une transformation
+   nouvelle a chaque image : la moindre transition les fait courir derriere le
+   defilement, et sous `prefers-reduced-motion` la regle generique
+   `transition-duration: .01ms` sur `*` suffisait a leur en coller une. Le
+   conteneur de defilement restait alors bloque a l'identite, transformation
+   posee mais jamais appliquee. */
+#defile,
+[data-epingle-contenu],
+.bandeau__piste,
+[data-parallaxe],
+.curseur {
+  transition: none !important;
+}
+
 /* ── Le conteneur amorti ──────────────────────────────────────────────── */
 #defile { will-change: transform; }
 html[data-pret='oui'] #defile:not([data-natif='oui']) {
