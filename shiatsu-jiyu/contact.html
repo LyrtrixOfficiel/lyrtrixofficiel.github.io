@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=9f64d962">
+<link rel="stylesheet" href="./styles.css?v=634ae547">
 </head>
 <body>
 <svg class="filtres" aria-hidden="true" focusable="false"
@@ -113,7 +113,25 @@
       </div>
       <div class="coord-ligne">
         <span class="etiq">Réseaux sociaux</span>
-        <span class="val"><a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener">Instagram @shiatsu_jiyu</a><a href="https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/" target="_blank" rel="noopener">Facebook Marguier Julie Shiatsu Jiyu</a></span>
+        <span class="val reseaux">
+      <a class="reseau" href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+    <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4"/>
+    <circle cx="12" cy="12" r="4.3"/>
+    <circle cx="17.5" cy="6.5" r="1.15" fill="currentColor" stroke="none"/>
+  </svg><span>@shiatsu_jiyu</span>
+      </a>
+      <a class="reseau" href="https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9.4"/>
+    <path d="M14.9 8.2h-1.5c-.9 0-1.4.5-1.4 1.4v1.6h2.7l-.4 2.7h-2.3v5.4"
+          stroke-linecap="round"/>
+    <path d="M9.4 11.2h2.6" stroke-linecap="round"/>
+  </svg><span>Shiatsu Jiyū</span>
+      </a>
+        </span>
       </div>
       <div class="coord-ligne">
         <span class="etiq">Sur rendez-vous</span>
@@ -133,7 +151,18 @@
   </div>
 </section>
 
-<section class="pan eclat-zone serree">
+<!--
+  La classe « fin » : cette phrase est le DERNIER bloc de la page, et c'est ce
+  qui la cassait. La plage « cover » d'une animation de defilement ne se termine
+  que lorsque l'element est ressorti par le haut. Un dernier bloc ne ressort
+  jamais : la page s'arrete avant, la course plafonne a la moitie, et les
+  derniers mots ne s'allument donc jamais. Ils restaient dans leur gris de
+  depart, ce qui se lit comme du texte transparent.
+
+  La classe bascule sur la plage « entry », qui s'acheve des que le bloc est
+  entierement visible. Ca, une derniere section l'atteint toujours.
+-->
+<section class="pan eclat-zone fin serree">
   <div class="serre">
     <!-- Les communes servent deux choses a la fois : elles disent au visiteur
          si c'est loin de chez lui, et elles donnent au moteur de recherche les

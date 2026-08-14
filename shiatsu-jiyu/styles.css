@@ -726,6 +726,23 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
       cover calc(14% + var(--i) * (30% / var(--n)))
       cover calc(27% + var(--i) * (30% / var(--n)));
   }
+
+  /* LA DERNIERE PHRASE D'UNE PAGE.
+
+     `cover` va de l'instant ou le bloc entre par le bas a celui ou il sort par
+     le haut. Un bloc pose en fin de page ne sort jamais : le document s'arrete
+     avant, la course plafonne aux alentours de la moitie, et les mots calcules
+     au-dela ne s'allument jamais. Sur la page Contact, la fin de la phrase
+     restait donc dans son gris de depart, ce qui se lit comme du texte
+     transparent.
+
+     `entry` s'acheve des que le bloc est entierement visible. Une derniere
+     section l'atteint toujours, quelle que soit la hauteur du pied de page. */
+  .eclat-zone.fin .eclat w {
+    animation-range:
+      entry calc(26% + var(--i) * (46% / var(--n)))
+      entry calc(44% + var(--i) * (46% / var(--n)));
+  }
 }
 @keyframes allumer {
   from { color: rgba(169,141,120,.30); }
@@ -907,11 +924,21 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .coord .val a { border-bottom: 1px solid rgba(226,113,29,.35); transition: border-color .3s; }
 .coord .val a:hover { border-color: var(--orange); }
 
-/* La ligne « Reseaux sociaux » porte deux liens le jour ou Julie donne son
-   Facebook. Cote a cote ils se liraient comme une seule adresse ; on ne les
-   empile qu'a partir du second, pour que la ligne Instagram seule reste
-   alignee avec les autres. */
-.coord .val a + a { display: block; margin-top: 6px; }
+/* Les reseaux : le logo porte la reconnaissance, le nom porte la certitude.
+   L'un sans l'autre laisse un doute, alors on garde les deux, dans une pastille
+   assez large pour qu'un pouce l'atteigne sans viser. */
+.coord .val.reseaux { display: flex; flex-wrap: wrap; gap: 10px; }
+.reseau {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 8px 15px 8px 12px; border-radius: 999px;
+  font-size: .95rem; font-weight: 450; line-height: 1;
+  color: var(--encre);
+  border: 1px solid rgba(226,113,29,.28);
+  background: rgba(255,255,255,.5);
+  transition: border-color .3s, background .3s, transform .3s;
+}
+.reseau svg { flex: none; color: var(--orange); }
+.reseau:hover { border-color: var(--orange); background: rgba(226,113,29,.09); transform: translateY(-1px); }
 
 /* =========================================================================
    L'ENTETE DES PAGES INTERIEURES
