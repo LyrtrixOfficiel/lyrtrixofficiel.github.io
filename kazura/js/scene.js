@@ -29,7 +29,9 @@ const VIOLET  = new THREE.Color('#7C3AED');
 const VIOLET_C= new THREE.Color('#A78BFA');
 
 export function monterLaScene(toile, options = {}) {
-  const sobre = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const _fm = new URLSearchParams(location.search).get('mouvement');
+  const sobre = _fm === '1' ? false : _fm === '0' ? true
+              : matchMedia('(prefers-reduced-motion: reduce)').matches;
   const petit = window.innerWidth < 820;
 
   /* Budget adapte a la machine. Sur un telephone on divise tout par deux et
@@ -44,7 +46,11 @@ export function monterLaScene(toile, options = {}) {
     canvas: toile, antialias: !petit, alpha: false,
     powerPreference: 'high-performance', stencil: false, depth: true
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, petit ? 1.5 : 1.75));
+  /* Plafond volontairement bas. Le bloom repasse cinq fois sur l'image en
+     descendant puis en remontant : chaque pixel coute une dizaine de fois son
+     prix. A 1,75 la scene etait deux fois plus chere qu'a 1,25 sans que
+     personne ne voie la difference sur un fond sombre et flou. */
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, petit ? 1.2 : 1.35));
   renderer.setClearColor(0x04060A, 1);
 
   const scene = new THREE.Scene();
@@ -183,7 +189,7 @@ export function monterLaScene(toile, options = {}) {
 
         // Le bourgeon. A 3.2 il brulait en taches blanches geantes.
         float front = smoothstep(seuil - 0.03, seuil, vUv.x);
-        col += vec3(0.55, 1.00, 0.80) * front * 0.95;
+        col += vec3(0.55, 1.00, 0.80) * front * 0.55;
 
         // Nervure longitudinale, pour que le tube ne soit pas lisse et mort.
         float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + vUv.x * 26.0)), 16.0);
@@ -197,7 +203,7 @@ export function monterLaScene(toile, options = {}) {
         /* La scene est un DECOR : elle passe derriere le texte, jamais devant.
            Une opacite pleine la faisait rivaliser avec le contenu, une opacite
            trop basse la rendait invisible sur le fond photographique. */
-        float alpha = 0.24 + fres * 0.44 + front * 0.40;
+        float alpha = 0.17 + fres * 0.38 + front * 0.26;
         gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
       }
     `
@@ -480,15 +486,20 @@ export function monterLaScene(toile, options = {}) {
 
   /* ── Boucle ────────────────────────────────────────────────────────── */
   let progression = 0, lisse = 0, souris = { x: 0, y: 0 }, sourisLisse = { x: 0, y: 0 };
-  let visible = true, vivant = true;
+  let vivant = true;
+
+  /* PIEGE COUTEUX : la toile est en `position: fixed` et couvre l'ecran, donc
+     un IntersectionObserver la declare visible sur TOUTE la page, y compris
+     quand son opacite est tombee a zero. La scene continuait alors de peindre
+     bloom compris pendant tout le reste du defilement, pour rien. C'est
+     l'appelant qui sait si elle sert encore, via `montrer()`. */
+  let visible = true;
 
   window.addEventListener('pointermove', e => {
     souris.x = (e.clientX / window.innerWidth) * 2 - 1;
     souris.y = (e.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
 
-  new IntersectionObserver(es => { visible = es[0].isIntersecting; },
-                           { threshold: 0.01 }).observe(toile);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) horloge.getDelta();   // evite un saut au retour
   });
@@ -496,12 +507,44 @@ export function monterLaScene(toile, options = {}) {
   const horloge = new THREE.Clock();
   let t = 0;
 
+  /* ── Qualite adaptative ────────────────────────────────────────────── */
+  /* Une belle scene qui tombe a vingt images par seconde est une mauvaise
+     scene. On mesure le temps par image en continu et on se deleste par
+     paliers : d'abord le bloom, qui est de loin la passe la plus chere, puis
+     la resolution. On ne remonte jamais : remonter provoquerait un
+     va-et-vient visible entre deux qualites. */
+  const budget = { somme: 0, n: 0, palier: 0, prochainTest: 2.5 };
+
+  function jauger(dt) {
+    budget.somme += dt; budget.n++;
+    if (t < budget.prochainTest || budget.n < 30) return;
+    const moyenne = budget.somme / budget.n;
+    budget.somme = 0; budget.n = 0;
+    budget.prochainTest = t + 2.5;
+
+    if (moyenne < 0.022 || budget.palier >= 2) return;   // au-dessus de 45 i/s
+
+    budget.palier++;
+    if (budget.palier === 1 && bloom) {
+      bloom.enabled = false;
+      console.info('scene : bloom coupe, la machine ne suivait pas '
+                   + Math.round(1 / moyenne) + ' i/s');
+    } else {
+      renderer.setPixelRatio(Math.max(0.75, renderer.getPixelRatio() * 0.7));
+      redimensionner();
+      console.info('scene : resolution reduite, ' + Math.round(1 / moyenne) + ' i/s');
+    }
+  }
+
   function peindre() {
     const dt = Math.min(horloge.getDelta(), 0.05);
     t += dt;
+    if (visible) jauger(dt);
 
-    // Le defilement est amorti : la pousse ne saute jamais.
-    lisse += (progression - lisse) * (sobre ? 1 : 0.07);
+    /* Amorti, et INDEPENDANT DU NOMBRE D'IMAGES. Un facteur fixe par image
+       rend la pousse plus rapide sur une machine qui tourne a 144 images et
+       saccadee des qu'une image tombe. */
+    lisse += (progression - lisse) * (sobre ? 1 : (1 - Math.pow(1 - 0.11, dt * 60)));
 
     /* La pousse ne part pas de zero. A zero, aucun fragment n'etait dessine et
        le hero s'ouvrait sur un ecran entierement noir : on annoncait une scene
@@ -517,8 +560,9 @@ export function monterLaScene(toile, options = {}) {
 
     // La camera monte le long de la colonne et se laisse pousser par la
     // souris, tres legerement, pour que la scene ait du volume.
-    sourisLisse.x += (souris.x - sourisLisse.x) * 0.045;
-    sourisLisse.y += (souris.y - sourisLisse.y) * 0.045;
+    const kSouris = 1 - Math.pow(1 - 0.045, dt * 60);
+    sourisLisse.x += (souris.x - sourisLisse.x) * kSouris;
+    sourisLisse.y += (souris.y - sourisLisse.y) * kSouris;
 
     /* La camera doit rester AU NIVEAU du front de pousse, pas au-dessus. Elle
        montait auparavant de 55 unites quand les tiges n'en gagnaient qu'une
@@ -539,6 +583,8 @@ export function monterLaScene(toile, options = {}) {
   return {
     /* Appelee par le defilement : 0 en haut de la page, 1 en bas. */
     avancer(p) { progression = Math.min(1, Math.max(0, p)); },
+    /* Coupe le rendu des que la scene n'est plus a l'ecran. */
+    montrer(v) { visible = !!v; },
     detruire() {
       vivant = false;
       renderer.dispose();

@@ -28,7 +28,9 @@
    ========================================================================== */
 
 export function monterLEncre(toile) {
-  const sobre = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const _fm = new URLSearchParams(location.search).get('mouvement');
+  const sobre = _fm === '1' ? false : _fm === '0' ? true
+              : matchMedia('(prefers-reduced-motion: reduce)').matches;
   const gl = toile.getContext('webgl2', {
     alpha: false, depth: false, stencil: false, antialias: false,
     preserveDrawingBuffer: false, powerPreference: 'high-performance'

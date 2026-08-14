@@ -6,7 +6,15 @@
    mouvement, si la machine est un telephone, ou si le script ne tourne pas.
    ========================================================================== */
 
-const sobre   = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* `?mouvement=1` force le mode anime, `?mouvement=0` force le mode sobre.
+   Sans cette bascule, impossible de mesurer ni de regarder les animations
+   depuis un navigateur regle sur « moins de mouvement », ce qui est le cas de
+   tous les environnements de test. Le reglage du systeme reste la valeur par
+   defaut : la bascule ne sert qu'a nous. */
+const _forceMouvement = new URLSearchParams(location.search).get('mouvement');
+const sobre = _forceMouvement === '1' ? false
+            : _forceMouvement === '0' ? true
+            : matchMedia('(prefers-reduced-motion: reduce)').matches;
 const tactile = matchMedia('(hover: none)').matches;
 const $  = (s, p = document) => p.querySelector(s);
 const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
@@ -73,14 +81,37 @@ let dernierY = 0;
 /* Un pas de la boucle, isole du rAF qui l'appelle. Deux raisons : le rAF ne
    tourne pas dans un onglet masque, et un pas appelable a la main rend la
    page verifiable et deboguable depuis la console (`kazura.pas()`). */
+let _dernierTemps = 0;
+
 function pas() {
   const brut = window.scrollY || document.documentElement.scrollTop;
 
+  /* Amortissement INDEPENDANT DU NOMBRE D'IMAGES. Un `y += (cible - y) * k`
+     avance d'autant plus vite qu'il y a d'images par seconde : a 120 images il
+     rattrape deux fois plus vite qu'a 60, et si une image saute, le rattrapage
+     se voit comme une marche. C'est exactement ce qu'on ressentait a la
+     molette, qui envoie de gros sauts, alors que la barre de defilement, qui
+     envoie de petits pas continus, paraissait douce.
+
+     La forme correcte est `1 - (1 - k)^(dt * 60)` : la fraction rattrapee
+     depend du TEMPS ecoule, pas du nombre d'appels. Le mouvement devient
+     identique a 30, 60 ou 144 images par seconde. */
+  const maintenant = performance.now();
+  let dt = _dernierTemps ? (maintenant - _dernierTemps) / 1000 : 1 / 60;
+  _dernierTemps = maintenant;
+  // Un onglet revenu au premier plan renvoie un dt enorme : on le borne.
+  dt = Math.min(dt, 1 / 20);
+
   if (glisse.actif) {
     glisse.cible = brut;
-    glisse.y += (glisse.cible - glisse.y) * 0.085;
+    const k = 1 - Math.pow(1 - 0.14, dt * 60);
+    glisse.y += (glisse.cible - glisse.y) * k;
     if (Math.abs(glisse.cible - glisse.y) < 0.06) glisse.y = glisse.cible;
-    glisse.boite.style.transform = `translate3d(0,${-glisse.y.toFixed(2)}px,0)`;
+    /* Arrondi au demi-pixel : sans cela le contenu tremble sur les ecrans
+       non retina, parce qu'une translation fractionnaire fait rechantillonner
+       le texte a chaque image. */
+    const y = Math.round(glisse.y * 2) / 2;
+    glisse.boite.style.transform = `translate3d(0,${-y}px,0)`;
   } else {
     glisse.y = brut;
     glisse.max = Math.max(0, document.body.scrollHeight - window.innerHeight);
@@ -446,6 +477,9 @@ async function monterLaScene3D() {
       // La toile s'efface quand sa zone est passee, et cesse alors de peindre.
       const sortie = borne((r.bottom - window.innerHeight * 0.6) / (window.innerHeight * 0.8), 0, 1);
       toile.style.opacity = sortie.toFixed(3);
+      /* Et surtout on lui dit d'arreter. Sans cela elle peignait la scene
+         complete, bloom compris, pendant tout le reste de la page. */
+      scene.montrer(sortie > 0.01);
     });
     toile.dataset.prete = 'oui';
   } catch (e) {

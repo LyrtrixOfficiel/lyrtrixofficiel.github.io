@@ -11,7 +11,9 @@
    ========================================================================== */
 
 export function monterLAtelier(toile) {
-  const sobre = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const _fm = new URLSearchParams(location.search).get('mouvement');
+  const sobre = _fm === '1' ? false : _fm === '0' ? true
+              : matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const gl = toile.getContext('webgl', {
     antialias: false, alpha: false, powerPreference: 'low-power'

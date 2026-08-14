@@ -25,7 +25,9 @@
    ========================================================================== */
 
 export async function monterLeMot(toile, texte = 'KAZURA') {
-  const sobre = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const _fm = new URLSearchParams(location.search).get('mouvement');
+  const sobre = _fm === '1' ? false : _fm === '0' ? true
+              : matchMedia('(prefers-reduced-motion: reduce)').matches;
   const gl = toile.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: false });
   if (!gl) return null;
 
@@ -262,12 +264,22 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
   new IntersectionObserver(es => { visible = es[0].isIntersecting; },
                            { threshold: 0.01 }).observe(toile);
 
+  let _t0 = 0;
   function peindre() {
     const t = (performance.now() - debut) / 1000;
-    forme += (formeCible - forme) * (sobre ? 1 : 0.055);
-    fente += (fenteCible - fente) * 0.09;
-    lx += (sx - lx) * 0.08;
-    ly += (sy - ly) * 0.08;
+
+    /* Amortissements independants du nombre d'images. Lies aux images, le mot
+       mettait une seconde a se condenser sur une machine rapide et dix sur une
+       machine lente, ou restait ondule tant que le rythme etait bas. */
+    const maintenant = performance.now();
+    const dt = Math.min(_t0 ? (maintenant - _t0) / 1000 : 1 / 60, 1 / 20);
+    _t0 = maintenant;
+    const k = (base) => 1 - Math.pow(1 - base, dt * 60);
+
+    forme += (formeCible - forme) * (sobre ? 1 : k(0.055));
+    fente += (fenteCible - fente) * k(0.09);
+    lx += (sx - lx) * k(0.08);
+    ly += (sy - ly) * k(0.08);
 
     gl.uniform1i(u.mot, 0);
     gl.activeTexture(gl.TEXTURE0);
