@@ -389,6 +389,14 @@ body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(
 .menu-liens a.ici { color: var(--orange); }
 /* Le numero est la seule chose qu'on vient chercher en urgence dans ce
    menu. En 1,2 rem il se lisait comme une note de bas de page. */
+/* Julie voulait « Numero » dans le menu, au meme rang que les autres entrees.
+   Le numero lui-meme reste le bouton : c'est ce sur quoi on appuie. L'etiquette
+   se pose au-dessus, petite, pour nommer la rubrique sans voler la place. */
+.menu-tel-etiq {
+  display: block;
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+  font-weight: 500; opacity: .8; margin-bottom: 2px;
+}
 .menu-liens .menu-tel {
   margin-top: 30px;
   font-size: clamp(1.55rem, 7.5vw, 2rem);
@@ -832,6 +840,13 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 }
 .tarif:hover { translate: 0 -4px; box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 38px 70px -34px rgba(120,60,15,.48); }
 .tarif-nom { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; }
+
+/* Le nom d'une seance se lit en deux temps. « Seance » est commun aux quatre
+   et ne distingue rien : on l'allege. Ce qui suit prend l'italique serif et
+   l'orange deja reserves aux mots mis en avant dans les grands titres, ce qui
+   evite d'inventer un style de plus pour un seul endroit. */
+.tarif-nom h3 { font-weight: 420; color: var(--encre-doux); }
+.tarif-nom h3 em { font-size: 1.12em; color: var(--orange); }
 .tarif-duree {
   font-size: .75rem; letter-spacing: .12em; text-transform: uppercase;
   color: var(--orange); padding: 4px 11px; border-radius: 999px;
@@ -891,6 +906,12 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .coord .val small { display: block; font-size: .88rem; color: var(--encre-pale); font-weight: 400; margin-top: 3px; }
 .coord .val a { border-bottom: 1px solid rgba(226,113,29,.35); transition: border-color .3s; }
 .coord .val a:hover { border-color: var(--orange); }
+
+/* La ligne « Reseaux sociaux » porte deux liens le jour ou Julie donne son
+   Facebook. Cote a cote ils se liraient comme une seule adresse ; on ne les
+   empile qu'a partir du second, pour que la ligne Instagram seule reste
+   alignee avec les autres. */
+.coord .val a + a { display: block; margin-top: 6px; }
 
 /* =========================================================================
    L'ENTETE DES PAGES INTERIEURES

@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=6de86730">
+<link rel="stylesheet" href="./styles.css?v=9f64d962">
 </head>
 <body>
 <svg class="filtres" aria-hidden="true" focusable="false"
@@ -47,9 +47,9 @@
       <span class="nom">Shiatsu Jiyū</span>
     </a>
     <div class="nav-liens">
-      <a href="./index.html" class="ici">Accueil</a>
-      <a href="./le-shiatsu.html">Le shiatsu</a>
-      <a href="./seances.html">Les séances</a>
+      <a href="./index.html" class="ici">Bienvenue</a>
+      <a href="./le-shiatsu.html">Shiatsu</a>
+      <a href="./seances.html">Séance</a>
       <a href="./contact.html" class="bouton" data-aimant><span
         class="long">Prendre rendez-vous</span><span class="court">Rendez-vous</span></a>
     </div>
@@ -73,11 +73,11 @@
 <div class="menu" id="menu" hidden>
   <div class="menu-fond" aria-hidden="true"></div>
   <nav class="menu-liens">
-    <a href="./index.html" class="ici" style="--i:0">Accueil</a>
-    <a href="./le-shiatsu.html" style="--i:1">Le shiatsu</a>
-    <a href="./seances.html" style="--i:2">Les séances</a>
+    <a href="./index.html" class="ici" style="--i:0">Bienvenue</a>
+    <a href="./le-shiatsu.html" style="--i:1">Shiatsu</a>
+    <a href="./seances.html" style="--i:2">Séance</a>
     <a href="./contact.html" style="--i:3">Contact</a>
-    <a href="tel:+33617111405" class="menu-tel" style="--i:4">06 17 11 14 05</a>
+    <a href="tel:+33617111405" class="menu-tel" style="--i:4"><span class="menu-tel-etiq">Numéro</span>06 17 11 14 05</a>
   </nav>
 </div>
 <main>
@@ -109,7 +109,12 @@
     <div class="reperes">
       <span class="repere verre barre" style="--i:0"><b>Shiatsu traditionnel</b> &middot; Fédération Française</span>
       <span class="repere verre barre" style="--i:1"><b>30 à 90 minutes</b> &middot; sur rendez-vous</span>
-      <span class="repere verre barre" style="--i:2"><b>Habillée, sur futon</b> &middot; rien à retirer</span>
+      <!-- Meme affirmation que dans le bandeau, donc meme correction : le
+           bandeau qui dirait « sur table » a cote d'un repere qui dit « sur
+           futon » se contredirait a trois centimetres d'ecart. Les phrases
+           qui DECRIVENT la seance parlent encore du futon : c'est signale a
+           Julie, c'est a elle de trancher. -->
+      <span class="repere verre barre" style="--i:2"><b>Habillé, sur table</b> &middot; rien à retirer</span>
     </div>
   </div>
 
@@ -118,14 +123,14 @@
 
 <div class="bandeau" aria-hidden="true">
   <div class="ruban">
-    <b>Shiatsu traditionnel</b><b>Sans aiguilles</b><b>Habillée, sur futon</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b><b>Fédération Française de Shiatsu</b><b>Shiatsu traditionnel</b><b>Sans aiguilles</b><b>Habillée, sur futon</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b><b>Fédération Française de Shiatsu</b>
+    <b>Shiatsu traditionnel</b><b>Habillé, sur table</b><b>Pratique naturelle et holistique</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b><b>Shiatsu traditionnel</b><b>Habillé, sur table</b><b>Pratique naturelle et holistique</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b>
   </div>
 </div>
 
 <section class="pan tache">
   <div class="serre deux">
     <div class="colle"><div class="rev">
-      <p class="sur-titre">Le shiatsu</p>
+      <p class="sur-titre">Shiatsu</p>
       <h2>Des mains,<br>du temps,<br><em>du calme</em>.</h2>
       <a href="./le-shiatsu.html" class="suite" style="margin-top:26px">Comment se passe une séance <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -171,7 +176,10 @@
       </video>
       <div class="ouverture-texte">
         <p class="sur-titre">Le cabinet</p>
-        <h2>Une heure où l'on ne vous demande rien.</h2>
+        <!-- La premiere des deux phrases proposees par Julie. Elle est ici,
+             sur le plein ecran, parce que c'est l'endroit le plus vu du site
+             et que c'est une phrase de promesse, pas de description. -->
+        <h2>Une véritable pause permettant de retrouver ancrage, vitalité et sérénité.</h2>
         <p>À Knœringue, dans le Haut-Rhin, à vingt minutes de Saint-Louis et de Bâle.</p>
       </div>
     </div>
@@ -209,43 +217,45 @@
 <section class="pan serree">
   <div class="serre">
     <div class="rev" style="max-width:52ch">
-      <p class="sur-titre">Les séances</p>
-      <h2>Quatre formules, selon le temps dont vous disposez.</h2>
+      <p class="sur-titre">Séance</p>
+      <h2>Selon vos besoins du moment et le temps dont vous disposez.</h2>
     </div>
     <div class="tarifs">
   <article class="tarif verre rev" data-i="0">
     <div>
-      <div class="tarif-nom"><h3>Séance Harmonie</h3><span class="tarif-duree">90 minutes</span></div>
-      <p>La séance complète. Le corps entier est parcouru sans se presser, avec le temps
-    de s'installer au début et de revenir à la fin.</p>
+      <div class="tarif-nom"><h3>Séance <em>Harmonie</em></h3><span class="tarif-duree">90 minutes</span></div>
+      <p>Plus longue et plus enveloppante, c'est l'association parfaite d'une séance
+    Traditionnelle et Visage &amp; Tête.</p>
     </div>
     <div class="tarif-prix">100<span>€</span></div>
   </article>
   <article class="tarif verre rev" data-i="1">
     <div>
-      <div class="tarif-nom"><h3>Séance traditionnelle</h3><span class="tarif-duree">60 min &middot; adulte</span></div>
-      <p>Le format habituel, celui de la plupart des séances de suivi.</p>
+      <div class="tarif-nom"><h3>Séance <em>Traditionnelle Adulte</em></h3><span class="tarif-duree">60 minutes</span></div>
+      <p>Accompagnement personnalisé selon vos besoins.</p>
     </div>
     <div class="tarif-prix">60<span>€</span></div>
   </article>
   <article class="tarif verre rev" data-i="2">
     <div>
-      <div class="tarif-nom"><h3>Séance traditionnelle</h3><span class="tarif-duree">30 min &middot; enfant</span></div>
-      <p>De quelques mois à douze ans. Un temps court, adapté à l'âge, avec un parent présent.</p>
+      <div class="tarif-nom"><h3>Séance <em>Traditionnelle Enfant</em></h3><span class="tarif-duree">30 minutes</span></div>
+      <p>De quelques mois à 12 ans. Une approche douce et ludique adaptée en fonction de
+    l'âge, avec la présence d'un parent.</p>
     </div>
     <div class="tarif-prix">40<span>€</span></div>
   </article>
   <article class="tarif verre rev" data-i="3">
     <div>
-      <div class="tarif-nom"><h3>Séance visage &amp; tête</h3><span class="tarif-duree">40 minutes</span></div>
-      <p>Le visage, le crâne, la nuque. Pour celles et ceux qui portent leurs tensions
-    au-dessus des épaules.</p>
+      <div class="tarif-nom"><h3>Séance <em>Visage &amp; Tête</em></h3><span class="tarif-duree">40 minutes</span></div>
+      <p>Shiatsu des épaules au sommet du crâne. Visage à l'huile de carotte ou jojoba,
+    au choix. Idéal pour apaiser les inconforts tels que les tensions physiques
+    (tête, cervicales, mâchoire serrée...), sinus bouchés et acouphènes.</p>
     </div>
     <div class="tarif-prix">60<span>€</span></div>
   </article>
 </div>
-    <p class="note">Tarifs applicables au 1<sup>er</sup> mai 2026. Règlement sur place.
-      <a href="./seances.html" class="suite">Le détail de chaque séance <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <p class="note">Tarifs applicables au 1<sup>er</sup> mai 2026. Règlement en espèces
+      ou par chèque. <a href="./seances.html" class="suite">Le détail de chaque séance <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
   </div>
 </section>
