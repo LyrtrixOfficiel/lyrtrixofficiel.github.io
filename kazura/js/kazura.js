@@ -542,6 +542,21 @@ async function monterLEncreSiPresente() {
   }
 }
 
+/* ══ 14 ter bis. Le jardin sec ══════════════════════════════════════════ */
+async function monterLeJardinSiPresent() {
+  const toile = $('#toile-jardin');
+  if (!toile) return;
+  if (!supporteLeFluide()) { toile.dataset.mode = 'aucun'; return; }
+  try {
+    const { monterLeJardin } = await import('./jardin.js');
+    const j = monterLeJardin(toile);
+    if (j) { toile.dataset.mode = 'jardin'; (window.kazura ||= {}).jardin = j; }
+  } catch (e) {
+    console.warn('jardin indisponible', e);
+    toile.dataset.mode = 'aucun';
+  }
+}
+
 /* ══ 14 quater. Le mot en WebGL ═════════════════════════════════════════ */
 async function monterLeMotSiPresent() {
   const toile = $('#toile-mot');
@@ -697,6 +712,7 @@ function demarrer() {
   monterLaScene3D();
   monterLAtelierSiPresent();
   monterLEncreSiPresente();
+  monterLeJardinSiPresent();
   monterLeMotSiPresent();
 
   const annee = $('[data-annee]');

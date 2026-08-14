@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Démonstrations · Kazura</title>
+<meta name="description" content="Trois pièces calculées en direct dans le navigateur : un jardin sec qu'on ratisse, une simulation de fluide, une plante qui pousse au défilement.">
+<!-- Apercu sur GitHub Pages : a retirer a la mise en ligne sur kazura.fr. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#04060A">
+<meta property="og:title" content="Démonstrations · Kazura">
+<meta property="og:image" content="assets/matiere.webp">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/kazura.css">
+</head>
+
+<body>
+
+<div class="rideau" id="rideau" data-etat="baisse" aria-hidden="true"><i></i><i></i></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="degrade-liane" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#6EE7B7"/><stop offset="55%" stop-color="#10B981"/><stop offset="100%" stop-color="#7C3AED"/>
+  </linearGradient>
+</defs></svg>
+
+<div class="fond-halo" aria-hidden="true"></div>
+<div class="fond-trame" aria-hidden="true"></div>
+
+<nav class="nav" data-cache="non" data-dense="oui">
+  <a class="nav__marque" href="index.html" aria-label="Kazura, accueil">
+    <svg viewBox="0 0 100 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true">
+      <path d="M50 2a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0 6a42 42 0 1 1 0 84 42 42 0 1 1 0-84z"/>
+      <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z"/>
+      <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(120 50 50)"/>
+      <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(240 50 50)"/>
+      <circle cx="50" cy="50" r="4.6"/>
+    </svg>
+    <span>Kazura</span>
+  </a>
+  <div class="nav__liens">
+    <a class="nav__lien" href="demonstrations.html" aria-current="page">Démonstrations</a>
+    <a class="nav__lien" href="savoir-faire.html">Savoir-faire</a>
+    <a class="nav__lien" href="travaux.html">Travaux</a>
+    <a class="nav__lien" href="studio.html">Le studio</a>
+  </div>
+  <a class="bouton bouton--plein nav__cta" href="contact.html" data-aimant>
+    Parler de mon site <span class="fleche" aria-hidden="true">→</span>
+  </a>
+  <button class="nav__menu" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu">
+    <span class="nav__barres" aria-hidden="true"><i></i><i></i></span>
+  </button>
+</nav>
+
+<div class="panneau" id="menu" hidden>
+  <nav class="panneau__liens" aria-label="Navigation principale">
+    <a href="index.html">Accueil</a>
+    <a href="demonstrations.html">Démonstrations</a>
+    <a href="savoir-faire.html">Savoir-faire</a>
+    <a href="travaux.html">Travaux</a>
+    <a href="studio.html">Le studio</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<div id="defile">
+
+  <header class="bloc" style="padding-top:clamp(9rem,22vh,14rem);padding-bottom:clamp(3rem,7vh,5rem)">
+    <div class="enveloppe">
+      <span class="etiquette" data-vient="bloc">葛 · Démonstrations</span>
+      <h1 class="titre" data-vient="titre" style="margin:1.2rem 0 1.6rem;max-width:17ch">
+        Rien ici n'est une vidéo.
+      </h1>
+      <p class="chapo" data-vient="bloc">
+        Trois pièces calculées par votre propre carte graphique pendant que
+        vous les regardez. Chacune réagit à votre geste, et aucune ne pourrait
+        être remplacée par un fichier téléchargé. C'est la différence entre
+        montrer et raconter.
+      </p>
+    </div>
+  </header>
+
+  <!-- ══ 1. Le jardin sec ═════════════════════════════════════════════ -->
+  <section class="demo" id="jardin">
+    <canvas id="toile-jardin" aria-hidden="true"></canvas>
+    <div class="demo__legende verre">
+      <span class="etiquette">Un · 枯山水 · Jardin sec</span>
+      <h2 class="sous-titre" style="margin:.7rem 0 .8rem">Ratissez le gravier.</h2>
+      <p>
+        Le curseur est un râteau à cinq dents. Chaque passage creuse un champ
+        de hauteur gardé en mémoire graphique, et les sillons restent. Ce que
+        vous voyez n'est pas dessiné : c'est un relief, éclairé par une lumière
+        rasante qui transforme un creux de quelques millièmes en ombre franche.
+      </p>
+      <p class="demo__note">Passez la souris. Rien ne s'efface.</p>
+    </div>
+  </section>
+
+  <!-- ══ 2. L'encre ═══════════════════════════════════════════════════ -->
+  <section class="demo" id="encre">
+    <canvas id="toile-encre" data-texte="KAZURA" aria-hidden="true"></canvas>
+    <div class="demo__legende verre">
+      <span class="etiquette">Deux · Navier-Stokes</span>
+      <h2 class="sous-titre" style="margin:.7rem 0 .8rem">Remuez l'encre.</h2>
+      <p>
+        Une simulation de fluide incompressible, résolue soixante fois par
+        seconde : injection, advection, divergence, vingt itérations de
+        pression, puis soustraction du gradient. C'est cette dernière passe qui
+        sépare un vrai fluide d'un flou qui dérive.
+      </p>
+      <p class="demo__note">Le nom s'écrit à l'encre, puis le courant l'emporte.</p>
+    </div>
+  </section>
+
+  <!-- ══ 3. La liane ══════════════════════════════════════════════════ -->
+  <section class="bloc">
+    <div class="enveloppe">
+      <div class="identite__grille">
+        <div>
+          <span class="etiquette" data-vient="bloc">Trois · Croissance</span>
+          <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">
+            Le défilement fait pousser la plante.
+          </h2>
+          <p class="chapo" data-vient="bloc">
+            Sur la page d'accueil, dix-huit lianes de verre poussent autour de
+            la caméra. Le truc tient en une phrase : sur un tube, une
+            coordonnée avance le long de la courbe, donc il suffit de jeter les
+            fragments au-delà d'un seuil pour que la tige apparaisse du pied
+            vers la pointe. Aucune géométrie n'est régénérée, et un liseré vif
+            posé sous le seuil donne le bourgeon qui s'ouvre.
+          </p>
+          <p class="chapo" data-vient="bloc" style="margin-top:1rem">
+            Remontez, elle se rétracte.
+          </p>
+          <p style="margin-top:2rem" data-vient="bloc">
+            <a class="bouton bouton--plein" href="index.html" data-aimant>
+              Aller la voir <span class="fleche" aria-hidden="true">→</span>
+            </a>
+          </p>
+        </div>
+        <figure class="identite__objet" data-vient="bloc">
+          <video src="video/matiere.mp4" poster="assets/affiche-matiere.webp"
+                 muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+          <figcaption>Matière en fusion, rendu temps réel</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Ce que ça coûte ══════════════════════════════════════════════ -->
+  <section class="bloc" style="border-top:1px solid rgba(174,236,213,.10)">
+    <div class="enveloppe">
+      <span class="etiquette" data-vient="bloc">La contrepartie</span>
+      <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem;max-width:20ch">
+        Le spectaculaire ne doit jamais coûter le confort.
+      </h2>
+      <p class="chapo" data-vient="bloc">
+        Une belle scène qui tombe à vingt images par seconde est une mauvaise
+        scène. Trois règles tenues sur chaque pièce de cette page.
+      </p>
+
+      <div class="cartes" style="margin-top:clamp(2.5rem,6vw,4rem)">
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">01</span>
+          <h3>Le rendu s'arrête</h3>
+          <p>Dès qu'une pièce quitte l'écran, elle cesse de calculer. Une machine qui chauffe est une machine qu'on quitte.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">02</span>
+          <h3>La qualité s'adapte</h3>
+          <p>Chaque scène mesure son propre temps par image et se déleste par paliers si la machine ne suit pas.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">03</span>
+          <h3>Le repli est prévu</h3>
+          <p>Sans carte graphique compatible, une image fixe prend la place. Personne ne voit jamais un rectangle noir.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="contact__fond" data-parallaxe="0.10" aria-hidden="true"></div>
+    <div class="contact__centre">
+      <p class="hero__kanji" aria-hidden="true" style="font-size:clamp(2rem,4.5vw,3.2rem)">門</p>
+      <h2 class="titre" data-vient="titre">Vous en voulez sur le vôtre ?</h2>
+      <div class="contact__liens" data-vient="bloc">
+        <a class="bouton bouton--plein" href="contact.html" data-aimant>Écrire <span class="fleche" aria-hidden="true">→</span></a>
+        <a class="bouton bouton--verre" href="index.html#prix" data-aimant>Voir le tarif</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pied">
+    <div class="enveloppe">
+      <div class="pied__haut">
+        <div class="pied__sceau">
+          <img src="assets/blason.webp" alt="Le sceau de Kazura" width="74" height="74" loading="lazy" decoding="async">
+          <div><b>Kazura</b><small>Beblenheim · Alsace</small></div>
+        </div>
+        <nav class="pied__nav" aria-label="Pied de page">
+          <a href="index.html">Accueil</a>
+          <a href="demonstrations.html">Démonstrations</a>
+    <a href="savoir-faire.html">Savoir-faire</a>
+          <a href="travaux.html">Travaux</a>
+          <a href="studio.html">Le studio</a>
+          <a href="contact.html">Contact</a>
+          <a href="mentions-legales.html">Mentions légales</a>
+        </nav>
+      </div>
+      <div class="pied__bas">
+        <span>© <span data-annee>2026</span> Kazura · Matheo Schmitt</span>
+        <span>SIREN 100 165 455 · TVA non applicable, art. 293 B du CGI</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script type="module" src="js/kazura.js"></script>
+</body>
+</html>
