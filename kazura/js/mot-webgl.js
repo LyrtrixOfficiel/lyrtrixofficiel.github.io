@@ -80,6 +80,12 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+    /* SANS CETTE LIGNE LE MOT EST A L'ENVERS. Une toile 2D numerote ses lignes
+       du haut vers le bas, une texture WebGL du bas vers le haut. Le mot
+       s'affichait donc retourne : le A devenait ∀, le U devenait ∩, le Z
+       devenait un S, et on lisait KASПBA au lieu de KAZURA. Aucune mesure ne
+       le voit, il faut regarder. */
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas);
   };
   televerser();
@@ -159,7 +165,10 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
       vec3 haut = vec3(1.0, 1.0, 1.0);
       vec3 mid  = vec3(0.431, 0.906, 0.718);
       vec3 bas  = vec3(0.016, 0.470, 0.341);
-      float g = clamp(uv.y, 0.0, 1.0);
+      /* Le degrade est cale sur la bande qu'occupent REELLEMENT les lettres,
+         pas sur la toile entiere. Etale sur toute la hauteur, le mot ne
+         traversait que le milieu du degrade et ressortait uniformement vert. */
+      float g = clamp((uv.y - 0.30) / 0.42, 0.0, 1.0);
       vec3 col = mix(bas, mid, smoothstep(0.0, 0.62, g));
       col = mix(col, haut, smoothstep(0.72, 1.0, g));
 

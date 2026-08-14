@@ -392,9 +392,11 @@ section { position: relative; }
   content: '';
   position: absolute; inset: 0;
   pointer-events: none;
+  /* Un puits sombre SERRE autour du texte. Large, il effacait toute l'image
+     de fond et le hero devenait une bouillie noire. */
   background:
-    radial-gradient(56% 50% at 50% 46%, rgba(4,6,10,.86) 0%, rgba(4,6,10,.4) 46%, transparent 74%),
-    linear-gradient(to bottom, rgba(4,6,10,.7) 0%, transparent 22%, transparent 66%, var(--noir) 100%);
+    radial-gradient(42% 34% at 50% 48%, rgba(4,6,10,.88) 0%, rgba(4,6,10,.5) 52%, transparent 78%),
+    linear-gradient(to bottom, rgba(4,6,10,.62) 0%, transparent 20%, transparent 70%, var(--noir) 100%);
 }
 .hero__centre { position: relative; z-index: 1; text-align: center; width: 100%; max-width: 1180px; }
 .hero__kanji {

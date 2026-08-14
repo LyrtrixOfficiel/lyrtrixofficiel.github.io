@@ -56,6 +56,63 @@ export function monterLaScene(toile, options = {}) {
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
   camera.position.set(0, 0, 9);
 
+  /* ── Le fond photographique ────────────────────────────────────────── */
+  /* Le procedural seul rendait une scene maigre : quelques tiges dans du noir.
+     L'image de synthese produite pour le hero a une densite qu'aucun shader
+     ecrit en une nuit n'egale. On ne choisit donc pas : elle devient le fond
+     du monde, les tiges poussent devant, et TOUT passe sous le meme
+     etalonnage (bloom, aberration, vignette, grain). C'est ce passage commun
+     qui fait tenir les deux ensemble au lieu de les juxtaposer.
+
+     Le plan est accroche a la camera, donc il la suit sans jamais bouger a
+     l'ecran, et il est mis a l'echelle pour couvrir le champ quel que soit le
+     format de la fenetre. */
+  const DIST_FOND = 70;
+  const fond = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    /* `fog: false` est indispensable. Un materiau basique subit le brouillard
+       de la scene par defaut, et a soixante-dix unites il en mangeait plus de
+       la moitie : l'image ressortait delavee, comme une tache sombre. Le fond
+       n'est pas dans le monde, il EST le monde : il ne doit rien recevoir. */
+    new THREE.MeshBasicMaterial({
+      depthWrite: false, depthTest: false, toneMapped: false, fog: false
+    })
+  );
+  fond.renderOrder = -1;
+  fond.position.z = -DIST_FOND;
+  camera.add(fond);
+  scene.add(camera);
+
+  new THREE.TextureLoader().load(
+    options.fond || 'assets/hero.webp',
+    (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      fond.material.map = tex;
+      /* Assombri pour que le texte reste lisible par-dessus : le hero porte
+         un titre en grand, pas une galerie. */
+      /* Le texte se detache par un puits sombre local (voir `.hero::after`),
+         pas en noyant toute l'image : a 0,55 la richesse de la photo etait
+         perdue et il ne restait qu'une bouillie sombre. */
+      fond.material.color.setScalar(0.92);
+      fond.material.needsUpdate = true;
+      cadrerLeFond(tex);
+    },
+    undefined,
+    () => { fond.visible = false; }
+  );
+
+  /* Couvre le champ sans deformer l'image : on compare le rapport de l'image
+     a celui de la fenetre et on deborde du cote qui manque. */
+  function cadrerLeFond(tex) {
+    if (!tex?.image) return;
+    const hauteurVue = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * DIST_FOND;
+    const largeurVue = hauteurVue * camera.aspect;
+    const rImage = tex.image.width / tex.image.height;
+    const rVue = camera.aspect;
+    if (rImage > rVue) fond.scale.set(hauteurVue * rImage, hauteurVue, 1);
+    else fond.scale.set(largeurVue, largeurVue / rImage, 1);
+  }
+
   /* ── Le materiau des tiges ─────────────────────────────────────────── */
   const matTige = new THREE.ShaderMaterial({
     transparent: true,
@@ -107,31 +164,40 @@ export function monterLaScene(toile, options = {}) {
         vec3 V = normalize(vVersOeil);
 
         // Fresnel : le verre s'allume sur ses aretes, pas au centre.
-        float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.4);
+        float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
 
-        // Fausse diffusion sous la surface : la lumiere violette vient de
-        // derriere et traverse la matiere.
+        // Fausse diffusion sous la surface : la lumiere vient de derriere et
+        // traverse la matiere. C'est la SEULE source de vert vif : une tige
+        // eclairee de face doit rester sombre, sinon on obtient du neon.
         vec3 L = normalize(vec3(-0.35, 0.55, -1.0));
-        float dos = pow(clamp(dot(-N, L), 0.0, 1.0), 1.6);
+        float dos = pow(clamp(dot(-N, L), 0.0, 1.0), 2.2);
 
-        vec3 col = mix(uJadeF, uJade, fres * 0.9 + 0.12);
-        col += uViolet  * dos * 1.35;
-        col += uVioletC * fres * 0.55;
+        /* Corps presque noir. La version precedente melangeait jadeF vers jade
+           sur toute la surface : les tiges etaient lumineuses partout, le
+           bloom les lavait, et la scene virait au cyan surexpose. Un verre
+           sombre qui ne s'allume que sur ses aretes lit comme du verre.
+           (Pas d'accent grave ici : on est dans un gabarit de chaine.) */
+        vec3 col = uJadeF * 0.5;
+        col += uJade   * dos  * 0.85;
+        col += uViolet * fres * 0.60;
 
-        // Le bourgeon : un liseré vif juste sous le front de pousse.
-        float front = smoothstep(seuil - 0.045, seuil, vUv.x);
-        col += vec3(0.62, 1.0, 0.84) * front * 3.2;
+        // Le bourgeon. A 3.2 il brulait en taches blanches geantes.
+        float front = smoothstep(seuil - 0.03, seuil, vUv.x);
+        col += vec3(0.55, 1.00, 0.80) * front * 0.95;
 
         // Nervure longitudinale, pour que le tube ne soit pas lisse et mort.
-        float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + vUv.x * 26.0)), 14.0);
-        col += uJade * nerv * 0.45;
+        float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + vUv.x * 26.0)), 16.0);
+        col += uJade * nerv * 0.28;
 
         // Brouillard applique a la main : le materiau est personnalise, donc
         // celui de la scene ne s'y applique pas tout seul.
         float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
         col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
 
-        float alpha = 0.42 + fres * 0.58 + front * 0.6;
+        /* La scene est un DECOR : elle passe derriere le texte, jamais devant.
+           Une opacite pleine la faisait rivaliser avec le contenu, une opacite
+           trop basse la rendait invisible sur le fond photographique. */
+        float alpha = 0.24 + fres * 0.44 + front * 0.40;
         gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
       }
     `
@@ -225,16 +291,21 @@ export function monterLaScene(toile, options = {}) {
   scene.add(groupe);
 
   for (let i = 0; i < NB_LIANES; i++) {
-    const rayon   = alea(2.6, 8.5);
+    const rayon   = alea(2.2, 7.5);
     const sens    = Math.random() < 0.5 ? -1 : 1;
-    const tours   = alea(1.1, 2.6) * sens;
+    /* Beaucoup plus de tours qu'avant. A moins de trois, une tige vue de pres
+       n'offre qu'un segment presque droit : on obtenait des tuteurs plantes
+       dans le decor, pas des lianes. Une liane s'enroule, c'est sa definition.
+       Il faut alors autant de points de controle, sinon la courbe coupe les
+       virages et redevient anguleuse. */
+    const tours   = alea(3.4, 7.0) * sens;
     const phase   = alea(0, Math.PI * 2);
     const yDepart = alea(-6, 2);
     const hauteur = alea(HAUTEUR * 0.55, HAUTEUR * 1.15);
     const ondul   = alea(0.5, 2.2);
 
     const points = [];
-    const N = 26;
+    const N = 64;
     for (let j = 0; j <= N; j++) {
       const t = j / N;
       const a = phase + t * Math.PI * 2 * tours;
@@ -247,7 +318,8 @@ export function monterLaScene(toile, options = {}) {
     }
 
     const courbe = new THREE.CatmullRomCurve3(points);
-    const geo = new THREE.TubeGeometry(courbe, SEGMENTS, alea(0.035, 0.11), RADIAUX, false);
+    // Tiges plus fines : a 0,11 de rayon on obtenait des tuyaux, pas des tiges.
+    const geo = new THREE.TubeGeometry(courbe, SEGMENTS, alea(0.022, 0.062), RADIAUX, false);
 
     const decalage = alea(0.0, 0.75);
     const dec = new Float32Array(geo.attributes.position.count).fill(decalage);
@@ -365,13 +437,13 @@ export function monterLaScene(toile, options = {}) {
         float r2 = dot(c, c);
 
         // L'ecart des trois canaux croit vers les bords, comme une optique.
-        vec2 ecart = c * r2 * 0.055 * uForce;
+        vec2 ecart = c * r2 * 0.028 * uForce;
         vec3 col;
         col.r = texture2D(tDiffuse, vUv - ecart).r;
         col.g = texture2D(tDiffuse, vUv).g;
         col.b = texture2D(tDiffuse, vUv + ecart).b;
 
-        col *= 1.0 - r2 * 0.85;                         // vignette
+        col *= 1.0 - r2 * 0.58;                         // vignette
         col += (alea(vUv * 900.0 + uTemps) - 0.5) * 0.030;  // grain
         gl_FragColor = vec4(col, 1.0);
       }
@@ -382,7 +454,10 @@ export function monterLaScene(toile, options = {}) {
   composer.addPass(new RenderPass(scene, camera));
   let bloom = null;
   if (!petit) {
-    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.72, 0.62, 0.22);
+    /* Force nettement reduite et seuil releve : a 0,72 et 0,22 le bloom
+       saisissait toute la tige et pas seulement ses aretes, ce qui donnait
+       des trainees de fibre optique. Il ne doit cueillir que les bourgeons. */
+    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.34, 0.55, 0.62);
     composer.addPass(bloom);
   }
   const finale = new ShaderPass(passeFinale);
@@ -398,6 +473,7 @@ export function monterLaScene(toile, options = {}) {
     renderer.setSize(w, h, false);
     composer.setSize(w, h);
     if (bloom) bloom.setSize(w, h);
+    cadrerLeFond(fond.material.map);
   }
   redimensionner();
   window.addEventListener('resize', redimensionner);
