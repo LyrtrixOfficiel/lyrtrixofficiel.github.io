@@ -458,10 +458,14 @@ section { position: relative; }
    L'epinglage est fait en JavaScript parce que `sticky` ne survit pas au
    conteneur translate. */
 [data-epingle] { position: relative; }
+/* Toujours en position absolue, jamais en `fixed` : c'est le script qui le
+   maintient immobile par une transformation. Voir le commentaire dans
+   `monterLEpinglage`, la raison est structurelle. */
 [data-epingle-contenu] {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100svh;
   overflow: hidden;
+  will-change: transform;
 }
 
 .scrub { position: relative; width: 100%; height: 100%; }

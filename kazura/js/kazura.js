@@ -226,18 +226,20 @@ function monterLEpinglage() {
       zone.style.setProperty('--avance', avance.toFixed(4));
       zone.dataset.avance = avance.toFixed(3);
 
-      if (r.top <= 0 && r.bottom >= h) {
-        dedans.style.position = 'fixed';
-        dedans.style.top = '0';
-        dedans.style.left = '0';
-        dedans.style.width = '100%';
-      } else {
-        dedans.style.position = 'absolute';
-        dedans.style.top = r.top > 0 ? '0' : 'auto';
-        dedans.style.bottom = r.top > 0 ? 'auto' : '0';
-        dedans.style.left = '0';
-        dedans.style.width = '100%';
-      }
+      /* On epingle par TRANSFORMATION, jamais par `position: fixed`.
+         `#defile` porte `will-change: transform`, ce qui suffit a en faire le
+         bloc conteneur de ses descendants fixes : un enfant en `fixed` avec
+         `top: 0` se collait alors en haut du DOCUMENT, soit des milliers de
+         pixels au-dessus de l'ecran. La section faisait 3 600 px de vide
+         absolu, et c'est ce que voyait Matheo apres les lianes.
+
+         Deplacer le contenu du meme nombre de pixels que la section a
+         defile le maintient immobile a l'ecran, sans dependre d'aucun bloc
+         conteneur, et fonctionne aussi bien en defilement natif qu'amorti. */
+      const cale = r.top <= 0
+        ? (r.bottom >= h ? -r.top : course)
+        : 0;
+      dedans.style.transform = 'translate3d(0,' + cale.toFixed(1) + 'px,0)';
       for (const f of fenetres) {
         f.el.dataset.actif = (avance >= f.a && avance < f.b) ? 'oui' : 'non';
       }
