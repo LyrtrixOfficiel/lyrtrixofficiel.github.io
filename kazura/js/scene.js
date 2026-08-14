@@ -1,0 +1,461 @@
+/* ==========================================================================
+   KAZURA 葛 - la montee
+   --------------------------------------------------------------------------
+   Une camera monte dans le noir. Autour d'elle, des lianes de verre poussent
+   au rythme du defilement : le scroll ne fait pas glisser une image, il fait
+   grandir la plante.
+
+   Comment la croissance est obtenue. Chaque liane est un tube genere le long
+   d'une courbe. Sur `TubeGeometry`, la coordonnee `uv.x` avance le long du
+   tube, de 0 au pied a 1 a la pointe. Il suffit donc de jeter les fragments
+   dont `uv.x` depasse un uniforme `uPousse` pour que le tube apparaisse
+   progressivement, du pied vers la pointe, sans regenerer aucune geometrie.
+   Un liseré lumineux pose juste sous ce seuil donne le bourgeon en train de
+   s'ouvrir.
+
+   Le meme seuil pilote les feuilles, qui portent en attribut leur position le
+   long de la tige : une feuille n'existe que si la liane l'a deja depassee.
+   ========================================================================== */
+
+import * as THREE from 'three';
+import { EffectComposer }  from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }      from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass }      from 'three/addons/postprocessing/ShaderPass.js';
+
+const JADE    = new THREE.Color('#10B981');
+const JADE_F  = new THREE.Color('#04352A');
+const VIOLET  = new THREE.Color('#7C3AED');
+const VIOLET_C= new THREE.Color('#A78BFA');
+
+export function monterLaScene(toile, options = {}) {
+  const sobre = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const petit = window.innerWidth < 820;
+
+  /* Budget adapte a la machine. Sur un telephone on divise tout par deux et
+     on coupe le bloom, qui est de loin la passe la plus chere. */
+  const NB_LIANES = petit ? 9 : 18;
+  const SEGMENTS  = petit ? 90 : 160;
+  const RADIAUX   = petit ? 6 : 10;
+  const NB_FEUILLES = petit ? 5 : 9;
+  const HAUTEUR   = 60;
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas: toile, antialias: !petit, alpha: false,
+    powerPreference: 'high-performance', stencil: false, depth: true
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, petit ? 1.5 : 1.75));
+  renderer.setClearColor(0x04060A, 1);
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x04060A, 0.028);
+
+  const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
+  camera.position.set(0, 0, 9);
+
+  /* ── Le materiau des tiges ─────────────────────────────────────────── */
+  const matTige = new THREE.ShaderMaterial({
+    transparent: true,
+    side: THREE.DoubleSide,
+    uniforms: {
+      uPousse:  { value: 0 },
+      uTemps:   { value: 0 },
+      uJade:    { value: JADE },
+      uJadeF:   { value: JADE_F },
+      uViolet:  { value: VIOLET },
+      uVioletC: { value: VIOLET_C },
+      uBrouillard: { value: new THREE.Color(0x04060A) },
+      uDensite: { value: scene.fog.density }
+    },
+    vertexShader: /* glsl */`
+      attribute float aDecalage;   // retard de pousse propre a chaque liane
+      varying vec2  vUv;
+      varying vec3  vNormalMonde;
+      varying vec3  vVersOeil;
+      varying float vDecalage;
+      varying float vProfondeur;
+
+      void main() {
+        vUv = uv;
+        vDecalage = aDecalage;
+        vec4 monde = modelMatrix * vec4(position, 1.0);
+        vNormalMonde = normalize(mat3(modelMatrix) * normal);
+        vVersOeil = normalize(cameraPosition - monde.xyz);
+        vec4 vue = viewMatrix * monde;
+        vProfondeur = -vue.z;
+        gl_Position = projectionMatrix * vue;
+      }
+    `,
+    fragmentShader: /* glsl */`
+      precision highp float;
+      uniform float uPousse, uTemps, uDensite;
+      uniform vec3  uJade, uJadeF, uViolet, uVioletC, uBrouillard;
+      varying vec2  vUv;
+      varying vec3  vNormalMonde, vVersOeil;
+      varying float vDecalage, vProfondeur;
+
+      void main() {
+        /* Le seuil de pousse, decale liane par liane pour qu'elles ne
+           montent pas toutes ensemble comme un rideau. */
+        float seuil = clamp(uPousse * (1.0 + vDecalage) - vDecalage, 0.0, 1.0);
+        if (vUv.x > seuil) discard;
+
+        vec3 N = normalize(vNormalMonde);
+        vec3 V = normalize(vVersOeil);
+
+        // Fresnel : le verre s'allume sur ses aretes, pas au centre.
+        float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 2.4);
+
+        // Fausse diffusion sous la surface : la lumiere violette vient de
+        // derriere et traverse la matiere.
+        vec3 L = normalize(vec3(-0.35, 0.55, -1.0));
+        float dos = pow(clamp(dot(-N, L), 0.0, 1.0), 1.6);
+
+        vec3 col = mix(uJadeF, uJade, fres * 0.9 + 0.12);
+        col += uViolet  * dos * 1.35;
+        col += uVioletC * fres * 0.55;
+
+        // Le bourgeon : un liseré vif juste sous le front de pousse.
+        float front = smoothstep(seuil - 0.045, seuil, vUv.x);
+        col += vec3(0.62, 1.0, 0.84) * front * 3.2;
+
+        // Nervure longitudinale, pour que le tube ne soit pas lisse et mort.
+        float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + vUv.x * 26.0)), 14.0);
+        col += uJade * nerv * 0.45;
+
+        // Brouillard applique a la main : le materiau est personnalise, donc
+        // celui de la scene ne s'y applique pas tout seul.
+        float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
+        col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
+
+        float alpha = 0.42 + fres * 0.58 + front * 0.6;
+        gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
+      }
+    `
+  });
+
+  /* ── Le materiau des feuilles ──────────────────────────────────────── */
+  const matFeuille = new THREE.ShaderMaterial({
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    uniforms: {
+      uPousse: { value: 0 },
+      uTemps:  { value: 0 },
+      uJade:   { value: JADE },
+      uViolet: { value: VIOLET },
+      uBrouillard: { value: new THREE.Color(0x04060A) },
+      uDensite: { value: scene.fog.density }
+    },
+    vertexShader: /* glsl */`
+      attribute float aLong;      // position de la feuille le long de la tige
+      attribute float aDecalage;
+      attribute float aGraine;    // pour desynchroniser le frisson
+      varying vec2  vUv;
+      varying float vOuverte;
+      varying float vGraine;
+      varying float vProfondeur;
+      uniform float uPousse, uTemps;
+
+      void main() {
+        vUv = uv;
+        vGraine = aGraine;
+        float seuil = clamp(uPousse * (1.0 + aDecalage) - aDecalage, 0.0, 1.0);
+
+        // La feuille s'ouvre sur les cinq centiemes qui suivent son point
+        // d'attache, puis reste ouverte.
+        vOuverte = smoothstep(aLong, aLong + 0.05, seuil);
+
+        vec3 p = position * vOuverte;
+        // Un frisson tres lent, pour que rien ne soit jamais parfaitement fixe.
+        p.xy += vec2(sin(uTemps * 0.55 + aGraine * 6.28),
+                     cos(uTemps * 0.42 + aGraine * 4.13)) * 0.045 * vOuverte;
+
+        vec4 monde = instanceMatrix * vec4(p, 1.0);
+        vec4 vue = viewMatrix * modelMatrix * monde;
+        vProfondeur = -vue.z;
+        gl_Position = projectionMatrix * vue;
+      }
+    `,
+    fragmentShader: /* glsl */`
+      precision highp float;
+      uniform vec3  uJade, uViolet, uBrouillard;
+      uniform float uTemps, uDensite;
+      varying vec2  vUv;
+      varying float vOuverte, vGraine, vProfondeur;
+
+      void main() {
+        if (vOuverte < 0.01) discard;
+
+        /* Silhouette de feuille, dessinee dans le carre : deux arcs qui se
+           rejoignent en pointe. Moins cher qu'une texture, et net a toutes
+           les tailles. */
+        vec2 p = vUv * 2.0 - 1.0;
+        float largeur = (1.0 - p.y * p.y) * 0.72;
+        float d = abs(p.x) - largeur;
+        if (d > 0.0) discard;
+
+        float bord = smoothstep(0.0, -0.42, d);
+        float nervure = smoothstep(0.05, 0.0, abs(p.x)) * 0.6
+                      + smoothstep(0.035, 0.0, abs(abs(p.x) - largeur * 0.5)) * 0.25;
+
+        vec3 col = mix(uJade * 0.30, uJade * 1.25, bord);
+        col += uViolet * (1.0 - bord) * 0.85;
+        col += vec3(0.72, 1.0, 0.88) * nervure * 0.55;
+
+        float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
+        col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
+
+        gl_FragColor = vec4(col, vOuverte * (0.30 + bord * 0.62));
+      }
+    `
+  });
+
+  /* ── Generation des lianes ─────────────────────────────────────────── */
+  /* Chaque liane est une helice bruitee : elle tourne autour de l'axe de
+     montee en s'ecartant et se rapprochant, ce qui donne un enroulement
+     credible sans simulation. Deux lianes ne se ressemblent jamais parce que
+     rayon, pas de vis, sens de rotation et bruit sont tires au hasard. */
+  const alea = (a, b) => a + Math.random() * (b - a);
+  const feuillesPos = [];
+  const groupe = new THREE.Group();
+  scene.add(groupe);
+
+  for (let i = 0; i < NB_LIANES; i++) {
+    const rayon   = alea(2.6, 8.5);
+    const sens    = Math.random() < 0.5 ? -1 : 1;
+    const tours   = alea(1.1, 2.6) * sens;
+    const phase   = alea(0, Math.PI * 2);
+    const yDepart = alea(-6, 2);
+    const hauteur = alea(HAUTEUR * 0.55, HAUTEUR * 1.15);
+    const ondul   = alea(0.5, 2.2);
+
+    const points = [];
+    const N = 26;
+    for (let j = 0; j <= N; j++) {
+      const t = j / N;
+      const a = phase + t * Math.PI * 2 * tours;
+      const r = rayon * (1 + Math.sin(t * Math.PI * ondul) * 0.28);
+      points.push(new THREE.Vector3(
+        Math.cos(a) * r + Math.sin(t * 7.3 + phase) * 0.55,
+        yDepart + t * hauteur,
+        Math.sin(a) * r + Math.cos(t * 5.9 + phase) * 0.55
+      ));
+    }
+
+    const courbe = new THREE.CatmullRomCurve3(points);
+    const geo = new THREE.TubeGeometry(courbe, SEGMENTS, alea(0.035, 0.11), RADIAUX, false);
+
+    const decalage = alea(0.0, 0.75);
+    const dec = new Float32Array(geo.attributes.position.count).fill(decalage);
+    geo.setAttribute('aDecalage', new THREE.BufferAttribute(dec, 1));
+
+    groupe.add(new THREE.Mesh(geo, matTige));
+
+    // Points d'ancrage des feuilles, releves sur la courbe.
+    for (let k = 0; k < NB_FEUILLES; k++) {
+      const t = 0.12 + (k / NB_FEUILLES) * 0.85 + alea(-0.03, 0.03);
+      feuillesPos.push({
+        p: courbe.getPointAt(Math.min(0.999, Math.max(0.001, t))),
+        tangente: courbe.getTangentAt(Math.min(0.999, Math.max(0.001, t))),
+        long: t, decalage, taille: alea(0.30, 0.72)
+      });
+    }
+  }
+
+  /* ── Les feuilles, en instances ────────────────────────────────────── */
+  const geoFeuille = new THREE.PlaneGeometry(1, 1.5);
+  const feuilles = new THREE.InstancedMesh(geoFeuille, matFeuille, feuillesPos.length);
+  const aLong = new Float32Array(feuillesPos.length);
+  const aDec  = new Float32Array(feuillesPos.length);
+  const aGrn  = new Float32Array(feuillesPos.length);
+  const mat4 = new THREE.Matrix4();
+  const quat = new THREE.Quaternion();
+  const haut = new THREE.Vector3(0, 1, 0);
+  const ech  = new THREE.Vector3();
+
+  feuillesPos.forEach((f, i) => {
+    quat.setFromUnitVectors(haut, f.tangente.clone().normalize());
+    const tourne = new THREE.Quaternion().setFromAxisAngle(
+      new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2);
+    quat.multiply(tourne);
+    ech.setScalar(f.taille);
+    mat4.compose(f.p, quat, ech);
+    feuilles.setMatrixAt(i, mat4);
+    aLong[i] = f.long;
+    aDec[i]  = f.decalage;
+    aGrn[i]  = Math.random();
+  });
+  geoFeuille.setAttribute('aLong', new THREE.InstancedBufferAttribute(aLong, 1));
+  geoFeuille.setAttribute('aDecalage', new THREE.InstancedBufferAttribute(aDec, 1));
+  geoFeuille.setAttribute('aGraine', new THREE.InstancedBufferAttribute(aGrn, 1));
+  feuilles.instanceMatrix.needsUpdate = true;
+  feuilles.frustumCulled = false;
+  groupe.add(feuilles);
+
+  /* ── Spores en suspension ──────────────────────────────────────────── */
+  const NB_SPORES = petit ? 260 : 700;
+  const posSpores = new Float32Array(NB_SPORES * 3);
+  const grnSpores = new Float32Array(NB_SPORES);
+  for (let i = 0; i < NB_SPORES; i++) {
+    posSpores[i * 3]     = alea(-16, 16);
+    posSpores[i * 3 + 1] = alea(-10, HAUTEUR + 10);
+    posSpores[i * 3 + 2] = alea(-16, 10);
+    grnSpores[i] = Math.random();
+  }
+  const geoSpores = new THREE.BufferGeometry();
+  geoSpores.setAttribute('position', new THREE.BufferAttribute(posSpores, 3));
+  geoSpores.setAttribute('aGraine', new THREE.BufferAttribute(grnSpores, 1));
+
+  const matSpores = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { uTemps: { value: 0 }, uJade: { value: JADE }, uViolet: { value: VIOLET_C } },
+    vertexShader: /* glsl */`
+      attribute float aGraine;
+      uniform float uTemps;
+      varying float vGraine;
+      void main() {
+        vGraine = aGraine;
+        vec3 p = position;
+        p.y += sin(uTemps * 0.22 + aGraine * 9.4) * 0.9;
+        p.x += cos(uTemps * 0.17 + aGraine * 7.1) * 0.7;
+        vec4 vue = modelViewMatrix * vec4(p, 1.0);
+        gl_PointSize = (10.0 + aGraine * 16.0) / max(-vue.z, 0.6);
+        gl_Position = projectionMatrix * vue;
+      }
+    `,
+    fragmentShader: /* glsl */`
+      precision mediump float;
+      uniform vec3 uJade, uViolet;
+      varying float vGraine;
+      void main() {
+        vec2 c = gl_PointCoord - 0.5;
+        float d = length(c);
+        if (d > 0.5) discard;
+        float a = pow(1.0 - d * 2.0, 2.6) * (0.20 + vGraine * 0.5);
+        gl_FragColor = vec4(mix(uJade, uViolet, vGraine), a);
+      }
+    `
+  });
+  scene.add(new THREE.Points(geoSpores, matSpores));
+
+  /* ── Post-traitement ───────────────────────────────────────────────── */
+  /* Aberration chromatique, vignette et grain en une seule passe. C'est ce
+     qui separe une image de synthese propre d'une image qui a l'air filmee. */
+  const passeFinale = {
+    uniforms: {
+      tDiffuse: { value: null },
+      uForce:   { value: 1.0 },
+      uTemps:   { value: 0 }
+    },
+    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: /* glsl */`
+      precision highp float;
+      uniform sampler2D tDiffuse;
+      uniform float uForce, uTemps;
+      varying vec2 vUv;
+
+      float alea(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+
+      void main() {
+        vec2 c = vUv - 0.5;
+        float r2 = dot(c, c);
+
+        // L'ecart des trois canaux croit vers les bords, comme une optique.
+        vec2 ecart = c * r2 * 0.055 * uForce;
+        vec3 col;
+        col.r = texture2D(tDiffuse, vUv - ecart).r;
+        col.g = texture2D(tDiffuse, vUv).g;
+        col.b = texture2D(tDiffuse, vUv + ecart).b;
+
+        col *= 1.0 - r2 * 0.85;                         // vignette
+        col += (alea(vUv * 900.0 + uTemps) - 0.5) * 0.030;  // grain
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  };
+
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  let bloom = null;
+  if (!petit) {
+    bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.72, 0.62, 0.22);
+    composer.addPass(bloom);
+  }
+  const finale = new ShaderPass(passeFinale);
+  finale.renderToScreen = true;
+  composer.addPass(finale);
+
+  /* ── Dimensions ────────────────────────────────────────────────────── */
+  function redimensionner() {
+    const r = toile.getBoundingClientRect();
+    const w = Math.max(1, r.width), h = Math.max(1, r.height);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+    composer.setSize(w, h);
+    if (bloom) bloom.setSize(w, h);
+  }
+  redimensionner();
+  window.addEventListener('resize', redimensionner);
+
+  /* ── Boucle ────────────────────────────────────────────────────────── */
+  let progression = 0, lisse = 0, souris = { x: 0, y: 0 }, sourisLisse = { x: 0, y: 0 };
+  let visible = true, vivant = true;
+
+  window.addEventListener('pointermove', e => {
+    souris.x = (e.clientX / window.innerWidth) * 2 - 1;
+    souris.y = (e.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
+
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; },
+                           { threshold: 0.01 }).observe(toile);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) horloge.getDelta();   // evite un saut au retour
+  });
+
+  const horloge = new THREE.Clock();
+  let t = 0;
+
+  function peindre() {
+    const dt = Math.min(horloge.getDelta(), 0.05);
+    t += dt;
+
+    // Le defilement est amorti : la pousse ne saute jamais.
+    lisse += (progression - lisse) * (sobre ? 1 : 0.07);
+
+    matTige.uniforms.uPousse.value = lisse;
+    matFeuille.uniforms.uPousse.value = lisse;
+    matTige.uniforms.uTemps.value = t;
+    matFeuille.uniforms.uTemps.value = t;
+    matSpores.uniforms.uTemps.value = t;
+    finale.uniforms.uTemps.value = t;
+
+    // La camera monte le long de la colonne et se laisse pousser par la
+    // souris, tres legerement, pour que la scene ait du volume.
+    sourisLisse.x += (souris.x - sourisLisse.x) * 0.045;
+    sourisLisse.y += (souris.y - sourisLisse.y) * 0.045;
+
+    const y = -4 + lisse * HAUTEUR * 0.92;
+    camera.position.y = y;
+    camera.position.x = Math.sin(lisse * 2.4) * 1.5 + sourisLisse.x * 1.1;
+    camera.position.z = 9 + Math.cos(lisse * 1.7) * 2.2;
+    camera.lookAt(sourisLisse.x * 0.9, y + 4.5 - sourisLisse.y * 0.9, 0);
+
+    groupe.rotation.y = lisse * 0.35;
+
+    if (visible) composer.render();
+    if (vivant) requestAnimationFrame(peindre);
+  }
+  peindre();
+
+  return {
+    /* Appelee par le defilement : 0 en haut de la page, 1 en bas. */
+    avancer(p) { progression = Math.min(1, Math.max(0, p)); },
+    detruire() {
+      vivant = false;
+      renderer.dispose();
+      composer.dispose?.();
+    }
+  };
+}

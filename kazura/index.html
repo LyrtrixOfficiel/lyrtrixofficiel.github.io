@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazura · Studio de création de sites internet</title>
+<meta name="description" content="Kazura crée des sites internet pour les indépendants. Trois dimensions temps réel, animation, direction artistique. Un site complet à 500 €, puis 20 € par mois. Alsace.">
+<!-- Apercu sur GitHub Pages : on ne veut pas que Google reference le site
+     sous cette adresse plutot que sous kazura.fr. A RETIRER a la mise en
+     ligne sur le vrai domaine. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#04060A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kazura · Studio de création de sites internet">
+<meta property="og:description" content="Un site complet à 500 €, puis 20 € par mois. Retravaillé autant de fois qu'il le faut.">
+<meta property="og:image" content="assets/hero.webp">
+<meta property="og:locale" content="fr_FR">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/kazura.css">
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+} }
+</script>
+</head>
+
+<body>
+
+<!-- Ecran de chargement. Retire du document une fois parti. -->
+<div class="chargement" id="chargement" role="status" aria-label="Chargement">
+  <div class="chargement__dedans">
+    <svg viewBox="0 0 60 200" aria-hidden="true">
+      <path d="M30 196 C 8 150, 52 116, 30 74 C 12 40, 40 22, 30 4"/>
+    </svg>
+    <p class="chargement__pied">
+      <span>Kazura</span>
+      <span class="chargement__pct" data-pct>00</span>
+    </p>
+  </div>
+</div>
+
+<!-- Rideau de transition entre les pages -->
+<div class="rideau" id="rideau" data-etat="baisse" aria-hidden="true"><i></i><i></i></div>
+
+<!-- Couches fixes, hors du conteneur amorti -->
+<div class="fond-halo" aria-hidden="true"></div>
+<div class="fond-trame" aria-hidden="true"></div>
+<canvas id="toile3d" aria-hidden="true"></canvas>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="degrade-liane" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#6EE7B7"/><stop offset="55%" stop-color="#10B981"/><stop offset="100%" stop-color="#7C3AED"/>
+  </linearGradient>
+</defs></svg>
+
+<nav class="nav" data-cache="non" data-dense="non">
+  <a class="nav__marque" href="index.html" aria-label="Kazura, accueil">
+    <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M33 16 L33 104"/><path d="M92 16 C68 36 48 48 40 60 C48 72 68 84 92 104"/>
+    </svg>
+    <span>Kazura</span>
+  </a>
+  <div class="nav__liens">
+    <a class="nav__lien" href="savoir-faire.html">Savoir-faire</a>
+    <a class="nav__lien" href="travaux.html">Travaux</a>
+    <a class="nav__lien" href="studio.html">Le studio</a>
+    <a class="nav__lien" href="#prix">Tarif</a>
+  </div>
+  <a class="bouton bouton--plein nav__cta" href="contact.html" data-aimant>
+    Parler de mon site <span class="fleche" aria-hidden="true">→</span>
+  </a>
+  <button class="nav__menu" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu">
+    <span class="nav__barres" aria-hidden="true"><i></i><i></i></span>
+  </button>
+</nav>
+
+<div class="panneau" id="menu" hidden>
+  <nav class="panneau__liens" aria-label="Navigation principale">
+    <a href="savoir-faire.html">Savoir-faire</a>
+    <a href="travaux.html">Travaux</a>
+    <a href="studio.html">Le studio</a>
+    <a href="#prix">Tarif</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<div id="defile">
+
+  <!-- ══ La zone que la scène 3D accompagne ═══════════════════════════ -->
+  <div data-scene-zone>
+
+    <header class="hero" id="haut">
+      <div class="hero__centre">
+        <p class="hero__kanji" aria-hidden="true">葛</p>
+
+        <!-- Le mot est rendu en WebGL. Le titre reste dans le document pour
+             les lecteurs d'ecran et les moteurs ; il s'efface a l'oeil des
+             que la toile est prete, et reste seul si WebGL manque. -->
+        <div class="mot3d">
+          <h1 class="mot3d__vrai">KAZURA</h1>
+          <canvas id="toile-mot" data-mot="KAZURA" aria-hidden="true"></canvas>
+        </div>
+        <p class="hero__ligne" data-vient="bloc">
+          Studio de création de sites internet.
+          Trois dimensions temps réel, animation, direction artistique.
+        </p>
+        <div class="hero__actions" data-vient="bloc">
+          <a class="bouton bouton--plein" href="contact.html" data-aimant>
+            Parler de mon site <span class="fleche" aria-hidden="true">→</span>
+          </a>
+          <a class="bouton bouton--verre" href="savoir-faire.html" data-aimant>Ce qu'on sait faire</a>
+        </div>
+      </div>
+      <div class="hero__bas" aria-hidden="true">
+        <span class="hero__fil"></span>
+        <span class="etiquette">Descendez, elle pousse</span>
+      </div>
+    </header>
+
+    <section class="chapitre chapitre--gauche">
+      <div class="chapitre__voile" style="--vx:32%" aria-hidden="true"></div>
+      <div class="chapitre__texte">
+        <span class="etiquette" data-vient="bloc">葛 · Un</span>
+        <p class="grand" data-vient="lettres">La liane ne demande la permission à personne.</p>
+      </div>
+    </section>
+
+    <section class="chapitre chapitre--droite">
+      <div class="chapitre__voile" style="--vx:68%" aria-hidden="true"></div>
+      <div class="chapitre__texte">
+        <span class="etiquette" data-vient="bloc">葛 · Deux</span>
+        <p class="grand" data-vient="lettres">Elle part d'un fil, trouve une prise, et monte.</p>
+      </div>
+    </section>
+
+    <section class="chapitre chapitre--gauche">
+      <div class="chapitre__voile" style="--vx:38%" aria-hidden="true"></div>
+      <div class="chapitre__texte">
+        <span class="etiquette" data-vient="bloc">葛 · Trois</span>
+        <p class="grand" data-vient="lettres">Un an après, on ne voit plus le mur.</p>
+        <p class="chapo" data-vient="bloc" style="margin-top:2rem">
+          Ce que vous regardez n'est pas une vidéo. Chaque tige est calculée
+          par votre carte graphique, et c'est votre défilement qui la fait
+          pousser. Redescendez, elle repousse.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ══ Bandeau ══════════════════════════════════════════════════════ -->
+  <div class="bandeau" aria-hidden="true">
+    <div class="bandeau__piste" data-bandeau="1">
+      <div class="bandeau__item">
+        <span><b>Trois dimensions</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Animation</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Direction artistique</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Vidéo</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Développement</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Référencement</b></span><span class="bandeau__pt">◆</span>
+      </div>
+      <div class="bandeau__item">
+        <span><b>Trois dimensions</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Animation</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Direction artistique</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Vidéo</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Développement</b></span><span class="bandeau__pt">◆</span>
+        <span><b>Référencement</b></span><span class="bandeau__pt">◆</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Vidéo pilotée au défilement ══════════════════════════════════ -->
+  <section class="bloc-scrub" data-epingle style="height:400svh" aria-label="La pousse">
+    <div data-epingle-contenu>
+      <div class="scrub">
+        <video data-scrub muted playsinline preload="auto"
+               poster="assets/affiche-jardin.webp" aria-hidden="true">
+          <source src="video/pousse-scrub-mobile.mp4" type="video/mp4" media="(max-width: 760px)">
+          <source src="video/pousse-scrub.mp4" type="video/mp4">
+        </video>
+
+        <div class="scrub__texte">
+          <div class="scrub__lignes" style="min-height:min(46vh,340px)">
+            <div class="scrub__ligne" data-fenetre="0,0.30">
+              <div>
+                <span class="etiquette">Image par image</span>
+                <p class="titre" style="margin-top:1rem">Vous ne faites pas défiler.<br>Vous rembobinez.</p>
+              </div>
+            </div>
+            <div class="scrub__ligne" data-fenetre="0.30,0.64">
+              <div>
+                <span class="etiquette">Deux cent quarante et une images</span>
+                <p class="titre" style="margin-top:1rem">Chaque cran de molette<br>vaut une image.</p>
+              </div>
+            </div>
+            <div class="scrub__ligne" data-fenetre="0.64,1.01">
+              <div>
+                <span class="etiquette">Et ça marche dans les deux sens</span>
+                <p class="titre" style="margin-top:1rem">Remontez.<br>Elle se rétracte.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="jauge" aria-hidden="true"><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Le studio ════════════════════════════════════════════════════ -->
+  <section class="bloc" id="studio">
+    <div class="enveloppe">
+      <div style="margin-bottom:clamp(2.5rem,6vw,4.5rem)">
+        <span class="etiquette" data-vient="bloc">Ce qui nous distingue</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">Pas une agence. Un artisan qui code.</h2>
+        <p class="chapo" data-vient="bloc">
+          Vous ne parlerez pas à un commercial, puis à un chef de projet, puis
+          à un prestataire. Vous parlerez à la personne qui fait le site. Les
+          allers-retours durent des heures, pas des semaines.
+        </p>
+      </div>
+
+      <div class="cartes">
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">01</span>
+          <h3>Vos couleurs, pas les nôtres</h3>
+          <p>La palette sort de votre logo, de votre salon, de vos photos. Jamais d'un gabarit. C'est la différence entre un site à votre nom et un site qui est le vôtre.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">02</span>
+          <h3>Retravaillé sans limite</h3>
+          <p>Tant que le site ne vous plaît pas, il n'est pas fini. Aucun compteur, aucun forfait de révisions, aucun supplément. C'est écrit dans le contrat.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">03</span>
+          <h3>Vous gardez la main</h3>
+          <p>Un espace personnel vous laisse changer vos textes, vos tarifs et vos photos quand vous voulez. Sans nous appeler, sans attendre, sans payer.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ L'encre, simulation de fluide ════════════════════════════════ -->
+  <section class="atelier" id="encre">
+    <canvas id="toile-encre" aria-hidden="true"></canvas>
+    <div class="atelier__centre">
+      <span class="etiquette" data-vient="bloc">Simulation, en direct</span>
+      <h2 class="titre" data-vient="titre" style="margin-top:1rem">Remuez l'encre.</h2>
+      <p class="chapo" data-vient="bloc" style="margin:1.4rem auto 0">
+        Ce n'est ni une vidéo, ni une texture qui ondule. C'est l'équation de
+        Navier-Stokes résolue dans votre navigateur, soixante fois par seconde :
+        un vrai fluide incompressible, dont vous poussez le courant du doigt.
+      </p>
+      <p class="atelier__indice" data-vient="bloc">Passez la main dessus</p>
+    </div>
+  </section>
+
+  <!-- ══ Savoir-faire ═════════════════════════════════════════════════ -->
+  <section class="bloc" id="savoir-faire">
+    <div class="enveloppe">
+      <div style="margin-bottom:clamp(2.5rem,6vw,4.5rem)">
+        <span class="etiquette" data-vient="bloc">Savoir-faire</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">Tout est fait ici.</h2>
+        <p class="chapo" data-vient="bloc">
+          Les images, les animations, la trois dimensions, la vidéo, le code,
+          le référencement. Rien n'est sous-traité, donc rien ne se perd entre
+          deux intervenants.
+        </p>
+      </div>
+
+      <div class="cartes">
+        <a class="metier" href="savoir-faire.html#trois-dimensions" data-vient="bloc">
+          <video class="metier__media" src="video/matiere.mp4" poster="assets/affiche-matiere.webp"
+                 muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+          <h3>Trois dimensions</h3>
+          <p>Des scènes calculées dans le navigateur, pilotées par le défilement. Pas une image, un monde.</p>
+          <span class="metier__lien">Voir <span class="fleche" aria-hidden="true">→</span></span>
+        </a>
+
+        <a class="metier" href="savoir-faire.html#animation" data-vient="bloc">
+          <video class="metier__media" src="video/jardin.mp4" poster="assets/affiche-jardin.webp"
+                 muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+          <h3>Animation et vidéo</h3>
+          <p>Du mouvement qui sert : guider l'œil, montrer un geste, donner envie de continuer à descendre.</p>
+          <span class="metier__lien">Voir <span class="fleche" aria-hidden="true">→</span></span>
+        </a>
+
+        <a class="metier" href="savoir-faire.html#identite" data-vient="bloc">
+          <video class="metier__media" src="video/sceau.mp4" poster="assets/affiche-sceau.webp"
+                 muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+          <h3>Identité de marque</h3>
+          <p>Un nom, un signe, deux couleurs et une façon de dire les mots. Jusqu'au blason gravé sur la carte.</p>
+          <span class="metier__lien">Voir <span class="fleche" aria-hidden="true">→</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Identité ═════════════════════════════════════════════════════ -->
+  <section class="identite" id="identite">
+    <div class="identite__fond" data-parallaxe="0.08" aria-hidden="true"></div>
+    <div class="enveloppe">
+      <div class="identite__grille">
+        <div>
+          <span class="etiquette" data-vient="bloc">Identité</span>
+          <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">Le site n'est que la partie visible.</h2>
+          <p class="chapo" data-vient="bloc">
+            Une marque tient dans peu de choses : un nom, un signe, deux
+            couleurs et une façon de dire les mots. On dessine tout, jusqu'au
+            blason gravé sur la carte qu'on vous laisse.
+          </p>
+          <ul class="liste" data-vient="bloc" style="margin-top:2.2rem">
+            <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span>Un <b>logo</b> et son symbole, déclinés pour l'écran et le papier</span></li>
+            <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span>Une <b>palette</b> tirée de ce que vous êtes déjà</span></li>
+            <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span>Des <b>cartes de visite</b> prêtes à imprimer</span></li>
+          </ul>
+        </div>
+
+        <figure class="identite__objet" data-vient="bloc">
+          <img src="assets/carte.webp" alt="Deux cartes de visite noires gravées du blason de Kazura, trois folioles dans un cercle, marquées à chaud en vert émeraude" width="2000" height="1328" loading="lazy" decoding="async">
+          <figcaption>Le sceau, marqué à chaud sur papier noir</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Travaux ══════════════════════════════════════════════════════ -->
+  <section class="bloc" id="travaux">
+    <div class="enveloppe">
+      <div style="margin-bottom:clamp(2.5rem,6vw,4.5rem)">
+        <span class="etiquette" data-vient="bloc">Travaux</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 0">Des sites qui travaillent.</h2>
+      </div>
+      <div class="travaux">
+        <article class="travail" data-vient="bloc">
+          <div class="travail__vue"><span class="travail__vide kanji" aria-hidden="true">氣</span></div>
+          <div class="travail__pied"><h3>Julie Marguier</h3><span>Shiatsu · 2026</span></div>
+        </article>
+        <article class="travail" data-vient="bloc">
+          <div class="travail__vue"><span class="travail__vide kanji" aria-hidden="true">美</span></div>
+          <div class="travail__pied"><h3>Prochainement</h3><span>Esthétique</span></div>
+        </article>
+        <article class="travail" data-vient="bloc">
+          <div class="travail__vue"><span class="travail__vide kanji" aria-hidden="true">手</span></div>
+          <div class="travail__pied"><h3>Prochainement</h3><span>Artisanat</span></div>
+        </article>
+      </div>
+      <p style="margin-top:2.5rem" data-vient="bloc">
+        <a class="bouton bouton--verre" href="travaux.html" data-aimant>
+          Tous les travaux <span class="fleche" aria-hidden="true">→</span>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ Prix ═════════════════════════════════════════════════════════ -->
+  <section class="bloc" id="prix">
+    <div class="enveloppe">
+      <div style="margin-bottom:clamp(2.5rem,6vw,4.5rem)">
+        <span class="etiquette" data-vient="bloc">Tarif</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">Un seul prix, et il est écrit.</h2>
+        <p class="chapo" data-vient="bloc">
+          Pas de devis à rallonge, pas d'options, pas de supplément découvert
+          en cours de route. Vous savez ce que vous payez avant de nous parler.
+        </p>
+      </div>
+
+      <div class="prix" data-vient="bloc">
+        <div>
+          <p class="prix__chiffre">500<span class="prix__euro">€</span></p>
+          <p class="prix__puis">puis 20 € par mois</p>
+          <a class="bouton bouton--plein" href="contact.html" data-aimant style="margin-top:2.2rem">
+            Commencer <span class="fleche" aria-hidden="true">→</span>
+          </a>
+        </div>
+        <ul class="liste">
+          <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span><b>Le site entier</b>, écrit, dessiné et codé sur mesure.</span></li>
+          <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span><b>Le logo</b>, si vous n'en avez pas encore.</span></li>
+          <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span><b>Le référencement</b>, pour qu'on vous trouve sur Google.</span></li>
+          <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span><b>Votre espace personnel</b>, pour modifier textes et tarifs.</span></li>
+          <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span><b>Des retouches sans limite</b>, jusqu'à ce que ça vous plaise.</span></li>
+          <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span>Les <b>20 € mensuels</b> couvrent l'hébergement, le nom de domaine et les modifications ensuite.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Contact ══════════════════════════════════════════════════════ -->
+  <section class="contact" id="contact">
+    <div class="contact__fond" data-parallaxe="0.10" aria-hidden="true"></div>
+    <div class="contact__centre">
+      <p class="hero__kanji" aria-hidden="true" style="font-size:clamp(2rem,4.5vw,3.2rem)">門</p>
+      <h2 class="titre" data-vient="titre">On commence ?</h2>
+      <p class="chapo" data-vient="bloc" style="margin:1.6rem auto 0;text-align:center">
+        Dites-moi ce que vous faites et à qui. Je vous montre à quoi votre site
+        pourrait ressembler, sans engagement et sans un euro.
+      </p>
+      <div class="contact__liens" data-vient="bloc">
+        <a class="bouton bouton--plein" href="contact.html" data-aimant>
+          Écrire <span class="fleche" aria-hidden="true">→</span>
+        </a>
+        <a class="bouton bouton--verre" href="tel:+33630110038" data-aimant>06 30 11 00 38</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Pied ═════════════════════════════════════════════════════════ -->
+  <footer class="pied">
+    <div class="enveloppe">
+      <div class="pied__haut">
+        <div class="pied__sceau">
+          <img src="assets/blason.webp" alt="Le sceau de Kazura, trois folioles de jade dans un cercle" width="74" height="74" loading="lazy" decoding="async">
+          <div><b>Kazura</b><small>Beblenheim · Alsace</small></div>
+        </div>
+        <nav class="pied__nav" aria-label="Pied de page">
+          <a href="savoir-faire.html">Savoir-faire</a>
+          <a href="travaux.html">Travaux</a>
+          <a href="studio.html">Le studio</a>
+          <a href="contact.html">Contact</a>
+          <a href="mentions-legales.html">Mentions légales</a>
+        </nav>
+      </div>
+      <div class="pied__bas">
+        <span>© <span data-annee>2026</span> Kazura · Matheo Schmitt</span>
+        <span>SIREN 100 165 455 · TVA non applicable, art. 293 B du CGI</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script type="module" src="js/kazura.js"></script>
+</body>
+</html>

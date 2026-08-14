@@ -1,0 +1,841 @@
+/* ==========================================================================
+   KAZURA 葛
+   --------------------------------------------------------------------------
+   Un jardin japonais la nuit. Presque tout est noir, le jade est la matiere,
+   le violet est la lumiere.
+
+   REGLE QUI TIENT TOUT : le violet EST la lumiere, le jade EST la matiere.
+   Ce qui brille brille en violet, ce qui vit est jade. Ne jamais inverser.
+
+   ARCHITECTURE. Le contenu vit dans `#defile`, un conteneur que le script
+   translate pour amortir le defilement. Deux consequences :
+     - `position: sticky` ne marche plus dedans, on epingle a la main
+     - tout ce qui doit rester fixe (barre, toile 3D, menu, curseur) est
+       place EN DEHORS de ce conteneur
+   Sans script, `#defile` reste un bloc normal et la page fonctionne.
+   ========================================================================== */
+
+:root {
+  --noir:        #04060A;
+  --noir-2:      #070B11;
+  --noir-3:      #0C131A;
+
+  --jade:        #10B981;
+  --jade-clair:  #6EE7B7;
+  --jade-fonce:  #047857;
+  --jade-nuit:   #032E22;
+
+  --violet:      #7C3AED;
+  --violet-clair:#A78BFA;
+  --violet-fonce:#4C1D95;
+
+  --blanc:       #ECFDF5;
+  --gris:        #93A5AE;
+  --gris-fonce:  #4A5A63;
+
+  --verre:       rgba(255,255,255,.045);
+  --verre-fort:  rgba(255,255,255,.085);
+  --verre-bord:  rgba(174,236,213,.16);
+  --verre-haut:  rgba(255,255,255,.34);
+
+  --display: 'Syne', system-ui, sans-serif;
+  --corps:   'Inter', system-ui, sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+  --jp:      'Zen Old Mincho', serif;
+
+  --marge:   clamp(1.25rem, 5vw, 5.5rem);
+  --large:   1440px;
+  --rayon:   18px;
+  --rayon-l: 28px;
+
+  --sortie:  cubic-bezier(.16,1,.3,1);
+  --doux:    cubic-bezier(.65,0,.35,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+html:not([data-pret='oui']) { scroll-behavior: smooth; }
+
+body {
+  background: var(--noir);
+  color: var(--blanc);
+  font-family: var(--corps);
+  font-size: clamp(1rem, .95rem + .2vw, 1.0625rem);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+body[data-fige='oui'] { overflow: hidden; }
+
+img, svg, video, canvas { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+::selection { background: var(--violet); color: #fff; }
+
+/* ── Le conteneur amorti ──────────────────────────────────────────────── */
+#defile { will-change: transform; }
+html[data-pret='oui'] #defile:not([data-natif='oui']) {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+}
+
+/* ── Fonds permanents ─────────────────────────────────────────────────── */
+.fond-halo, .fond-trame {
+  position: fixed; inset: 0; pointer-events: none;
+}
+.fond-halo {
+  z-index: -3;
+  background:
+    radial-gradient(120% 80% at 12% -10%, rgba(124,58,237,.20), transparent 62%),
+    radial-gradient(100% 70% at 92% 108%, rgba(16,185,129,.16), transparent 60%),
+    var(--noir);
+}
+.fond-trame {
+  z-index: -2;
+  opacity: .45;
+  background-image:
+    linear-gradient(rgba(174,236,213,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(174,236,213,.035) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(120% 90% at 50% 30%, #000 20%, transparent 78%);
+}
+
+/* ── La toile 3D ──────────────────────────────────────────────────────── */
+#toile3d {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity .8s var(--doux);
+}
+#toile3d[data-prete='oui'] { opacity: 1; }
+/* Repli si WebGL manque ou si l'appareil est trop petit : une image fixe
+   plutot qu'un rectangle noir. */
+#toile3d[data-repli='oui'] {
+  opacity: 1;
+  background: url('../assets/hero.webp') center / cover no-repeat;
+}
+
+/* ── Typographie ──────────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: -.035em;
+}
+
+/* Syne en 800 avance de 1,16 em par lettre : six lettres occupent pres de
+   7 em. D'ou le plafond a 12vw, sous lequel le mot ne se coupe jamais. */
+.geant {
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 12vw, 12.5rem);
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: .84;
+  white-space: nowrap;
+}
+.titre     { font-size: clamp(2.1rem, 5.6vw, 4.8rem); letter-spacing: -.04em; }
+.sous-titre{ font-size: clamp(1.35rem, 2.4vw, 2.1rem); letter-spacing: -.028em; line-height: 1.15; }
+
+.kanji { font-family: var(--jp); font-weight: 400; letter-spacing: .1em; }
+
+.etiquette {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--jade-clair);
+}
+
+.chapo {
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  color: var(--gris);
+  max-width: 56ch;
+  line-height: 1.65;
+}
+.plomb { color: var(--gris); }
+.jade  { color: var(--jade-clair); }
+
+/* Un degrade sur le texte, reserve aux tres grands corps. */
+.eclat {
+  background: linear-gradient(176deg, #fff 6%, #CFF7E7 34%, var(--jade-clair) 68%, var(--jade-fonce) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 70px rgba(16,185,129,.32));
+}
+
+/* ── Apparitions ──────────────────────────────────────────────────────── */
+/* Rien n'est masque tant que le script n'a pas pris la main : sans lui, la
+   page reste entierement lisible. */
+html[data-pret='oui'] [data-vient='bloc'] {
+  opacity: 0;
+  transform: translateY(38px);
+}
+[data-vient='bloc'] {
+  transition: opacity 1s var(--sortie), transform 1s var(--sortie);
+}
+[data-vient='bloc'][data-vu='oui'] { opacity: 1; transform: none; }
+
+/* Le mot est la fenetre, la lettre monte depuis dessous. */
+.mot {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: .12em;
+  margin-bottom: -.12em;
+}
+.lettre {
+  display: inline-block;
+  will-change: transform;
+}
+html[data-pret='oui'] [data-vient='lettres'] .lettre,
+html[data-pret='oui'] [data-vient='titre'] .lettre {
+  opacity: 0;
+  transform: translateY(112%);
+  transition: transform .95s var(--sortie), opacity .5s linear;
+  transition-delay: calc(var(--i) * 26ms);
+}
+[data-vient='lettres'][data-vu='oui'] .lettre,
+[data-vient='titre'][data-vu='oui'] .lettre {
+  opacity: 1;
+  transform: none;
+}
+
+/* La variante titre bascule en plus autour de son pied : la lettre se releve
+   au lieu de simplement monter. */
+[data-vient='titre'] .mot { perspective: 700px; }
+html[data-pret='oui'] [data-vient='titre'] .lettre {
+  transform: translateY(112%) rotateX(-78deg);
+  transform-origin: 50% 100%;
+}
+
+[data-vient='brouille'] { font-variant-ligatures: none; }
+
+/* ── Grille ───────────────────────────────────────────────────────────── */
+.enveloppe {
+  width: 100%;
+  max-width: var(--large);
+  margin-inline: auto;
+  padding-inline: var(--marge);
+}
+section { position: relative; }
+.bloc { padding-block: clamp(6rem, 14vh, 11rem); }
+.centre { text-align: center; }
+
+/* ── Verre ────────────────────────────────────────────────────────────── */
+/* Trois couches : fond flou, liseré lumineux sur l'arete haute, ombre
+   profonde. Sans le liseré, ce n'est qu'un rectangle trouble. */
+.verre {
+  position: relative;
+  background: var(--verre);
+  border: 1px solid var(--verre-bord);
+  border-radius: var(--rayon-l);
+  backdrop-filter: blur(26px) saturate(1.7);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  box-shadow:
+    0 1px 0 0 var(--verre-haut) inset,
+    0 -1px 0 0 rgba(16,185,129,.10) inset,
+    0 30px 70px -30px rgba(0,0,0,.9),
+    0 0 90px -50px var(--violet);
+  overflow: hidden;
+}
+.verre::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(118deg,
+    rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 26%,
+    rgba(255,255,255,0) 62%, rgba(167,139,250,.09) 100%);
+}
+
+/* ── Boutons ──────────────────────────────────────────────────────────── */
+.bouton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .7em;
+  padding: 1.05em 1.9em;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: .76rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform .5s var(--sortie), box-shadow .5s var(--sortie),
+              border-color .5s var(--doux);
+  will-change: transform;
+}
+.bouton .fleche { transition: transform .5s var(--sortie); }
+.bouton:hover .fleche { transform: translateX(5px); }
+
+.bouton--plein {
+  background: linear-gradient(135deg, var(--jade) 0%, var(--jade-fonce) 100%);
+  color: #01120C;
+  box-shadow: 0 14px 40px -16px rgba(16,185,129,.75);
+}
+.bouton--plein:hover { box-shadow: 0 20px 55px -16px rgba(16,185,129,.95); }
+
+.bouton--verre {
+  background: var(--verre-fort);
+  border: 1px solid var(--verre-bord);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow: 0 1px 0 0 var(--verre-haut) inset;
+}
+.bouton--verre:hover {
+  border-color: rgba(167,139,250,.45);
+  box-shadow: 0 1px 0 0 var(--verre-haut) inset, 0 0 40px -12px var(--violet);
+}
+
+/* ── Barre ────────────────────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: clamp(.75rem, 2vw, 1.4rem);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 90;
+  width: min(calc(100% - 2 * var(--marge)), 1180px);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .6rem .6rem .6rem 1.35rem;
+  border-radius: 999px;
+  background: rgba(7,11,17,.5);
+  border: 1px solid rgba(174,236,213,.10);
+  backdrop-filter: blur(22px) saturate(1.6);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  box-shadow: 0 1px 0 0 rgba(255,255,255,.13) inset;
+  transition: transform .7s var(--sortie), background .7s var(--doux),
+              border-color .7s var(--doux);
+}
+.nav[data-cache='oui'] { transform: translateY(-170%); }
+.nav[data-dense='oui'] { background: rgba(7,11,17,.88); border-color: rgba(174,236,213,.18); }
+
+.nav__marque {
+  display: flex; align-items: center; gap: .7rem;
+  padding-block: .5rem;
+  font-family: var(--display); font-weight: 700; font-size: 1.02rem;
+}
+.nav__marque svg { width: 26px; height: 26px; color: var(--jade); flex: none; }
+
+.nav__liens { display: flex; gap: .35rem; margin-left: auto; }
+.nav__lien {
+  padding: .55rem .95rem;
+  border-radius: 999px;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--gris);
+  transition: color .4s var(--doux), background .4s var(--doux);
+}
+.nav__lien:hover, .nav__lien[aria-current='page'] { color: var(--blanc); background: rgba(255,255,255,.06); }
+.nav__cta { padding: .8em 1.4em; font-size: .7rem; }
+
+.nav__menu {
+  display: none;
+  width: 44px; height: 44px;
+  margin-left: auto;
+  border-radius: 999px;
+  align-items: center; justify-content: center;
+  background: var(--verre-fort);
+  border: 1px solid var(--verre-bord);
+  flex: none;
+}
+.nav__barres { display: grid; gap: 6px; width: 18px; }
+.nav__barres i {
+  display: block; height: 1.5px; background: var(--blanc); border-radius: 2px;
+  transition: transform .45s var(--sortie);
+}
+.nav__menu[aria-expanded='true'] .nav__barres i:first-child { transform: translateY(3.75px) rotate(45deg); }
+.nav__menu[aria-expanded='true'] .nav__barres i:last-child  { transform: translateY(-3.75px) rotate(-45deg); }
+
+.panneau {
+  position: fixed; inset: 0; z-index: 95;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.6rem; padding: var(--marge);
+  background: rgba(4,6,10,.94);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  opacity: 0;
+  transition: opacity .45s var(--doux);
+}
+.panneau[hidden] { display: none; }
+.panneau[data-ouvert='oui'] { opacity: 1; }
+.panneau__liens { display: grid; gap: .3rem; text-align: center; }
+.panneau__liens a {
+  display: block; padding: .7rem 1.5rem;
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(1.7rem, 8vw, 2.6rem); letter-spacing: -.035em;
+  color: var(--blanc);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding-block: 7rem 5.5rem;
+  padding-inline: var(--marge);
+}
+/* Un puits sombre exactement la ou le mot se pose, sinon la 3D mange le
+   texte. */
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(56% 50% at 50% 46%, rgba(4,6,10,.86) 0%, rgba(4,6,10,.4) 46%, transparent 74%),
+    linear-gradient(to bottom, rgba(4,6,10,.7) 0%, transparent 22%, transparent 66%, var(--noir) 100%);
+}
+.hero__centre { position: relative; z-index: 1; text-align: center; width: 100%; max-width: 1180px; }
+.hero__kanji {
+  font-family: var(--jp);
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  color: var(--jade-clair);
+  line-height: 1;
+  margin-bottom: .4rem;
+  text-shadow: 0 0 60px rgba(16,185,129,.55);
+}
+.hero__ligne { margin: 1.9rem auto 0; max-width: 46ch; font-size: clamp(1rem,1.35vw,1.2rem); color: var(--gris); }
+.hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; margin-top: 2.6rem; }
+
+.hero__bas {
+  position: absolute; left: 50%; bottom: clamp(1.2rem,3vh,2.4rem);
+  translate: -50% 0; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: .7rem;
+}
+.hero__fil {
+  width: 1px; height: 58px;
+  background: linear-gradient(to bottom, transparent, var(--jade-clair), transparent);
+  animation: fil 2.6s var(--doux) infinite;
+}
+@keyframes fil {
+  0%,100% { opacity: .25; transform: scaleY(.55); }
+  50%     { opacity: 1;   transform: scaleY(1); }
+}
+
+/* ── Chapitres sur la 3D ──────────────────────────────────────────────── */
+/* Ces sections sont transparentes : la scene se voit derriere. Un voile
+   local garde le texte lisible sans noircir toute la page. */
+.chapitre {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding-block: clamp(5rem, 12vh, 9rem);
+  padding-inline: var(--marge);
+}
+.chapitre__voile {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(58% 46% at var(--vx, 50%) 50%,
+              rgba(4,6,10,.88) 0%, rgba(4,6,10,.45) 48%, transparent 76%);
+}
+.chapitre__texte { position: relative; z-index: 1; width: 100%; max-width: 1180px; }
+.chapitre--gauche .chapitre__texte { text-align: left; }
+.chapitre--droite .chapitre__texte { text-align: right; margin-left: auto; }
+.chapitre p.grand {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(1.7rem, 4.4vw, 3.6rem);
+  line-height: 1.12; letter-spacing: -.04em;
+  max-width: 18ch;
+}
+.chapitre--droite p.grand { margin-left: auto; }
+
+/* ── Section epinglee ─────────────────────────────────────────────────── */
+/* La section est haute, son contenu est colle a l'ecran pendant la traversee.
+   L'epinglage est fait en JavaScript parce que `sticky` ne survit pas au
+   conteneur translate. */
+[data-epingle] { position: relative; }
+[data-epingle-contenu] {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100svh;
+  overflow: hidden;
+}
+
+.scrub { position: relative; width: 100%; height: 100%; }
+.scrub video, .scrub img.affiche {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.scrub::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(70% 60% at 50% 50%, transparent 20%, rgba(4,6,10,.72) 80%),
+    linear-gradient(to bottom, var(--noir) 0%, transparent 18%, transparent 82%, var(--noir) 100%);
+}
+.scrub__texte {
+  position: absolute; inset: 0; z-index: 2;
+  display: grid; place-items: center;
+  text-align: center;
+  padding-inline: var(--marge);
+}
+.scrub__lignes { position: relative; width: 100%; max-width: 900px; }
+/* Trois messages qui se relaient pendant la traversee, pilotes par --avance. */
+.scrub__ligne {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  opacity: 0;
+  transition: opacity .5s var(--doux), transform .7s var(--sortie);
+  transform: translateY(24px);
+}
+[data-epingle][data-avance] .scrub__ligne[data-actif='oui'] { opacity: 1; transform: none; }
+
+.jauge {
+  position: absolute; left: 50%; bottom: 8vh; translate: -50% 0; z-index: 3;
+  width: min(420px, 60vw); height: 2px;
+  background: rgba(174,236,213,.16);
+  border-radius: 2px; overflow: hidden;
+}
+/* Une mise a l'echelle plutot qu'une largeur calculee : la barre reste sur le
+   compositeur au lieu de declencher une mise en page a chaque image. */
+/* Aucune transition ici, volontairement : la barre suit le defilement image
+   par image. La moindre transition la ferait trainer derriere le scroll. */
+.jauge i {
+  display: block;
+  width: 100%; height: 100%;
+  transform: scaleX(var(--avance, 0));
+  transform-origin: left center;
+  transition: none !important;
+  background: linear-gradient(90deg, var(--jade), var(--violet-clair));
+}
+
+/* ── Bandeau ──────────────────────────────────────────────────────────── */
+.bandeau {
+  position: relative;
+  padding-block: 1.6rem;
+  border-block: 1px solid rgba(174,236,213,.10);
+  background: rgba(7,11,17,.55);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.bandeau__piste { display: flex; width: max-content; will-change: transform; }
+.bandeau__item {
+  display: flex; align-items: center; gap: 3.5rem; padding-right: 3.5rem;
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(1.1rem, 2vw, 1.7rem); letter-spacing: -.02em;
+  color: var(--gris-fonce); white-space: nowrap;
+}
+.bandeau__item b { color: var(--blanc); }
+.bandeau__pt { color: var(--jade); font-size: .7em; }
+
+/* ── Cartes ───────────────────────────────────────────────────────────── */
+.cartes { display: grid; grid-template-columns: repeat(auto-fit, minmax(288px, 1fr)); gap: 1.1rem; }
+.carte {
+  position: relative;
+  padding: clamp(1.7rem, 3vw, 2.4rem);
+  min-height: 300px;
+  display: flex; flex-direction: column;
+  transition: transform .65s var(--sortie), border-color .65s var(--doux);
+  will-change: transform;
+}
+.carte:hover { border-color: rgba(167,139,250,.4); }
+.carte__num { font-family: var(--mono); font-size: .68rem; letter-spacing: .2em; color: var(--jade); margin-bottom: auto; }
+.carte h3 { font-size: clamp(1.3rem,2vw,1.7rem); margin: 2.4rem 0 .85rem; }
+.carte p { color: var(--gris); font-size: .97rem; }
+.carte__halo {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  transition: opacity .5s var(--doux);
+  background: radial-gradient(280px circle at var(--x,50%) var(--y,50%), rgba(124,58,237,.20), transparent 65%);
+}
+.carte:hover .carte__halo { opacity: 1; }
+
+/* ── Cartes illustrees ────────────────────────────────────────────────── */
+.metier {
+  position: relative; border-radius: var(--rayon-l); overflow: hidden;
+  min-height: 440px; display: flex; flex-direction: column; justify-content: flex-end;
+  padding: clamp(1.6rem,3vw,2.2rem);
+  border: 1px solid var(--verre-bord);
+  isolation: isolate;
+}
+.metier__media {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.1s var(--sortie);
+}
+.metier:hover .metier__media { transform: scale(1.06); }
+.metier::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to top, rgba(4,6,10,.96) 8%, rgba(4,6,10,.45) 44%, rgba(4,6,10,.12) 100%);
+}
+.metier h3 { font-size: clamp(1.35rem,2.2vw,1.9rem); margin-bottom: .6rem; }
+.metier p { color: var(--gris); font-size: .95rem; max-width: 34ch; }
+.metier__lien {
+  display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.2rem;
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--jade-clair);
+}
+
+/* ── Atelier WebGL ────────────────────────────────────────────────────── */
+.atelier {
+  position: relative; min-height: 92svh;
+  display: grid; grid-template-columns: minmax(0,1fr); place-items: center;
+  overflow: hidden; isolation: isolate;
+  border-block: 1px solid rgba(174,236,213,.10);
+}
+#toile-atelier { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; }
+.atelier::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(62% 58% at 50% 50%, rgba(4,6,10,.86) 0%, rgba(4,6,10,.4) 48%, transparent 76%);
+}
+.atelier__centre { text-align: center; padding-inline: var(--marge); width: 100%; max-width: 800px; }
+.atelier__indice { margin-top: 2rem; font-family: var(--mono); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris-fonce); }
+
+/* ── Chiffres ─────────────────────────────────────────────────────────── */
+.chiffres { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 1.1rem; }
+.chiffre { padding: clamp(1.4rem,2.5vw,2rem); text-align: center; }
+.chiffre b {
+  display: block;
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(2.4rem,5vw,3.8rem); line-height: 1; letter-spacing: -.05em;
+  background: linear-gradient(170deg,#fff,var(--jade-clair) 60%,var(--jade-fonce));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.chiffre span { display: block; margin-top: .7rem; font-family: var(--mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gris-fonce); }
+
+/* ── Travaux ──────────────────────────────────────────────────────────── */
+.travaux { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); }
+.travail {
+  position: relative; border-radius: var(--rayon-l); overflow: hidden;
+  border: 1px solid var(--verre-bord); background: var(--noir-2);
+  transition: transform .7s var(--sortie), border-color .6s var(--doux);
+  will-change: transform;
+}
+.travail:hover { border-color: rgba(167,139,250,.45); }
+.travail__vue {
+  aspect-ratio: 16/10;
+  background: linear-gradient(140deg, var(--jade-nuit), var(--noir-3) 55%, var(--violet-fonce));
+  display: grid; place-items: center; overflow: hidden;
+}
+.travail__vue img { width: 100%; height: 100%; object-fit: cover; }
+.travail__vide { font-family: var(--jp); font-size: 3rem; color: rgba(236,253,245,.14); }
+.travail__pied {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1.35rem 1.5rem; border-top: 1px solid rgba(174,236,213,.10);
+}
+.travail__pied h3 { font-size: 1.12rem; }
+.travail__pied span { font-family: var(--mono); font-size: .68rem; letter-spacing: .16em; color: var(--gris-fonce); text-transform: uppercase; }
+
+/* ── Identite ─────────────────────────────────────────────────────────── */
+.identite { position: relative; overflow: hidden; isolation: isolate; padding-block: clamp(6rem,14vh,11rem); border-block: 1px solid rgba(174,236,213,.10); }
+.identite__fond { position: absolute; inset: -8%; z-index: -2; background: url('../assets/jardin.webp') center/cover no-repeat; will-change: transform; }
+.identite::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, var(--noir) 0%, rgba(4,6,10,.84) 34%, rgba(4,6,10,.88) 66%, var(--noir) 100%); }
+.identite__grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px,1fr)); gap: clamp(2.5rem,6vw,5rem); align-items: center; }
+.identite__objet { border-radius: var(--rayon-l); overflow: hidden; border: 1px solid var(--verre-bord); box-shadow: 0 40px 90px -40px rgba(0,0,0,.95), 0 0 120px -60px var(--violet); }
+.identite__objet img, .identite__objet video { width: 100%; height: auto; }
+.identite__objet figcaption { padding: 1rem 1.3rem; border-top: 1px solid rgba(174,236,213,.10); background: rgba(7,11,17,.7); font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris-fonce); }
+
+/* ── Prix ─────────────────────────────────────────────────────────────── */
+.prix {
+  position: relative; overflow: hidden;
+  border-radius: clamp(var(--rayon),3vw,40px);
+  border: 1px solid var(--verre-bord);
+  background:
+    radial-gradient(90% 110% at 15% 0%, rgba(124,58,237,.20), transparent 58%),
+    radial-gradient(80% 100% at 100% 100%, rgba(16,185,129,.16), transparent 55%),
+    var(--noir-2);
+  padding: clamp(2rem,5vw,4.2rem);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+  gap: clamp(2rem,5vw,4rem); align-items: center;
+}
+.prix__chiffre {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(4.2rem,12vw,9.5rem); line-height: .82; letter-spacing: -.06em;
+  background: linear-gradient(170deg,#fff,var(--jade-clair) 55%,var(--jade-fonce));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.prix__euro { font-size: .36em; vertical-align: super; }
+.prix__puis { margin-top: 1.1rem; font-family: var(--mono); font-size: .82rem; letter-spacing: .1em; color: var(--violet-clair); }
+
+.liste { list-style: none; display: grid; gap: .9rem; }
+.liste li { display: grid; grid-template-columns: 22px 1fr; gap: .85rem; align-items: start; font-size: .98rem; color: var(--gris); }
+.liste b { color: var(--blanc); font-weight: 500; }
+.liste .coche {
+  width: 20px; height: 20px; margin-top: .22em; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(16,185,129,.14); border: 1px solid rgba(16,185,129,.35);
+  color: var(--jade-clair); flex: none;
+}
+.liste .coche svg { width: 11px; height: 11px; }
+
+/* ── Contact ──────────────────────────────────────────────────────────── */
+.contact {
+  position: relative; min-height: 88svh;
+  display: grid; grid-template-columns: minmax(0,1fr); place-items: center;
+  text-align: center; overflow: hidden; isolation: isolate;
+}
+.contact__fond { position: absolute; inset: -6%; z-index: -2; background: url('../assets/portail.webp') center 40%/cover no-repeat; will-change: transform; }
+.contact::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, var(--noir) 0%, rgba(4,6,10,.55) 30%, rgba(4,6,10,.8) 72%, var(--noir) 100%); }
+.contact__centre { padding-inline: var(--marge); width: 100%; max-width: 900px; }
+.contact__liens { margin-top: 2.6rem; display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; }
+
+/* ── Pied ─────────────────────────────────────────────────────────────── */
+.pied { border-top: 1px solid rgba(174,236,213,.10); padding-block: clamp(3rem,7vw,5rem) 2.5rem; background: var(--noir); position: relative; z-index: 1; }
+.pied__haut { display: flex; flex-wrap: wrap; gap: 2.5rem; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
+.pied__sceau { display: flex; align-items: center; gap: 1.15rem; }
+.pied__sceau img { width: 74px; height: 74px; border-radius: 50%; border: 1px solid var(--verre-bord); }
+.pied__sceau b { display: block; font-family: var(--display); font-weight: 700; font-size: 1.25rem; }
+.pied__sceau small { font-family: var(--mono); font-size: .68rem; letter-spacing: .16em; color: var(--gris-fonce); text-transform: uppercase; }
+.pied__nav { display: flex; flex-wrap: wrap; gap: .2rem .8rem; margin: -.6rem; }
+.pied__nav a { display: inline-block; padding: .6rem .8rem; font-size: .9rem; color: var(--gris); transition: color .35s var(--doux); }
+.pied__nav a:hover { color: var(--jade-clair); }
+.pied__bas { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; padding-top: 2rem; border-top: 1px solid rgba(174,236,213,.07); font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; color: var(--gris-fonce); }
+
+/* ── Le mot rendu en WebGL ────────────────────────────────────────────── */
+/* Le vrai titre reste dans le document et ne disparait qu'une fois la toile
+   prete. Si WebGL manque, le texte s'affiche normalement et personne ne voit
+   la difference. */
+.mot3d {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1180 / 300;
+  max-height: 46svh;
+  margin-inline: auto;
+}
+.mot3d__vrai {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 12vw, 12.5rem);
+  font-weight: 800; letter-spacing: -.055em; line-height: .84;
+  white-space: nowrap;
+  background: linear-gradient(176deg, #fff 6%, #CFF7E7 34%, var(--jade-clair) 68%, var(--jade-fonce) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 70px rgba(16,185,129,.32));
+  transition: opacity .6s var(--doux);
+}
+.mot3d[data-prete='oui'] .mot3d__vrai {
+  opacity: 0;
+  /* Toujours lu par les lecteurs d'ecran et les moteurs, jamais par l'oeil. */
+  pointer-events: none;
+}
+#toile-mot { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ── L'encre ──────────────────────────────────────────────────────────── */
+#toile-encre {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%;
+  touch-action: none;   /* le doigt remue le fluide au lieu de faire defiler */
+}
+
+/* ── Ecran de chargement ──────────────────────────────────────────────── */
+.chargement {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center;
+  background: var(--noir);
+  transition: opacity .8s var(--doux), visibility .8s;
+}
+.chargement[data-parti='oui'] { opacity: 0; visibility: hidden; pointer-events: none; }
+.chargement__dedans { display: grid; justify-items: center; gap: 1.8rem; }
+.chargement svg { width: 54px; height: auto; overflow: visible; }
+.chargement path {
+  fill: none; stroke: url(#degrade-liane); stroke-width: 3; stroke-linecap: round;
+}
+.chargement__pied {
+  display: flex; align-items: baseline; gap: .9rem;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--gris-fonce);
+}
+.chargement__pct { color: var(--jade-clair); font-variant-numeric: tabular-nums; }
+
+/* ── Rideau de transition ─────────────────────────────────────────────── */
+/* Deux volets qui se rejoignent au centre. Le rideau part baisse pour que
+   l'arrivee sur la page soit une ouverture, pas un flash. */
+.rideau {
+  position: fixed; inset: 0; z-index: 250;
+  pointer-events: none;
+  display: grid; grid-template-rows: 1fr 1fr;
+}
+.rideau i {
+  display: block;
+  background: var(--noir);
+  transform-origin: center;
+  transition: transform .55s var(--sortie);
+}
+.rideau i:first-child { transform-origin: top; }
+.rideau i:last-child  { transform-origin: bottom; }
+.rideau[data-etat='leve'] i { transform: scaleY(0); }
+.rideau[data-etat='baisse'] i { transform: scaleY(1); }
+.rideau::after {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+  translate: 0 -50%;
+  background: linear-gradient(90deg, transparent, var(--jade), var(--violet-clair), transparent);
+  opacity: 0;
+  transition: opacity .4s var(--doux);
+}
+.rideau[data-etat='baisse']::after { opacity: 1; }
+
+/* ── Curseur ──────────────────────────────────────────────────────────── */
+.curseur {
+  position: fixed; top: 0; left: 0; z-index: 200;
+  pointer-events: none; opacity: 0;
+  transition: opacity .3s;
+  mix-blend-mode: screen;
+}
+.curseur[data-actif='oui'] { opacity: 1; }
+.curseur span {
+  display: block; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 1px solid rgba(110,231,183,.55); border-radius: 50%;
+  transition: width .4s var(--sortie), height .4s var(--sortie),
+              margin .4s var(--sortie), background .4s var(--doux), border-color .4s var(--doux);
+}
+.curseur[data-gros='oui'] span {
+  width: 66px; height: 66px; margin: -33px 0 0 -33px;
+  background: rgba(124,58,237,.22); border-color: rgba(167,139,250,.7);
+}
+
+/* ── Documents ────────────────────────────────────────────────────────── */
+.doc { max-width: 760px; }
+.doc h2 { font-size: clamp(1.2rem,2vw,1.55rem); margin: 2.8rem 0 .9rem; }
+.doc h2:first-of-type { margin-top: 0; }
+.doc p, .doc li { color: var(--gris); }
+.doc p + p { margin-top: .9rem; }
+.doc ul { margin: 1rem 0 0 1.2rem; display: grid; gap: .5rem; }
+.doc dl { display: grid; grid-template-columns: auto 1fr; gap: .5rem 1.4rem; }
+.doc dt { font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--jade-clair); padding-top: .35em; }
+.doc dd { color: var(--blanc); }
+.doc a { color: var(--jade-clair); text-decoration: underline; text-underline-offset: 3px; }
+.aversion {
+  border: 1px solid rgba(245,158,11,.4); background: rgba(245,158,11,.07);
+  border-radius: var(--rayon); padding: 1.1rem 1.3rem; margin-top: 1.2rem;
+  color: #FCD9A0; font-size: .92rem;
+}
+
+/* ── Adaptations ──────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .nav__liens, .nav__cta { display: none; }
+  .nav__menu { display: inline-flex; }
+  .chapitre--droite .chapitre__texte { text-align: left; margin-left: 0; }
+  .chapitre p.grand { max-width: 100%; }
+}
+@media (max-width: 560px) {
+  .nav { padding-left: 1rem; }
+  .doc dl { grid-template-columns: 1fr; gap: .2rem 0; }
+}
+@media (hover: none) { .curseur { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  html[data-pret='oui'] [data-vient='bloc'],
+  html[data-pret='oui'] [data-vient='lettres'] .lettre,
+  html[data-pret='oui'] [data-vient='titre'] .lettre {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le studio · Kazura</title>
+<meta name="description" content="Kazura est un studio d'une personne, à Beblenheim en Alsace. Ce qu'on fait, comment on travaille, et pourquoi ce nom.">
+<!-- Apercu sur GitHub Pages : on ne veut pas que Google reference le site
+     sous cette adresse plutot que sous kazura.fr. A RETIRER a la mise en
+     ligne sur le vrai domaine. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#04060A">
+<meta property="og:title" content="Le studio · Kazura">
+<meta property="og:image" content="assets/portail.webp">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/kazura.css">
+</head>
+
+<body>
+
+<div class="rideau" id="rideau" data-etat="baisse" aria-hidden="true"><i></i><i></i></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="degrade-liane" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6EE7B7"/><stop offset="55%" stop-color="#10B981"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient></defs></svg>
+
+<div class="fond-halo" aria-hidden="true"></div>
+<div class="fond-trame" aria-hidden="true"></div>
+
+<nav class="nav" data-cache="non" data-dense="oui">
+  <a class="nav__marque" href="index.html" aria-label="Kazura, accueil">
+    <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M33 16 L33 104"/><path d="M92 16 C68 36 48 48 40 60 C48 72 68 84 92 104"/>
+    </svg>
+    <span>Kazura</span>
+  </a>
+  <div class="nav__liens">
+    <a class="nav__lien" href="savoir-faire.html">Savoir-faire</a>
+    <a class="nav__lien" href="travaux.html">Travaux</a>
+    <a class="nav__lien" href="studio.html" aria-current="page">Le studio</a>
+    <a class="nav__lien" href="index.html#prix">Tarif</a>
+  </div>
+  <a class="bouton bouton--plein nav__cta" href="contact.html" data-aimant>
+    Parler de mon site <span class="fleche" aria-hidden="true">→</span>
+  </a>
+  <button class="nav__menu" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu">
+    <span class="nav__barres" aria-hidden="true"><i></i><i></i></span>
+  </button>
+</nav>
+
+<div class="panneau" id="menu" hidden>
+  <nav class="panneau__liens" aria-label="Navigation principale">
+    <a href="index.html">Accueil</a>
+    <a href="savoir-faire.html">Savoir-faire</a>
+    <a href="travaux.html">Travaux</a>
+    <a href="studio.html">Le studio</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<div id="defile">
+
+  <header class="bloc" style="padding-top:clamp(9rem,22vh,14rem)">
+    <div class="enveloppe">
+      <span class="etiquette" data-vient="bloc">葛 · Le studio</span>
+      <h1 class="titre" data-vient="titre" style="margin:1.2rem 0 1.6rem;max-width:16ch">
+        Une personne, et c'est voulu.
+      </h1>
+      <p class="chapo" data-vient="bloc">
+        Kazura est un studio d'une seule personne, installé à Beblenheim, dans
+        le vignoble alsacien. Ce n'est pas une étape avant de devenir une
+        agence, c'est le format. Une agence a besoin de vendre des heures ;
+        moi j'ai besoin que le site vous plaise, et ce n'est pas la même chose.
+      </p>
+    </div>
+  </header>
+
+  <!-- ══ Le nom ═══════════════════════════════════════════════════════ -->
+  <section class="identite">
+    <div class="identite__fond" data-parallaxe="0.08" aria-hidden="true"></div>
+    <div class="enveloppe">
+      <div class="identite__grille">
+        <div>
+          <span class="etiquette" data-vient="bloc">葛 · Le nom</span>
+          <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">Kazura, la liane.</h2>
+          <p class="chapo" data-vient="bloc">
+            <span lang="ja">葛</span>, <span lang="ja">kazura</span>, désigne
+            en japonais la plante grimpante. Elle part d'un fil, cherche un
+            appui, et monte. Un an plus tard on ne voit plus le mur.
+          </p>
+          <p class="chapo" data-vient="bloc" style="margin-top:1rem">
+            C'est exactement ce qu'un site fait pour quelqu'un qui n'en a pas.
+            Il ne remplace pas le travail, il lui donne de quoi grimper.
+          </p>
+        </div>
+        <figure class="identite__objet" data-vient="bloc">
+          <video src="video/sceau.mp4" poster="assets/affiche-sceau.webp" muted loop playsinline autoplay preload="none" aria-hidden="true"></video>
+          <figcaption>Le sceau, trois folioles de jade sur obsidienne</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ La méthode ═══════════════════════════════════════════════════ -->
+  <section class="bloc">
+    <div class="enveloppe">
+      <span class="etiquette" data-vient="bloc">La méthode</span>
+      <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem;max-width:18ch">
+        Vous voyez le site avant de payer.
+      </h2>
+      <p class="chapo" data-vient="bloc">
+        La plupart des prestataires demandent un acompte pour commencer à
+        dessiner. Ici c'est l'inverse : on fait une maquette, vous la regardez,
+        et vous décidez ensuite. Si elle ne vous plaît pas, vous ne devez rien.
+      </p>
+
+      <div class="cartes" style="margin-top:clamp(2.5rem,6vw,4rem)">
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">01</span>
+          <h3>On regarde</h3>
+          <p>Vos photos, votre lieu, ce que vous dites à vos clientes. La palette et le ton sortent de là, jamais d'un gabarit.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">02</span>
+          <h3>On montre</h3>
+          <p>Une maquette réelle, dans un navigateur, pas un dessin. Vous cliquez dedans. À ce stade, vous n'avez rien payé.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">03</span>
+          <h3>On reprend</h3>
+          <p>Autant de fois qu'il le faut. Sans compteur et sans supplément : c'est la clause dont je suis le plus fier.</p>
+        </article>
+        <article class="carte verre" data-vient="bloc">
+          <span class="carte__halo" aria-hidden="true"></span>
+          <span class="carte__num">04</span>
+          <h3>On vous laisse la clé</h3>
+          <p>Un espace personnel pour vos textes, vos tarifs et vos photos. Vous n'aurez pas à demander la permission de changer un prix.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Qui ══════════════════════════════════════════════════════════ -->
+  <section class="bloc" style="border-top:1px solid rgba(174,236,213,.10)">
+    <div class="enveloppe">
+      <div class="doc">
+        <span class="etiquette" data-vient="bloc">Qui</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.6rem">Matheo Schmitt</h2>
+        <p class="chapo" data-vient="bloc">
+          J'ai dix-huit ans et je code des sites depuis l'Alsace. Mon
+          entreprise est déclarée, elle porte le numéro SIREN 100 165 455, et
+          vous pouvez le vérifier avant de me faire confiance. Je préfère le
+          dire simplement que le laisser deviner.
+        </p>
+        <p class="chapo" data-vient="bloc" style="margin-top:1rem">
+          Ce que je ne sais pas encore faire, je le dis. Ce que je promets,
+          c'est écrit dans le contrat, y compris les retouches sans limite.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="contact__fond" data-parallaxe="0.10" aria-hidden="true"></div>
+    <div class="contact__centre">
+      <p class="hero__kanji" aria-hidden="true" style="font-size:clamp(2rem,4.5vw,3.2rem)">門</p>
+      <h2 class="titre" data-vient="titre">On se parle ?</h2>
+      <div class="contact__liens" data-vient="bloc">
+        <a class="bouton bouton--plein" href="contact.html" data-aimant>Écrire <span class="fleche" aria-hidden="true">→</span></a>
+        <a class="bouton bouton--verre" href="tel:+33630110038" data-aimant>06 30 11 00 38</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pied">
+    <div class="enveloppe">
+      <div class="pied__haut">
+        <div class="pied__sceau">
+          <img src="assets/blason.webp" alt="Le sceau de Kazura" width="74" height="74" loading="lazy" decoding="async">
+          <div><b>Kazura</b><small>Beblenheim · Alsace</small></div>
+        </div>
+        <nav class="pied__nav" aria-label="Pied de page">
+          <a href="index.html">Accueil</a>
+          <a href="savoir-faire.html">Savoir-faire</a>
+          <a href="travaux.html">Travaux</a>
+          <a href="studio.html">Le studio</a>
+          <a href="contact.html">Contact</a>
+          <a href="mentions-legales.html">Mentions légales</a>
+        </nav>
+      </div>
+      <div class="pied__bas">
+        <span>© <span data-annee>2026</span> Kazura · Matheo Schmitt</span>
+        <span>SIREN 100 165 455 · TVA non applicable, art. 293 B du CGI</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script type="module" src="js/kazura.js"></script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+/* ==========================================================================
+   KAZURA 葛 - le moteur
+   --------------------------------------------------------------------------
+   Aucune dependance hors three.js, charge a part et seulement quand une page
+   en a besoin. Tout est coupe proprement si l'utilisateur demande moins de
+   mouvement, si la machine est un telephone, ou si le script ne tourne pas.
+   ========================================================================== */
+
+const sobre   = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const tactile = matchMedia('(hover: none)').matches;
+const $  = (s, p = document) => p.querySelector(s);
+const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
+const borne = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* ══ 1. Defilement amorti ═══════════════════════════════════════════════
+   Le contenu vit dans un conteneur fixe qu'on translate, pendant que le
+   corps de page garde la hauteur reelle pour que la barre de defilement soit
+   juste. C'est ce qui donne l'inertie des sites primes.
+
+   Deux consequences a connaitre avant de toucher au CSS :
+   - `position: sticky` ne fonctionne plus a l'interieur du conteneur. On
+     epingle donc a la main, avec `position: fixed` pilote au defilement.
+   - tout ce qui doit rester fixe a l'ecran (barre, toiles de fond, menu) est
+     place EN DEHORS du conteneur.
+
+   Sur ecran tactile et en mode sobre, on ne detourne rien : le defilement
+   natif est meilleur que tout ce qu'on pourrait imiter. */
+const glisse = {
+  y: 0, cible: 0, max: 0, vitesse: 0, actif: false, boite: null
+};
+
+function monterLeDefilement() {
+  const boite = $('#defile');
+  if (!boite) return;
+  glisse.boite = boite;
+  glisse.actif = !tactile && !sobre;
+
+  if (!glisse.actif) {
+    boite.dataset.natif = 'oui';
+    return;
+  }
+
+  const mesurer = () => {
+    const h = boite.getBoundingClientRect().height;
+    document.body.style.height = h + 'px';
+    glisse.max = Math.max(0, h - window.innerHeight);
+  };
+  mesurer();
+  new ResizeObserver(mesurer).observe(boite);
+  window.addEventListener('resize', mesurer);
+
+  // Un lien d'ancre doit continuer a fonctionner malgre le detournement.
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const cible = $(a.getAttribute('href'));
+      if (!cible) return;
+      e.preventDefault();
+      const haut = cible.getBoundingClientRect().top + glisse.y;
+      window.scrollTo({ top: haut, behavior: 'auto' });
+    });
+  });
+}
+
+/* ══ 2. Les abonnes au defilement ═══════════════════════════════════════
+   Un seul rAF pour toute la page, une seule lecture de position, et une
+   liste d'abonnes. Multiplier les ecouteurs de `scroll` est le moyen le plus
+   sur de rendre une page saccadee. */
+const abonnes = [];
+const auDefilement = (fn) => { abonnes.push(fn); return fn; };
+
+let dernierY = 0;
+
+/* Un pas de la boucle, isole du rAF qui l'appelle. Deux raisons : le rAF ne
+   tourne pas dans un onglet masque, et un pas appelable a la main rend la
+   page verifiable et deboguable depuis la console (`kazura.pas()`). */
+function pas() {
+  const brut = window.scrollY || document.documentElement.scrollTop;
+
+  if (glisse.actif) {
+    glisse.cible = brut;
+    glisse.y += (glisse.cible - glisse.y) * 0.085;
+    if (Math.abs(glisse.cible - glisse.y) < 0.06) glisse.y = glisse.cible;
+    glisse.boite.style.transform = `translate3d(0,${-glisse.y.toFixed(2)}px,0)`;
+  } else {
+    glisse.y = brut;
+    glisse.max = Math.max(0, document.body.scrollHeight - window.innerHeight);
+  }
+
+  glisse.vitesse = glisse.y - dernierY;
+  dernierY = glisse.y;
+
+  const p = glisse.max > 0 ? borne(glisse.y / glisse.max, 0, 1) : 0;
+  for (const fn of abonnes) fn(glisse.y, p, glisse.vitesse);
+}
+
+function battre() {
+  pas();
+  requestAnimationFrame(battre);
+}
+
+/* Position d'un element dans le repere du document, valable dans les deux
+   modes. En mode amorti, le conteneur est translate : on rajoute le decalage. */
+function boiteReelle(el) {
+  const r = el.getBoundingClientRect();
+  const dy = glisse.actif ? glisse.y : 0;
+  return { haut: r.top + dy, bas: r.bottom + dy, hauteur: r.height, ecran: r };
+}
+
+/* ══ 3. Decoupe du texte ════════════════════════════════════════════════ */
+/* Chaque mot devient un bloc, chaque lettre un bloc dans le mot. Le mot sert
+   de fenetre : la lettre monte depuis dessous, donc rien ne deborde. */
+function decouper(el) {
+  if (el.dataset.decoupe === 'oui') return;
+  const texte = el.textContent;
+  el.textContent = '';
+  el.dataset.decoupe = 'oui';
+  let n = 0;
+  texte.trim().split(/(\s+)/).forEach(bout => {
+    if (/^\s+$/.test(bout)) { el.appendChild(document.createTextNode(' ')); return; }
+    const mot = document.createElement('span');
+    mot.className = 'mot';
+    [...bout].forEach(c => {
+      const l = document.createElement('span');
+      l.className = 'lettre';
+      l.textContent = c;
+      l.style.setProperty('--i', n++);
+      mot.appendChild(l);
+    });
+    el.appendChild(mot);
+  });
+  el.style.setProperty('--n', n);
+}
+
+/* ══ 4. Brouillage de lettres ═══════════════════════════════════════════ */
+/* Le principe d'Igloo Inc, transpose au DOM : on ne remplace pas le texte,
+   on fait defiler des glyphes a la place de chaque lettre pas encore fixee.
+   Les lettres se figent de gauche a droite. */
+const GLYPHES = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ葛蔓蔦茎芽0123456789';
+
+function brouiller(el, duree = 1100) {
+  const vrai = el.dataset.vrai || (el.dataset.vrai = el.textContent.trim());
+  const debut = performance.now();
+  const n = vrai.length;
+
+  const tour = () => {
+    const t = borne((performance.now() - debut) / duree, 0, 1);
+    // Courbe de sortie : la fin se pose doucement.
+    const avance = 1 - Math.pow(1 - t, 3);
+    const fixees = Math.floor(avance * n);
+    let sortie = '';
+    for (let i = 0; i < n; i++) {
+      if (vrai[i] === ' ') { sortie += ' '; continue; }
+      sortie += i < fixees ? vrai[i] : GLYPHES[(Math.random() * GLYPHES.length) | 0];
+    }
+    el.textContent = sortie;
+    if (t < 1) requestAnimationFrame(tour);
+    else el.textContent = vrai;
+  };
+  tour();
+}
+
+/* ══ 5. Apparitions ═════════════════════════════════════════════════════ */
+/* Calcul au defilement plutot qu'IntersectionObserver. L'observateur ne
+   repond pas dans un document non compose (onglet en arriere-plan, fenetre
+   masquee, navigateur pilote), ce qui laisserait toute la page a opacite
+   zero. Ici la meme boucle qui anime tout decide aussi de ce qui apparait. */
+function monterLesApparitions() {
+  const cibles = $$('[data-vient]');
+  cibles.forEach(el => {
+    if (el.dataset.vient === 'lettres' || el.dataset.vient === 'titre') decouper(el);
+  });
+
+  let restants = cibles.slice();
+
+  auDefilement(() => {
+    if (!restants.length) return;
+    const h = window.innerHeight;
+    restants = restants.filter(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top > h * 0.92 || r.bottom < 0) return true;
+      el.dataset.vu = 'oui';
+      if (el.dataset.vient === 'brouille') brouiller(el);
+      return false;
+    });
+  });
+}
+
+/* ══ 6. Parallaxe ═══════════════════════════════════════════════════════ */
+function monterLaParallaxe() {
+  const couches = $$('[data-parallaxe]');
+  if (!couches.length || sobre) return;
+  auDefilement(() => {
+    const h = window.innerHeight;
+    couches.forEach(c => {
+      const r = c.parentElement.getBoundingClientRect();
+      if (r.bottom < -300 || r.top > h + 300) return;
+      const force = parseFloat(c.dataset.parallaxe) || 0.15;
+      const centre = r.top + r.height / 2 - h / 2;
+      c.style.transform = `translate3d(0,${(-centre * force).toFixed(2)}px,0)`;
+    });
+  });
+}
+
+/* ══ 7. Epinglage ═══════════════════════════════════════════════════════ */
+/* `position: sticky` est inutilisable dans un conteneur translate. On epingle
+   donc a la main : l'element passe en `position: fixed` tant que sa section
+   traverse l'ecran, et redevient normal aux deux bouts. */
+function monterLEpinglage() {
+  const zones = $$('[data-epingle]');
+  zones.forEach(zone => {
+    const dedans = $('[data-epingle-contenu]', zone);
+    if (!dedans) return;
+
+    /* Les messages qui se relaient pendant la traversee. Chacun declare la
+       tranche d'avancement ou il doit etre visible. */
+    const fenetres = $$('[data-fenetre]', zone).map(el => {
+      const [a, b] = el.dataset.fenetre.split(',').map(Number);
+      return { el, a, b };
+    });
+
+    auDefilement(() => {
+      const r = zone.getBoundingClientRect();
+      const h = window.innerHeight;
+      const course = r.height - h;
+      const avance = borne(-r.top / Math.max(course, 1), 0, 1);
+      zone.style.setProperty('--avance', avance.toFixed(4));
+      zone.dataset.avance = avance.toFixed(3);
+
+      if (r.top <= 0 && r.bottom >= h) {
+        dedans.style.position = 'fixed';
+        dedans.style.top = '0';
+        dedans.style.left = '0';
+        dedans.style.width = '100%';
+      } else {
+        dedans.style.position = 'absolute';
+        dedans.style.top = r.top > 0 ? '0' : 'auto';
+        dedans.style.bottom = r.top > 0 ? 'auto' : '0';
+        dedans.style.left = '0';
+        dedans.style.width = '100%';
+      }
+      for (const f of fenetres) {
+        f.el.dataset.actif = (avance >= f.a && avance < f.b) ? 'oui' : 'non';
+      }
+
+      zone.dispatchEvent(new CustomEvent('avance', { detail: avance }));
+    });
+  });
+}
+
+/* ══ 8. Video pilotee au defilement ═════════════════════════════════════ */
+/* La video a ete reencodee avec une image-cle sur chaque image : sans ca, le
+   decodeur remonte a la cle precedente a chaque saut et le scrub saccade.
+   On n'ecrit `currentTime` que si l'ecart depasse une demi-image, sinon on
+   noie le decodeur sous des demandes inutiles. */
+function monterLeScrub() {
+  $$('[data-scrub]').forEach(video => {
+    const zone = video.closest('[data-epingle]');
+    if (!zone) return;
+
+    video.pause();
+    video.muted = true;
+    video.playsInline = true;
+
+    let duree = 0, vise = 0, courant = 0, pret = false;
+    const prendreDuree = () => {
+      if (Number.isFinite(video.duration) && video.duration > 0) {
+        duree = video.duration; pret = true;
+      }
+    };
+    video.addEventListener('loadedmetadata', prendreDuree);
+    video.addEventListener('durationchange', prendreDuree);
+    prendreDuree();
+
+    zone.addEventListener('avance', e => { vise = e.detail * (duree || 0); });
+
+    auDefilement(() => {
+      if (!pret || !duree) return;
+      /* Ne jamais empiler les demandes : tant que le decodeur cherche encore
+         l'image precedente, une nouvelle ecriture l'oblige a tout reprendre.
+         C'est la difference entre un scrub fluide et un scrub qui bafouille. */
+      if (video.seeking) return;
+      courant += (vise - courant) * 0.16;
+      if (Math.abs(video.currentTime - courant) > 1 / 48) {
+        try { video.currentTime = courant; } catch (e) { /* ignore */ }
+      }
+    });
+  });
+}
+
+/* ══ 9. Bandeau sensible a la vitesse ═══════════════════════════════════ */
+function monterLesBandeaux() {
+  $$('[data-bandeau]').forEach(piste => {
+    const sens = parseFloat(piste.dataset.bandeau) || 1;
+    let x = 0;
+    auDefilement((y, p, v) => {
+      // Deroule tout seul, et le defilement le pousse ou le freine.
+      x -= (0.55 + Math.abs(v) * 0.14) * sens;
+      const l = piste.scrollWidth / 2;
+      if (l > 0) { if (x < -l) x += l; if (x > 0) x -= l; }
+      piste.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+    });
+  });
+}
+
+/* ══ 10. Barre et menu ══════════════════════════════════════════════════ */
+function monterLaBarre() {
+  const nav = $('.nav');
+  if (nav) {
+    let precedent = 0;
+    auDefilement(y => {
+      nav.dataset.dense = y > 60 ? 'oui' : 'non';
+      nav.dataset.cache = (y > precedent + 1 && y > 420) ? 'oui' : 'non';
+      precedent = y;
+    });
+  }
+
+  const bouton = $('.nav__menu'), panneau = $('.panneau');
+  if (!bouton || !panneau) return;
+
+  const basculer = (ouvrir) => {
+    bouton.setAttribute('aria-expanded', String(ouvrir));
+    bouton.setAttribute('aria-label', ouvrir ? 'Fermer le menu' : 'Ouvrir le menu');
+    document.body.dataset.fige = ouvrir ? 'oui' : 'non';
+    if (ouvrir) {
+      panneau.hidden = false;
+      void panneau.offsetHeight;      // force le calcul, sinon pas de transition
+      panneau.dataset.ouvert = 'oui';
+      /* Le panneau couvre tout l'ecran et reste cliquable a opacite zero :
+         s'il s'ouvrait sans devenir visible, il condamnerait la page. */
+      setTimeout(() => {
+        if (panneau.dataset.ouvert === 'oui' &&
+            parseFloat(getComputedStyle(panneau).opacity) < 0.9) {
+          panneau.style.opacity = '1';
+        }
+      }, 500);
+    } else {
+      panneau.style.opacity = '';
+      panneau.dataset.ouvert = 'non';
+      setTimeout(() => {
+        if (panneau.dataset.ouvert !== 'oui') panneau.hidden = true;
+      }, 520);
+    }
+  };
+
+  bouton.addEventListener('click', () =>
+    basculer(bouton.getAttribute('aria-expanded') !== 'true'));
+  $$('a', panneau).forEach(a => a.addEventListener('click', () => basculer(false)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && bouton.getAttribute('aria-expanded') === 'true') basculer(false);
+  });
+}
+
+/* ══ 11. Curseur et aimants ═════════════════════════════════════════════ */
+function monterLeCurseur() {
+  if (tactile || sobre) return;
+  const c = document.createElement('div');
+  c.className = 'curseur';
+  c.innerHTML = '<span></span>';
+  document.body.appendChild(c);
+
+  let cx = innerWidth / 2, cy = innerHeight / 2, vx = cx, vy = cy;
+  addEventListener('pointermove', e => {
+    cx = e.clientX; cy = e.clientY; c.dataset.actif = 'oui';
+  }, { passive: true });
+  addEventListener('pointerleave', () => { c.dataset.actif = 'non'; });
+
+  (function suivre() {
+    vx += (cx - vx) * 0.19; vy += (cy - vy) * 0.19;
+    c.style.transform = `translate3d(${vx.toFixed(1)}px,${vy.toFixed(1)}px,0)`;
+    requestAnimationFrame(suivre);
+  })();
+
+  const marquer = (v) => () => { c.dataset.gros = v; };
+  $$('a, button, [data-aimant], .carte, .metier, .travail').forEach(el => {
+    el.addEventListener('pointerenter', marquer('oui'));
+    el.addEventListener('pointerleave', marquer('non'));
+  });
+
+  $$('[data-aimant]').forEach(b => {
+    b.addEventListener('pointermove', e => {
+      const r = b.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) * 0.3;
+      const y = (e.clientY - r.top - r.height / 2) * 0.34;
+      b.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+    });
+    b.addEventListener('pointerleave', () => { b.style.transform = ''; });
+  });
+}
+
+/* ══ 12. Cartes : halo et inclinaison ═══════════════════════════════════ */
+function monterLesCartes() {
+  if (tactile || sobre) return;
+  $$('.carte, .travail').forEach(carte => {
+    carte.addEventListener('pointermove', e => {
+      const r = carte.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      carte.style.setProperty('--x', x + 'px');
+      carte.style.setProperty('--y', y + 'px');
+      const ix = (x / r.width - 0.5) * 2, iy = (y / r.height - 0.5) * 2;
+      carte.style.transform =
+        `perspective(1000px) rotateY(${(ix * 5).toFixed(2)}deg) rotateX(${(-iy * 5).toFixed(2)}deg) translateZ(8px)`;
+    });
+    carte.addEventListener('pointerleave', () => { carte.style.transform = ''; });
+  });
+}
+
+/* ══ 13. Images differees, avec filet ═══════════════════════════════════ */
+function monterLesImages() {
+  const differees = $$('img[loading="lazy"]');
+  if (!differees.length) return;
+  let restantes = differees.slice();
+  auDefilement(() => {
+    if (!restantes.length) return;
+    const h = window.innerHeight;
+    restantes = restantes.filter(img => {
+      if (img.complete && img.naturalWidth) return false;
+      const r = img.getBoundingClientRect();
+      if (r.top > h + 600 || r.bottom < -600) return true;
+      img.loading = 'eager';
+      img.src = img.getAttribute('src');
+      return false;
+    });
+  });
+}
+
+/* ══ 14. Scene 3D ═══════════════════════════════════════════════════════ */
+async function monterLaScene3D() {
+  const toile = $('#toile3d');
+  if (!toile) return;
+
+  // Le telephone n'a pas le budget : on lui laisse l'image de fond du CSS.
+  if (tactile && window.innerWidth < 700) { toile.dataset.repli = 'oui'; return; }
+
+  try {
+    const { monterLaScene } = await import('./scene.js');
+    const scene = monterLaScene(toile);
+    const zone = $('[data-scene-zone]') || document.body;
+
+    auDefilement(() => {
+      const r = zone.getBoundingClientRect();
+      const course = Math.max(1, r.height - window.innerHeight);
+      const avance = borne(-r.top / course, 0, 1);
+      scene.avancer(avance);
+      // La toile s'efface quand sa zone est passee, et cesse alors de peindre.
+      const sortie = borne((r.bottom - window.innerHeight * 0.6) / (window.innerHeight * 0.8), 0, 1);
+      toile.style.opacity = sortie.toFixed(3);
+    });
+    toile.dataset.prete = 'oui';
+  } catch (e) {
+    console.warn('scene 3D indisponible', e);
+    toile.dataset.repli = 'oui';
+  }
+}
+
+/* ══ 14 bis. Atelier ════════════════════════════════════════════════════ */
+async function monterLAtelierSiPresent() {
+  const toile = $('#toile-atelier');
+  if (!toile) return;
+  try {
+    const { monterLAtelier } = await import('./atelier.js');
+    monterLAtelier(toile);
+  } catch (e) {
+    console.warn('atelier indisponible', e);
+  }
+}
+
+/* ══ 14 ter. L'encre, simulation de fluide ══════════════════════════════ */
+/* On sonde le support sur une toile jetable AVANT de choisir le module : une
+   fois qu'un contexte webgl2 est attache a une toile, on ne peut plus y
+   demander un contexte webgl1, et le repli serait perdu. */
+function supporteLeFluide() {
+  try {
+    const t = document.createElement('canvas');
+    t.width = t.height = 2;
+    const g = t.getContext('webgl2');
+    if (!g) return false;
+    const ok = !!g.getExtension('EXT_color_buffer_float');
+    g.getExtension('WEBGL_lose_context')?.loseContext();
+    return ok;
+  } catch (e) { return false; }
+}
+
+async function monterLEncreSiPresente() {
+  const toile = $('#toile-encre');
+  if (!toile) return;
+
+  if (supporteLeFluide()) {
+    try {
+      const { monterLEncre } = await import('./fluide.js');
+      const encre = monterLEncre(toile);
+      if (encre) {
+        toile.dataset.mode = 'fluide';
+        (window.kazura ||= {}).encre = encre;
+        return;
+      }
+    } catch (e) { console.warn('encre indisponible', e); }
+  }
+
+  // Repli : le champ de bruit, moins spectaculaire mais toujours vivant.
+  try {
+    const { monterLAtelier } = await import('./atelier.js');
+    monterLAtelier(toile);
+    toile.dataset.mode = 'bruit';
+  } catch (e) {
+    toile.dataset.mode = 'aucun';
+  }
+}
+
+/* ══ 14 quater. Le mot en WebGL ═════════════════════════════════════════ */
+async function monterLeMotSiPresent() {
+  const toile = $('#toile-mot');
+  if (!toile) return;
+  try {
+    const { monterLeMot } = await import('./mot-webgl.js');
+    const mot = await monterLeMot(toile, toile.dataset.mot || 'KAZURA');
+    if (!mot) return;
+    (window.kazura ||= {}).mot = mot;
+
+    // Le titre en DOM cede la place, mais reste dans le document.
+    toile.closest('.mot3d')?.setAttribute('data-prete', 'oui');
+
+    if (mot.statique) return;
+    const hero = toile.closest('.hero') || toile.parentElement;
+    auDefilement(() => {
+      const r = hero.getBoundingClientRect();
+      /* Net tant que le hero occupe l'ecran, pulverise a mesure qu'il sort.
+         Le mot se recondense si on remonte. */
+      const sortie = borne((r.bottom - window.innerHeight * 0.28) / (window.innerHeight * 0.72), 0, 1);
+      mot.viser(sortie);
+    });
+  } catch (e) {
+    console.warn('mot WebGL indisponible', e);
+  }
+}
+
+/* ══ 14 quinquies. Ecran de chargement ══════════════════════════════════ */
+/* Il ne sert pas a masquer une lenteur, il sert a poser le ton avant que la
+   premiere image n'arrive : la liane se dessine, le compteur monte, et la
+   page apparait quand les polices sont pretes. Duree plafonnee : un ecran de
+   chargement qui s'eternise est pire que pas d'ecran du tout. */
+function monterLeChargement() {
+  const ecran = $('#chargement');
+  if (!ecran) return;
+
+  const trait = $('path', ecran);
+  const pct = $('[data-pct]', ecran);
+  if (trait) {
+    const L = trait.getTotalLength();
+    trait.style.strokeDasharray = L;
+    trait.style.strokeDashoffset = L;
+  }
+
+  const debut = performance.now();
+  const DUREE_MIN = sobre ? 120 : 900;
+  const DUREE_MAX = 3200;
+  let pretes = false;
+
+  const attendre = Promise.all([
+    document.fonts ? document.fonts.ready.catch(() => {}) : Promise.resolve(),
+    new Promise(r => {
+      if (document.readyState === 'complete') r();
+      else addEventListener('load', r, { once: true });
+    })
+  ]);
+  attendre.then(() => { pretes = true; });
+
+  const fermer = () => {
+    ecran.dataset.parti = 'oui';
+    document.body.dataset.fige = 'non';
+    setTimeout(() => { ecran.remove(); }, 900);
+  };
+
+  document.body.dataset.fige = 'oui';
+
+  (function tour() {
+    const t = performance.now() - debut;
+    // La barre avance vite jusqu'a 85 pour cent, puis attend vraiment.
+    const feint = Math.min(0.85, t / DUREE_MIN * 0.85);
+    const p = pretes ? Math.min(1, feint + (t - DUREE_MIN) / 400 * 0.15 + 0.15) : feint;
+    if (pct) pct.textContent = String(Math.round(p * 100)).padStart(2, '0');
+    if (trait) {
+      const L = trait.getTotalLength();
+      trait.style.strokeDashoffset = String(L * (1 - p));
+    }
+    if ((pretes && t > DUREE_MIN) || t > DUREE_MAX) { fermer(); return; }
+    requestAnimationFrame(tour);
+  })();
+
+  // Filet : rAF ne tourne pas dans un onglet masque, l'ecran resterait pose.
+  setTimeout(() => { if (ecran.dataset.parti !== 'oui') fermer(); }, DUREE_MAX + 400);
+}
+
+/* ══ 14 sexies. Transitions entre pages ═════════════════════════════════ */
+/* Un rideau se ferme, la navigation part, et le rideau se leve de l'autre
+   cote. Sans ca, chaque clic donne un flash blanc qui casse net l'ambiance. */
+function monterLesTransitions() {
+  const rideau = $('#rideau');
+  if (!rideau) return;
+
+  // A l'arrivee : le rideau est baisse, on le leve.
+  requestAnimationFrame(() => { rideau.dataset.etat = 'leve'; });
+  setTimeout(() => { rideau.dataset.etat = 'leve'; }, 60);   // filet sans rAF
+
+  if (sobre) return;
+
+  $$('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!href || /^(https?:|mailto:|tel:|#)/.test(href)) return;
+    if (a.target === '_blank') return;
+
+    a.addEventListener('click', e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      rideau.dataset.etat = 'baisse';
+      setTimeout(() => { location.href = href; }, 520);
+    });
+  });
+}
+
+/* ══ 15. Compteurs ══════════════════════════════════════════════════════ */
+function monterLesCompteurs() {
+  const cs = $$('[data-compte]');
+  if (!cs.length) return;
+  let restants = cs.slice();
+  auDefilement(() => {
+    if (!restants.length) return;
+    const h = window.innerHeight;
+    restants = restants.filter(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top > h * 0.9) return true;
+      const fin = parseFloat(el.dataset.compte);
+      const debut = performance.now();
+      const duree = 1400;
+      const tour = () => {
+        const t = borne((performance.now() - debut) / duree, 0, 1);
+        const e = 1 - Math.pow(1 - t, 4);
+        el.textContent = Math.round(fin * e).toLocaleString('fr-FR');
+        if (t < 1) requestAnimationFrame(tour);
+      };
+      tour();
+      return false;
+    });
+  });
+}
+
+/* ══ Demarrage ══════════════════════════════════════════════════════════ */
+function demarrer() {
+  monterLeChargement();
+  monterLesTransitions();
+  monterLeDefilement();
+  monterLesApparitions();
+  monterLaParallaxe();
+  monterLEpinglage();
+  monterLeScrub();
+  monterLesBandeaux();
+  monterLaBarre();
+  monterLeCurseur();
+  monterLesCartes();
+  monterLesImages();
+  monterLesCompteurs();
+  monterLaScene3D();
+  monterLAtelierSiPresent();
+  monterLEncreSiPresente();
+  monterLeMotSiPresent();
+
+  const annee = $('[data-annee]');
+  if (annee) annee.textContent = new Date().getFullYear();
+
+  requestAnimationFrame(battre);
+
+  /* rAF ne tourne pas dans un onglet masque : au retour, on rattrape. */
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) pas(); });
+
+  // Poignee de service : un pas manuel, pour verifier ou deboguer.
+  window.kazura = Object.assign(window.kazura || {}, { pas, glisse, abonnes });
+
+  document.documentElement.dataset.pret = 'oui';
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', demarrer);
+} else {
+  demarrer();
+}
