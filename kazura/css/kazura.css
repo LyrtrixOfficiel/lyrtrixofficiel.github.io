@@ -1336,12 +1336,41 @@ section { position: relative; }
         transparent calc(var(--ouvre) * 78vmax),
         #000 calc(var(--ouvre) * 78vmax + 2px));
 }
+/* LA TRAVERSEE. `--ouvre` repond au geste, `--passe` se joue toute seule une
+   fois le portail franchi, sur deux secondes et demie.
+
+   Le jardin AVANCE VERS NOUS pendant la traversee. C'etait l'inverse avant, il
+   partait de 1.14 pour revenir a 1 : on reculait en ouvrant la porte, ce qui
+   est exactement le contraire de la sensation cherchee. Maintenant il grandit
+   jusqu'a 1.9, donc c'est nous qui entrons dedans. */
+.seuil { --passe: 0; }
 .seuil__jardin {
   position: absolute; inset: 0;
   background: url('../assets/portail.webp') center 42% / cover no-repeat;
   opacity: calc(.58 + var(--ouvre) * .42);
-  transform: scale(calc(1.14 - var(--ouvre) * .14));
+  transform: scale(calc(1 + var(--ouvre) * .06 + var(--passe) * .84));
   transition: none;
+}
+/* L'anneau s'ecarte autour de nous et sort du cadre : on le depasse au lieu de
+   le voir disparaitre. */
+.seuil[data-traverse='oui'] .seuil__anneau {
+  transform: scale(calc(1 + var(--passe) * 4.2));
+  opacity: calc(1 - var(--passe) * 1.35);
+  transition: none;
+}
+/* Le texte s'efface tout de suite : une consigne n'a plus rien a dire une fois
+   qu'on est en train de la suivre. */
+.seuil[data-traverse='oui'] .seuil__pied,
+.seuil[data-traverse='oui'] .seuil__jauge,
+.seuil[data-traverse='oui'] .seuil__invite {
+  opacity: calc(1 - var(--passe) * 3.2);
+  transition: none;
+  animation: none;
+}
+/* Et l'ecran entier ne se dissout qu'au tout dernier tiers, sinon on voit le
+   site apparaitre avant d'avoir fini de traverser. */
+.seuil[data-traverse='oui'] {
+  opacity: calc(1 - max(0, (var(--passe) - 0.68)) * 3.1);
 }
 
 .seuil__dedans {

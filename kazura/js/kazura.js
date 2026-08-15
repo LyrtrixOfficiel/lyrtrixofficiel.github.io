@@ -716,6 +716,18 @@ function monterLeSeuil() {
 
   /* ── Phase 2 : on pousse ──────────────────────────────────────────── */
   let ouvre = 0, cible = 0, fini = false;
+  /* La traversee est le moment ou l'on PASSE le portail, apres l'avoir ouvert.
+     Avant, le seuil disparaissait des que le trou etait perce : on voyait une
+     porte s'escamoter, on n'entrait nulle part. Ici le jardin se rapproche, le
+     portail s'ecarte autour de nous et le voile se dissout, sur une duree
+     fixe. On ne regarde plus la porte, on la franchit. */
+  let passe = 0, traversee = false;
+  const DUREE_TRAVERSEE = 2.5;
+  const traverser = () => {
+    if (traversee || fini) return;
+    traversee = true;
+    ecran.dataset.traverse = 'oui';
+  };
 
   const franchir = () => {
     if (fini) return;
@@ -729,7 +741,7 @@ function monterLeSeuil() {
   const pousser = (quantite) => {
     if (!ouvrable || fini) return;
     cible = Math.min(1, Math.max(0, cible + quantite));
-    if (cible >= 0.995) franchir();
+    if (cible >= 0.995) traverser();
   };
 
   // La molette et le geste vertical poussent. Un clic ouvre d'un coup.
@@ -772,7 +784,16 @@ function monterLeSeuil() {
     const k = 1 - Math.pow(1 - 0.16, dt * 60);
     ouvre += (cible - ouvre) * k;
     ecran.style.setProperty('--ouvre', ouvre.toFixed(4));
-    if (ouvre > 0.985 && cible >= 1) franchir();
+    if (traversee) {
+      /* Courbe d'entree : lente au depart, puis on plonge. Une vitesse
+         constante donnerait un fondu de logiciel, pas un mouvement. */
+      passe = Math.min(1, passe + dt / DUREE_TRAVERSEE);
+      const e = passe * passe * (3.0 - 2.0 * passe);
+      ecran.style.setProperty('--passe', e.toFixed(4));
+      if (passe >= 1) franchir();
+    } else if (ouvre > 0.985 && cible >= 1) {
+      traverser();
+    }
     relancer();
   }
   function relancer() {
