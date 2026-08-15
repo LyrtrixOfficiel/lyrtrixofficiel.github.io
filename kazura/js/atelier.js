@@ -11,9 +11,9 @@
    ========================================================================== */
 
 export function monterLAtelier(toile) {
-  const _fm = new URLSearchParams(location.search).get('mouvement');
-  const sobre = _fm === '1' ? false : _fm === '0' ? true
-              : matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* La decision est prise une seule fois, par kazura.js, a partir de l'adresse,
+     du choix garde et du reglage systeme. On la lit, on ne la refait pas. */
+  const sobre = document.documentElement.dataset.mouvement !== 'anime';
 
   const gl = toile.getContext('webgl', {
     antialias: false, alpha: false, powerPreference: 'low-power'

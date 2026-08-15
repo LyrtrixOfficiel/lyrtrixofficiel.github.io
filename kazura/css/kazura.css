@@ -895,6 +895,53 @@ section { position: relative; }
 }
 .liste .coche svg { width: 11px; height: 11px; }
 
+/* ── Le choix du mouvement ────────────────────────────────────────────── */
+/* En bas a droite, hors du chemin de lecture. Il ne bloque rien, ne couvre
+   aucun bouton, et disparait des qu'on a repondu. */
+.mouvement {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 92;
+  width: min(340px, calc(100vw - 2rem));
+  display: grid; gap: .9rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--rayon);
+  background: rgba(9, 14, 21, .96);
+  border: 1px solid var(--verre-bord);
+  box-shadow: 0 22px 60px -24px rgba(0,0,0,.95);
+  /* L'entree et la sortie sont ecrites a la main plutot que laissees a une
+     regle generale : ce bandeau s'affiche PRECISEMENT quand le systeme demande
+     moins d'animations, donc la seule chose qui bouge doit etre lui. */
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .45s var(--doux), transform .45s var(--sortie);
+}
+.mouvement[data-la='oui']    { opacity: 1; transform: none; }
+.mouvement[data-parti='oui'] { opacity: 0; transform: translateY(14px); }
+
+.mouvement__texte { font-size: .92rem; line-height: 1.55; color: var(--gris); margin: 0; }
+.mouvement__texte b { color: var(--blanc); }
+
+.mouvement__actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+.mouvement__actions button {
+  flex: 1 1 auto;
+  padding: .62em 1em;
+  border-radius: 999px;
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; white-space: nowrap;
+  background: linear-gradient(135deg, var(--jade) 0%, var(--jade-fonce) 100%);
+  color: #01120C;
+  transition: filter .3s var(--doux);
+}
+.mouvement__actions button:hover { filter: brightness(1.12); }
+.mouvement__actions button:focus-visible { outline: 2px solid var(--jade-clair); outline-offset: 3px; }
+.mouvement__non {
+  background: transparent !important;
+  color: var(--gris) !important;
+  border: 1px solid var(--verre-bord);
+}
+.mouvement__non:hover { color: var(--blanc) !important; }
+
 /* ══ Planche de marque ═════════════════════════════════════════════════ */
 /* Page interne. Tout y est montre sur le fond ou le fichier doit reellement
    servir : un logo juge sur le mauvais fond ne prouve rien. */
@@ -1217,12 +1264,21 @@ section { position: relative; }
 /* Le vrai titre reste dans le document et ne disparait qu'une fois la toile
    prete. Si WebGL manque, le texte s'affiche normalement et personne ne voit
    la difference. */
+/* LE MOT SORT DE LA COLONNE. Le hero est plafonne a 1180 px, ce qui est la
+   bonne largeur pour une ligne qu'on LIT. Ce n'en est pas une pour un
+   logotype : sur l'ultra-large de 3440 px de Matheo, le mot n'occupait qu'un
+   tiers de l'ecran pendant que la scene 3D, elle, remplissait tout. Le hero
+   ressemblait a une petite carte posee au milieu d'un grand vide.
+   On centre donc le mot sur la FENETRE et non sur son parent. La ligne de
+   texte, elle, garde ses 46 caracteres : ce qui se lit reste etroit, ce qui
+   s'annonce prend la place. */
 .mot3d {
   position: relative;
-  width: 100%;
+  left: 50%;
+  translate: -50% 0;
+  width: min(86vw, 1760px);
   aspect-ratio: 1180 / 300;
   max-height: 46svh;
-  margin-inline: auto;
 }
 /* Le corps, la graisse et l'approche viennent de `.geant`, pose sur le meme
    element : une seule definition du mot, et c'est elle que le calage mesure. */
@@ -1272,7 +1328,7 @@ section { position: relative; }
   /* Pas tout a fait opaque : le jardin doit se DEVINER derriere, sinon on
      pousse une porte sans savoir ce qu'il y a de l'autre cote, et l'ecran
      d'accueil n'est qu'un rectangle noir. */
-  background: rgba(4, 6, 10, .90);
+  background: rgba(4, 6, 10, .72);
   -webkit-mask: radial-gradient(circle at 50% 50%,
         transparent calc(var(--ouvre) * 78vmax),
         #000 calc(var(--ouvre) * 78vmax + 2px));
@@ -1283,7 +1339,7 @@ section { position: relative; }
 .seuil__jardin {
   position: absolute; inset: 0;
   background: url('../assets/portail.webp') center 42% / cover no-repeat;
-  opacity: calc(.42 + var(--ouvre) * .58);
+  opacity: calc(.58 + var(--ouvre) * .42);
   transform: scale(calc(1.14 - var(--ouvre) * .14));
   transition: none;
 }
@@ -1300,8 +1356,12 @@ section { position: relative; }
   /* Largeur ET hauteur explicites. `aspect-ratio` cede devant un contenu plus
      haut que large, et la liane au format 60 par 200 etirait l'anneau en
      ovale : un portail de lune qui n'est pas rond n'est plus un portail. */
-  width:  clamp(120px, 22vmin, 210px);
-  height: clamp(120px, 22vmin, 210px);
+  /* Le plafond etait a 210 px, cale sur un portable. Sur un ecran de 3440 px le
+     portail devenait un point perdu dans le noir, alors qu'il est la piece qui
+     doit s'imposer. vmin suit le petit cote, donc la HAUTEUR sur un
+     ultra-large : 30vmin de 1222 px font 366 px, ce qui tient l'ecran. */
+  width:  clamp(150px, 30vmin, 400px);
+  height: clamp(150px, 30vmin, 400px);
   flex: none;
   position: relative;
   border-radius: 50%;
@@ -1332,13 +1392,31 @@ section { position: relative; }
 }
 .seuil__pct { color: var(--jade-clair); font-variant-numeric: tabular-nums; }
 
+/* L'invitation est la SEULE consigne de tout l'ecran d'entree. A .72rem sur un
+   grand ecran elle se lisait comme une mention legale au bas d'un noir immense,
+   et rien ne disait qu'il fallait faire quelque chose. Elle grandit donc avec
+   l'ecran, et elle respire pour signaler qu'elle attend un geste. */
 .seuil__invite {
-  font-family: var(--mono); font-size: .72rem; letter-spacing: .24em;
+  font-family: var(--mono);
+  font-size: clamp(.72rem, .6rem + .4vmin, .96rem);
+  letter-spacing: .24em;
   text-transform: uppercase; color: var(--jade-clair);
   opacity: 0; transition: opacity .5s var(--doux);
-  background: none; padding: .8rem 1.2rem; cursor: pointer;
+  background: none; padding: .9rem 1.4rem; cursor: pointer;
+  border-radius: 999px;
 }
-.seuil[data-pret='oui'] .seuil__invite { opacity: 1; }
+.seuil__invite:hover { color: var(--blanc); }
+.seuil__invite:focus-visible { outline: 1px solid var(--jade-clair); outline-offset: 2px; }
+.seuil[data-pret='oui'] .seuil__invite {
+  opacity: 1;
+  animation: seuil-souffle 2.8s var(--doux) infinite;
+}
+/* Le souffle est une lueur, jamais un deplacement : l'ecran d'entree est aussi
+   celui que voient les gens qui ont demande moins de mouvement. */
+@keyframes seuil-souffle {
+  0%, 100% { text-shadow: 0 0 0 rgba(110, 231, 183, 0); }
+  50%      { text-shadow: 0 0 20px rgba(110, 231, 183, .6); }
+}
 .seuil[data-pret='oui'] .seuil__pied { opacity: .35; }
 
 /* La barre qu'on remplit en poussant. */

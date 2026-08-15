@@ -11,10 +11,34 @@
    depuis un navigateur regle sur « moins de mouvement », ce qui est le cas de
    tous les environnements de test. Le reglage du systeme reste la valeur par
    defaut : la bascule ne sert qu'a nous. */
+/* TROIS SOURCES, DANS CET ORDRE : l'adresse, le choix garde, le systeme.
+
+   Le choix garde n'est pas un confort, c'est une reparation. Sous Windows,
+   `prefers-reduced-motion` est pilote par « Effets d'animation », que
+   beaucoup de gens coupent pour gagner des images par seconde dans les jeux,
+   sans aucun rapport avec une gene au mouvement. Matheo l'a coupe : il n'a
+   donc JAMAIS vu le defilement amorti de ce site, et il le decrivait comme
+   brusque, ce qui etait exact et n'etait pas un defaut du code.
+
+   On continue d'obeir au systeme par defaut, parce que la preference est
+   vraie pour ceux qui en ont besoin. Mais on le DIT, et on propose de
+   passer outre. Une preference respectee en silence, quand elle vient d'un
+   reglage pris pour autre chose, prive l'utilisateur sans qu'il sache de
+   quoi. */
 const _forceMouvement = new URLSearchParams(location.search).get('mouvement');
+let _choix = null;
+try { _choix = localStorage.getItem('kazura-mouvement'); } catch (e) { /* mode prive */ }
+
 const sobre = _forceMouvement === '1' ? false
             : _forceMouvement === '0' ? true
+            : _choix === '1' ? false
+            : _choix === '0' ? true
             : matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Les modules charges ensuite lisent cette decision plutot que de la refaire
+   chacun de leur cote a partir de la seule adresse : sans quoi le choix garde
+   ne les atteindrait pas. Pose AVANT le moindre import dynamique. */
+document.documentElement.dataset.mouvement = sobre ? 'sobre' : 'anime';
 const tactile = matchMedia('(hover: none)').matches;
 
 /* VERSION. GitHub Pages garde chaque fichier dix minutes dans le cache du
@@ -728,13 +752,19 @@ function monterLeSeuil() {
   });
   ecran.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cible = 1; }
+    /* Echap ouvre sans amortissement. Un ecran d'entree doit toujours avoir une
+       sortie immediate : c'est le reflexe de quiconque se sent bloque. */
+    if (e.key === 'Escape') { e.preventDefault(); franchir(); }
   });
   if (invite) invite.addEventListener('click', () => { cible = 1; });
 
   /* L'ouverture est amortie, et le retour a zero aussi : si on lache avant la
      fin, le portail se referme doucement au lieu de rester entrouvert. */
   let dernier = performance.now();
-  (function animer() {
+  let programme = false;
+
+  function animer() {
+    programme = false;
     const n = performance.now();
     const dt = Math.min((n - dernier) / 1000, 1 / 20);
     dernier = n;
@@ -743,8 +773,35 @@ function monterLeSeuil() {
     ouvre += (cible - ouvre) * k;
     ecran.style.setProperty('--ouvre', ouvre.toFixed(4));
     if (ouvre > 0.985 && cible >= 1) franchir();
-    if (!fini) requestAnimationFrame(animer);
-  })();
+    relancer();
+  }
+  function relancer() {
+    if (fini || programme) return;
+    programme = true;
+    dernier = performance.now();     // sinon le retour d'onglet donne un dt enorme
+    requestAnimationFrame(animer);
+  }
+  relancer();
+
+  /* CE FILET EST LE PLUS IMPORTANT DU MODULE. Cet ecran fige le corps de la
+     page : tant qu'il est la, on ne peut ni defiler ni rien atteindre. Si sa
+     boucle s'arrete pour une raison quelconque, le visiteur est enferme DEHORS,
+     sans message et sans issue.
+
+     `requestAnimationFrame` ne tourne pas dans un onglet masque. Quelqu'un qui
+     change d'onglet au milieu du geste revient donc sur un portail fige a mi
+     course. Vu en vrai, a 0,9566 d'ouverture, corps toujours bloque. On relance
+     donc la boucle au retour, systematiquement.
+
+     Regle a garder : rien de decoratif ne doit pouvoir verrouiller un site. */
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) relancer();
+  });
+
+  /* Deuxieme filet, pour ce que le premier ne couvre pas. Si la boucle ne
+     repart pas du tout, ce delai rend la page au bout de vingt secondes. On
+     perd le rituel, on ne perd pas le visiteur. */
+  setTimeout(() => { if (!fini) franchir(); }, 20000);
 }
 
 /* ══ 14 sexies. Transitions entre pages ═════════════════════════════════ */
@@ -798,6 +855,62 @@ function monterLesCompteurs() {
       return false;
     });
   });
+}
+
+/* ══ Le choix du mouvement ══════════════════════════════════════════════ */
+/* Un bandeau discret, propose UNE SEULE FOIS, et seulement a qui remplit les
+   trois conditions : le systeme demande moins d'animations, le visiteur n'a
+   jamais tranche, et l'adresse ne force rien.
+
+   POURQUOI IL EXISTE. Sous Windows, `prefers-reduced-motion` suit le reglage
+   « Effets d'animation », que beaucoup coupent pour gagner des images par
+   seconde. Ces gens n'ont demande a personne de retirer le mouvement d'un site,
+   ils ont demande a Windows de ne pas animer ses fenetres. Obeir en silence
+   leur retire l'essentiel du travail sans qu'ils sachent qu'il existe.
+
+   ON N'IGNORE PAS LA PREFERENCE POUR AUTANT : elle reste la valeur par defaut,
+   et le bandeau ne fait que rendre le choix visible. C'est la difference entre
+   passer outre et proposer. */
+function monterLeChoixDuMouvement() {
+  if (!sobre) return;                       // deja anime, rien a proposer
+  if (_forceMouvement !== null) return;     // l'adresse tranche, on se tait
+  if (_choix !== null) return;              // le visiteur a deja repondu
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const garder = (v) => {
+    try { localStorage.setItem('kazura-mouvement', v); } catch (e) { /* mode prive */ }
+  };
+
+  const barre = document.createElement('aside');
+  barre.className = 'mouvement';
+  barre.setAttribute('role', 'region');
+  barre.setAttribute('aria-label', 'Réglage des animations');
+  barre.innerHTML =
+    '<p class="mouvement__texte">Votre système demande <b>moins d’animations</b>, ' +
+    'et nous l’avons suivi. Ce site en contient beaucoup, et le défilement y est ' +
+    'normalement amorti.</p>' +
+    '<div class="mouvement__actions">' +
+      '<button type="button" data-oui>Les activer</button>' +
+      '<button type="button" data-non class="mouvement__non">Garder ainsi</button>' +
+    '</div>';
+
+  $('[data-oui]', barre).addEventListener('click', () => {
+    garder('1');
+    /* On recharge : `sobre` est decide au chargement et parcourt tous les
+       modules. Le basculer a chaud demanderait a chacun de savoir se remonter,
+       pour un cas qui se produit une fois par visiteur. */
+    location.reload();
+  });
+  $('[data-non]', barre).addEventListener('click', () => {
+    garder('0');
+    barre.dataset.parti = 'oui';
+    setTimeout(() => barre.remove(), 500);
+  });
+
+  document.body.appendChild(barre);
+  /* Une image d'attente, sinon la transition d'entree ne se declenche pas :
+     l'element est insere et rendu visible dans la meme image. */
+  requestAnimationFrame(() => { barre.dataset.la = 'oui'; });
 }
 
 /* ══ Le portail de pierre ═══════════════════════════════════════════════ */
@@ -1029,6 +1142,7 @@ function demarrer() {
   monterLeSceauSiPresent();
   monterLePortailSiPresent();
   monterLeFormulaire();
+  monterLeChoixDuMouvement();
   monterLeMotSiPresent();
 
   const annee = $('[data-annee]');

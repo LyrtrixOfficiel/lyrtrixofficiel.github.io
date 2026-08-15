@@ -23,9 +23,9 @@ import { GLTFLoader }  from 'three/addons/loaders/GLTFLoader.js';
 import { monterLeCiel } from './ciel.js';
 
 export async function monterLePortail(toile, options = {}) {
-  const _fm = new URLSearchParams(location.search).get('mouvement');
-  const sobre = _fm === '1' ? false : _fm === '0' ? true
-              : matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* La decision est prise une seule fois, par kazura.js, a partir de l'adresse,
+     du choix garde et du reglage systeme. On la lit, on ne la refait pas. */
+  const sobre = document.documentElement.dataset.mouvement !== 'anime';
 
   let renderer;
   try {
