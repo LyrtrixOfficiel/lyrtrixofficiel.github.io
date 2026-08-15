@@ -883,6 +883,184 @@ section { position: relative; }
 }
 .liste .coche svg { width: 11px; height: 11px; }
 
+/* ══ Planche de marque ═════════════════════════════════════════════════ */
+/* Page interne. Tout y est montre sur le fond ou le fichier doit reellement
+   servir : un logo juge sur le mauvais fond ne prouve rien. */
+.marque__vedette {
+  display: grid; place-items: center;
+  padding: clamp(2.5rem, 8vw, 5rem);
+  color: var(--jade-clair);
+}
+.marque__vedette img { width: min(300px, 55vw); height: auto; }
+
+.marque__lecture {
+  display: grid; gap: clamp(2rem, 5vw, 3.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+}
+
+.marque__grille {
+  display: grid; gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+.marque__case {
+  border: 1px solid var(--trait, rgba(174,236,213,.12));
+  border-radius: var(--rayon); overflow: hidden;
+}
+.marque__case > img {
+  display: block; width: 96px; height: 96px;
+  margin: 2.2rem auto;
+}
+/* Chaque case porte le fond de sa situation d'emploi. */
+.marque__case--sombre { background: var(--noir); }
+.marque__case--clair  { background: #F4F6F5; }
+.marque__case--neutre { background: #2A3138; }
+.marque__case--photo  {
+  background: url('../assets/brume.webp') center / cover no-repeat;
+}
+.marque__case figcaption {
+  display: grid; gap: .3rem;
+  padding: .95rem 1.1rem;
+  background: rgba(7,11,17,.94);
+  border-top: 1px solid rgba(174,236,213,.10);
+}
+.marque__case figcaption b { font-family: var(--display); font-size: .98rem; }
+.marque__case figcaption span { font-size: .84rem; color: var(--gris); line-height: 1.45; }
+.marque__case figcaption a {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .06em;
+  color: var(--jade-clair); margin-top: .2rem;
+  text-decoration: underline; text-underline-offset: .25em;
+}
+
+/* ── Les verrous ──────────────────────────────────────────────────────── */
+.marque__verrous {
+  display: grid; gap: clamp(1.5rem, 4vw, 2.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+.marque__verrou figcaption {
+  margin-top: .9rem; font-size: .9rem; color: var(--gris); line-height: 1.55;
+}
+.verrou {
+  display: flex; align-items: center; gap: .85em;
+  padding: clamp(2rem, 5vw, 3rem);
+  border: 1px solid var(--verre-bord); border-radius: var(--rayon);
+  background: var(--noir-2);
+  color: var(--jade-clair);
+  /* La hauteur du sceau EGALE la hauteur des capitales, pas celle de la ligne.
+     Cale sur la ligne, il flotte au dessus du mot ; cale sur la capitale, les
+     deux reposent sur la meme assise optique. Archivo a une hauteur de
+     capitale de 0,73 em, d'ou ce facteur. */
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  letter-spacing: -.02em;
+}
+.verrou svg { width: .73em; height: .73em; flex: none; }
+.verrou span { color: var(--blanc); }
+.verrou--v { flex-direction: column; gap: .5em; text-align: center; }
+.verrou--v svg { width: 1.6em; height: 1.6em; }
+
+/* ── L'air et l'echelle ───────────────────────────────────────────────── */
+.marque__mesures {
+  display: grid; gap: clamp(2rem, 5vw, 3.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+.marque__mesures figcaption {
+  margin-top: 1rem; font-size: .92rem; color: var(--gris); line-height: 1.6;
+}
+.marque__mesures figcaption b { color: var(--blanc); }
+.marque__air {
+  position: relative; display: grid; place-items: center;
+  padding: clamp(2.5rem, 6vw, 4rem);
+  background: var(--noir-2); border: 1px solid var(--verre-bord);
+  border-radius: var(--rayon);
+  color: var(--jade-clair);
+}
+/* La zone interdite, dessinee : un quart du sceau tout autour. */
+.marque__air-zone {
+  position: absolute; width: 165px; height: 165px;
+  border: 1px dashed rgba(167,139,250,.55); border-radius: 6px;
+}
+.marque__echelle {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem); flex-wrap: wrap;
+  padding: clamp(2.5rem, 6vw, 4rem) 1rem;
+  background: var(--noir-2); border: 1px solid var(--verre-bord);
+  border-radius: var(--rayon);
+}
+.marque__echelle span { display: grid; justify-items: center; gap: .7rem; }
+.marque__echelle i {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .1em;
+  font-style: normal; color: var(--gris-fonce);
+}
+
+/* ── Les interdits ────────────────────────────────────────────────────── */
+.marque__interdits {
+  display: grid; gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+.interdit__vue {
+  position: relative; display: grid; place-items: center;
+  aspect-ratio: 4 / 3;
+  background: var(--noir-2);
+  border: 1px solid rgba(255,138,138,.28); border-radius: var(--rayon);
+  overflow: hidden;
+}
+.interdit__vue img { width: 76px; height: 76px; }
+.interdit__vue--degrade img {
+  /* Le blanc sert de pochoir, le degrade passe derriere. */
+  background: linear-gradient(135deg, #6EE7B7, #7C3AED);
+  -webkit-mask: url('../assets/logo/sceau-blanc.svg') center / contain no-repeat;
+  mask: url('../assets/logo/sceau-blanc.svg') center / contain no-repeat;
+  opacity: 0;
+}
+.interdit__vue--degrade {
+  background:
+    radial-gradient(60% 60% at 50% 50%, transparent 40%, var(--noir-2) 41%),
+    var(--noir-2);
+}
+.interdit__vue--degrade::after {
+  content: ''; position: absolute; width: 76px; height: 76px;
+  background: linear-gradient(135deg, #6EE7B7 0%, #7C3AED 100%);
+  -webkit-mask: url('../assets/logo/sceau-blanc.svg') center / contain no-repeat;
+  mask: url('../assets/logo/sceau-blanc.svg') center / contain no-repeat;
+}
+.interdit__vue--bruit {
+  background: url('../assets/racines.webp') center / cover no-repeat;
+}
+/* La croix qui barre : dessinee en CSS, elle suit la taille de la case. */
+.interdit__vue::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to bottom right, transparent calc(50% - 1px), rgba(255,138,138,.5) 50%, transparent calc(50% + 1px)),
+    linear-gradient(to bottom left,  transparent calc(50% - 1px), rgba(255,138,138,.5) 50%, transparent calc(50% + 1px));
+  z-index: 2;
+}
+.interdit figcaption {
+  margin-top: .7rem; font-size: .85rem; color: var(--gris); line-height: 1.5;
+}
+
+/* ── La palette ───────────────────────────────────────────────────────── */
+.marque__palette {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+.teinte {
+  display: grid; gap: .25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--verre-bord); border-radius: var(--rayon);
+  background: var(--noir-2);
+  /* La pastille est un bord epais : pas de boite en plus a placer. */
+  border-left: 10px solid var(--t);
+}
+.teinte b { font-family: var(--display); font-size: .98rem; }
+.teinte code { font-family: var(--mono); font-size: .74rem; color: var(--jade-clair); letter-spacing: .04em; }
+.teinte span { font-size: .82rem; color: var(--gris); line-height: 1.45; }
+
 /* ── Le portail de pierre ─────────────────────────────────────────────── */
 /* La toile est transparente : l'objet flotte sur le fond de la page au lieu
    d'etre enferme dans une vignette noire, ce qui est la moitie de l'effet. */
