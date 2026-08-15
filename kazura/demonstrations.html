@@ -115,7 +115,56 @@
     </div>
   </section>
 
-  <!-- ══ 3. La liane ══════════════════════════════════════════════════ -->
+  <!-- ══ 3. Le miroir de palette ══════════════════════════════════════ -->
+  <section class="bloc" id="miroir">
+    <div class="enveloppe">
+      <span class="etiquette" data-vient="bloc">Trois · Miroir</span>
+      <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem;max-width:19ch">
+        Déposez une photo. Le site prend vos couleurs.
+      </h2>
+      <p class="chapo" data-vient="bloc">
+        On dit à chaque cliente que sa palette sortira de ses propres photos,
+        jamais d'un gabarit. Plutôt que de l'écrire une fois de plus, voilà la
+        chose qui se fait. Déposez n'importe quelle image, une photo de votre
+        salon, de votre logo, d'un mur que vous aimez : ce site entier se
+        repeint dans ses teintes, tout de suite.
+      </p>
+
+      <div class="miroir verre" data-vient="bloc" data-pret="non" style="margin-top:clamp(2rem,4vw,3rem)">
+        <div class="miroir__grille">
+
+          <div class="miroir__depot">
+            <label class="miroir__cible" for="miroir-fichier">
+              <b>Déposez une image ici</b>
+              <span>ou cliquez pour en choisir une</span>
+              <input id="miroir-fichier" type="file" accept="image/*">
+            </label>
+            <img class="miroir__apercu" data-apercu alt="" hidden>
+          </div>
+
+          <div>
+            <div class="miroir__nuancier" data-nuancier></div>
+            <p class="miroir__etat" data-message>En attente d'une image.</p>
+            <div class="miroir__pied">
+              <button class="bouton bouton--verre miroir__rendre" type="button" data-rendre>
+                Rendre la palette d'origine
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <p class="miroir__discret" style="margin-top:1.4rem">
+          L'image ne quitte pas votre navigateur. Aucun envoi, aucun serveur,
+          rien de conservé. Les couleurs sont regroupées en espace Lab, celui
+          qui approche la perception de l'œil, et triées sur leur caractère
+          plutôt que sur leur surface : une palette utile n'est pas faite des
+          couleurs les plus présentes, ce sont les murs beiges.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 4. La liane ══════════════════════════════════════════════════ -->
   <section class="bloc">
     <div class="enveloppe">
       <div class="identite__grille">

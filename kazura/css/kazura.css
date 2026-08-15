@@ -654,6 +654,74 @@ section { position: relative; }
   .demo__legende { left: 50%; translate: -50% 0; width: calc(100% - 2 * var(--marge)); }
 }
 
+/* ── Le miroir de palette ─────────────────────────────────────────────── */
+.miroir {
+  border-radius: var(--rayon-l);
+  padding: clamp(1.6rem, 3.5vw, 2.8rem);
+  transition: border-color .4s var(--doux), background .4s var(--doux);
+}
+.miroir[data-survol='oui'] {
+  border-color: var(--jade-clair);
+  background: rgba(16, 185, 129, .07);
+}
+.miroir__grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+  align-items: start;
+}
+.miroir__depot {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+}
+.miroir__depot input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.miroir__cible {
+  width: 100%;
+  border: 1px dashed rgba(174, 236, 213, .28);
+  border-radius: var(--rayon);
+  padding: 1.6rem 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .35s var(--doux), color .35s var(--doux);
+}
+.miroir__cible:hover { border-color: var(--jade-clair); }
+.miroir__cible b { display: block; font-family: var(--display); font-size: 1.05rem; margin-bottom: .35rem; }
+.miroir__cible span { font-size: .85rem; color: var(--gris); }
+
+.miroir__apercu {
+  width: 100%; max-height: 190px; object-fit: cover;
+  border-radius: var(--rayon); border: 1px solid var(--verre-bord);
+}
+.miroir__nuancier { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: .5rem; }
+.miroir__ton {
+  aspect-ratio: 1 / 1.15;
+  border-radius: var(--rayon);
+  border: 1px solid rgba(255, 255, 255, .12);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: .5rem;
+  opacity: 0;
+  animation: tonArrive .5s var(--sortie) forwards;
+}
+.miroir__ton span {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .06em;
+  /* Texte sombre sur pastille : lisible sur n'importe quelle couleur claire,
+     et l'ombre le sauve sur les couleurs foncees. */
+  color: rgba(0, 0, 0, .72);
+  text-shadow: 0 0 6px rgba(255, 255, 255, .55);
+}
+@keyframes tonArrive {
+  from { opacity: 0; transform: translateY(12px) scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+.miroir__etat {
+  margin-top: 1.2rem;
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .1em;
+  color: var(--jade-clair);
+  min-height: 1.4em;
+}
+.miroir__pied { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; margin-top: 1.4rem; }
+.miroir__discret { font-size: .8rem; color: var(--gris-fonce); }
+[data-pret='non'] .miroir__rendre, .miroir:not([data-pret='oui']) .miroir__rendre { display: none; }
+
 /* ── Chiffres ─────────────────────────────────────────────────────────── */
 .chiffres { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 1.1rem; }
 .chiffre { padding: clamp(1.4rem,2.5vw,2rem); text-align: center; }

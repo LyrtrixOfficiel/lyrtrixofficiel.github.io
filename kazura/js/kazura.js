@@ -557,6 +557,18 @@ async function monterLeJardinSiPresent() {
   }
 }
 
+/* ══ 14 ter ter. Le miroir de palette ═══════════════════════════════════ */
+async function monterLeMiroirSiPresent() {
+  const zone = $('.miroir');
+  if (!zone) return;
+  try {
+    const { monterLeMiroir } = await import('./miroir.js');
+    (window.kazura ||= {}).miroir = monterLeMiroir(zone);
+  } catch (e) {
+    console.warn('miroir indisponible', e);
+  }
+}
+
 /* ══ 14 quater. Le mot en WebGL ═════════════════════════════════════════ */
 async function monterLeMotSiPresent() {
   const toile = $('#toile-mot');
@@ -713,6 +725,7 @@ function demarrer() {
   monterLAtelierSiPresent();
   monterLEncreSiPresente();
   monterLeJardinSiPresent();
+  monterLeMiroirSiPresent();
   monterLeMotSiPresent();
 
   const annee = $('[data-annee]');
