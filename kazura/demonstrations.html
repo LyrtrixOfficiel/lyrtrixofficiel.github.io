@@ -14,7 +14,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=18bf29df29">
+<link rel="stylesheet" href="css/kazura.css?v=506fe872cf">
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+} }
+</script>
 </head>
 
 <body>
@@ -70,13 +76,13 @@
     <div class="enveloppe">
       <span class="etiquette" data-vient="bloc">葛 · Démonstrations</span>
       <h1 class="titre" data-vient="titre" style="margin:1.2rem 0 1.6rem;max-width:17ch">
-        Rien ici n’est une vidéo.
+        Regardez ce qu’on sait faire.
       </h1>
       <p class="chapo" data-vient="bloc">
-        Trois pièces calculées par votre propre carte graphique pendant que
-        vous les regardez. Chacune réagit à votre geste, et aucune ne pourrait
-        être remplacée par un fichier téléchargé. C’est la différence entre
-        montrer et raconter.
+        Quatre pièces qui répondent à votre geste pendant que vous les regardez.
+        Certaines sont calculées par votre carte graphique, une autre est un
+        objet sculpté qu’on est allé chercher. Le point n’est pas la méthode,
+        c’est qu’on choisit celle qui convient à ce que vous voulez.
       </p>
     </div>
   </header>
@@ -162,12 +168,46 @@
     </div>
   </section>
 
-  <!-- ══ 4. La liane ══════════════════════════════════════════════════ -->
+  <!-- ══ 4. Le portail de pierre ══════════════════════════════════════
+       Un modèle sculpté venu de l'extérieur, posé dans notre lumière. Ce que
+       cette section démontre n'est pas qu'on sait tout calculer, c'est qu'on
+       sait tout intégrer, y compris ce qu'aucune formule ne donne. -->
+  <section class="bloc" id="portail">
+    <div class="enveloppe">
+      <div class="identite__grille">
+        <figure class="portail3d" data-vient="bloc">
+          <canvas id="toile-portail" aria-hidden="true"></canvas>
+          <figcaption>Portail de lune · sculpté, puis allégé de 91 % · 809 Ko</figcaption>
+        </figure>
+        <div>
+          <span class="etiquette" data-vient="bloc">Quatre · Volume</span>
+          <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">
+            Un objet sculpté, dans votre lumière.
+          </h2>
+          <p class="chapo" data-vient="bloc">
+            Tout ne se calcule pas. Une pierre érodée envahie de lianes, aucune
+            formule ne la donne. Alors on la sculpte ailleurs, et on l’amène
+            ici, où elle prend l’éclairage de la page et suit votre souris.
+          </p>
+          <p data-vient="bloc" style="margin-top:1.4rem;color:var(--gris)">
+            Le fichier livré pesait 9,4 Mo pour 9 092 triangles seulement&nbsp;:
+            la forme ne coûtait rien, trois textures en 2048 pesaient 97&nbsp;% du
+            poids. Réduites selon ce que chacune porte, il en reste 809 Ko et
+            pas un triangle en moins. <b>C’est ce travail-là qui décide si un
+            site s’ouvre en une seconde ou en dix</b>, et c’est celui que
+            personne ne montre.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5. La liane ══════════════════════════════════════════════════ -->
   <section class="bloc">
     <div class="enveloppe">
       <div class="identite__grille">
         <div>
-          <span class="etiquette" data-vient="bloc">Trois · Croissance</span>
+          <span class="etiquette" data-vient="bloc">Cinq · Croissance</span>
           <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">
             Le défilement fait pousser la plante.
           </h2>
@@ -269,6 +309,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=18bf29df29"></script>
+<script type="module" src="js/kazura.js?v=506fe872cf"></script>
 </body>
 </html>

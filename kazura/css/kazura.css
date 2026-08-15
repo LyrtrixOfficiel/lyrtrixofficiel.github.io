@@ -883,6 +883,30 @@ section { position: relative; }
 }
 .liste .coche svg { width: 11px; height: 11px; }
 
+/* ── Le portail de pierre ─────────────────────────────────────────────── */
+/* La toile est transparente : l'objet flotte sur le fond de la page au lieu
+   d'etre enferme dans une vignette noire, ce qui est la moitie de l'effet. */
+.portail3d { position: relative; }
+#toile-portail {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 62svh;
+  opacity: 0;
+  transition: opacity 1s var(--doux);
+}
+#toile-portail[data-prete='oui'] { opacity: 1; }
+.portail3d figcaption {
+  margin-top: .6rem; text-align: center;
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--gris-fonce);
+}
+/* Tant que rien n'est charge, la case garde sa hauteur : sans cette reserve,
+   la page sautait au moment ou le modele arrivait. */
+.portail3d::before {
+  content: ''; display: block; position: absolute; inset: 0; z-index: -1;
+  background: radial-gradient(58% 58% at 50% 46%, rgba(16,185,129,.10), transparent 70%);
+}
+
 /* ── Epinglage natif ──────────────────────────────────────────────────── */
 /* Pose par le script quand le defilement n'est pas detourne, c'est-a-dire sur
    telephone et en mode sobre. Le navigateur epingle alors lui-meme, sur le

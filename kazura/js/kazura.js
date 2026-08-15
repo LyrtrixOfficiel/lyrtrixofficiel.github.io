@@ -800,6 +800,46 @@ function monterLesCompteurs() {
   });
 }
 
+/* ══ Le portail de pierre ═══════════════════════════════════════════════ */
+/* Le seul module qui va chercher un fichier lourd. On ne le charge donc que
+   lorsque sa section approche vraiment de l'ecran : le declencher au montage
+   ferait payer 809 Ko a quelqu'un qui n'ira peut-etre jamais jusque la. */
+async function monterLePortailSiPresent() {
+  const toile = $('#toile-portail');
+  if (!toile) return;
+  const memoire = navigator.deviceMemory || 4;
+  if (memoire <= 2) { toile.dataset.repli = 'oui'; return; }
+
+  const figure = toile.closest('figure') || toile;
+  let lance = false;
+
+  const approche = auDefilement(() => {
+    if (lance) return;
+    const r = figure.getBoundingClientRect();
+    if (r.top > window.innerHeight * 2.2) return;   // encore loin, on attend
+    lance = true;
+    abonnes.splice(abonnes.indexOf(approche), 1);   // ce guetteur a fini son travail
+    charger();
+  });
+
+  async function charger() {
+    try {
+      const { monterLePortail } = await import('./portail.js' + VERSION);
+      const p = await monterLePortail(toile);
+      if (!p) { toile.dataset.repli = 'oui'; return; }
+      (window.kazura ||= {}).portail = p;
+      auDefilement(() => {
+        const r = figure.getBoundingClientRect();
+        p.montrer(r.bottom > -200 && r.top < window.innerHeight + 200);
+      });
+      toile.dataset.prete = 'oui';
+    } catch (e) {
+      console.warn('portail indisponible', e);
+      toile.dataset.repli = 'oui';
+    }
+  }
+}
+
 /* ══ Le formulaire ══════════════════════════════════════════════════════ */
 /* Il n'y a pas de serveur derriere ce site, et il n'y en aura pas pour un
    formulaire par semaine. L'envoi ouvre donc le courrielleur du visiteur avec
@@ -987,6 +1027,7 @@ function demarrer() {
   monterLeJardinSiPresent();
   monterLeMiroirSiPresent();
   monterLeSceauSiPresent();
+  monterLePortailSiPresent();
   monterLeFormulaire();
   monterLeMotSiPresent();
 

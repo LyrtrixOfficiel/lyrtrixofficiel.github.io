@@ -21,6 +21,7 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 import * as THREE from 'three';
+import { monterLeCiel }    from './ciel.js';
 import { SVGLoader }        from 'three/addons/loaders/SVGLoader.js';
 import { EffectComposer }   from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass }       from 'three/addons/postprocessing/RenderPass.js';
@@ -41,55 +42,6 @@ const BLASON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 </svg>`;
 
 const alea = (a, b) => a + Math.random() * (b - a);
-
-/* ── L'environnement ────────────────────────────────────────────────────── */
-/* Une equirectangulaire peinte a la main. On ne prend pas une photo de studio :
-   le reflet doit raconter le jardin de nuit du site, pas une piece blanche.
-   L'arete blanche est indispensable, c'est le seul eclat franc que le biseau
-   pourra attraper ; sans elle le verre reste terne quoi qu'on fasse. */
-function peindreLeCiel() {
-  const c = document.createElement('canvas');
-  c.width = 1024; c.height = 512;
-  const x = c.getContext('2d');
-
-  /* Le fond n'est PAS le noir du site. Un verre ne fabrique pas de lumiere, il
-     en renvoie : peindre le ciel au noir de la page donnait un blason noir.
-     L'environnement est la piece qu'on allume, pas le decor qu'on voit. */
-  x.fillStyle = '#121A24';
-  x.fillRect(0, 0, 1024, 512);
-
-  const halo = (cx, cy, r, couleur, force) => {
-    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
-    g.addColorStop(0, couleur.replace(')', `,${force})`).replace('rgb', 'rgba'));
-    g.addColorStop(1, couleur.replace(')', ',0)').replace('rgb', 'rgba'));
-    x.fillStyle = g;
-    x.fillRect(cx - r, cy - r, r * 2, r * 2);
-  };
-
-  halo(300, 400, 430, 'rgb(16,185,129)', 1);      // jade, en bas : le sol
-  halo(760, 120, 420, 'rgb(124,58,237)', 1);      // violet, en haut : le ciel
-  halo(120, 130, 260, 'rgb(167,232,255)', 0.55);
-
-  /* Deux barres lumineuses, nettes et non floues : un reflet net est ce qui
-     distingue une surface polie d'une surface depolie. Il en faut DEUX, pas
-     une. Avec une seule, la moitie des aretes du blason ne rencontre jamais
-     d'eclat en tournant et reste eteinte quel que soit l'angle. */
-  const barre = (y0, h, force) => {
-    const b = x.createLinearGradient(0, y0, 0, y0 + h);
-    b.addColorStop(0,   'rgba(255,255,255,0)');
-    b.addColorStop(0.5, `rgba(255,255,255,${force})`);
-    b.addColorStop(1,   'rgba(255,255,255,0)');
-    x.fillStyle = b;
-    return b;
-  };
-  barre(30, 120, 1);    x.fillRect(90, 30, 460, 120);
-  barre(300, 90, 0.75); x.fillRect(560, 300, 380, 90);
-
-  const t = new THREE.CanvasTexture(c);
-  t.mapping = THREE.EquirectangularReflectionMapping;
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
-}
 
 /* ── Les poussieres ─────────────────────────────────────────────────────── */
 /* Leur seul role est d'etre deformees. Un verre pose devant du noir ne se voit
@@ -269,15 +221,9 @@ export function monterLeSceau(toile, options = {}) {
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 60);
   camera.position.set(0, 0, 7.4);
 
-  /* L'environnement passe par le PMREM : sans ce prefiltrage, une texture brute
-     donne des reflets granuleux sur les surfaces un peu rugueuses. */
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  pmrem.compileEquirectangularShader();
-  const ciel = peindreLeCiel();
-  const env = pmrem.fromEquirectangular(ciel).texture;
-  scene.environment = env;
-  ciel.dispose();
-  pmrem.dispose();
+  /* Le ciel de la maison, partage avec le portail de pierre : deux objets
+     eclaires par deux ciels differents n'appartiennent pas au meme monde. */
+  const env = monterLeCiel(renderer, scene);
 
   const fond = faireLeFond();
   scene.add(fond);
@@ -398,15 +344,27 @@ export function monterLeSceau(toile, options = {}) {
   const vu   = { x: 0, y: 0 };
   let survol = 0, survolCible = 0;
 
-  toile.addEventListener('pointermove', e => {
+  /* On ecoute la FENETRE, pas la toile. En n'ecoutant que la toile, l'objet ne
+     repondait que si le curseur etait pose dessus : partout ailleurs il ne
+     restait que le balancement au ralenti, et Matheo le decrivait exactement
+     comme il fallait, « il bouge tres aleatoirement ». Il ne repondait pas au
+     hasard, il ne repondait pas du tout. En suivant le pointeur partout, il
+     regarde la souris des l'instant ou on le voit. */
+  const suivre = e => {
+    if (!visible) return;
     const r = toile.getBoundingClientRect();
-    const nx = (e.clientX - r.left) / r.width  * 2 - 1;
-    const ny = (e.clientY - r.top)  / r.height * 2 - 1;
-    vise.y = nx * 0.62;
-    vise.x = ny * 0.42;
-    survolCible = 1;
-  });
-  toile.addEventListener('pointerleave', () => { vise.x = vise.y = 0; survolCible = 0; });
+    if (!r.width) return;
+    const nx = (e.clientX - (r.left + r.width / 2))  / (r.width / 2);
+    const ny = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+    /* Borne large : au dela de deux demi-largeurs la rotation ne suit plus,
+       sinon le sceau finit de dos des qu'on sort du cadre. */
+    vise.y = Math.max(-1.6, Math.min(1.6, nx)) * 0.48;
+    vise.x = Math.max(-1.6, Math.min(1.6, ny)) * 0.32;
+    /* Le verre ne s'eclaircit que quand la souris est vraiment dessus : c'est
+       la recompense du survol, elle doit rester rare pour se voir. */
+    survolCible = (Math.abs(nx) < 1 && Math.abs(ny) < 1) ? 1 : 0;
+  };
+  window.addEventListener('pointermove', suivre, { passive: true });
 
   /* ── Entree ───────────────────────────────────────────────────────────── */
   /* Le sceau arrive par la tranche et pivote jusqu'a se presenter de face. Une
@@ -482,6 +440,7 @@ export function monterLeSceau(toile, options = {}) {
     detruire() {
       actif = false;
       window.removeEventListener('resize', mesurer);
+      window.removeEventListener('pointermove', suivre);
       groupe.traverse(o => { o.geometry?.dispose?.(); });
       matiere.dispose();
       poussieres.geometry.dispose();
