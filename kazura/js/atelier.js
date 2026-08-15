@@ -66,20 +66,49 @@ export function monterLAtelier(toile) {
       vec3 jade   = vec3(0.063, 0.725, 0.506);
       vec3 violet = vec3(0.486, 0.227, 0.929);
 
-      float mVert   = smoothstep(0.60, 0.24, f);
-      float mViolet = smoothstep(0.54, 0.90, f);
+      /* LES DEUX MASQUES SE CHEVAUCHAIENT. A 0.60 vers 0.24 et 0.54 vers 0.90,
+         ensemble ils couvraient toute la plage : chaque pixel recevait donc du
+         jade ou du violet a pleine force, multiplie par 1.3 et 1.4 par dessus.
+         Resultat, une marbrure saturee sur tout l'ecran ou le titre blanc
+         devenait illisible, et qui contredisait la regle de la maison, ici
+         presque tout doit etre noir.
+         On les resserre chacun sur un bout de la plage en laissant entre eux un
+         large creux qui reste sombre. Le noir est la matiere par defaut, la
+         couleur est l'exception. */
+      float mVert   = smoothstep(0.34, 0.12, f);
+      float mViolet = smoothstep(0.70, 0.92, f);
+
+      /* LA PRESENCE. Resserrer les masques ne suffisait pas : la couleur
+         restait repartie sur toute la surface, simplement moins forte, et
+         l'ensemble gardait l'air d'une nappe d'huile. Ce qu'il faut n'est pas
+         moins de couleur PARTOUT, c'est de la couleur PAR ENDROITS.
+         Ce bruit de tres basse frequence decide donc ou la matiere s'allume du
+         tout. Il laisse de larges plages presque noires entre les zones vives,
+         ce qui est exactement la densite du fond des lianes, et il derive
+         lentement pour que ces plages se deplacent. */
+      float presence = smoothstep(0.48, 0.88, fbm(q * 0.32 + t * 0.35));
 
       vec3 col = vec3(0.004, 0.018, 0.026);
-      col += jade   * mVert   * 1.30;
-      col += violet * mViolet * 1.40;
+      col += jade   * mVert   * 0.46 * presence;
+      col += violet * mViolet * 0.80 * presence;
 
+      /* Les nervures gardent leur eclat : ce sont elles qui portent la vie, et
+         elles sont assez fines pour ne jamais noyer le texte. C'est la lecon du
+         sceau de verre, ou trois traits pales disaient mieux la refraction que
+         sept barres epaisses. */
       float nerf = abs(sin(f * 11.0 + t * 5.5));
-      col += vec3(0.43, 0.94, 0.74) * pow(nerf, 8.0) * 0.75 * mVert;
-      col += vec3(0.72, 0.55, 1.00) * pow(abs(sin(f * 7.5 - t * 3.6)), 9.0) * 0.55;
+      col += vec3(0.43, 0.94, 0.74) * pow(nerf, 8.0) * 0.70 * mVert * presence;
+      col += vec3(0.72, 0.55, 1.00) * pow(abs(sin(f * 7.5 - t * 3.6)), 9.0) * 0.70 * presence;
 
-      col += violet * exp(-d * 3.2) * 0.35;
-      col *= 1.0 - 0.62 * length(uv * vec2(0.72, 1.0));
-      col = pow(max(col, 0.0), vec3(0.90));
+      col += violet * exp(-d * 3.2) * 0.30;
+
+      /* Un puits sombre au centre, exactement la ou le titre se pose. Le texte
+         est blanc : sans ce creux il tombait sur du vert clair. */
+      vec2 pu = uv * vec2(1.15, 1.85);
+      col *= 1.0 - 0.70 * exp(-dot(pu, pu) * 2.0);
+
+      col *= 1.0 - 0.55 * length(uv * vec2(0.72, 1.0));
+      col = pow(max(col, 0.0), vec3(1.16));
 
       gl_FragColor = vec4(col, 1.0);
     }
