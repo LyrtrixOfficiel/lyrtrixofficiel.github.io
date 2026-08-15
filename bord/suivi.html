@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Suivi · Lyrtrix</title>
+<style>
+:root {
+  --fond:#fff; --carte:#fbfbfc; --encre:#14181f; --doux:#5a6473; --pale:#8b95a5;
+  --trait:#e4e8ee; --vif:#c9601a; --pale-vif:#fdf3e9; --vert:#1f7a4d;
+  --pale-vert:#eaf6f0; --rouge:#b4322a; --pale-rouge:#fdefee; --code:#f4f6f8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --fond:#0f1319; --carte:#161b22; --encre:#eef1f5; --doux:#9aa5b4; --pale:#6d7885;
+  --trait:#232a34; --vif:#e2822f; --pale-vif:#2a1d10; --vert:#4ec98a;
+  --pale-vert:#12261c; --rouge:#f08076; --pale-rouge:#2a1513; --code:#1b212a;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.large{width:min(860px,92vw);margin-inline:auto}
+a{color:var(--vif);text-decoration:none;border-bottom:1px solid rgba(201,96,26,.32)}
+a:hover{border-bottom-color:var(--vif)}
+
+.barre{position:sticky;top:0;z-index:9;background:var(--fond);
+  border-bottom:1px solid var(--trait)}
+.barre .large{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 0}
+.marque{font-size:14px;font-weight:700;letter-spacing:.15em;color:var(--doux);border:0}
+.marque b{color:var(--vif)}
+.onglets{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.onglets a{font-size:13.5px;padding:6px 12px;border-radius:999px;border:1px solid transparent;
+  color:var(--doux);background:transparent}
+.onglets a:hover{color:var(--vif);background:var(--carte);border-color:var(--trait)}
+.onglets a.ici{color:var(--vif);background:var(--pale-vif);border-color:rgba(201,96,26,.3)}
+
+header.tete{padding:42px 0 6px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.12;margin:0 0 10px;letter-spacing:-.025em}
+.chapeau{font-size:18px;color:var(--doux);margin:0;max-width:62ch}
+.date{font-size:13px;color:var(--pale);margin-top:14px}
+
+section{padding:34px 0 6px;border-top:1px solid var(--trait);margin-top:30px}
+section:first-of-type{border-top:0;margin-top:12px}
+h2{font-size:clamp(21px,3.2vw,27px);margin:0 0 8px;letter-spacing:-.02em}
+h3{font-size:17px;margin:26px 0 8px}
+h4{font-size:15px;margin:20px 0 6px;color:var(--doux)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 14px;padding-left:21px}
+li{margin-bottom:6px}
+
+.chiffres{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));margin:18px 0 6px}
+.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:14px 16px}
+.chiffre b{display:block;font-size:25px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chiffre span{font-size:12.5px;color:var(--doux);line-height:1.4;display:block;margin-top:3px}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14.5px;max-width:100%}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--trait);
+  vertical-align:top;overflow-wrap:anywhere}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--pale);font-weight:600}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+pre{background:var(--code);border:1px solid var(--trait);border-radius:10px;padding:13px 15px;
+  overflow-x:auto;max-width:100%;font-size:13.5px;line-height:1.6;
+  font-family:"SF Mono",Menlo,Consolas,monospace;margin:13px 0}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em;
+  font-family:"SF Mono",Menlo,Consolas,monospace}
+
+.note,.alerte,.bien{border-radius:12px;padding:14px 17px;margin:17px 0;font-size:15px;
+  border:1px solid var(--trait)}
+.note{border-left:3px solid var(--vif);background:var(--pale-vif)}
+.alerte{border-left:3px solid var(--rouge);background:var(--pale-rouge)}
+.bien{border-left:3px solid var(--vert);background:var(--pale-vert)}
+.note>:last-child,.alerte>:last-child,.bien>:last-child{margin-bottom:0}
+.note strong,.alerte strong,.bien strong{display:block;margin-bottom:4px}
+
+.tache{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-bottom:9px;
+  background:var(--carte);border:1px solid var(--trait);border-radius:12px;cursor:pointer}
+.tache:hover{border-color:var(--vif)}
+.tache input{margin-top:5px;width:17px;height:17px;accent-color:var(--vif);flex:none;cursor:pointer}
+.tache .corps{flex:1;min-width:0}
+.tache .titre{font-weight:600}
+.tache .quoi{font-size:14px;color:var(--doux);margin-top:3px}
+.tache input:checked~.corps{opacity:.4;text-decoration:line-through}
+.etiq{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:2px;white-space:nowrap}
+.e-rouge{background:var(--pale-rouge);color:var(--rouge)}
+.e-orange{background:var(--pale-vif);color:var(--vif)}
+.e-vert{background:var(--pale-vert);color:var(--vert)}
+.e-gris{background:var(--code);color:var(--doux)}
+
+.entree{border-left:2px solid var(--trait);padding:0 0 24px 20px;margin-left:6px;position:relative}
+.entree::before{content:"";position:absolute;left:-5px;top:8px;width:8px;height:8px;
+  border-radius:50%;background:var(--vif)}
+.entree .quand{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--pale);font-weight:600}
+.entree h3{margin:3px 0 8px;font-size:16.5px}
+.dit{background:var(--carte);border:1px solid var(--trait);border-radius:10px;
+  padding:10px 13px;margin:0 0 11px;font-size:14.5px;color:var(--doux)}
+.dit b{color:var(--encre)}
+
+footer{border-top:1px solid var(--trait);margin-top:44px;padding:20px 0 64px;color:var(--pale);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="barre"><div class="large">
+  <a class="marque" href="./index.html">LYR<b>TRIX</b></a>
+  <nav class="onglets">
+    <a href="./index.html">Tableau de bord</a>
+    <a href="./suivi.html" class="ici">Suivi</a>
+    <a href="./sms.html">SMS et email</a>
+    <a href="./facture.html">Facture électronique</a>
+    <a href="./maquettes.html">Les maquettes</a>
+    <a href="./juridique.html">Juridique et clients</a>
+  </nav>
+</div></div>
+
+<div class="large">
+  <header class="tete">
+    <h1>Suivi</h1>
+    <p class="chapeau">Ce qui a été dit, ce qui a été décidé, et quand.</p>
+    <p class="date">Mis à jour le 15 août 2026</p>
+  </header>
+
+<section>
+  <h2>Comment lire cette page</h2>
+  <p>Chaque entrée reprend ce que tu as demandé ou décidé, et ce qui en a découlé.
+  La plus récente est en haut. C'est la mémoire commune : quand tu te demandes
+  pourquoi une chose est comme elle est, c'est ici.</p>
+</section>
+
+<section>
+  <h2>15 août</h2>
+
+<div class="entree">
+  <div class="quand">15 août, 5h40</div>
+  <h3>Le canal SMS s'arrête, et c'est assumé</h3>
+  <p class="dit"><b>Toi :</b> Le numéro est mort. On stop du coup, c'est fini. J'attends d'encaisser l'argent, quand j'ai de l'argent je passe à un truc pour payer au SMS.</p>
+  <p>Acté. La file reste en pause, les 158 messages du jour 4 sont gardés intacts et
+  repartiront tels quels le jour où tu auras un numéro professionnel. Tu avais raison de
+  vouloir les garder : c'était le premier lot entièrement en registre HUMAIN, on n'a
+  jamais mesuré ce qu'il donne.</p>
+  <p>Et la vente de Julie tombe bien : c'est elle qui financera la reprise.</p>
+</div>
+
+<div class="entree">
+  <div class="quand">15 août, 5h40</div>
+  <h3>Ma correction sur Julie</h3>
+  <p class="dit"><b>Toi :</b> Son identité n'était pas noire. C'était du orange et blanc, et le site final est blanc et orange.</p>
+  <p>Tu as raison, et je m'étais trompé. J'ai écrit cette anecdote dans quatre fichiers
+  pour justifier le calcul de palette, et elle était fausse.</p>
+  <p>C'est corrigé partout. La méthode, elle, tient sans cet exemple : aujourd'hui
+  <b>six palettes écrites en dur couvrent cent deux métiers</b>, donc deux concurrents de
+  la même rue reçoivent la même chose au pixel près. Ça suffit largement à justifier qu'on
+  aille chercher la couleur chez le client.</p>
+</div>
+
+<div class="entree">
+  <div class="quand">15 août, 5h40</div>
+  <h3>Le compte est rétabli</h3>
+  <p class="dit"><b>Toi :</b> Mon compte est rétabli du coup, le compte business. Elle me l'a renvoyé sur le compte pro.</p>
+  <p>Les quatre factures sont régénérées avec l'IBAN professionnel
+  <code>FR76 2823 3000 0167 0422 5574 517</code>. Le compte personnel redevient un secours,
+  noté dans le fichier au cas où.</p>
+</div>
+
+<div class="entree">
+  <div class="quand">15 août, 5h40</div>
+  <h3>Le tableau de bord</h3>
+  <p class="dit"><b>Toi :</b> Tout ce que tu veux que je lise, mets-le dans le site web avec des pages ou un truc bien orchestré où je peux tout retrouver.</p>
+  <p>C'est cette page et les cinq autres. Les notes qui vivaient dans <code>docs/*.md</code>
+  y sont reprises, avec une navigation et une date de mise à jour. Un générateur les
+  reconstruit, pour que la dixième modification ne casse pas la navigation.</p>
+</div>
+</section>
+
+<section>
+  <h2>14 août</h2>
+
+<div class="entree">
+  <div class="quand">14 août, nuit</div>
+  <h3>La couleur vient du client</h3>
+  
+  <p>Écrit <code>scripts/palette.mjs</code>, qui calcule une palette à partir des images du
+  client, via Chrome et un canvas, sans installer une seule bibliothèque. Mesuré sur 40 sites
+  archivés : 16 rendent une couleur du client, six familles de teinte différentes là où
+  l'ancien gabarit en donnait une seule. Le contraste tient sur la totalité.</p>
+</div>
+
+<div class="entree">
+  <div class="quand">14 août, nuit</div>
+  <h3>Les archives du web</h3>
+  
+  <p>Pour les 2 744 prospects au site mort, récupéré la dernière copie de leur ancien site.
+  <b>1 177 ont du texte exploitable</b>, 1 149 ont leurs images. Pour eux, le problème de la
+  maquette générique disparaît : on ne leur fait pas une maquette, on refait leur site.</p>
+</div>
+
+<div class="entree">
+  <div class="quand">14 août, nuit</div>
+  <h3>Le scraper Google Maps</h3>
+  <p class="dit"><b>Toi :</b> Y'a un github google maps scraper, trouve-le et continue à me trouver des prospects.</p>
+  <p>Trouvé, téléchargé, installé, et bloqué par le mur de consentement européen de Google.
+  Diagnostic complet sur la page <a href="./maquettes.html#maps">Les maquettes</a>. Tu m'as
+  proposé NordVPN depuis : c'est la solution la plus simple des trois, j'en parle là-bas.</p>
+</div>
+</section>
+
+<section>
+  <h2>13 août</h2>
+
+<div class="entree">
+  <div class="quand">13 août</div>
+  <h3>Le blocage en cascade</h3>
+  
+  <p>Trois pannes le même jour : l'application SMS morte sur le téléphone, l'opérateur qui
+  refuse les nouveaux destinataires, et le compte Revolut bloqué. La cause de la troisième
+  était que l'entreprise était déclarée comme <b>label de musique</b> alors qu'elle vend des
+  sites. Déclaration de modification déposée le jour même.</p>
+</div>
+
+<div class="entree">
+  <div class="quand">13 août</div>
+  <h3>Le registre HUMAIN</h3>
+  <p class="dit"><b>Toi :</b> Se justifier de ne pas être une arnaque, ça fait suspect. Pas de SIREN, pas de mise en garde sur le lien.</p>
+  <p>Tu avais raison et je m'étais trompé dans l'autre sens : ma version répondait à la peur
+  point par point, et chaque phrase de défense ajoutait le soupçon qu'elle voulait lever.
+  Le message est passé de sept segments à quatre.</p>
+</div>
+</section>
+
+  <footer>
+    Tableau de bord interne · Lyrtrix, Matheo Schmitt, entrepreneur individuel ·
+    reconstruit par <code>node scripts/bord.mjs</code>
+  </footer>
+</div>
+</body>
+</html>

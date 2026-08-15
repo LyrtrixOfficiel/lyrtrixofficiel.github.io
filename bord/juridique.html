@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Juridique et clients · Lyrtrix</title>
+<style>
+:root {
+  --fond:#fff; --carte:#fbfbfc; --encre:#14181f; --doux:#5a6473; --pale:#8b95a5;
+  --trait:#e4e8ee; --vif:#c9601a; --pale-vif:#fdf3e9; --vert:#1f7a4d;
+  --pale-vert:#eaf6f0; --rouge:#b4322a; --pale-rouge:#fdefee; --code:#f4f6f8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --fond:#0f1319; --carte:#161b22; --encre:#eef1f5; --doux:#9aa5b4; --pale:#6d7885;
+  --trait:#232a34; --vif:#e2822f; --pale-vif:#2a1d10; --vert:#4ec98a;
+  --pale-vert:#12261c; --rouge:#f08076; --pale-rouge:#2a1513; --code:#1b212a;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.large{width:min(860px,92vw);margin-inline:auto}
+a{color:var(--vif);text-decoration:none;border-bottom:1px solid rgba(201,96,26,.32)}
+a:hover{border-bottom-color:var(--vif)}
+
+.barre{position:sticky;top:0;z-index:9;background:var(--fond);
+  border-bottom:1px solid var(--trait)}
+.barre .large{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 0}
+.marque{font-size:14px;font-weight:700;letter-spacing:.15em;color:var(--doux);border:0}
+.marque b{color:var(--vif)}
+.onglets{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.onglets a{font-size:13.5px;padding:6px 12px;border-radius:999px;border:1px solid transparent;
+  color:var(--doux);background:transparent}
+.onglets a:hover{color:var(--vif);background:var(--carte);border-color:var(--trait)}
+.onglets a.ici{color:var(--vif);background:var(--pale-vif);border-color:rgba(201,96,26,.3)}
+
+header.tete{padding:42px 0 6px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.12;margin:0 0 10px;letter-spacing:-.025em}
+.chapeau{font-size:18px;color:var(--doux);margin:0;max-width:62ch}
+.date{font-size:13px;color:var(--pale);margin-top:14px}
+
+section{padding:34px 0 6px;border-top:1px solid var(--trait);margin-top:30px}
+section:first-of-type{border-top:0;margin-top:12px}
+h2{font-size:clamp(21px,3.2vw,27px);margin:0 0 8px;letter-spacing:-.02em}
+h3{font-size:17px;margin:26px 0 8px}
+h4{font-size:15px;margin:20px 0 6px;color:var(--doux)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 14px;padding-left:21px}
+li{margin-bottom:6px}
+
+.chiffres{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));margin:18px 0 6px}
+.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:14px 16px}
+.chiffre b{display:block;font-size:25px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chiffre span{font-size:12.5px;color:var(--doux);line-height:1.4;display:block;margin-top:3px}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14.5px;max-width:100%}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--trait);
+  vertical-align:top;overflow-wrap:anywhere}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--pale);font-weight:600}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+pre{background:var(--code);border:1px solid var(--trait);border-radius:10px;padding:13px 15px;
+  overflow-x:auto;max-width:100%;font-size:13.5px;line-height:1.6;
+  font-family:"SF Mono",Menlo,Consolas,monospace;margin:13px 0}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em;
+  font-family:"SF Mono",Menlo,Consolas,monospace}
+
+.note,.alerte,.bien{border-radius:12px;padding:14px 17px;margin:17px 0;font-size:15px;
+  border:1px solid var(--trait)}
+.note{border-left:3px solid var(--vif);background:var(--pale-vif)}
+.alerte{border-left:3px solid var(--rouge);background:var(--pale-rouge)}
+.bien{border-left:3px solid var(--vert);background:var(--pale-vert)}
+.note>:last-child,.alerte>:last-child,.bien>:last-child{margin-bottom:0}
+.note strong,.alerte strong,.bien strong{display:block;margin-bottom:4px}
+
+.tache{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-bottom:9px;
+  background:var(--carte);border:1px solid var(--trait);border-radius:12px;cursor:pointer}
+.tache:hover{border-color:var(--vif)}
+.tache input{margin-top:5px;width:17px;height:17px;accent-color:var(--vif);flex:none;cursor:pointer}
+.tache .corps{flex:1;min-width:0}
+.tache .titre{font-weight:600}
+.tache .quoi{font-size:14px;color:var(--doux);margin-top:3px}
+.tache input:checked~.corps{opacity:.4;text-decoration:line-through}
+.etiq{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:2px;white-space:nowrap}
+.e-rouge{background:var(--pale-rouge);color:var(--rouge)}
+.e-orange{background:var(--pale-vif);color:var(--vif)}
+.e-vert{background:var(--pale-vert);color:var(--vert)}
+.e-gris{background:var(--code);color:var(--doux)}
+
+.entree{border-left:2px solid var(--trait);padding:0 0 24px 20px;margin-left:6px;position:relative}
+.entree::before{content:"";position:absolute;left:-5px;top:8px;width:8px;height:8px;
+  border-radius:50%;background:var(--vif)}
+.entree .quand{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--pale);font-weight:600}
+.entree h3{margin:3px 0 8px;font-size:16.5px}
+.dit{background:var(--carte);border:1px solid var(--trait);border-radius:10px;
+  padding:10px 13px;margin:0 0 11px;font-size:14.5px;color:var(--doux)}
+.dit b{color:var(--encre)}
+
+footer{border-top:1px solid var(--trait);margin-top:44px;padding:20px 0 64px;color:var(--pale);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="barre"><div class="large">
+  <a class="marque" href="./index.html">LYR<b>TRIX</b></a>
+  <nav class="onglets">
+    <a href="./index.html">Tableau de bord</a>
+    <a href="./suivi.html">Suivi</a>
+    <a href="./sms.html">SMS et email</a>
+    <a href="./facture.html">Facture électronique</a>
+    <a href="./maquettes.html">Les maquettes</a>
+    <a href="./juridique.html" class="ici">Juridique et clients</a>
+  </nav>
+</div></div>
+
+<div class="large">
+  <header class="tete">
+    <h1>Juridique et clients</h1>
+    <p class="chapeau">La structure, les obligations, et Julie.</p>
+    <p class="date">Mis à jour le 15 août 2026</p>
+  </header>
+
+<section>
+  <h2>Où tu en es</h2>
+  <div class="scroll"><table>
+    <tr><th>Quoi</th><th>Valeur</th></tr>
+    <tr><td>Forme</td><td>Entreprise individuelle, régime micro</td></tr>
+    <tr><td>SIREN</td><td class="n">100 165 455</td></tr>
+    <tr><td>SIRET</td><td class="n">100 165 455 00013</td></tr>
+    <tr><td>Immatriculation</td><td>22 janvier 2026</td></tr>
+    <tr><td>Activité principale</td><td>Création de sites internet, depuis la déclaration du 13 août</td></tr>
+    <tr><td>TVA</td><td>Non applicable, article 293 B du CGI</td></tr>
+    <tr><td>Plafond</td><td class="n">77 700 € de chiffre d'affaires</td></tr>
+  </table></div>
+  <p>Le plafond est plus proche qu'il n'y paraît : à 500 € la vente, c'est <b>155 ventes</b>.
+  À dix par mois, c'est seize mois. Et le seuil de TVA arrive <b>avant</b> celui de la micro.</p>
+</section>
+
+<section>
+  <h2>La déclaration du 13 août</h2>
+  <p>Ton entreprise était déclarée comme <b>label de musique</b>, code APE 5920Z, alors qu'elle
+  vend des sites internet. C'est ce décalage qui a fait bloquer le compte Revolut : une banque
+  qui voit des encaissements sans rapport avec l'activité déclarée ouvre un contrôle.</p>
+  <p>La déclaration de modification est déposée, formalité <code>J00272591579</code>. La création
+  de sites devient l'activité principale, la musique passe en secondaire sans disparaître.</p>
+  <div class="note">
+    <p>Le traitement prend 1 à 3 semaines. Le <b>3 septembre</b>, dans ton agenda, il faudra
+    retélécharger l'attestation sur <a href="https://data.inpi.fr" target="_blank">data.inpi.fr</a>
+    et vérifier que le code APE a bien basculé. C'est ce document qui règle définitivement le
+    sujet avec la banque.</p>
+  </div>
+</section>
+
+<section id="ics">
+  <h2>L'ICS, puisque tu me demandes ce que c'est</h2>
+  <p><b>Identifiant Créancier SEPA.</b> Treize caractères commençant par FR, délivrés par la
+  Banque de France, mais que tu demandes à ta banque.</p>
+  <p>Il sert à une seule chose : <b>prélever</b> tes clients au lieu d'attendre leurs virements.
+  Aujourd'hui Julie doit créer un virement permanent de 20 € et penser à ne pas l'arrêter. Avec
+  un ICS, elle signe un mandat une fois et c'est toi qui tires chaque mois.</p>
+  <div class="alerte">
+    <strong>Pourquoi le demander maintenant alors qu'on n'en a pas besoin</strong>
+    <p>Parce qu'il met <b>3 jours à 3 semaines</b> à arriver, qu'il ne coûte rien tant qu'on ne
+    s'en sert pas, et qu'à trente abonnés il sera indispensable. Un virement permanent qui
+    s'arrête ne prévient personne : tu découvrirais les impayés avec deux mois de retard.</p>
+    <p>C'est exactement le genre de démarche qu'on ne fait jamais parce qu'elle n'est jamais
+    urgente. C'est dans ton agenda au 18 août.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Ce qui manque encore</h2>
+  <ul>
+    <li><b>Le registre des traitements.</b> La seule vraie lacune du démarchage. Un document
+    interne d'une page qui décrit quelles données tu collectes, d'où, pourquoi, et combien de
+    temps tu les gardes. La CNIL peut le demander, et ne pas l'avoir est en soi un manquement.
+    Une heure de travail, dis-le-moi et je l'écris.</li>
+    <li><b>Une durée de conservation.</b> Trois ans après le dernier contact est ce que la CNIL
+    retient pour la prospection.</li>
+    <li><b>Une mention d'information</b> sur les maquettes, qui dise d'où viennent les données du
+    prospect et comment demander leur suppression.</li>
+  </ul>
+  <p>Ce qui est fait : les <a href="https://lyrtrixofficiel.github.io/cgv/" target="_blank">CGV</a>
+  sont écrites et publiées. Elles couvrent le nom de domaine qui appartient au client,
+  l'abonnement sans engagement, la cession des droits au paiement intégral, et ta position de
+  sous-traitant RGPD.</p>
+</section>
+
+<section id="julie">
+  <h2>Julie Marguier</h2>
+  <div class="scroll"><table>
+    <tr><th>Facture</th><th>Date</th><th>Montant</th><th>État</th></tr>
+    <tr><td>F2026-001</td><td>12 août</td><td class="n">200 €</td><td>envoyée, paiement en attente</td></tr>
+    <tr><td>F2026-002</td><td>12 septembre</td><td class="n">100 €</td><td>prête</td></tr>
+    <tr><td>F2026-003</td><td>12 octobre</td><td class="n">100 €</td><td>prête</td></tr>
+    <tr><td>F2026-004</td><td>12 novembre</td><td class="n">100 €</td><td>prête</td></tr>
+  </table></div>
+  <p>Les quatre portent de nouveau l'IBAN professionnel, maintenant que le compte est rétabli.
+  Aucun trou et aucun doublon dans la numérotation, c'est ce que la loi regarde.</p>
+  <p>L'abonnement de 20 € par mois est <b>distinct</b> et démarre à la mise en ligne du site.
+  Pendant trois mois, elle paiera donc 120 € par mois, puis 20 €. C'est annoncé dans le devis
+  et dans le mail, pour qu'il n'y ait pas de mauvaise surprise au deuxième mois.</p>
+
+  <h3>Son site</h3>
+  <p><a href="https://lyrtrixofficiel.github.io/shiatsu-jiyu/" target="_blank">lyrtrixofficiel.github.io/shiatsu-jiyu</a></p>
+  <p>Sa première vague de retouches est appliquée en entier, ainsi que les trois corrections
+  du 14 : la table à la place du futon partout, les formes inclusives, et sa page Facebook.</p>
+  <div class="note">
+    <strong>Ce qui reste</strong>
+    <p>Son logo, à faire. Ses nouvelles demandes, qu'elle envoie par mail aujourd'hui. Ses
+    photos professionnelles, en septembre. Et le nom de domaine : tant qu'il n'est pas acheté,
+    le site reste en <code>noindex</code> et Google ne le voit pas. C'est aussi ce jour-là que
+    l'abonnement démarre.</p>
+  </div>
+</section>
+
+  <footer>
+    Tableau de bord interne · Lyrtrix, Matheo Schmitt, entrepreneur individuel ·
+    reconstruit par <code>node scripts/bord.mjs</code>
+  </footer>
+</div>
+</body>
+</html>

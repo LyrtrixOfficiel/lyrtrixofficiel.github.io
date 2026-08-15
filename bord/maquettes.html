@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Les maquettes · Lyrtrix</title>
+<style>
+:root {
+  --fond:#fff; --carte:#fbfbfc; --encre:#14181f; --doux:#5a6473; --pale:#8b95a5;
+  --trait:#e4e8ee; --vif:#c9601a; --pale-vif:#fdf3e9; --vert:#1f7a4d;
+  --pale-vert:#eaf6f0; --rouge:#b4322a; --pale-rouge:#fdefee; --code:#f4f6f8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --fond:#0f1319; --carte:#161b22; --encre:#eef1f5; --doux:#9aa5b4; --pale:#6d7885;
+  --trait:#232a34; --vif:#e2822f; --pale-vif:#2a1d10; --vert:#4ec98a;
+  --pale-vert:#12261c; --rouge:#f08076; --pale-rouge:#2a1513; --code:#1b212a;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.large{width:min(860px,92vw);margin-inline:auto}
+a{color:var(--vif);text-decoration:none;border-bottom:1px solid rgba(201,96,26,.32)}
+a:hover{border-bottom-color:var(--vif)}
+
+.barre{position:sticky;top:0;z-index:9;background:var(--fond);
+  border-bottom:1px solid var(--trait)}
+.barre .large{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 0}
+.marque{font-size:14px;font-weight:700;letter-spacing:.15em;color:var(--doux);border:0}
+.marque b{color:var(--vif)}
+.onglets{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.onglets a{font-size:13.5px;padding:6px 12px;border-radius:999px;border:1px solid transparent;
+  color:var(--doux);background:transparent}
+.onglets a:hover{color:var(--vif);background:var(--carte);border-color:var(--trait)}
+.onglets a.ici{color:var(--vif);background:var(--pale-vif);border-color:rgba(201,96,26,.3)}
+
+header.tete{padding:42px 0 6px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.12;margin:0 0 10px;letter-spacing:-.025em}
+.chapeau{font-size:18px;color:var(--doux);margin:0;max-width:62ch}
+.date{font-size:13px;color:var(--pale);margin-top:14px}
+
+section{padding:34px 0 6px;border-top:1px solid var(--trait);margin-top:30px}
+section:first-of-type{border-top:0;margin-top:12px}
+h2{font-size:clamp(21px,3.2vw,27px);margin:0 0 8px;letter-spacing:-.02em}
+h3{font-size:17px;margin:26px 0 8px}
+h4{font-size:15px;margin:20px 0 6px;color:var(--doux)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 14px;padding-left:21px}
+li{margin-bottom:6px}
+
+.chiffres{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));margin:18px 0 6px}
+.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:14px 16px}
+.chiffre b{display:block;font-size:25px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chiffre span{font-size:12.5px;color:var(--doux);line-height:1.4;display:block;margin-top:3px}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14.5px;max-width:100%}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--trait);
+  vertical-align:top;overflow-wrap:anywhere}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--pale);font-weight:600}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+pre{background:var(--code);border:1px solid var(--trait);border-radius:10px;padding:13px 15px;
+  overflow-x:auto;max-width:100%;font-size:13.5px;line-height:1.6;
+  font-family:"SF Mono",Menlo,Consolas,monospace;margin:13px 0}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em;
+  font-family:"SF Mono",Menlo,Consolas,monospace}
+
+.note,.alerte,.bien{border-radius:12px;padding:14px 17px;margin:17px 0;font-size:15px;
+  border:1px solid var(--trait)}
+.note{border-left:3px solid var(--vif);background:var(--pale-vif)}
+.alerte{border-left:3px solid var(--rouge);background:var(--pale-rouge)}
+.bien{border-left:3px solid var(--vert);background:var(--pale-vert)}
+.note>:last-child,.alerte>:last-child,.bien>:last-child{margin-bottom:0}
+.note strong,.alerte strong,.bien strong{display:block;margin-bottom:4px}
+
+.tache{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-bottom:9px;
+  background:var(--carte);border:1px solid var(--trait);border-radius:12px;cursor:pointer}
+.tache:hover{border-color:var(--vif)}
+.tache input{margin-top:5px;width:17px;height:17px;accent-color:var(--vif);flex:none;cursor:pointer}
+.tache .corps{flex:1;min-width:0}
+.tache .titre{font-weight:600}
+.tache .quoi{font-size:14px;color:var(--doux);margin-top:3px}
+.tache input:checked~.corps{opacity:.4;text-decoration:line-through}
+.etiq{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:2px;white-space:nowrap}
+.e-rouge{background:var(--pale-rouge);color:var(--rouge)}
+.e-orange{background:var(--pale-vif);color:var(--vif)}
+.e-vert{background:var(--pale-vert);color:var(--vert)}
+.e-gris{background:var(--code);color:var(--doux)}
+
+.entree{border-left:2px solid var(--trait);padding:0 0 24px 20px;margin-left:6px;position:relative}
+.entree::before{content:"";position:absolute;left:-5px;top:8px;width:8px;height:8px;
+  border-radius:50%;background:var(--vif)}
+.entree .quand{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--pale);font-weight:600}
+.entree h3{margin:3px 0 8px;font-size:16.5px}
+.dit{background:var(--carte);border:1px solid var(--trait);border-radius:10px;
+  padding:10px 13px;margin:0 0 11px;font-size:14.5px;color:var(--doux)}
+.dit b{color:var(--encre)}
+
+footer{border-top:1px solid var(--trait);margin-top:44px;padding:20px 0 64px;color:var(--pale);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="barre"><div class="large">
+  <a class="marque" href="./index.html">LYR<b>TRIX</b></a>
+  <nav class="onglets">
+    <a href="./index.html">Tableau de bord</a>
+    <a href="./suivi.html">Suivi</a>
+    <a href="./sms.html">SMS et email</a>
+    <a href="./facture.html">Facture électronique</a>
+    <a href="./maquettes.html" class="ici">Les maquettes</a>
+    <a href="./juridique.html">Juridique et clients</a>
+  </nav>
+</div></div>
+
+<div class="large">
+  <header class="tete">
+    <h1>Les maquettes</h1>
+    <p class="chapeau">Le seul vrai chantier, celui qui décide de tout le reste.</p>
+    <p class="date">Mis à jour le 15 août 2026</p>
+  </header>
+
+<section>
+  <h2>Le problème, en une phrase</h2>
+  <p>Vingt mille prospects sont récoltés, triés, et prêts. Aucun ne peut être contacté, parce
+  que <b>six palettes et cinq vidéos couvrent cent deux métiers</b>. Deux concurrents de la même
+  rue reçoivent la même chose au pixel près, et un garagiste reçoit la vidéo du plombier.</p>
+  <div class="note">
+    <p>C'est le seul chantier qui compte. Le prix ouvre la porte, la maquette fait signer.
+    Une maquette générique nous ramène à un argument de prix, et un prix seul ne défend rien.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Le stock, et ce qu'il vaut</h2>
+  <div class="chiffres">
+    <div class="chiffre"><b>17 880</b><span>prospects sans aucun site</span></div>
+    <div class="chiffre"><b>2 744</b><span>dont le site est mort</span></div>
+    <div class="chiffre"><b>1 177</b><span>dont on a retrouvé l'ancien site</span></div>
+    <div class="chiffre"><b>2 632</b><span>bien-être jamais contactés</span></div>
+  </div>
+
+  <h3>Les 1 177, c'est le meilleur segment qu'on ait</h3>
+  <p>Pour chacun des 2 744 prospects au site mort, je suis allé chercher la dernière copie de
+  leur ancien site sur archive.org. <b>1 177 ont du texte exploitable</b>, 181 mots en médiane,
+  et 1 149 ont leurs images.</p>
+  <div class="bien">
+    <p>Pour eux le problème de la maquette générique <b>n'existe plus</b>. On a leurs mots, leurs
+    prestations, souvent leurs tarifs. On ne leur fait pas une maquette, <b>on refait leur
+    site</b>. Et le message n'a plus rien d'un démarchage : « votre site n'existe plus, je l'ai
+    refait ». Ils reconnaîtront leurs propres phrases.</p>
+  </div>
+  <p>C'est par eux qu'on reprendra les envois, une fois le numéro professionnel en place.</p>
+</section>
+
+<section id="palette">
+  <h2>La couleur vient du client</h2>
+  <p><code>scripts/palette.mjs</code> calcule la palette d'un site à partir des images du client :
+  son logo, ses photos publiques, ou celles de son ancien site.</p>
+  <p>Sans installer une seule bibliothèque : décoder un JPEG à la main serait des centaines de
+  lignes fragiles, mais Chrome est déjà là et sait lire tous les formats. Il pose l'image dans
+  un canvas, range les pixels dans 4 096 casiers, et le calcul reprend la main pour la partie
+  qui demande du jugement.</p>
+
+  <h3>Les trois décisions qui font la qualité</h3>
+  <ul>
+    <li><b>L'accent n'est pas la couleur la plus répandue.</b> Sur un logo, la plus répandue est
+    presque toujours le blanc du fond. On cherche celle qui a le plus de caractère.</li>
+    <li><b>Le démarrage est régulier, jamais aléatoire.</b> Deux constructions du même site
+    doivent rendre exactement la même palette, sinon un client verrait ses couleurs changer à
+    chaque publication.</li>
+    <li><b>Le contraste prime sur la fidélité.</b> 7:1 pour le corps de texte, 3:1 pour l'accent,
+    vérifiés et corrigés avant de rendre. Une teinte jaune est naturellement claire : on la
+    fonce jusqu'à ce qu'elle passe, sans changer sa teinte.</li>
+  </ul>
+
+  <h3>Mesuré sur 40 sites</h3>
+  <div class="scroll"><table>
+    <tr><th>Résultat</th><th>Nombre</th><th>Ce que ça veut dire</th></tr>
+    <tr><td>Couleur du client trouvée</td><td class="n">16 · 40 %</td><td>six familles de teinte différentes</td></tr>
+    <tr><td>Palette neutre</td><td class="n">1 · 2 %</td><td>enseigne sans couleur franche, on ne force pas</td></tr>
+    <tr><td>Aucune image lisible</td><td class="n">23 · 58 %</td><td>site mort depuis trop longtemps</td></tr>
+  </table></div>
+  <p>Le contraste tient sur la totalité des seize palettes, minimum 14,1:1 pour le texte et
+  3,2:1 pour l'accent. Un métallier en rouge, une crêperie en terre cuite, une association en
+  or. <b>Avec l'ancien gabarit, ces seize auraient tous reçu le même orange.</b></p>
+</section>
+
+<section>
+  <h2>La feuille de route</h2>
+  <div class="scroll"><table>
+    <tr><th>#</th><th>Chantier</th><th>Durée</th><th>État</th></tr>
+    <tr><td class="n">1</td><td>La palette tirée du client</td><td class="n">fait</td><td><span class="etiq e-vert">fait</span></td></tr>
+    <tr><td class="n">2</td><td>Les visuels par métier, Pexels et Pixabay</td><td class="n">3 jours</td><td>en pause, attend tes clés</td></tr>
+    <tr><td class="n">3</td><td>Le contrôle qualité avant publication</td><td class="n">2 jours</td><td>je peux le faire seul</td></tr>
+    <tr><td class="n">4</td><td>Le rendu dynamique et la base</td><td class="n">5 jours</td><td>lève le mur des 1 Go</td></tr>
+    <tr><td class="n">5</td><td>Les 10 ossatures et les 6 animations</td><td class="n">8 jours</td><td>c'est ce qui fait l'unique</td></tr>
+    <tr><td class="n">6</td><td>Le logo du client récupéré et détouré</td><td class="n">2 jours</td><td>le détail qui tue</td></tr>
+  </table></div>
+  <p>Le point 3 ne dépend de personne : je peux le construire pendant que le reste attend.
+  Un site cassé qui part chez un prospect coûte plus cher qu'un prospect non contacté.</p>
+</section>
+
+<section id="maps">
+  <h2>Google Maps</h2>
+  <p>Le scraper de <a href="https://github.com/gosom/google-maps-scraper" target="_blank">gosom</a>
+  est téléchargé et installé dans <code>outils/gmaps</code>. Il publie un binaire Windows, donc
+  ni Go ni Docker. Il annonce 36 colonnes dont le téléphone et le site internet.</p>
+  <p>Il échoue, et j'ai trouvé pourquoi : <b>le mur de consentement européen</b>. Google redirige
+  tout visiteur de l'Union vers <code>consent.google.com</code> avant d'afficher la moindre
+  carte. Le programme attend des résultats, reçoit une page de cookies, et se ferme.</p>
+
+  <h3>Tu m'as parlé de NordVPN, et c'est la bonne piste</h3>
+  <div class="bien">
+    <p>C'est la solution la plus simple des trois. Google ne montre le mur qu'aux adresses
+    européennes : en te connectant à un serveur <b>hors Union</b>, le problème disparaît sans
+    une ligne de code.</p>
+    <p>Deux réserves à connaître. Les résultats seront ceux vus depuis ce pays, donc il faudra
+    forcer la langue et la zone dans les requêtes. Et un VPN grand public partage ses adresses
+    entre milliers d'utilisateurs, donc Google peut demander un captcha plus vite. À tester sur
+    une petite série avant de lancer quoi que ce soit de gros.</p>
+  </div>
+  <p>L'autre piste, plus propre mais plus longue, est d'injecter le cookie <code>SOCS</code> qui
+  enregistre le consentement. Deux à trois heures de travail, et ça marche partout.</p>
+  <p><b>Mon avis reste le même :</b> ce n'est pas ce qui nous bloque. Vingt mille prospects
+  attendent déjà. À reprendre quand ils seront écoulés.</p>
+</section>
+
+  <footer>
+    Tableau de bord interne · Lyrtrix, Matheo Schmitt, entrepreneur individuel ·
+    reconstruit par <code>node scripts/bord.mjs</code>
+  </footer>
+</div>
+</body>
+</html>

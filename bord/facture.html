@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Facture électronique · Lyrtrix</title>
+<style>
+:root {
+  --fond:#fff; --carte:#fbfbfc; --encre:#14181f; --doux:#5a6473; --pale:#8b95a5;
+  --trait:#e4e8ee; --vif:#c9601a; --pale-vif:#fdf3e9; --vert:#1f7a4d;
+  --pale-vert:#eaf6f0; --rouge:#b4322a; --pale-rouge:#fdefee; --code:#f4f6f8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --fond:#0f1319; --carte:#161b22; --encre:#eef1f5; --doux:#9aa5b4; --pale:#6d7885;
+  --trait:#232a34; --vif:#e2822f; --pale-vif:#2a1d10; --vert:#4ec98a;
+  --pale-vert:#12261c; --rouge:#f08076; --pale-rouge:#2a1513; --code:#1b212a;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.large{width:min(860px,92vw);margin-inline:auto}
+a{color:var(--vif);text-decoration:none;border-bottom:1px solid rgba(201,96,26,.32)}
+a:hover{border-bottom-color:var(--vif)}
+
+.barre{position:sticky;top:0;z-index:9;background:var(--fond);
+  border-bottom:1px solid var(--trait)}
+.barre .large{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 0}
+.marque{font-size:14px;font-weight:700;letter-spacing:.15em;color:var(--doux);border:0}
+.marque b{color:var(--vif)}
+.onglets{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.onglets a{font-size:13.5px;padding:6px 12px;border-radius:999px;border:1px solid transparent;
+  color:var(--doux);background:transparent}
+.onglets a:hover{color:var(--vif);background:var(--carte);border-color:var(--trait)}
+.onglets a.ici{color:var(--vif);background:var(--pale-vif);border-color:rgba(201,96,26,.3)}
+
+header.tete{padding:42px 0 6px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.12;margin:0 0 10px;letter-spacing:-.025em}
+.chapeau{font-size:18px;color:var(--doux);margin:0;max-width:62ch}
+.date{font-size:13px;color:var(--pale);margin-top:14px}
+
+section{padding:34px 0 6px;border-top:1px solid var(--trait);margin-top:30px}
+section:first-of-type{border-top:0;margin-top:12px}
+h2{font-size:clamp(21px,3.2vw,27px);margin:0 0 8px;letter-spacing:-.02em}
+h3{font-size:17px;margin:26px 0 8px}
+h4{font-size:15px;margin:20px 0 6px;color:var(--doux)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 14px;padding-left:21px}
+li{margin-bottom:6px}
+
+.chiffres{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));margin:18px 0 6px}
+.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:14px 16px}
+.chiffre b{display:block;font-size:25px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chiffre span{font-size:12.5px;color:var(--doux);line-height:1.4;display:block;margin-top:3px}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14.5px;max-width:100%}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--trait);
+  vertical-align:top;overflow-wrap:anywhere}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--pale);font-weight:600}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+pre{background:var(--code);border:1px solid var(--trait);border-radius:10px;padding:13px 15px;
+  overflow-x:auto;max-width:100%;font-size:13.5px;line-height:1.6;
+  font-family:"SF Mono",Menlo,Consolas,monospace;margin:13px 0}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em;
+  font-family:"SF Mono",Menlo,Consolas,monospace}
+
+.note,.alerte,.bien{border-radius:12px;padding:14px 17px;margin:17px 0;font-size:15px;
+  border:1px solid var(--trait)}
+.note{border-left:3px solid var(--vif);background:var(--pale-vif)}
+.alerte{border-left:3px solid var(--rouge);background:var(--pale-rouge)}
+.bien{border-left:3px solid var(--vert);background:var(--pale-vert)}
+.note>:last-child,.alerte>:last-child,.bien>:last-child{margin-bottom:0}
+.note strong,.alerte strong,.bien strong{display:block;margin-bottom:4px}
+
+.tache{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-bottom:9px;
+  background:var(--carte);border:1px solid var(--trait);border-radius:12px;cursor:pointer}
+.tache:hover{border-color:var(--vif)}
+.tache input{margin-top:5px;width:17px;height:17px;accent-color:var(--vif);flex:none;cursor:pointer}
+.tache .corps{flex:1;min-width:0}
+.tache .titre{font-weight:600}
+.tache .quoi{font-size:14px;color:var(--doux);margin-top:3px}
+.tache input:checked~.corps{opacity:.4;text-decoration:line-through}
+.etiq{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:2px;white-space:nowrap}
+.e-rouge{background:var(--pale-rouge);color:var(--rouge)}
+.e-orange{background:var(--pale-vif);color:var(--vif)}
+.e-vert{background:var(--pale-vert);color:var(--vert)}
+.e-gris{background:var(--code);color:var(--doux)}
+
+.entree{border-left:2px solid var(--trait);padding:0 0 24px 20px;margin-left:6px;position:relative}
+.entree::before{content:"";position:absolute;left:-5px;top:8px;width:8px;height:8px;
+  border-radius:50%;background:var(--vif)}
+.entree .quand{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--pale);font-weight:600}
+.entree h3{margin:3px 0 8px;font-size:16.5px}
+.dit{background:var(--carte);border:1px solid var(--trait);border-radius:10px;
+  padding:10px 13px;margin:0 0 11px;font-size:14.5px;color:var(--doux)}
+.dit b{color:var(--encre)}
+
+footer{border-top:1px solid var(--trait);margin-top:44px;padding:20px 0 64px;color:var(--pale);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="barre"><div class="large">
+  <a class="marque" href="./index.html">LYR<b>TRIX</b></a>
+  <nav class="onglets">
+    <a href="./index.html">Tableau de bord</a>
+    <a href="./suivi.html">Suivi</a>
+    <a href="./sms.html">SMS et email</a>
+    <a href="./facture.html" class="ici">Facture électronique</a>
+    <a href="./maquettes.html">Les maquettes</a>
+    <a href="./juridique.html">Juridique et clients</a>
+  </nav>
+</div></div>
+
+<div class="large">
+  <header class="tete">
+    <h1>Facture électronique</h1>
+    <p class="chapeau">De A à Z, sans rien sauter, y compris ce qui fâche.</p>
+    <p class="date">Mis à jour le 15 août 2026</p>
+  </header>
+
+<section>
+  <h2>C'est quoi, au juste</h2>
+  <p>Aujourd'hui, tu fais une facture en PDF et tu l'envoies par mail. À partir de la réforme,
+  ça ne suffit plus : la facture doit être un <b>fichier structuré</b>, lisible par une
+  machine, et elle doit <b>transiter par une plateforme agréée par l'État</b>.</p>
+  <p>Concrètement, une facture électronique c'est deux choses dans un même fichier :</p>
+  <pre>un PDF normal          que ton client lit comme avant
++ un fichier XML       caché dedans, que les machines lisent
+= le format Factur-X</pre>
+  <p>Ton client voit exactement la même chose qu'avant. Ce qui change est invisible pour lui
+  et pour toi : le fichier passe par un opérateur agréé, qui vérifie qu'il est bien formé, le
+  livre à la plateforme de ton client, et transmet une copie des données au fisc.</p>
+</section>
+
+<section>
+  <h2>Le calendrier, et ce qui te concerne</h2>
+  <div class="scroll"><table>
+    <tr><th>Date</th><th>Obligation</th><th>Pour toi</th></tr>
+    <tr><td class="n">1<sup>er</sup> sept. 2026</td><td>Être capable de <b>recevoir</b></td><td>une inscription, dix minutes</td></tr>
+    <tr><td class="n">1<sup>er</sup> sept. 2027</td><td><b>Émettre</b> tes factures B2B</td><td>brancher nos scripts sur l'API</td></tr>
+  </table></div>
+  <div class="alerte">
+    <strong>Le piège, et il attrape beaucoup de monde</strong>
+    <p>« Je ne facture pas la TVA, donc je ne suis pas concerné » est faux. Un micro-entrepreneur
+    n'est pas <b>redevable</b> de la TVA mais il y est <b>assujetti</b>, et assujetti suffit.
+    Tu es dans le périmètre exactement comme les autres.</p>
+    <p>Et toutes tes ventes sont concernées, parce que tes clients sont des professionnels.
+    Julie est entrepreneur individuel : c'est du B2B.</p>
+  </div>
+  <p>Ce qui <b>n'est pas</b> concerné : un particulier. Le jour où tu vends un site à
+  quelqu'un qui n'a pas d'entreprise, la facture électronique ne s'applique pas à cette
+  vente-là. En revanche, les <b>données</b> de la transaction devront quand même être
+  transmises au fisc, c'est ce qu'on appelle l'e-reporting.</p>
+</section>
+
+<section>
+  <h2>Ce qu'il faut faire, et dans quel ordre</h2>
+  <h3>Aujourd'hui, dix minutes</h3>
+  <ol>
+    <li>Aller sur <a href="https://www.superpdp.tech" target="_blank">superpdp.tech</a>.
+    <b>Attention : <code>.tech</code>, pas <code>.com</code></b>, qui appartient à une agence
+    de marketing sans rapport.</li>
+    <li>Créer le compte gratuit.</li>
+    <li>Déclarer l'adresse de réception. C'est ça, et rien d'autre, qui remplit l'obligation
+    du 1<sup>er</sup> septembre.</li>
+    <li>Créer une « application », qui donne un <code>client_id</code> et un
+    <code>client_secret</code>. <b>Le secret ne s'affiche qu'une fois</b>, note-le tout de suite.</li>
+  </ol>
+  <p>Tu mettras les deux dans un fichier que je ne lis pas, et mon code ira le chercher tout
+  seul. Je n'ai jamais besoin de voir le secret.</p>
+
+  <h3>Ensuite, de mon côté</h3>
+  <p><code>scripts/facture.mjs</code> fabrique déjà la facture, la numérote sans trou et sort
+  le PDF. J'ajoute derrière :</p>
+  <pre>1  générer la version XML au format UBL
+2  la faire valider par l'API AVANT tout envoi
+3  n'envoyer que si la validation passe
+4  garder l'identifiant retourné dans le journal
+5  marquer « encaissée » le jour où tu confirmes le virement</pre>
+  <p>L'étape 2 est celle qui m'intéresse le plus : une facture mal formée est refusée avant de
+  partir, elle ne se perd pas dans le circuit fiscal.</p>
+  <div class="bien">
+    <p>Et on peut tout construire sans risque : leur bac à sable crée d'office deux entreprises
+    fictives, Burger Queen et Tricatel. On envoie des factures de l'une à l'autre, on vérifie
+    que tout marche, et on ne bascule sur ton vrai compte que quand c'est au point.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Pourquoi SUPER PDP, et pas un autre</h2>
+  <p>Vérifié à la source : j'ai téléchargé le fichier de la DGFiP et je l'ai ouvert. Il contient
+  deux listes, et la différence compte.</p>
+  <pre>liste 1   satisfait TOUTES les conditions, tests inclus     147 plateformes
+liste 2   dossier complet, en attente des tests             21 plateformes
+
+SUPER PDP est dans la liste 1.
+
+Nom commercial     SUPER PDP
+Adresse            6 rue de la Dhuis, 75020 Paris
+Immatriculation    22 décembre 2025, définitive</pre>
+  <p>N'importe quel éditeur écrit « agréé DGFiP » sur sa page d'accueil. Là, le nom est dans le
+  fichier publié par l'administration.</p>
+
+  <h3>Les tarifs, exactement</h3>
+  <div class="scroll"><table>
+    <tr><th>Offre</th><th>Volume</th><th>Prix</th></tr>
+    <tr><td>COMPTE, interface web</td><td class="n">0 à 1 000 par mois</td><td class="n">gratuit</td></tr>
+    <tr><td>API</td><td class="n">0 à 10 000 par mois</td><td class="n">0,01 € HT</td></tr>
+    <tr><td>API</td><td class="n">10 000 à 100 000</td><td class="n">0,005 € HT</td></tr>
+    <tr><td>Minimum de facturation</td><td class="n">au global</td><td class="n">10 € HT par an</td></tr>
+  </table></div>
+  <p>Pour toi : <b>0 € aujourd'hui</b>, et <b>10 € HT par an</b>, soit 12 € TTC, le jour où on
+  automatise. À mille abonnés ce serait 105 € par an pour 240 000 € de chiffre d'affaires.</p>
+
+  <h3>Et l'API existe vraiment, je l'ai appelée</h3>
+  <pre>GET https://api.superpdp.tech/v1.beta/companies/me   →   401</pre>
+  <p>Un 401 et pas un 404 : le point d'entrée existe et attend une authentification.
+  Authentification OAuth 2.0, formats UBL, CII et Factur-X, et leur exemple officiel est
+  <b>en Node.js</b>, exactement le langage de nos scripts.</p>
+  <p>Ils implémentent aussi l'<b>API AFNOR</b>, la spécification française commune aux
+  plateformes agréées. Autrement dit, si un jour ils disparaissent ou augmentent leurs prix,
+  le code se rebranche ailleurs sans être réécrit. On ne se met pas dans leurs mains.</p>
+</section>
+
+<section>
+  <h2>« À quel point on va se faire fliquer »</h2>
+  <p>Ta question, et elle mérite une réponse franche plutôt qu'une brochure.</p>
+
+  <h3>Ce que l'administration voit vraiment</h3>
+  <p>La plateforme transmet au fisc, pour chaque facture, un jeu de données réduit :</p>
+  <pre>qui facture qui        SIREN de l'émetteur et du destinataire
+combien                montant hors taxes, TVA, total
+quand                  date d'émission, date d'échéance
+et plus tard           le statut : encaissée, ou pas</pre>
+  <div class="note">
+    <p><b>Le contenu de la facture ne part pas.</b> Le libellé de tes prestations, ce que tu
+    écris dedans, tes conditions : le fisc ne les reçoit pas. Il reçoit les montants et les
+    identités.</p>
+  </div>
+
+  <h3>Ce que ça change en pratique</h3>
+  <p>Soyons clairs : c'est un vrai changement, et le but assumé de la réforme est la lutte
+  contre la fraude à la TVA. Le fisc passe d'une vision annuelle et déclarative à une vision
+  <b>quasi temps réel et croisée</b> : ce que tu déclares avoir facturé doit correspondre à ce
+  que tes clients déclarent avoir reçu.</p>
+  <p>Mais regarde ta situation réelle :</p>
+  <ul>
+    <li>Tu ne factures pas de TVA, donc tu n'es pas la cible de la réforme.</li>
+    <li>Tu encaisses par virement bancaire, donc tout est déjà traçable.</li>
+    <li>Tu déclares ton chiffre d'affaires à l'URSSAF tous les mois.</li>
+  </ul>
+  <p><b>Pour quelqu'un qui fait les choses proprement, ça ne change rien.</b> Ça devient même un
+  avantage : tes factures sont horodatées par un tiers de confiance, donc en cas d'impayé ou de
+  litige, tu as une preuve que personne ne conteste.</p>
+  <div class="bien">
+    <strong>Le vrai bénéfice, et il est concret</strong>
+    <p>Le statut « encaissée » remonte dans le circuit. À cinquante abonnés à 20 €, tu sauras
+    au jour le jour qui a payé et qui n'a pas payé, sans tenir de tableau à la main.
+    C'est exactement le problème qu'on a identifié avec les virements permanents, et la
+    réforme le résout à notre place.</p>
+  </div>
+
+  <h3>Les sanctions, pour être complet</h3>
+  <p>Ne pas être en mesure de recevoir, ou émettre hors circuit après l'échéance, expose à des
+  amendes forfaitaires par facture, plafonnées à l'année. Les montants exacts sont
+  <b>à confirmer</b>, ils ont bougé plusieurs fois. Ce n'est pas le sujet : l'inscription est
+  gratuite et prend dix minutes, il n'y a aucune raison de s'y exposer.</p>
+</section>
+
+  <footer>
+    Tableau de bord interne · Lyrtrix, Matheo Schmitt, entrepreneur individuel ·
+    reconstruit par <code>node scripts/bord.mjs</code>
+  </footer>
+</div>
+</body>
+</html>

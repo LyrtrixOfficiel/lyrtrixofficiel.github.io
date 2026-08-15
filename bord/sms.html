@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>SMS et email · Lyrtrix</title>
+<style>
+:root {
+  --fond:#fff; --carte:#fbfbfc; --encre:#14181f; --doux:#5a6473; --pale:#8b95a5;
+  --trait:#e4e8ee; --vif:#c9601a; --pale-vif:#fdf3e9; --vert:#1f7a4d;
+  --pale-vert:#eaf6f0; --rouge:#b4322a; --pale-rouge:#fdefee; --code:#f4f6f8;
+}
+@media (prefers-color-scheme:dark){:root{
+  --fond:#0f1319; --carte:#161b22; --encre:#eef1f5; --doux:#9aa5b4; --pale:#6d7885;
+  --trait:#232a34; --vif:#e2822f; --pale-vif:#2a1d10; --vert:#4ec98a;
+  --pale-vert:#12261c; --rouge:#f08076; --pale-rouge:#2a1513; --code:#1b212a;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:16px/1.65 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.large{width:min(860px,92vw);margin-inline:auto}
+a{color:var(--vif);text-decoration:none;border-bottom:1px solid rgba(201,96,26,.32)}
+a:hover{border-bottom-color:var(--vif)}
+
+.barre{position:sticky;top:0;z-index:9;background:var(--fond);
+  border-bottom:1px solid var(--trait)}
+.barre .large{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 0}
+.marque{font-size:14px;font-weight:700;letter-spacing:.15em;color:var(--doux);border:0}
+.marque b{color:var(--vif)}
+.onglets{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.onglets a{font-size:13.5px;padding:6px 12px;border-radius:999px;border:1px solid transparent;
+  color:var(--doux);background:transparent}
+.onglets a:hover{color:var(--vif);background:var(--carte);border-color:var(--trait)}
+.onglets a.ici{color:var(--vif);background:var(--pale-vif);border-color:rgba(201,96,26,.3)}
+
+header.tete{padding:42px 0 6px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.12;margin:0 0 10px;letter-spacing:-.025em}
+.chapeau{font-size:18px;color:var(--doux);margin:0;max-width:62ch}
+.date{font-size:13px;color:var(--pale);margin-top:14px}
+
+section{padding:34px 0 6px;border-top:1px solid var(--trait);margin-top:30px}
+section:first-of-type{border-top:0;margin-top:12px}
+h2{font-size:clamp(21px,3.2vw,27px);margin:0 0 8px;letter-spacing:-.02em}
+h3{font-size:17px;margin:26px 0 8px}
+h4{font-size:15px;margin:20px 0 6px;color:var(--doux)}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 14px;padding-left:21px}
+li{margin-bottom:6px}
+
+.chiffres{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));margin:18px 0 6px}
+.chiffre{background:var(--carte);border:1px solid var(--trait);border-radius:12px;padding:14px 16px}
+.chiffre b{display:block;font-size:25px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.chiffre span{font-size:12.5px;color:var(--doux);line-height:1.4;display:block;margin-top:3px}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14.5px;max-width:100%}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--trait);
+  vertical-align:top;overflow-wrap:anywhere}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--pale);font-weight:600}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+pre{background:var(--code);border:1px solid var(--trait);border-radius:10px;padding:13px 15px;
+  overflow-x:auto;max-width:100%;font-size:13.5px;line-height:1.6;
+  font-family:"SF Mono",Menlo,Consolas,monospace;margin:13px 0}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em;
+  font-family:"SF Mono",Menlo,Consolas,monospace}
+
+.note,.alerte,.bien{border-radius:12px;padding:14px 17px;margin:17px 0;font-size:15px;
+  border:1px solid var(--trait)}
+.note{border-left:3px solid var(--vif);background:var(--pale-vif)}
+.alerte{border-left:3px solid var(--rouge);background:var(--pale-rouge)}
+.bien{border-left:3px solid var(--vert);background:var(--pale-vert)}
+.note>:last-child,.alerte>:last-child,.bien>:last-child{margin-bottom:0}
+.note strong,.alerte strong,.bien strong{display:block;margin-bottom:4px}
+
+.tache{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin-bottom:9px;
+  background:var(--carte);border:1px solid var(--trait);border-radius:12px;cursor:pointer}
+.tache:hover{border-color:var(--vif)}
+.tache input{margin-top:5px;width:17px;height:17px;accent-color:var(--vif);flex:none;cursor:pointer}
+.tache .corps{flex:1;min-width:0}
+.tache .titre{font-weight:600}
+.tache .quoi{font-size:14px;color:var(--doux);margin-top:3px}
+.tache input:checked~.corps{opacity:.4;text-decoration:line-through}
+.etiq{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:2px;white-space:nowrap}
+.e-rouge{background:var(--pale-rouge);color:var(--rouge)}
+.e-orange{background:var(--pale-vif);color:var(--vif)}
+.e-vert{background:var(--pale-vert);color:var(--vert)}
+.e-gris{background:var(--code);color:var(--doux)}
+
+.entree{border-left:2px solid var(--trait);padding:0 0 24px 20px;margin-left:6px;position:relative}
+.entree::before{content:"";position:absolute;left:-5px;top:8px;width:8px;height:8px;
+  border-radius:50%;background:var(--vif)}
+.entree .quand{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--pale);font-weight:600}
+.entree h3{margin:3px 0 8px;font-size:16.5px}
+.dit{background:var(--carte);border:1px solid var(--trait);border-radius:10px;
+  padding:10px 13px;margin:0 0 11px;font-size:14.5px;color:var(--doux)}
+.dit b{color:var(--encre)}
+
+footer{border-top:1px solid var(--trait);margin-top:44px;padding:20px 0 64px;color:var(--pale);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="barre"><div class="large">
+  <a class="marque" href="./index.html">LYR<b>TRIX</b></a>
+  <nav class="onglets">
+    <a href="./index.html">Tableau de bord</a>
+    <a href="./suivi.html">Suivi</a>
+    <a href="./sms.html" class="ici">SMS et email</a>
+    <a href="./facture.html">Facture électronique</a>
+    <a href="./maquettes.html">Les maquettes</a>
+    <a href="./juridique.html">Juridique et clients</a>
+  </nav>
+</div></div>
+
+<div class="large">
+  <header class="tete">
+    <h1>SMS et email</h1>
+    <p class="chapeau">Les deux canaux, leurs prix réels, et comment ne pas finir en spam.</p>
+    <p class="date">Mis à jour le 15 août 2026</p>
+  </header>
+
+<section>
+  <h2>Où on en est</h2>
+  <div class="alerte">
+    <strong>Arrêt, pas panne</strong>
+    <p>Un forfait mobile grand public <b>interdit contractuellement</b> l'envoi commercial en
+    masse. C'est écrit dans les conditions de tous les opérateurs français. On n'a pas
+    rencontré un bug, on a atteint la limite du montage.</p>
+    <p>Ce qui a été sauvé : ton numéro personnel. C'est celui de Julie, celui des factures,
+    celui des prospects en cours. Une carte à 2 € se perd, un numéro non.</p>
+  </div>
+</section>
+
+<section id="prix">
+  <h2>Le vrai prix, les deux finalistes comparés</h2>
+  <p>Tu m'as demandé de trancher entre smsmode et SMSFactor en comptant l'abonnement.
+  J'ai les grilles publiques des deux, et <b>le résultat n'est pas celui que j'annonçais</b>.</p>
+
+  <h3>SMSFactor, en prépayé</h3>
+  <div class="scroll"><table>
+    <tr><th>Pack</th><th>Prix unitaire HT</th><th>Total</th></tr>
+    <tr><td>1 000 SMS</td><td class="n">0,066 €</td><td class="n">66 €</td></tr>
+    <tr><td>2 500 SMS</td><td class="n">0,062 €</td><td class="n">155 €</td></tr>
+    <tr><td>5 000 SMS</td><td class="n">0,060 €</td><td class="n">300 €</td></tr>
+    <tr><td>10 000 SMS</td><td class="n">0,056 €</td><td class="n">560 €</td></tr>
+    <tr><td>100 000 SMS</td><td class="n">0,043 €</td><td class="n">4 300 €</td></tr>
+  </table></div>
+  <p>Les crédits sont valables un an. Un abonnement dégressif existe à partir de
+  3 000 SMS par mois, avec un acompte de mise en service converti en crédits.</p>
+
+  <h3>smsmode, en abonnement</h3>
+  <pre>0,0312 € HT le SMS, grille d'avril 2026
+abonnement de 9 € HT par mois pour 6 500 messages
+jusqu'à 499 € HT par mois pour un million</pre>
+
+  <div class="bien">
+    <strong>À ton volume, smsmode gagne, et largement</strong>
+    <p>À 175 par jour, soit 5 250 messages par mois :</p>
+    <pre>SMSFactor, pack de 5 000     0,060 €   →  315 € par mois
+smsmode, abonnement           0,0312 €  →  164 € + environ 9 à 20 €
+                                        →  <b>moitié prix</b></pre>
+    <p>Et à 100 par jour, soit 3 000 par mois, l'écart tient : environ 186 € contre 105 €.</p>
+  </div>
+
+  <div class="note">
+    <strong>Je corrige un chiffre que je t'ai donné hier</strong>
+    <p>J'annonçais SMSFactor à 0,035 €. C'est leur tarif à partir d'<b>un million</b> de SMS.
+    À ton volume réel c'est 0,060 €, presque le double de ce que j'avais dit. Le calcul
+    « 184 € par mois » d'hier ne valait que pour smsmode. Chez SMSFactor c'était 315 €.</p>
+  </div>
+
+  <h3>Ce que ça coûte selon le rythme, chez smsmode</h3>
+  <div class="scroll"><table>
+    <tr><th>Rythme</th><th>Par mois</th><th>Coût</th><th>Ventes attendues</th><th>Part du chiffre</th></tr>
+    <tr><td>100 par jour</td><td class="n">3 000</td><td class="n">≈ 105 €</td><td class="n">8</td><td class="n">2,6 %</td></tr>
+    <tr><td>200 par jour</td><td class="n">6 000</td><td class="n">≈ 200 €</td><td class="n">16</td><td class="n">2,5 %</td></tr>
+    <tr><td>1 000 par jour</td><td class="n">30 000</td><td class="n">≈ 950 €</td><td class="n">82</td><td class="n">2,5 %</td></tr>
+  </table></div>
+  <p>Les ventes attendues partent de ton taux mesuré, une vente pour 362 messages.</p>
+
+  <div class="alerte">
+    <strong>Le risque réel, celui que tu as identifié</strong>
+    <p>Tu l'as dit mieux que moi : <b>le problème n'est pas le prix, c'est de ne pas vendre.</b>
+    Si on dépense 175 € dans le mois sans faire une vente, on a mangé un tiers de Julie.
+    C'est pour ça qu'on démarre à 100 par jour et pas à mille, et qu'on ne redémarre qu'une
+    fois les maquettes améliorées.</p>
+  </div>
+</section>
+
+<section id="bidirectionnel">
+  <h2>Le numéro long bidirectionnel, expliqué</h2>
+  <p>Tu m'as dit ne pas savoir ce que c'est. C'est important, et c'est la première question à
+  poser, avant le prix.</p>
+  <p>Un envoi professionnel part par défaut d'un <b>expéditeur alphanumérique</b> : le
+  destinataire voit « LYRTRIX » à la place d'un numéro. C'est joli, ça rassure, et ça a un
+  défaut fatal pour nous : <b>on ne peut pas y répondre</b>. Le téléphone n'a pas de numéro
+  vers lequel envoyer.</p>
+  <p>Un <b>numéro long</b> est un vrai numéro de téléphone, en 06 ou 07, que le prestataire te
+  loue. Le destinataire voit un numéro normal, il peut répondre, et sa réponse arrive dans
+  ton interface, donc dans nos scripts.</p>
+  <div class="note">
+    <p>Pour nous, c'est vital. Ta première vente s'est faite par échange de messages.
+    Un envoi sans retour possible, c'est un tract : on parle, personne ne peut répondre.
+    Compte quelques euros à quelques dizaines d'euros par mois selon le prestataire.</p>
+  </div>
+  <pre>Les trois questions, le même jour, à smsmode et SMSFactor
+
+1  prix tout compris à 3 000 puis 6 000 SMS par mois
+2  numéro long bidirectionnel : possible, et combien par mois
+3  acceptez-vous une campagne B2B vers des numéros publics d'entreprises
+
+Sans réponse claire aux trois, on ne signe pas.</pre>
+</section>
+
+<section id="email">
+  <h2>L'email, et ta seule exigence</h2>
+  <p>Tu l'as dit clairement : <b>« il ne faut absolument pas qu'on tombe dans les spams ».</b>
+  C'est la bonne exigence, et elle se traite en trois couches.</p>
+
+  <h3>Ce que ça coûte : rien</h3>
+  <div class="scroll"><table>
+    <tr><th>Service</th><th>Gratuit</th><th>Ton domaine</th><th>Pour quoi</th></tr>
+    <tr><td>Resend</td><td class="n">3 000/mois · 100/jour</td><td>oui</td><td>le plus propre à brancher sur nos scripts</td></tr>
+    <tr><td>Brevo</td><td class="n">9 000/mois · 300/jour</td><td>non</td><td>le plus gros volume gratuit</td></tr>
+    <tr><td>Mailjet</td><td class="n">6 000/mois · 200/jour</td><td>non</td><td>correct, logo imposé</td></tr>
+    <tr><td>Zoho Mail</td><td class="n">5 boîtes</td><td>oui</td><td>pour avoir contact@ton-domaine.fr</td></tr>
+  </table></div>
+
+  <h3>Couche 1 : l'authentification, sinon rien n'arrive</h3>
+  <div class="alerte">
+    <strong>Depuis février 2024, un email non authentifié est refusé, pas classé en spam</strong>
+    <p>Google et Yahoo <b>rejettent</b> les envois en nombre non authentifiés. Microsoft depuis
+    mai 2025. Et une adresse en <code>@gmail.com</code> ne peut pas être authentifiée à ton nom.</p>
+  </div>
+  <pre>SPF     déclare quels serveurs ont le droit d'écrire en ton nom
+DKIM    signe chaque message pour prouver qu'il n'a pas été modifié
+DMARC   dit aux autres quoi faire des messages qui échouent aux deux premiers</pre>
+  <p>Trois lignes à poser dans la zone DNS du domaine. Infomaniak a une interface pour ça, et
+  Resend te donne les valeurs exactes à copier. Une demi-heure la première fois.
+  <a href="https://mxtoolbox.com" target="_blank">mxtoolbox.com</a> vérifie les trois.</p>
+
+  <h3 id="domaine">Couche 2 : faut-il un deuxième domaine ?</h3>
+  <p>Tu me demandes si <code>ta-marque-contact.fr</code> est nécessaire. <b>Oui, et c'est la
+  décision la plus importante de cette page.</b></p>
+  <p>La réputation d'expéditeur se dégrade avec le démarchage, c'est mécanique : quelques
+  personnes signalent, le score baisse. Si ça arrive sur ton domaine principal, tu ne peux
+  <b>plus écrire à tes propres clients</b>, ni envoyer un devis, ni une facture.</p>
+  <div class="bien">
+    <p>Un domaine voisin à 10 € l'an isole le risque. Ton domaine principal sert aux clients
+    et aux factures, le second sert au démarchage. Si le second brûle, tu en rachètes un, et
+    rien d'important n'a bougé.</p>
+  </div>
+
+  <h3>Couche 3 : le réchauffement, que tout le monde saute</h3>
+  <p>Un domaine neuf, même parfaitement réglé, qui envoie 500 messages le premier jour, est
+  bloqué. Le volume soudain est en lui-même le signal d'alarme.</p>
+  <pre>semaine 1     10 à 20 messages par jour
+semaine 2     30 à 50
+semaine 3     80 à 120
+semaine 4     200 et plus</pre>
+
+  <h3>Les règles de contenu</h3>
+  <ul>
+    <li><b>Pas d'image, pas de pièce jointe, pas de bouton</b> dans un premier message. Un email
+    qui ressemble à une infolettre est trié comme une infolettre.</li>
+    <li><b>Un seul lien</b>, vers ton propre domaine. Les raccourcisseurs sont un signal de spam
+    à eux seuls. Même règle que pour nos SMS.</li>
+    <li><b>Un lien de désinscription visible</b>, même en B2B. Une plainte coûte cent fois plus
+    cher qu'un désabonnement.</li>
+    <li><b>Varier le texte.</b> Cinq cents emails identiques se détectent en une seconde.</li>
+  </ul>
+
+  <div class="note">
+    <strong>L'ordre à suivre</strong>
+    <p>1. Acheter le domaine principal chez Infomaniak. 2. En acheter un second pour le
+    démarchage. 3. Créer un compte Resend et poser SPF, DKIM, DMARC sur le second.
+    4. Monter le volume sur quatre semaines. 5. N'automatiser qu'après, quand ça marche déjà
+    à la main.</p>
+  </div>
+</section>
+
+  <footer>
+    Tableau de bord interne · Lyrtrix, Matheo Schmitt, entrepreneur individuel ·
+    reconstruit par <code>node scripts/bord.mjs</code>
+  </footer>
+</div>
+</body>
+</html>
