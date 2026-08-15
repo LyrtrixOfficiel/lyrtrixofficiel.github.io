@@ -16,6 +16,20 @@ const sobre = _forceMouvement === '1' ? false
             : _forceMouvement === '0' ? true
             : matchMedia('(prefers-reduced-motion: reduce)').matches;
 const tactile = matchMedia('(hover: none)').matches;
+
+/* VERSION. GitHub Pages garde chaque fichier dix minutes dans le cache du
+   navigateur, HTML compris, mais chacun expire pour son compte. Un visiteur qui
+   revient juste apres une mise en ligne recoit donc le HTML NEUF avec l'ANCIEN
+   script : le nouveau balisage est la, le code qui le cherche ne l'est pas, et
+   la piece ne se monte jamais sans la moindre erreur en console. C'est
+   exactement ce qui est arrive au sceau de verre, et ca ne se voit pas en local
+   ou le serveur repond `no-store`.
+
+   Le script publie est appele avec `?v=<empreinte>`. On relit cette empreinte
+   sur notre propre adresse et on la repasse a chaque import : le HTML entraine
+   alors TOUTE la chaine de modules avec lui, et les deux ne peuvent plus se
+   desynchroniser. Sans empreinte, en developpement, la chaine reste nue. */
+const VERSION = new URL(import.meta.url).search;
 const $  = (s, p = document) => p.querySelector(s);
 const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
 const borne = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -465,7 +479,7 @@ async function monterLaScene3D() {
   if (tactile && window.innerWidth < 700) { toile.dataset.repli = 'oui'; return; }
 
   try {
-    const { monterLaScene } = await import('./scene.js');
+    const { monterLaScene } = await import('./scene.js' + VERSION);
     const scene = monterLaScene(toile);
     const zone = $('[data-scene-zone]') || document.body;
 
@@ -493,7 +507,7 @@ async function monterLAtelierSiPresent() {
   const toile = $('#toile-atelier');
   if (!toile) return;
   try {
-    const { monterLAtelier } = await import('./atelier.js');
+    const { monterLAtelier } = await import('./atelier.js' + VERSION);
     monterLAtelier(toile);
   } catch (e) {
     console.warn('atelier indisponible', e);
@@ -522,7 +536,7 @@ async function monterLEncreSiPresente() {
 
   if (supporteLeFluide()) {
     try {
-      const { monterLEncre } = await import('./fluide.js');
+      const { monterLEncre } = await import('./fluide.js' + VERSION);
       const encre = monterLEncre(toile, { texte: toile.dataset.texte || null });
       if (encre) {
         toile.dataset.mode = 'fluide';
@@ -534,7 +548,7 @@ async function monterLEncreSiPresente() {
 
   // Repli : le champ de bruit, moins spectaculaire mais toujours vivant.
   try {
-    const { monterLAtelier } = await import('./atelier.js');
+    const { monterLAtelier } = await import('./atelier.js' + VERSION);
     monterLAtelier(toile);
     toile.dataset.mode = 'bruit';
   } catch (e) {
@@ -548,7 +562,7 @@ async function monterLeJardinSiPresent() {
   if (!toile) return;
   if (!supporteLeFluide()) { toile.dataset.mode = 'aucun'; return; }
   try {
-    const { monterLeJardin } = await import('./jardin.js');
+    const { monterLeJardin } = await import('./jardin.js' + VERSION);
     const j = monterLeJardin(toile);
     if (j) { toile.dataset.mode = 'jardin'; (window.kazura ||= {}).jardin = j; }
   } catch (e) {
@@ -562,7 +576,7 @@ async function monterLeMiroirSiPresent() {
   const zone = $('.miroir');
   if (!zone) return;
   try {
-    const { monterLeMiroir } = await import('./miroir.js');
+    const { monterLeMiroir } = await import('./miroir.js' + VERSION);
     (window.kazura ||= {}).miroir = monterLeMiroir(zone);
   } catch (e) {
     console.warn('miroir indisponible', e);
@@ -574,7 +588,7 @@ async function monterLeMotSiPresent() {
   const toile = $('#toile-mot');
   if (!toile) return;
   try {
-    const { monterLeMot } = await import('./mot-webgl.js');
+    const { monterLeMot } = await import('./mot-webgl.js' + VERSION);
     const mot = await monterLeMot(toile, toile.dataset.mot || 'KAZURA');
     if (!mot) return;
     (window.kazura ||= {}).mot = mot;
@@ -773,7 +787,7 @@ async function monterLeSceauSiPresent() {
   if (tactile && window.innerWidth < 700) { toile.dataset.repli = 'oui'; return; }
 
   try {
-    const { monterLeSceau } = await import('./sceau.js');
+    const { monterLeSceau } = await import('./sceau.js' + VERSION);
     const s = monterLeSceau(toile);
     if (!s) { toile.dataset.repli = 'oui'; return; }
     (window.kazura ||= {}).sceau = s;
