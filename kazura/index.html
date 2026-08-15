@@ -340,9 +340,16 @@
           </ul>
         </div>
 
-        <figure class="identite__objet" data-vient="bloc">
-          <img src="assets/carte.webp" alt="Deux cartes de visite noires gravées du blason de Kazura, trois folioles dans un cercle, marquées à chaud en vert émeraude" width="2000" height="1328" loading="lazy" decoding="async">
-          <figcaption>Le sceau, marqué à chaud sur papier noir</figcaption>
+        <!-- Le sceau en verre, calculé image par image à partir du tracé
+             vectoriel du blason. Si WebGL manque ou si l'appareil est trop
+             petit, `data-repli` fait apparaître la photo des cartes à la
+             place : personne ne voit un rectangle noir. -->
+        <figure class="identite__objet identite__objet--vif" data-vient="bloc">
+          <div class="sceau3d">
+            <canvas id="toile-sceau" aria-hidden="true"></canvas>
+            <img class="sceau3d__repli" src="assets/carte.webp" alt="Deux cartes de visite noires gravées du blason de Kazura, trois folioles dans un cercle, marquées à chaud en vert émeraude" width="2000" height="1328" loading="lazy" decoding="async">
+          </div>
+          <figcaption>Le sceau, taillé dans le verre <span aria-hidden="true">·</span> rendu en direct, pas une vidéo</figcaption>
         </figure>
       </div>
     </div>

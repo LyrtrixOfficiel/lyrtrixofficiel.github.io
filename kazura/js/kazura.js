@@ -761,6 +761,38 @@ function monterLesCompteurs() {
   });
 }
 
+/* ══ Le sceau de verre ══════════════════════════════════════════════════ */
+/* Le blason extrude et rendu en verre, image par image. Le module remplace la
+   photo qui tenait cette place : c'est le meme signe, mais calcule.
+   Le telephone en est dispense. La refraction demande un second rendu complet
+   de la scene a chaque image, et sur un petit appareil elle mangerait le
+   defilement de toute la page pour un objet de la taille d'une vignette. */
+async function monterLeSceauSiPresent() {
+  const toile = $('#toile-sceau');
+  if (!toile) return;
+  if (tactile && window.innerWidth < 700) { toile.dataset.repli = 'oui'; return; }
+
+  try {
+    const { monterLeSceau } = await import('./sceau.js');
+    const s = monterLeSceau(toile);
+    if (!s) { toile.dataset.repli = 'oui'; return; }
+    (window.kazura ||= {}).sceau = s;
+
+    /* Meme piege que pour la scene principale : sans interrupteur explicite le
+       verre continue de calculer sa refraction en bas de page. */
+    const figure = toile.closest('figure') || toile;
+    s.montrer(false);
+    auDefilement(() => {
+      const r = figure.getBoundingClientRect();
+      s.montrer(r.bottom > -200 && r.top < window.innerHeight + 200);
+    });
+    toile.dataset.prete = 'oui';
+  } catch (e) {
+    console.warn('sceau indisponible', e);
+    toile.dataset.repli = 'oui';
+  }
+}
+
 /* ══ Le mot cale a la largeur ═══════════════════════════════════════════ */
 /* Archivo porte un axe de chasse continu, de 62 a 125 pour cent. Plutot que
    deviner un corps en vw qui laisse deux marges vides sur grand ecran et
@@ -852,6 +884,7 @@ function demarrer() {
   monterLEncreSiPresente();
   monterLeJardinSiPresent();
   monterLeMiroirSiPresent();
+  monterLeSceauSiPresent();
   monterLeMotSiPresent();
 
   const annee = $('[data-annee]');

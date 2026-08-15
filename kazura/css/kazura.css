@@ -826,6 +826,30 @@ section { position: relative; }
 .identite__objet img, .identite__objet video { width: 100%; height: auto; }
 .identite__objet figcaption { padding: 1rem 1.3rem; border-top: 1px solid rgba(174,236,213,.10); background: rgba(7,11,17,.7); font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gris-fonce); }
 
+/* ── Le sceau de verre ────────────────────────────────────────────────── */
+/* La toile et sa photo de repli occupent la meme case de grille : l'une ou
+   l'autre est visible, jamais les deux, et la boite garde sa hauteur dans les
+   deux cas. Un format 4/3 plutot que carre, pour que le blason respire. */
+.sceau3d {
+  display: grid;
+  aspect-ratio: 4 / 3;
+  background: radial-gradient(70% 70% at 50% 45%, #0A0F16 0%, #050810 70%);
+}
+.sceau3d > * { grid-area: 1 / 1; width: 100%; height: 100%; }
+.sceau3d__repli { object-fit: cover; }
+
+/* Tant que la toile n'a rien peint elle est transparente et la photo tient la
+   place. Des qu'elle est prete, elle passe devant. Si elle echoue, elle se
+   retire et la photo reste : aucun etat n'affiche un rectangle vide. */
+#toile-sceau { opacity: 0; transition: opacity .9s var(--doux); }
+#toile-sceau[data-prete='oui'] { opacity: 1; }
+#toile-sceau[data-repli='oui'] { display: none; }
+#toile-sceau[data-prete='oui'] + .sceau3d__repli { opacity: 0; }
+.sceau3d__repli { transition: opacity .9s var(--doux); }
+
+/* Le verre se tourne a la souris : on l'annonce par le curseur. */
+#toile-sceau[data-prete='oui'] { cursor: grab; touch-action: pan-y; }
+
 /* ── Prix ─────────────────────────────────────────────────────────────── */
 .prix {
   position: relative; overflow: hidden;
