@@ -39,7 +39,7 @@ export function monterLaScene(toile, options = {}) {
   const NB_LIANES = petit ? 9 : 18;
   const SEGMENTS  = petit ? 90 : 160;
   const RADIAUX   = petit ? 6 : 10;
-  const NB_FEUILLES = petit ? 5 : 9;
+  const NB_FEUILLES = petit ? 8 : 15;
   const HAUTEUR   = 60;
 
   const renderer = new THREE.WebGLRenderer({
@@ -297,15 +297,32 @@ export function monterLaScene(toile, options = {}) {
   scene.add(groupe);
 
   for (let i = 0; i < NB_LIANES; i++) {
-    const rayon   = alea(2.2, 7.5);
-    const sens    = Math.random() < 0.5 ? -1 : 1;
-    /* Beaucoup plus de tours qu'avant. A moins de trois, une tige vue de pres
-       n'offre qu'un segment presque droit : on obtenait des tuteurs plantes
-       dans le decor, pas des lianes. Une liane s'enroule, c'est sa definition.
-       Il faut alors autant de points de controle, sinon la courbe coupe les
-       virages et redevient anguleuse. */
-    const tours   = alea(3.4, 7.0) * sens;
-    const phase   = alea(0, Math.PI * 2);
+    /* CHAQUE LIANE A SON PROPRE AXE. Avant, toutes s'enroulaient autour du
+       meme centre a des rayons differents : vues ensemble, elles semblaient
+       tourner les unes autour des autres comme les brins d'un cable. Matheo
+       l'a dit exactement, « elles tournent entre elles, c'est bizarre ». Rien
+       dans une plante ne fait ca. */
+    const axeX = alea(-7, 7);
+    const axeZ = alea(-9, 6);
+    const sens = Math.random() < 0.5 ? -1 : 1;
+
+    /* UNE LIANE MONTE, ELLE NE FAIT PAS LA VIS. L'ancienne valeur allait de
+       3,4 a 7 tours complets sur la hauteur : c'est un ressort, pas une tige.
+       Entre un demi-tour et deux tours, on voit la torsion sans lire un
+       tire-bouchon. Et le rayon de cette torsion devient petit, parce que ce
+       n'est plus une orbite autour d'un poteau, c'est un enroulement sur soi. */
+    const tours  = alea(0.45, 1.9) * sens;
+    const torsad = alea(0.5, 2.0);
+    const phase  = alea(0, Math.PI * 2);
+
+    /* LE MEANDRE, qui donne desormais la forme. Trois frequences sans rapport
+       simple entre elles : leur somme ne se repete jamais, donc la tige
+       serpente au lieu de suivre un motif. C'est ce qui manquait pour qu'on
+       lise une plante ayant cherche son chemin plutot qu'une courbe calculee. */
+    const mx = alea(0.7, 1.7), mz = alea(0.7, 1.7);
+    const px = alea(0, 6.283), pz = alea(0, 6.283);
+    const ampleur = alea(1.1, 3.2);
+
     const yDepart = alea(-6, 2);
     const hauteur = alea(HAUTEUR * 0.55, HAUTEUR * 1.15);
     const ondul   = alea(0.5, 2.2);
@@ -315,17 +332,21 @@ export function monterLaScene(toile, options = {}) {
     for (let j = 0; j <= N; j++) {
       const t = j / N;
       const a = phase + t * Math.PI * 2 * tours;
-      const r = rayon * (1 + Math.sin(t * Math.PI * ondul) * 0.28);
+      const r = torsad * (1 + Math.sin(t * Math.PI * ondul) * 0.25);
       points.push(new THREE.Vector3(
-        Math.cos(a) * r + Math.sin(t * 7.3 + phase) * 0.55,
+        axeX + Math.cos(a) * r
+             + Math.sin(t * 3.1 * mx + px)       * ampleur
+             + Math.sin(t * 7.7 * mx + px * 2.1) * ampleur * 0.32,
         yDepart + t * hauteur,
-        Math.sin(a) * r + Math.cos(t * 5.9 + phase) * 0.55
+        axeZ + Math.sin(a) * r
+             + Math.cos(t * 2.7 * mz + pz)       * ampleur
+             + Math.cos(t * 6.3 * mz + pz * 1.7) * ampleur * 0.28
       ));
     }
 
     const courbe = new THREE.CatmullRomCurve3(points);
     // Tiges plus fines : a 0,11 de rayon on obtenait des tuyaux, pas des tiges.
-    const geo = new THREE.TubeGeometry(courbe, SEGMENTS, alea(0.022, 0.062), RADIAUX, false);
+    const geo = new THREE.TubeGeometry(courbe, SEGMENTS, alea(0.085, 0.215), RADIAUX, false);
 
     const decalage = alea(0.0, 0.75);
     const dec = new Float32Array(geo.attributes.position.count).fill(decalage);
@@ -339,7 +360,7 @@ export function monterLaScene(toile, options = {}) {
       feuillesPos.push({
         p: courbe.getPointAt(Math.min(0.999, Math.max(0.001, t))),
         tangente: courbe.getTangentAt(Math.min(0.999, Math.max(0.001, t))),
-        long: t, decalage, taille: alea(0.30, 0.72)
+        long: t, decalage, taille: alea(0.62, 1.35)
       });
     }
   }

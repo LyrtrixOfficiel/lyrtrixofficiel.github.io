@@ -213,15 +213,15 @@ export function monterLEncre(toile, options = {}) {
          tampon (bilan()) et non estime au jugé : apres advection et
          dissipation, l'encre plafonne autour de 0,3 et non de 1. Des seuils
          poses a l'oeil laissaient une surface entierement noire. */
-      float mVert   = smoothstep(0.010, 0.26, e.g);
-      float mViolet = smoothstep(0.014, 0.32, e.b);
+      float mVert   = smoothstep(0.075, 0.30, e.g);
+      float mViolet = smoothstep(0.075, 0.34, e.b);
 
       vec3 col = vec3(0.004, 0.016, 0.024);
-      col += jade   * mVert   * 1.35;
-      col += violet * mViolet * 1.45;
+      col += jade   * mVert   * 1.05;
+      col += violet * mViolet * 1.20;
 
       // Une crete blanche la ou l'encre est la plus dense.
-      col += vec3(0.78, 1.0, 0.92) * pow(smoothstep(0.22, 0.62, m), 2.2) * 0.85;
+      col += vec3(0.78, 1.0, 0.92) * pow(smoothstep(0.52, 0.95, m), 3.0) * 0.20;
 
       vec2 c = vUv - 0.5;
       col *= 1.0 - 0.85 * dot(c, c);
@@ -343,7 +343,7 @@ export function monterLEncre(toile, options = {}) {
        il saturait les deux masques de l'affichage et ressortait blanc. Le
        violet est reserve a ce que la main y ajoute : la marque ecrit, le
        visiteur colore. */
-    gl.uniform3f(P_MASQUE.u.uCouleur, 0.04, 0.46, 0.05);
+    gl.uniform3f(P_MASQUE.u.uCouleur, 0.05, 1.35, 0.06);
     gl.uniform1f(P_MASQUE.u.uForce, force);
     dessiner(encre.ecrire);
     encre.echanger();
@@ -352,8 +352,9 @@ export function monterLEncre(toile, options = {}) {
   /* ── Le doigt ──────────────────────────────────────────────────────── */
   const doigt = { x: .5, y: .5, dx: 0, dy: 0, appuie: false, deja: false };
   let ratio = 1;
+  let teinte = 0;   // fait alterner le jade et le violet d'une tache a l'autre
 
-  const injecter = (x, y, dx, dy, rayon = 0.00135, force = 1.35) => {
+  const injecter = (x, y, dx, dy, rayon = 0.00135, force = 1.0) => {
     // Vitesse
     gl.useProgram(P_INJECTION.p);
     gl.uniform1i(P_INJECTION.u.uCible, vitesse.lire.lier(0));
