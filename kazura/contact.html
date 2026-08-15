@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contact · Kazura</title>
-<meta name="description" content="Parler de votre site avec Kazura. Une maquette réelle avant tout engagement, et sans un euro.">
+<meta name="description" content="Kazura crée des sites internet sur mesure pour les indépendants : trois dimensions temps réel, animation, direction artistique. On vous montre une maquette de votre site avant que vous décidiez, gratuitement. Alsace.">
 <!-- Apercu sur GitHub Pages : on ne veut pas que Google reference le site
      sous cette adresse plutot que sous kazura.fr. A RETIRER a la mise en
      ligne sur le vrai domaine. -->
@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=951e301878">
+<link rel="stylesheet" href="css/kazura.css?v=18bf29df29">
 </head>
 
 <body>
@@ -42,9 +42,8 @@
   <div class="nav__liens">
     <a class="nav__lien" href="demonstrations.html">Démonstrations</a>
     <a class="nav__lien" href="savoir-faire.html">Savoir-faire</a>
-    <a class="nav__lien" href="travaux.html">Travaux</a>
     <a class="nav__lien" href="studio.html">Le studio</a>
-    <a class="nav__lien" href="index.html#prix">Tarif</a>
+    <a class="nav__lien" href="index.html#offre">La maquette</a>
   </div>
   <button class="nav__menu" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu">
     <span class="nav__barres" aria-hidden="true"><i></i><i></i></span>
@@ -56,7 +55,6 @@
     <a href="index.html">Accueil</a>
     <a href="demonstrations.html">Démonstrations</a>
     <a href="savoir-faire.html">Savoir-faire</a>
-    <a href="travaux.html">Travaux</a>
     <a href="studio.html">Le studio</a>
     <a href="contact.html">Contact</a>
   </nav>
@@ -120,7 +118,7 @@
           </li>
           <li>
             <span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span>
-            <span><b>Si et seulement si ça vous plaît</b>, on signe : 500 €, puis 20 € par mois.</span>
+            <span><b>Si et seulement si ça vous plaît</b>, on parle du reste. Le prix dépend de ce que le site doit faire, et il reste en dessous de ce qu’une agence demanderait pour le même travail.</span>
           </li>
         </ul>
 
@@ -132,6 +130,16 @@
           et vos photos, sans passer par moi et sans payer.
         </p>
 
+        <h3 class="sous-titre" style="margin-top:2rem" data-vient="bloc">Combien ça coûte, au juste ?</h3>
+        <p data-vient="bloc">
+          Ça dépend de ce que le site doit faire. Une vitrine qui présente
+          votre métier et mène à votre agenda n’a rien à voir avec une boutique
+          qui encaisse des paiements. Dites votre budget dans le formulaire :
+          on vous répond franchement ce qu’il permet, et on le dit aussi quand
+          il ne suffit pas.
+        </p>
+
+
         <h3 class="sous-titre" style="margin-top:2rem" data-vient="bloc">Et si je veux arrêter ?</h3>
         <p data-vient="bloc">
           L’abonnement mensuel couvre l’hébergement, le nom de domaine et les
@@ -141,10 +149,103 @@
 
         <h3 class="sous-titre" style="margin-top:2rem" data-vient="bloc">Je n’ai pas de logo, c’est un problème ?</h3>
         <p data-vient="bloc">
-          Non, il est compris dans les 500 €. Si vous en avez déjà un, on
+          Non, il est compris. Si vous n’en avez pas, on le dessine. Si vous en avez déjà un, on
           part de ses couleurs.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- ══ Le formulaire ════════════════════════════════════════════════
+       Deux champs font le tri, et ce ne sont pas les coordonnees.
+       Le BUDGET, parce qu'une demande sans budget est une demande sans
+       projet, et parce qu'un chiffre annonce evite de passer trois jours a
+       deviner. La CASE de fin, parce qu'une maquette poussee coute des heures
+       de travail offertes : le rappeler, et le faire reconnaitre, engage la
+       personne bien plus qu'une case d'accord habituelle.
+
+       PAS ENCORE CABLE. L'envoi ouvre le courrielleur du visiteur avec tout le
+       formulaire deja ecrit, ce qui fonctionne sans le moindre serveur. Voir
+       `monterLeFormulaire` dans kazura.js. -->
+  <section class="bloc" id="formulaire">
+    <div class="enveloppe" style="max-width:860px">
+      <div style="margin-bottom:clamp(2rem,5vw,3.2rem)">
+        <span class="etiquette" data-vient="bloc">Demander sa maquette</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem">Dites-nous le site dont vous rêvez.</h2>
+        <p class="chapo" data-vient="bloc">
+          Répondez comme vous parlez. Il n’y a pas de mauvaise réponse, et rien
+          de ce que vous écrivez ici ne vous engage.
+        </p>
+      </div>
+
+      <form class="formulaire verre" data-formulaire novalidate data-vient="bloc">
+        <div class="champ">
+          <label for="f-nom">Votre nom</label>
+          <input id="f-nom" name="nom" type="text" autocomplete="name" required>
+        </div>
+
+        <div class="champ">
+          <label for="f-metier">Votre métier</label>
+          <input id="f-metier" name="metier" type="text" placeholder="Praticienne en shiatsu, garagiste, fleuriste…" required>
+        </div>
+
+        <div class="champ">
+          <label for="f-ville">Votre ville</label>
+          <input id="f-ville" name="ville" type="text" autocomplete="address-level2">
+        </div>
+
+        <div class="champ">
+          <label for="f-contact">Où vous joindre</label>
+          <input id="f-contact" name="contact" type="text" placeholder="Un courriel ou un numéro, au choix" required>
+          <small class="champ__aide">Un seul suffit.</small>
+        </div>
+
+        <div class="champ champ--large">
+          <label for="f-site">Votre site actuel, s’il en existe un</label>
+          <input id="f-site" name="site" type="text" inputmode="url" placeholder="Une adresse, une page Facebook, ou rien du tout">
+        </div>
+
+        <div class="champ champ--large">
+          <label for="f-reve">Le site dont vous rêvez</label>
+          <textarea id="f-reve" name="reve" rows="5" required
+            placeholder="Décrivez-le, même mal. Ce qu’il doit montrer, ce qu’il doit faire faire aux gens, ce que vous avez vu ailleurs et qui vous a plu."></textarea>
+        </div>
+
+        <div class="champ champ--large">
+          <label for="f-budget">Votre budget pour ce site</label>
+          <select id="f-budget" name="budget" required>
+            <option value="" selected disabled>Choisissez une fourchette</option>
+            <option>Moins de 500 €</option>
+            <option>Entre 500 et 1 000 €</option>
+            <option>Entre 1 000 et 2 500 €</option>
+            <option>Plus de 2 500 €</option>
+            <option>Je ne sais pas encore</option>
+          </select>
+          <small class="champ__aide">
+            Aucune fourchette ne disqualifie personne, et « je ne sais pas » est
+            une réponse valable. Ça nous évite de vous proposer quelque chose à
+            côté de la plaque.
+          </small>
+        </div>
+
+        <div class="champ champ--large">
+          <label class="case">
+            <input type="checkbox" name="conscient" required>
+            <span>
+              Je sais qu’une maquette demande <b>plusieurs heures de travail</b>,
+              qu’elle est faite pour moi seul, et qu’elle m’est offerte avant
+              même que j’aie décidé quoi que ce soit.
+            </span>
+          </label>
+        </div>
+
+        <div class="champ champ--large formulaire__pied">
+          <button class="bouton bouton--plein" type="submit" data-aimant>
+            Envoyer ma demande <span class="fleche" aria-hidden="true">→</span>
+          </button>
+          <p class="formulaire__note" data-note role="status"></p>
+        </div>
+      </form>
     </div>
   </section>
 
@@ -172,8 +273,7 @@
         <nav class="pied__nav" aria-label="Pied de page">
           <a href="index.html">Accueil</a>
     <a href="savoir-faire.html">Savoir-faire</a>
-          <a href="travaux.html">Travaux</a>
-          <a href="studio.html">Le studio</a>
+    <a href="studio.html">Le studio</a>
           <a href="mentions-legales.html">Mentions légales</a>
         </nav>
       </div>
@@ -186,6 +286,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=951e301878"></script>
+<script type="module" src="js/kazura.js?v=18bf29df29"></script>
 </body>
 </html>

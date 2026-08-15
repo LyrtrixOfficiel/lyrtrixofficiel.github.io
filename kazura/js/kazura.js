@@ -256,6 +256,10 @@ function monterLEpinglage() {
     const dedans = $('[data-epingle-contenu]', zone);
     if (!dedans) return;
 
+    /* Le mode est fige au montage : le CSS ne peut pas deviner lequel des deux
+       epinglages s'applique, c'est le script qui le lui dit. */
+    if (!glisse.actif) dedans.dataset.colle = 'oui';
+
     /* Les messages qui se relaient pendant la traversee. Chacun declare la
        tranche d'avancement ou il doit etre visible. */
     const fenetres = $$('[data-fenetre]', zone).map(el => {
@@ -281,10 +285,20 @@ function monterLEpinglage() {
          Deplacer le contenu du meme nombre de pixels que la section a
          defile le maintient immobile a l'ecran, sans dependre d'aucun bloc
          conteneur, et fonctionne aussi bien en defilement natif qu'amorti. */
-      const cale = r.top <= 0
-        ? (r.bottom >= h ? -r.top : course)
-        : 0;
-      dedans.style.transform = 'translate3d(0,' + cale.toFixed(1) + 'px,0)';
+      /* EN DEFILEMENT NATIF, on ne touche a rien. `position: sticky` fait le
+         travail sur le compositeur, sans une image de retard. Notre epinglage
+         a la main, lui, est calcule dans un rAF qui arrive APRES que le
+         navigateur a deja peint la page a sa nouvelle position : le contenu
+         epingle rattrape son retard a chaque image, ce qui se voit exactement
+         comme un tremblement. C'est ce que Matheo decrivait sur telephone.
+         On ne garde notre calcul que dans le conteneur translate, ou sticky
+         est inutilisable et ou tout bouge dans la meme image. */
+      if (glisse.actif) {
+        const cale = r.top <= 0
+          ? (r.bottom >= h ? -r.top : course)
+          : 0;
+        dedans.style.transform = 'translate3d(0,' + cale.toFixed(1) + 'px,0)';
+      }
       for (const f of fenetres) {
         f.el.dataset.actif = (avance >= f.a && avance < f.b) ? 'oui' : 'non';
       }
@@ -475,8 +489,19 @@ async function monterLaScene3D() {
   const toile = $('#toile3d');
   if (!toile) return;
 
-  // Le telephone n'a pas le budget : on lui laisse l'image de fond du CSS.
-  if (tactile && window.innerWidth < 700) { toile.dataset.repli = 'oui'; return; }
+  /* La 3D etait coupee des que l'ecran passait sous 700 px. C'etait une erreur
+     de critere : la largeur de l'ecran ne dit rien de la carte graphique, et un
+     telephone de 2024 rend ces lianes sans effort. Le resultat, c'est que les
+     visiteurs sur mobile tombaient sur trois ecrans vides la ou se trouve la
+     plus belle piece du site. `scene.js` a deja un chemin allege complet,
+     9 lianes au lieu de 18, pas de halo, definition plafonnee : il n'attendait
+     que d'etre autorise a tourner.
+     On garde un plancher, mais mesure sur l'appareil et non sur sa vitre. Les
+     navigateurs qui ne repondent pas passent, parce qu'ils sont sur des
+     machines rapides, et la qualite adaptative de la scene rattrape le reste. */
+  const memoire = navigator.deviceMemory || 4;
+  const coeurs  = navigator.hardwareConcurrency || 4;
+  if (memoire <= 2 || coeurs <= 2) { toile.dataset.repli = 'oui'; return; }
 
   try {
     const { monterLaScene } = await import('./scene.js' + VERSION);
@@ -775,6 +800,69 @@ function monterLesCompteurs() {
   });
 }
 
+/* ══ Le formulaire ══════════════════════════════════════════════════════ */
+/* Il n'y a pas de serveur derriere ce site, et il n'y en aura pas pour un
+   formulaire par semaine. L'envoi ouvre donc le courrielleur du visiteur avec
+   le message deja ecrit : rien a heberger, rien a maintenir, aucune donnee
+   qui transite par un tiers.
+
+   LIMITE A CONNAITRE. Sur un poste sans courrielleur configure, le clic ne
+   fait rien de visible. On affiche donc TOUJOURS l'adresse en clair apres
+   l'envoi, pour que la personne puisse copier son message a la main. Un
+   formulaire qui avale une demande en silence est pire que pas de formulaire. */
+const COURRIEL = 'bonjour@kazura.fr';
+
+function monterLeFormulaire() {
+  const form = $('[data-formulaire]');
+  if (!form) return;
+  const note = $('[data-note]', form);
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    form.dataset.teste = 'oui';
+
+    /* `novalidate` coupe les bulles du navigateur, qui sont laides et
+       illisibles sur fond sombre. On garde la validation, pas son affichage. */
+    const fautif = form.querySelector(':invalid');
+    if (fautif) {
+      note.dataset.ton = 'faute';
+      note.textContent = fautif.type === 'checkbox'
+        ? 'Il manque la dernière case.'
+        : 'Il manque une réponse un peu plus haut.';
+      fautif.focus({ preventScroll: true });
+      fautif.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+
+    const v = n => (form.elements[n]?.value || '').trim();
+    const lignes = [
+      ['Nom', v('nom')], ['Métier', v('metier')], ['Ville', v('ville')],
+      ['Où me joindre', v('contact')], ['Site actuel', v('site')],
+      ['Budget', v('budget')], ['', ''], ['Le site dont je rêve', ''],
+      ['', v('reve')]
+    ];
+    const corps = lignes
+      .map(([cle, val]) => (cle && val) ? `${cle} : ${val}` : (val || ''))
+      .join('\n');
+
+    const url = 'mailto:' + COURRIEL
+      + '?subject=' + encodeURIComponent('Demande de maquette · ' + v('nom'))
+      + '&body=' + encodeURIComponent(corps);
+
+    delete note.dataset.ton;
+    note.textContent = 'Votre messagerie s’ouvre. Si rien ne se passe, écrivez à ' + COURRIEL + '.';
+    location.href = url;
+  });
+
+  /* La faute s'efface des qu'on repond, sans attendre un second envoi. */
+  form.addEventListener('input', () => {
+    if (note.dataset.ton === 'faute' && !form.querySelector(':invalid')) {
+      delete note.dataset.ton;
+      note.textContent = '';
+    }
+  });
+}
+
 /* ══ Le sceau de verre ══════════════════════════════════════════════════ */
 /* Le blason extrude et rendu en verre, image par image. Le module remplace la
    photo qui tenait cette place : c'est le meme signe, mais calcule.
@@ -899,6 +987,7 @@ function demarrer() {
   monterLeJardinSiPresent();
   monterLeMiroirSiPresent();
   monterLeSceauSiPresent();
+  monterLeFormulaire();
   monterLeMotSiPresent();
 
   const annee = $('[data-annee]');

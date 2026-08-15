@@ -883,6 +883,99 @@ section { position: relative; }
 }
 .liste .coche svg { width: 11px; height: 11px; }
 
+/* ── Epinglage natif ──────────────────────────────────────────────────── */
+/* Pose par le script quand le defilement n'est pas detourne, c'est-a-dire sur
+   telephone et en mode sobre. Le navigateur epingle alors lui-meme, sur le
+   compositeur, sans l'image de retard que notre calcul en rAF ne peut pas
+   eviter. La hauteur d'ecran est indispensable : sans elle, l'element colle
+   par son bord haut et son contenu centre glisse pendant toute la traversee. */
+[data-epingle-contenu][data-colle='oui'] {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+
+/* ── Le formulaire ────────────────────────────────────────────────────── */
+.formulaire {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem clamp(1.2rem, 3vw, 2rem);
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+}
+.champ { display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
+.champ--large { grid-column: 1 / -1; }
+
+.champ label {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--jade-clair);
+}
+.champ__aide { color: var(--gris-fonce); font-size: .84rem; line-height: 1.5; }
+
+/* Les champs sont creuses dans le verre plutot que poses dessus : un fond plus
+   sombre que le panneau, et une seule ligne claire en bas comme sur un
+   formulaire de papier. Le cadre complet alourdissait la grille. */
+.champ input, .champ textarea, .champ select {
+  width: 100%;
+  padding: .85rem 1rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--blanc);
+  background: rgba(4, 6, 10, .55);
+  border: 1px solid rgba(174, 236, 213, .13);
+  border-radius: 12px;
+  transition: border-color .3s var(--doux), background .3s var(--doux),
+              box-shadow .3s var(--doux);
+}
+.champ textarea { resize: vertical; min-height: 7.5em; line-height: 1.6; }
+
+/* La fleche du menu deroulant est dessinee ici : celle du systeme est claire
+   sur clair et disparait sur ce fond. */
+.champ select {
+  appearance: none;
+  padding-right: 2.6rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%236EE7B7' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+}
+.champ select option { background: var(--noir-2); color: var(--blanc); }
+
+.champ input::placeholder, .champ textarea::placeholder { color: var(--gris-fonce); }
+
+.champ input:focus-visible, .champ textarea:focus-visible, .champ select:focus-visible {
+  outline: none;
+  border-color: rgba(110, 231, 183, .55);
+  background: rgba(4, 6, 10, .8);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, .16);
+}
+/* Un champ n'est signale en faute qu'APRES une tentative d'envoi. Colorer en
+   rouge un champ vide que la personne n'a pas encore atteint est une punition
+   avant la faute. */
+.formulaire[data-teste='oui'] :invalid {
+  border-color: rgba(255, 138, 138, .5);
+}
+
+.case { flex-direction: row; align-items: flex-start; gap: .85rem; cursor: pointer; }
+.case input {
+  width: 20px; height: 20px; flex: none; margin-top: .18em;
+  accent-color: var(--jade);
+}
+.case span {
+  font-size: .95rem; line-height: 1.6; color: var(--gris);
+  font-family: var(--corps); letter-spacing: 0; text-transform: none;
+}
+.case b { color: var(--blanc); }
+
+.formulaire__pied {
+  flex-direction: row; flex-wrap: wrap; align-items: center; gap: 1.2rem;
+  margin-top: .5rem;
+}
+.formulaire__note { font-size: .9rem; color: var(--jade-clair); margin: 0; }
+.formulaire__note[data-ton='faute'] { color: #FFB4B4; }
+
 /* ── Contact ──────────────────────────────────────────────────────────── */
 .contact {
   position: relative; min-height: 88svh;
