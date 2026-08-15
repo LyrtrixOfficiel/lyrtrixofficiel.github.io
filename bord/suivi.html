@@ -135,6 +135,24 @@ footer{border-top:1px solid var(--trait);margin-top:44px;padding:20px 0 64px;col
   <h2>15 août</h2>
 
 <div class="entree">
+  <div class="quand">15 août</div>
+  <h3>Le premier euro</h3>
+  <p class="dit"><b>Toi :</b> Mail du Crédit Mutuel : virement de 200 € instruit le 14/08, motif F2026-001. Le RIB affiché a l'air à la fois juste et faux, il manque un chiffre sur un des deux affichages.</p>
+  <p>Vérifié caractère par caractère, et <b>c'est le bon compte</b>. Les deux affichages du
+  Crédit Mutuel disent la même chose :</p>
+  <pre>notre IBAN pro   FR7628233000016704225574517   27 caracteres, cle valide
+version masquee  FR7628233000XXXXXXXXXX745XX   tous les caracteres visibles correspondent
+version en clair FR762823300001670422557451    26 caracteres, il manque le 7 final</pre>
+  <p>Le second est simplement tronqué à l'affichage : sa clé de contrôle ne passe pas, ce qui
+  prouve qu'il lui manque un caractère plutôt qu'il ne désigne un autre compte. Le premier,
+  masqué, correspond au nôtre sur chaque caractère visible, y compris le <code>745</code> en
+  position 23 à 25.</p>
+  <p>Virement instruit vendredi 14, week-end derrière : compte lundi 17 ou mardi 18.
+  <b>C'est le premier chiffre d'affaires de l'entreprise, et c'est lui qui rallume le
+  canal SMS.</b></p>
+</div>
+
+<div class="entree">
   <div class="quand">15 août, 5h40</div>
   <h3>Le canal SMS s'arrête, et c'est assumé</h3>
   <p class="dit"><b>Toi :</b> Le numéro est mort. On stop du coup, c'est fini. J'attends d'encaisser l'argent, quand j'ai de l'argent je passe à un truc pour payer au SMS.</p>
