@@ -1006,7 +1006,7 @@ section { position: relative; }
   display: grid; grid-template-columns: minmax(0,1fr); place-items: center;
   text-align: center; overflow: hidden; isolation: isolate;
 }
-.contact__fond { position: absolute; inset: -6%; z-index: -2; background: url('../assets/portail.webp') center 40%/cover no-repeat; will-change: transform; }
+.contact__fond { position: absolute; inset: -6%; z-index: -2; background: url('../assets/brume.webp') center 55%/cover no-repeat; will-change: transform; }
 .contact::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, var(--noir) 0%, rgba(4,6,10,.55) 30%, rgba(4,6,10,.8) 72%, var(--noir) 100%); }
 .contact__centre { padding-inline: var(--marge); width: 100%; max-width: 900px; }
 .contact__liens { margin-top: 2.6rem; display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; }

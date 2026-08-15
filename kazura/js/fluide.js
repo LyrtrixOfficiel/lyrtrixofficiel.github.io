@@ -47,7 +47,7 @@ export function monterLEncre(toile, options = {}) {
      en une seconde et demie et la surface restait vide : il faut qu'une
      volute survive assez longtemps pour qu'on la voie deriver. */
   const DISSIPATION_VITESSE = 0.994;
-  const DISSIPATION_ENCRE   = 0.992;
+  const DISSIPATION_ENCRE   = 0.9962;
 
   /* ── Outils ────────────────────────────────────────────────────────── */
   const compiler = (type, src) => {
@@ -353,7 +353,7 @@ export function monterLEncre(toile, options = {}) {
   const doigt = { x: .5, y: .5, dx: 0, dy: 0, appuie: false, deja: false };
   let ratio = 1;
 
-  const injecter = (x, y, dx, dy, rayon = 0.00030, force = 1) => {
+  const injecter = (x, y, dx, dy, rayon = 0.00135, force = 1.35) => {
     // Vitesse
     gl.useProgram(P_INJECTION.p);
     gl.uniform1i(P_INJECTION.u.uCible, vitesse.lire.lier(0));
@@ -423,7 +423,7 @@ export function monterLEncre(toile, options = {}) {
     phase += dt;
     const [x, y] = lissajous(phase);
     const [px, py] = lissajous(phase - dt);
-    injecter(x, y, (x - px) * 1400, (y - py) * 1400, 0.00042, 0.75);
+    injecter(x, y, (x - px) * 1400, (y - py) * 1400, 0.00060, 0.13);
   }
 
   /* Composition fixe, pour le mode sobre. Neuf taches posees en spirale, avec
@@ -620,6 +620,16 @@ export function monterLEncre(toile, options = {}) {
        (onglet masque, navigateur pilote). Meme raison d'etre que
        `window.kazura.pas`. */
     pas(dt = 1 / 60) { caresser(dt); simuler(dt); afficher(); },
+    /* L'injection du GESTE ne vit que dans la boucle rAF, et rAF ne tourne pas
+       dans un onglet masque ni dans un navigateur pilote. Sans cette poignee,
+       toute mesure de l'interaction mesure en realite la caresse automatique,
+       et conclut faussement que la main du visiteur ne sert a rien. On a perdu
+       du temps ainsi : le geste doit etre appelable a la main comme le reste.
+       x et y en fraction de la toile, origine en bas a gauche. */
+    remuer(x, y, dx = 0, dy = 0, dt = 1 / 60) {
+      injecter(x, y, dx, dy);
+      simuler(dt); afficher();
+    },
     ecrire(f = 1) { ecrireLeMot(f); afficher(); },
     sonder, bilan
   };
