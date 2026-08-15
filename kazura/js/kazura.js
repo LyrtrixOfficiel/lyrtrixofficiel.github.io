@@ -601,56 +601,111 @@ async function monterLeMotSiPresent() {
    premiere image n'arrive : la liane se dessine, le compteur monte, et la
    page apparait quand les polices sont pretes. Duree plafonnee : un ecran de
    chargement qui s'eternise est pire que pas d'ecran du tout. */
-function monterLeChargement() {
-  const ecran = $('#chargement');
+function monterLeSeuil() {
+  const ecran = $('#seuil');
   if (!ecran) return;
+
+  /* On ne fait franchir le seuil qu'une fois par session. Redemander le geste
+     a chaque page serait une porte qui claque, pas un rituel. */
+  let dejaVu = false;
+  try { dejaVu = sessionStorage.getItem('kazura-seuil') === 'franchi'; } catch (e) {}
+  if (dejaVu || sobre) { ecran.remove(); return; }
 
   const trait = $('path', ecran);
   const pct = $('[data-pct]', ecran);
-  if (trait) {
-    const L = trait.getTotalLength();
-    trait.style.strokeDasharray = L;
-    trait.style.strokeDashoffset = L;
-  }
+  const invite = $('.seuil__invite', ecran);
+  const longueur = trait ? trait.getTotalLength() : 0;
+  if (trait) { trait.style.strokeDasharray = longueur; trait.style.strokeDashoffset = longueur; }
 
+  document.body.dataset.fige = 'oui';
+
+  /* ── Phase 1 : le chargement ─────────────────────────────────────── */
   const debut = performance.now();
-  const DUREE_MIN = sobre ? 120 : 900;
-  const DUREE_MAX = 3200;
-  let pretes = false;
+  const DUREE_MIN = 700, DUREE_MAX = 3200;
+  let pretes = false, ouvrable = false;
 
-  const attendre = Promise.all([
+  Promise.all([
     document.fonts ? document.fonts.ready.catch(() => {}) : Promise.resolve(),
     new Promise(r => {
       if (document.readyState === 'complete') r();
       else addEventListener('load', r, { once: true });
     })
-  ]);
-  attendre.then(() => { pretes = true; });
+  ]).then(() => { pretes = true; });
 
-  const fermer = () => {
-    ecran.dataset.parti = 'oui';
-    document.body.dataset.fige = 'non';
-    setTimeout(() => { ecran.remove(); }, 900);
+  const autoriser = () => {
+    if (ouvrable) return;
+    ouvrable = true;
+    ecran.dataset.pret = 'oui';
+    if (pct) pct.textContent = '100';
   };
 
-  document.body.dataset.fige = 'oui';
-
-  (function tour() {
+  (function charger() {
     const t = performance.now() - debut;
-    // La barre avance vite jusqu'a 85 pour cent, puis attend vraiment.
-    const feint = Math.min(0.85, t / DUREE_MIN * 0.85);
-    const p = pretes ? Math.min(1, feint + (t - DUREE_MIN) / 400 * 0.15 + 0.15) : feint;
+    const feint = Math.min(0.9, t / DUREE_MIN * 0.9);
+    const p = pretes ? Math.min(1, feint + 0.1) : feint;
     if (pct) pct.textContent = String(Math.round(p * 100)).padStart(2, '0');
-    if (trait) {
-      const L = trait.getTotalLength();
-      trait.style.strokeDashoffset = String(L * (1 - p));
-    }
-    if ((pretes && t > DUREE_MIN) || t > DUREE_MAX) { fermer(); return; }
-    requestAnimationFrame(tour);
+    if (trait) trait.style.strokeDashoffset = String(longueur * (1 - p));
+    if ((pretes && t > DUREE_MIN) || t > DUREE_MAX) { autoriser(); return; }
+    requestAnimationFrame(charger);
   })();
+  // Filet : rAF ne tourne pas dans un onglet masque.
+  setTimeout(autoriser, DUREE_MAX + 300);
 
-  // Filet : rAF ne tourne pas dans un onglet masque, l'ecran resterait pose.
-  setTimeout(() => { if (ecran.dataset.parti !== 'oui') fermer(); }, DUREE_MAX + 400);
+  /* ── Phase 2 : on pousse ──────────────────────────────────────────── */
+  let ouvre = 0, cible = 0, fini = false;
+
+  const franchir = () => {
+    if (fini) return;
+    fini = true;
+    try { sessionStorage.setItem('kazura-seuil', 'franchi'); } catch (e) {}
+    ecran.dataset.parti = 'oui';
+    document.body.dataset.fige = 'non';
+    setTimeout(() => ecran.remove(), 800);
+  };
+
+  const pousser = (quantite) => {
+    if (!ouvrable || fini) return;
+    cible = Math.min(1, Math.max(0, cible + quantite));
+    if (cible >= 0.995) franchir();
+  };
+
+  // La molette et le geste vertical poussent. Un clic ouvre d'un coup.
+  ecran.addEventListener('wheel', e => { e.preventDefault(); pousser(Math.abs(e.deltaY) / 900); },
+                         { passive: false });
+  let px = null;
+  ecran.addEventListener('pointerdown', e => { px = { x: e.clientX, y: e.clientY, bouge: 0 }; });
+  ecran.addEventListener('pointermove', e => {
+    if (!px) return;
+    const d = Math.hypot(e.clientX - px.x, e.clientY - px.y);
+    px.bouge += d;
+    pousser(d / 420);
+    px.x = e.clientX; px.y = e.clientY;
+  });
+  ecran.addEventListener('pointerup', () => {
+    // Un simple clic, sans deplacement, ouvre en entier : le geste ne doit
+    // jamais etre une condition d'acces.
+    if (px && px.bouge < 6) { cible = 1; }
+    px = null;
+  });
+  ecran.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cible = 1; }
+  });
+  if (invite) invite.addEventListener('click', () => { cible = 1; });
+
+  /* L'ouverture est amortie, et le retour a zero aussi : si on lache avant la
+     fin, le portail se referme doucement au lieu de rester entrouvert. */
+  let dernier = performance.now();
+  (function animer() {
+    const n = performance.now();
+    const dt = Math.min((n - dernier) / 1000, 1 / 20);
+    dernier = n;
+    if (!fini && ouvrable && !px && cible < 1) cible = Math.max(0, cible - dt * 0.35);
+    const k = 1 - Math.pow(1 - 0.16, dt * 60);
+    ouvre += (cible - ouvre) * k;
+    ecran.style.setProperty('--ouvre', ouvre.toFixed(4));
+    if (ouvre > 0.985 && cible >= 1) franchir();
+    if (!fini) requestAnimationFrame(animer);
+  })();
 }
 
 /* ══ 14 sexies. Transitions entre pages ═════════════════════════════════ */
@@ -708,7 +763,7 @@ function monterLesCompteurs() {
 
 /* ══ Demarrage ══════════════════════════════════════════════════════════ */
 function demarrer() {
-  monterLeChargement();
+  monterLeSeuil();
   monterLesTransitions();
   monterLeDefilement();
   monterLesApparitions();

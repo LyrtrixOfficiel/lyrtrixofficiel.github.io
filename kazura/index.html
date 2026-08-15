@@ -32,16 +32,24 @@
 
 <body>
 
-<!-- Ecran de chargement. Retire du document une fois parti. -->
-<div class="chargement" id="chargement" role="status" aria-label="Chargement">
-  <div class="chargement__dedans">
-    <svg viewBox="0 0 60 200" aria-hidden="true">
-      <path d="M30 196 C 8 150, 52 116, 30 74 C 12 40, 40 22, 30 4"/>
-    </svg>
-    <p class="chargement__pied">
+<!-- Le seuil. Le temps de chargement devient un rituel d'entree : la liane
+     se dessine, puis on pousse le portail pour entrer. Retire du document une
+     fois franchi, et propose une seule fois par session. -->
+<div class="seuil" id="seuil" role="dialog" aria-label="Entrer dans le site" tabindex="0">
+  <div class="seuil__jardin" aria-hidden="true"></div>
+  <div class="seuil__voile" aria-hidden="true"></div>
+  <div class="seuil__dedans">
+    <div class="seuil__anneau" aria-hidden="true">
+      <svg viewBox="0 0 60 200">
+        <path d="M30 196 C 8 150, 52 116, 30 74 C 12 40, 40 22, 30 4"/>
+      </svg>
+    </div>
+    <p class="seuil__pied">
       <span>Kazura</span>
-      <span class="chargement__pct" data-pct>00</span>
+      <span class="seuil__pct" data-pct>00</span>
     </p>
+    <div class="seuil__jauge" aria-hidden="true"><i></i></div>
+    <button class="seuil__invite" type="button">Poussez pour entrer</button>
   </div>
 </div>
 

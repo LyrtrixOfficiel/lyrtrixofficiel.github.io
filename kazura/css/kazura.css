@@ -859,25 +859,111 @@ section { position: relative; }
   touch-action: none;   /* le doigt remue le fluide au lieu de faire defiler */
 }
 
-/* ── Ecran de chargement ──────────────────────────────────────────────── */
-.chargement {
+/* ── Le seuil ─────────────────────────────────────────────────────────── */
+/* Le temps de chargement devient un rituel d'entree : la liane se dessine
+   pendant que la page charge, puis un portail de lune s'ouvre quand on le
+   pousse. On ne subit plus une attente, on franchit une porte.
+
+   L'ouverture est faite par un MASQUE circulaire qui grandit. Le portail reste
+   immobile, c'est le trou qui s'elargit : c'est ce qui donne la sensation
+   d'entrer, plutot que de voir un panneau glisser. */
+.seuil {
   position: fixed; inset: 0; z-index: 300;
   display: grid; place-items: center;
   background: var(--noir);
-  transition: opacity .8s var(--doux), visibility .8s;
+  --ouvre: 0;
+  transition: opacity .7s var(--doux), visibility .7s;
 }
-.chargement[data-parti='oui'] { opacity: 0; visibility: hidden; pointer-events: none; }
-.chargement__dedans { display: grid; justify-items: center; gap: 1.8rem; }
-.chargement svg { width: 54px; height: auto; overflow: visible; }
-.chargement path {
-  fill: none; stroke: url(#degrade-liane); stroke-width: 3; stroke-linecap: round;
+.seuil[data-parti='oui'] { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Le voile : c'est lui qu'on perce. Son masque est un disque dont le rayon
+   suit `--ouvre`, de rien a plus grand que l'ecran. */
+.seuil__voile {
+  position: absolute; inset: 0;
+  /* Pas tout a fait opaque : le jardin doit se DEVINER derriere, sinon on
+     pousse une porte sans savoir ce qu'il y a de l'autre cote, et l'ecran
+     d'accueil n'est qu'un rectangle noir. */
+  background: rgba(4, 6, 10, .90);
+  -webkit-mask: radial-gradient(circle at 50% 50%,
+        transparent calc(var(--ouvre) * 78vmax),
+        #000 calc(var(--ouvre) * 78vmax + 2px));
+  mask: radial-gradient(circle at 50% 50%,
+        transparent calc(var(--ouvre) * 78vmax),
+        #000 calc(var(--ouvre) * 78vmax + 2px));
 }
-.chargement__pied {
+.seuil__jardin {
+  position: absolute; inset: 0;
+  background: url('../assets/portail.webp') center 42% / cover no-repeat;
+  opacity: calc(.42 + var(--ouvre) * .58);
+  transform: scale(calc(1.14 - var(--ouvre) * .14));
+  transition: none;
+}
+
+.seuil__dedans {
+  position: relative; z-index: 2;
+  display: grid; justify-items: center; gap: 1.6rem;
+  text-align: center;
+  padding-inline: var(--marge);
+}
+
+/* L'anneau du portail. Il s'ecarte a mesure qu'on pousse. */
+.seuil__anneau {
+  /* Largeur ET hauteur explicites. `aspect-ratio` cede devant un contenu plus
+     haut que large, et la liane au format 60 par 200 etirait l'anneau en
+     ovale : un portail de lune qui n'est pas rond n'est plus un portail. */
+  width:  clamp(120px, 22vmin, 210px);
+  height: clamp(120px, 22vmin, 210px);
+  flex: none;
+  position: relative;
+  border-radius: 50%;
+  border: 1px solid rgba(174, 236, 213, .32);
+  display: grid; place-items: center;
+  box-shadow: 0 0 calc(var(--ouvre) * 90px) rgba(124, 58, 237, .55),
+              inset 0 0 calc(var(--ouvre) * 60px) rgba(110, 231, 183, .25);
+  transform: scale(calc(1 + var(--ouvre) * .35));
+}
+/* Positionne en ABSOLU, et c'est necessaire : sur un element remplace en flux
+   avec `width: auto`, le navigateur applique le pourcentage a la largeur et en
+   deduit la hauteur par le format du viewBox. La liane, au format 60 par 200,
+   ressortait alors trois fois trop haute et debordait de l'anneau. Contre un
+   bloc conteneur de hauteur definie, le pourcentage se resout correctement. */
+.seuil__anneau svg {
+  position: absolute; top: 50%; left: 50%;
+  translate: -50% -50%;
+  height: 56%; width: auto; overflow: visible;
+}
+.seuil__anneau path {
+  fill: none; stroke: url(#degrade-liane); stroke-width: 6; stroke-linecap: round;
+}
+
+.seuil__pied {
   display: flex; align-items: baseline; gap: .9rem;
   font-family: var(--mono); font-size: .72rem; letter-spacing: .24em;
   text-transform: uppercase; color: var(--gris-fonce);
 }
-.chargement__pct { color: var(--jade-clair); font-variant-numeric: tabular-nums; }
+.seuil__pct { color: var(--jade-clair); font-variant-numeric: tabular-nums; }
+
+.seuil__invite {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--jade-clair);
+  opacity: 0; transition: opacity .5s var(--doux);
+  background: none; padding: .8rem 1.2rem; cursor: pointer;
+}
+.seuil[data-pret='oui'] .seuil__invite { opacity: 1; }
+.seuil[data-pret='oui'] .seuil__pied { opacity: .35; }
+
+/* La barre qu'on remplit en poussant. */
+.seuil__jauge {
+  width: min(240px, 52vw); height: 2px;
+  background: rgba(174, 236, 213, .16);
+  border-radius: 2px; overflow: hidden;
+}
+.seuil__jauge i {
+  display: block; width: 100%; height: 100%;
+  transform: scaleX(var(--ouvre, 0)); transform-origin: left center;
+  transition: none !important;
+  background: linear-gradient(90deg, var(--jade), var(--violet-clair));
+}
 
 /* ── Rideau de transition ─────────────────────────────────────────────── */
 /* Deux volets qui se rejoignent au centre. Le rideau part baisse pour que
