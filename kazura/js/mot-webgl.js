@@ -35,7 +35,7 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
   /* La police doit etre chargee avant de peindre, sinon on capture le repli
      systeme et on garde ce dessin faux pour toute la session. */
   try {
-    await document.fonts.load('800 200px Syne');
+    await document.fonts.load('800 200px Archivo');
     await document.fonts.ready;
   } catch (e) { /* on peint quand meme */ }
 
@@ -52,22 +52,41 @@ export async function monterLeMot(toile, texte = 'KAZURA') {
     atlas.width = L; atlas.height = H;
 
     ctx.clearRect(0, 0, L, H);
-    // On cherche la taille qui remplit 88 pour cent de la largeur disponible.
-    let taille = H;
-    ctx.font = `800 ${taille}px Syne, system-ui, sans-serif`;
-    let m = ctx.measureText(texte);
-    const vise = L * 0.88;
-    taille = Math.max(10, taille * (vise / Math.max(1, m.width)));
-    if (taille > H * 0.92) taille = H * 0.92;
-
-    ctx.font = `800 ${taille}px Syne, system-ui, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#fff';
-    ctx.letterSpacing = '-0.05em';
-    m = ctx.measureText(texte);
+
+    /* Le corps est d'abord tire vers la largeur voulue, puis rabattu si la
+       hauteur ne suit pas. Sur une toile large et basse c'est la hauteur qui
+       gagne, et le mot flottait alors au centre de deux marges vides.
+       Ce qui reste se rattrape a l'approche : on ecarte les lettres au lieu
+       de les grossir, qui est le geste juste sur un logotype. Trois tours
+       suffisent, la largeur est lineaire en approche. */
+    const vise = L * 0.88;
+    let taille = H;
+    ctx.letterSpacing = '0px';
+    ctx.font = `800 ${taille}px Archivo, system-ui, sans-serif`;
+    taille = Math.max(10, taille * (vise / Math.max(1, ctx.measureText(texte).width)));
+    taille = Math.min(taille, H * 0.92);
+
+    ctx.font = `800 ${taille}px Archivo, system-ui, sans-serif`;
+    let ecart = 0;
+    for (let i = 0; i < 3; i++) {
+      ctx.letterSpacing = ecart.toFixed(2) + 'px';
+      const w = ctx.measureText(texte).width;
+      if (Math.abs(w - vise) < 1) break;
+      const suivant = ecart + (vise - w) / texte.length;
+      ecart = Math.min(taille * 0.30, Math.max(-taille * 0.05, suivant));
+    }
+    /* Safari ignore `letterSpacing` : la mesure ne bouge pas, la boucle sature
+       la borne et le trace revient au cas plafonne par la hauteur. Pas de
+       correction fausse, juste le comportement d'avant. */
+
+    const m = ctx.measureText(texte);
     largeurMot = m.width; hauteurMot = taille;
-    ctx.fillText(texte, L / 2, H / 2 + taille * 0.02);
+    /* L'approche s'ajoute aussi APRES la derniere lettre. Centre sur la boite,
+       le mot part donc d'un demi-ecart vers la gauche : on le rend. */
+    ctx.fillText(texte, L / 2 + ecart / 2, H / 2 + taille * 0.02);
     return { L, H };
   }
 

@@ -761,6 +761,76 @@ function monterLesCompteurs() {
   });
 }
 
+/* ══ Le mot cale a la largeur ═══════════════════════════════════════════ */
+/* Archivo porte un axe de chasse continu, de 62 a 125 pour cent. Plutot que
+   deviner un corps en vw qui laisse deux marges vides sur grand ecran et
+   deborde sur petit, on mesure et on ouvre les lettres jusqu'a ce que le mot
+   touche ses deux bords. Le corps reste celui du CSS : le mot garde la meme
+   presence verticale d'un ecran a l'autre, c'est sa largeur qui absorbe la
+   difference. C'est la raison d'etre du choix d'Archivo, pas un ornement.
+
+   La mesure passe par un Range et non par scrollWidth : l'element est une
+   grille centree, la largeur de sa boite ne dit rien de celle de son texte. */
+function largeurDuTexte(el) {
+  const r = document.createRange();
+  r.selectNodeContents(el);
+  return r.getBoundingClientRect().width;
+}
+
+function calerUnGeant(el) {
+  const dispo = el.clientWidth;
+  if (dispo < 40) return;                      // pas encore mis en page
+  const cible = dispo * 0.995;
+
+  el.style.fontSize = '';                      // on repart toujours du corps CSS
+  const corpsCss = parseFloat(getComputedStyle(el).fontSize);
+
+  let bas = 62, haut = 125;
+  for (let i = 0; i < 9; i++) {
+    const milieu = (bas + haut) / 2;
+    el.style.fontStretch = milieu + '%';
+    if (largeurDuTexte(el) > cible) haut = milieu; else bas = milieu;
+  }
+  el.style.fontStretch = bas.toFixed(2) + '%';
+
+  /* Quand l'axe sature il reste un ecart. A chasse fixe la largeur est
+     proportionnelle au corps : un seul produit le referme exactement. On borne
+     pour que le mot ne devienne ni minuscule ni plus haut que sa boite. */
+  const reste = largeurDuTexte(el);
+  if (Math.abs(reste - cible) > 1 && reste > 1) {
+    const hMax = el.clientHeight || Infinity;
+    const voulu = corpsCss * borne(cible / reste, 0.7, 1.45);
+    el.style.fontSize = Math.min(voulu, hMax).toFixed(2) + 'px';
+  }
+}
+
+function monterLesGeants() {
+  const els = $$('.geant');
+  if (!els.length) return;
+
+  let derniere = -1, prevu = false;
+  const caler = () => {
+    prevu = false;
+    derniere = innerWidth;
+    els.forEach(calerUnGeant);
+  };
+  /* Neuf mesures par element forcent autant de recalculs de style. Au
+     redimensionnement on ne les paie qu'une fois par image, et seulement si la
+     largeur a vraiment bouge : sur mobile la barre d'adresse qui se retracte
+     declenche un resize a chaque pixel de defilement. */
+  const prevoir = () => {
+    if (prevu || innerWidth === derniere) return;
+    prevu = true;
+    requestAnimationFrame(caler);
+  };
+
+  caler();
+  /* Caler avant l'arrivee de la fonte reviendrait a mesurer le repli systeme,
+     et a garder ce calage faux pour toute la session. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(caler);
+  window.addEventListener('resize', prevoir);
+}
+
 /* ══ Demarrage ══════════════════════════════════════════════════════════ */
 function demarrer() {
   monterLeSeuil();
@@ -776,6 +846,7 @@ function demarrer() {
   monterLesCartes();
   monterLesImages();
   monterLesCompteurs();
+  monterLesGeants();
   monterLaScene3D();
   monterLAtelierSiPresent();
   monterLEncreSiPresente();

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Démonstrations · Kazura</title>
-<meta name="description" content="Trois pièces calculées en direct dans le navigateur : un jardin sec qu'on ratisse, une simulation de fluide, une plante qui pousse au défilement.">
+<meta name="description" content="Trois pièces calculées en direct dans le navigateur : un jardin sec qu’on ratisse, une simulation de fluide, une plante qui pousse au défilement.">
 <!-- Apercu sur GitHub Pages : a retirer a la mise en ligne sur kazura.fr. -->
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#04060A">
@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/kazura.css">
 </head>
 
@@ -72,12 +72,12 @@
     <div class="enveloppe">
       <span class="etiquette" data-vient="bloc">葛 · Démonstrations</span>
       <h1 class="titre" data-vient="titre" style="margin:1.2rem 0 1.6rem;max-width:17ch">
-        Rien ici n'est une vidéo.
+        Rien ici n’est une vidéo.
       </h1>
       <p class="chapo" data-vient="bloc">
         Trois pièces calculées par votre propre carte graphique pendant que
         vous les regardez. Chacune réagit à votre geste, et aucune ne pourrait
-        être remplacée par un fichier téléchargé. C'est la différence entre
+        être remplacée par un fichier téléchargé. C’est la différence entre
         montrer et raconter.
       </p>
     </div>
@@ -92,10 +92,10 @@
       <p>
         Le curseur est un râteau à cinq dents. Chaque passage creuse un champ
         de hauteur gardé en mémoire graphique, et les sillons restent. Ce que
-        vous voyez n'est pas dessiné : c'est un relief, éclairé par une lumière
+        vous voyez n’est pas dessiné : c’est un relief, éclairé par une lumière
         rasante qui transforme un creux de quelques millièmes en ombre franche.
       </p>
-      <p class="demo__note">Passez la souris. Rien ne s'efface.</p>
+      <p class="demo__note">Passez la souris. Rien ne s’efface.</p>
     </div>
   </section>
 
@@ -104,14 +104,14 @@
     <canvas id="toile-encre" data-texte="KAZURA" aria-hidden="true"></canvas>
     <div class="demo__legende verre">
       <span class="etiquette">Deux · Navier-Stokes</span>
-      <h2 class="sous-titre" style="margin:.7rem 0 .8rem">Remuez l'encre.</h2>
+      <h2 class="sous-titre" style="margin:.7rem 0 .8rem">Remuez l’encre.</h2>
       <p>
         Une simulation de fluide incompressible, résolue soixante fois par
-        seconde : injection, advection, divergence, vingt itérations de
-        pression, puis soustraction du gradient. C'est cette dernière passe qui
-        sépare un vrai fluide d'un flou qui dérive.
+        seconde : injection, advection, divergence, vingt itérations de
+        pression, puis soustraction du gradient. C’est cette dernière passe qui
+        sépare un vrai fluide d’un flou qui dérive.
       </p>
-      <p class="demo__note">Le nom s'écrit à l'encre, puis le courant l'emporte.</p>
+      <p class="demo__note">Le nom s’écrit à l’encre, puis le courant l’emporte.</p>
     </div>
   </section>
 
@@ -124,9 +124,9 @@
       </h2>
       <p class="chapo" data-vient="bloc">
         On dit à chaque cliente que sa palette sortira de ses propres photos,
-        jamais d'un gabarit. Plutôt que de l'écrire une fois de plus, voilà la
-        chose qui se fait. Déposez n'importe quelle image, une photo de votre
-        salon, de votre logo, d'un mur que vous aimez : ce site entier se
+        jamais d’un gabarit. Plutôt que de l’écrire une fois de plus, voilà la
+        chose qui se fait. Déposez n’importe quelle image, une photo de votre
+        salon, de votre logo, d’un mur que vous aimez : ce site entier se
         repeint dans ses teintes, tout de suite.
       </p>
 
@@ -144,20 +144,20 @@
 
           <div>
             <div class="miroir__nuancier" data-nuancier></div>
-            <p class="miroir__etat" data-message>En attente d'une image.</p>
+            <p class="miroir__etat" data-message>En attente d’une image.</p>
             <div class="miroir__pied">
               <button class="bouton bouton--verre miroir__rendre" type="button" data-rendre>
-                Rendre la palette d'origine
+                Rendre la palette d’origine
               </button>
             </div>
           </div>
 
         </div>
         <p class="miroir__discret" style="margin-top:1.4rem">
-          L'image ne quitte pas votre navigateur. Aucun envoi, aucun serveur,
+          L’image ne quitte pas votre navigateur. Aucun envoi, aucun serveur,
           rien de conservé. Les couleurs sont regroupées en espace Lab, celui
-          qui approche la perception de l'œil, et triées sur leur caractère
-          plutôt que sur leur surface : une palette utile n'est pas faite des
+          qui approche la perception de l’œil, et triées sur leur caractère
+          plutôt que sur leur surface : une palette utile n’est pas faite des
           couleurs les plus présentes, ce sont les murs beiges.
         </p>
       </div>
@@ -174,12 +174,12 @@
             Le défilement fait pousser la plante.
           </h2>
           <p class="chapo" data-vient="bloc">
-            Sur la page d'accueil, dix-huit lianes de verre poussent autour de
-            la caméra. Le truc tient en une phrase : sur un tube, une
+            Sur la page d’accueil, dix-huit lianes de verre poussent autour de
+            la caméra. Le truc tient en une phrase : sur un tube, une
             coordonnée avance le long de la courbe, donc il suffit de jeter les
-            fragments au-delà d'un seuil pour que la tige apparaisse du pied
-            vers la pointe. Aucune géométrie n'est régénérée, et un liseré vif
-            posé sous le seuil donne le bourgeon qui s'ouvre.
+            fragments au-delà d’un seuil pour que la tige apparaisse du pied
+            vers la pointe. Aucune géométrie n’est régénérée, et un liseré vif
+            posé sous le seuil donne le bourgeon qui s’ouvre.
           </p>
           <p class="chapo" data-vient="bloc" style="margin-top:1rem">
             Remontez, elle se rétracte.
@@ -215,13 +215,13 @@
         <article class="carte verre" data-vient="bloc">
           <span class="carte__halo" aria-hidden="true"></span>
           <span class="carte__num">01</span>
-          <h3>Le rendu s'arrête</h3>
-          <p>Dès qu'une pièce quitte l'écran, elle cesse de calculer. Une machine qui chauffe est une machine qu'on quitte.</p>
+          <h3>Le rendu s’arrête</h3>
+          <p>Dès qu’une pièce quitte l’écran, elle cesse de calculer. Une machine qui chauffe est une machine qu’on quitte.</p>
         </article>
         <article class="carte verre" data-vient="bloc">
           <span class="carte__halo" aria-hidden="true"></span>
           <span class="carte__num">02</span>
-          <h3>La qualité s'adapte</h3>
+          <h3>La qualité s’adapte</h3>
           <p>Chaque scène mesure son propre temps par image et se déleste par paliers si la machine ne suit pas.</p>
         </article>
         <article class="carte verre" data-vient="bloc">
@@ -238,7 +238,7 @@
     <div class="contact__fond" data-parallaxe="0.10" aria-hidden="true"></div>
     <div class="contact__centre">
       <p class="hero__kanji" aria-hidden="true" style="font-size:clamp(2rem,4.5vw,3.2rem)">門</p>
-      <h2 class="titre" data-vient="titre">Vous en voulez sur le vôtre ?</h2>
+      <h2 class="titre" data-vient="titre">Vous en voulez sur le vôtre ?</h2>
       <div class="contact__liens" data-vient="bloc">
         <a class="bouton bouton--plein" href="contact.html" data-aimant>Écrire <span class="fleche" aria-hidden="true">→</span></a>
         <a class="bouton bouton--verre" href="index.html#prix" data-aimant>Voir le tarif</a>

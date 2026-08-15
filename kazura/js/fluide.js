@@ -299,7 +299,7 @@ export function monterLEncre(toile, options = {}) {
 
   async function preparerLeMot() {
     if (!texteEncre) return;
-    try { await document.fonts.load('800 200px Syne'); await document.fonts.ready; }
+    try { await document.fonts.load('800 200px Archivo'); await document.fonts.ready; }
     catch (e) { /* on ecrit quand meme */ }
 
     const N = RES_ENCRE;
@@ -309,12 +309,12 @@ export function monterLEncre(toile, options = {}) {
     ctx.clearRect(0, 0, N, N);
 
     let taille = N * 0.5;
-    ctx.font = `800 ${taille}px Syne, system-ui, sans-serif`;
+    ctx.font = `800 ${taille}px Archivo, system-ui, sans-serif`;
     const vise = N * 0.80 * Math.min(1, ratio);   // largeur visee, apres etirement
     taille *= vise / Math.max(1, ctx.measureText(texteEncre).width / ratio);
     taille = Math.min(taille, N * 0.34);
 
-    ctx.font = `800 ${taille}px Syne, system-ui, sans-serif`;
+    ctx.font = `800 ${taille}px Archivo, system-ui, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#fff';

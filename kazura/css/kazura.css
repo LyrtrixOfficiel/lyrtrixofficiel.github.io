@@ -30,18 +30,31 @@
   --violet-fonce:#4C1D95;
 
   --blanc:       #ECFDF5;
-  --gris:        #93A5AE;
-  --gris-fonce:  #4A5A63;
+  --gris:        #93A5AE;   /* 7.95 contre le fond */
+  /* Etait #4A5A63, soit 2.83 contre le fond quand il en faut 4.5. Il portait
+     les petites capitales de 11 px les plus discretes du site, celles qu'on lit
+     le plus mal : le niveau le plus bas de la hierarchie etait devenu le niveau
+     illisible. Meme teinte, clarte remontee jusqu'au premier point qui passe,
+     et pas au dela : 4.53, toujours loin sous le gris courant. */
+  --gris-fonce:  #657A87;
 
   --verre:       rgba(255,255,255,.045);
   --verre-fort:  rgba(255,255,255,.085);
   --verre-bord:  rgba(174,236,213,.16);
   --verre-haut:  rgba(255,255,255,.34);
 
-  --display: 'Syne', system-ui, sans-serif;
-  --corps:   'Inter', system-ui, sans-serif;
+  /* TYPOGRAPHIE. La regle vient du japonais, pas du gout : le gothique
+     (ゴシック) signale, le mincho (明朝) se lit. On applique la meme division
+     au latin. Archivo tient les enseignes, Newsreader tient les phrases, et
+     Zen Old Mincho n'est plus une vignette exotique posee a cote d'une grotesque
+     sans contraste : il partage le squelette de Newsreader, pleins verticaux et
+     delies horizontaux. Le kanji appartient enfin a la page.
+     Archivo porte un axe de chasse, 62 a 125. C'est lui qui cale le mot geant
+     a la largeur exacte de sa colonne, voir `ajusterLesGeants` dans kazura.js. */
+  --display: 'Archivo', 'Helvetica Neue', system-ui, sans-serif;
+  --corps:   'Newsreader', 'Iowan Old Style', Georgia, serif;
   --mono:    'JetBrains Mono', ui-monospace, monospace;
-  --jp:      'Zen Old Mincho', serif;
+  --jp:      'Zen Old Mincho', 'Yu Mincho', serif;
 
   --marge:   clamp(1.25rem, 5vw, 5.5rem);
   --large:   1440px;
@@ -57,13 +70,23 @@
 html { -webkit-text-size-adjust: 100%; }
 html:not([data-pret='oui']) { scroll-behavior: smooth; }
 
+/* Le corps monte de 300 a 400 et grandit d'un demi-point. Deux raisons, une
+   optique et une technique. Sur fond presque noir le texte clair deborde de
+   son trace, un maigre s'y delave alors que sur blanc il tiendrait ; et un
+   romain a delies fins perd davantage a ce jeu qu'une grotesque. La graisse
+   400 de Newsreader rend au texte le poids que le fond lui prend.
+   `font-optical-sizing` fait le reste : Newsreader porte un axe opsz, le
+   navigateur epaissit les delies dans les petits corps et les affine dans les
+   grands. Sans cette ligne on lit partout le dessin d'affiche. */
 body {
   background: var(--noir);
   color: var(--blanc);
   font-family: var(--corps);
-  font-size: clamp(1rem, .95rem + .2vw, 1.0625rem);
-  font-weight: 300;
-  line-height: 1.7;
+  font-size: clamp(1.06rem, 1rem + .26vw, 1.16rem);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  line-height: 1.66;
+  text-wrap: pretty;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
@@ -137,27 +160,55 @@ html[data-pret='oui'] #defile:not([data-natif='oui']) {
 }
 
 /* ── Typographie ──────────────────────────────────────────────────────── */
+/* L'interligne passe de .98 a 1.03. En dessous de 1 les jambages de g, j, p et
+   y d'une ligne mordent les capitales de la suivante ; ca ne se voyait pas sur
+   les titres d'un mot et ca se voyait sur les autres.
+   L'approche se resserre a mesure que le corps grandit : c'est le meme reglage
+   qu'une fonte a corps optiques ferait seule, Archivo ne l'a pas, on le pose. */
 h1, h2, h3, h4 {
   font-family: var(--display);
   font-weight: 700;
-  line-height: .98;
-  letter-spacing: -.035em;
+  line-height: 1.03;
+  letter-spacing: -.018em;
+  text-wrap: balance;
 }
 
-/* Syne en 800 avance de 1,16 em par lettre : six lettres occupent pres de
-   7 em. D'ou le plafond a 12vw, sous lequel le mot ne se coupe jamais. */
+/* Le mot geant n'a plus de taille devinee. La regle CSS n'est que le repli
+   sans script ; `ajusterLesGeants` mesure la ligne et ouvre ou resserre l'axe
+   de chasse d'Archivo jusqu'a ce que le mot touche exactement ses deux bords.
+   Le corps reste donc constant d'un ecran a l'autre, c'est la largeur des
+   lettres qui absorbe la difference : le mot garde la meme presence verticale
+   partout au lieu de retrecir avec la fenetre. */
 .geant {
   font-family: var(--display);
-  font-size: clamp(2.8rem, 12vw, 12.5rem);
+  font-size: clamp(2.6rem, 19vw, 14rem);
   font-weight: 800;
-  letter-spacing: -.055em;
-  line-height: .84;
+  font-stretch: var(--chasse, 100%);
+  letter-spacing: -.028em;
+  line-height: .88;
   white-space: nowrap;
 }
-.titre     { font-size: clamp(2.1rem, 5.6vw, 4.8rem); letter-spacing: -.04em; }
-.sous-titre{ font-size: clamp(1.35rem, 2.4vw, 2.1rem); letter-spacing: -.028em; line-height: 1.15; }
+.titre     { font-size: clamp(2.1rem, 5.6vw, 4.8rem); letter-spacing: -.026em; }
+.sous-titre{ font-size: clamp(1.35rem, 2.4vw, 2.1rem); letter-spacing: -.012em; line-height: 1.18; }
 
 .kanji { font-family: var(--jp); font-weight: 400; letter-spacing: .1em; }
+
+/* Dans une grotesque, 500 se detache du 300 voisin. Dans un romain a delies,
+   400 et 500 sont le meme gris : il faut 600 pour que l'accent se voie. */
+b, strong { font-weight: 600; }
+
+/* Aucune graisse ni aucune italique fabriquee par le navigateur. Les deux
+   familles portent leurs vraies graisses jusqu'a 800, une fausse serait un
+   epaississement au trait. L'italique de Newsreader, elle, est un second
+   fichier de 117 Ko : trop cher pour l'unique <em> du site. Tant qu'on n'a
+   pas de vraie copie editoriale, l'emphase se marque a la couleur, ce qui
+   reste dans le systeme puisque le jade est la matiere vivante. */
+html { font-synthesis: none; }
+em { font-style: normal; color: var(--jade-clair); }
+
+/* Les nombres alignes en colonne : chiffres de meme chasse, et le zero barre
+   la ou on lit une reference plutot qu'une quantite. */
+.chiffre strong, .prix__mt, .doc dd, .miroir__code { font-variant-numeric: tabular-nums; }
 
 .etiquette {
   display: inline-block;
@@ -169,11 +220,15 @@ h1, h2, h3, h4 {
   color: var(--jade-clair);
 }
 
+/* Le chapo est le seul endroit ou l'on allege : au dela de 1.2rem l'axe opsz
+   affine deja les delies, une graisse 350 y ajoute la respiration d'un texte
+   de tete sans tomber dans le maigre illisible du fond noir. */
 .chapo {
-  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  font-size: clamp(1.1rem, 1.5vw, 1.36rem);
+  font-weight: 350;
   color: var(--gris);
-  max-width: 56ch;
-  line-height: 1.65;
+  max-width: 58ch;
+  line-height: 1.6;
 }
 .plomb { color: var(--gris); }
 .jade  { color: var(--jade-clair); }
@@ -422,13 +477,18 @@ section { position: relative; }
   margin-bottom: .4rem;
   text-shadow: 0 0 60px rgba(16,185,129,.55);
 }
-.hero__ligne { margin: 1.9rem auto 0; max-width: 46ch; font-size: clamp(1rem,1.35vw,1.2rem); color: var(--gris); }
+/* Centre sur deux lignes, `pretty` ne corrige que la derniere et laissait
+   « temps » seul avec « reel » a la ligne. `balance` egalise les deux. */
+.hero__ligne { margin: 1.9rem auto 0; max-width: 46ch; font-size: clamp(1rem,1.35vw,1.2rem); color: var(--gris); text-wrap: balance; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; margin-top: 2.6rem; }
 
 .hero__bas {
   position: absolute; left: 50%; bottom: clamp(1.2rem,3vh,2.4rem);
   translate: -50% 0; z-index: 1;
   display: flex; flex-direction: column; align-items: center; gap: .7rem;
+  /* Le bloc est centre, pas son texte : sur mobile l'etiquette passe a la
+     ligne et se retrouvait alignee a gauche sous une liane centree. */
+  text-align: center;
 }
 .hero__fil {
   width: 1px; height: 58px;
@@ -790,7 +850,7 @@ section { position: relative; }
 
 .liste { list-style: none; display: grid; gap: .9rem; }
 .liste li { display: grid; grid-template-columns: 22px 1fr; gap: .85rem; align-items: start; font-size: .98rem; color: var(--gris); }
-.liste b { color: var(--blanc); font-weight: 500; }
+.liste b { color: var(--blanc); font-weight: 600; }
 .liste .coche {
   width: 20px; height: 20px; margin-top: .22em; border-radius: 50%;
   display: grid; place-items: center;
@@ -833,13 +893,11 @@ section { position: relative; }
   max-height: 46svh;
   margin-inline: auto;
 }
+/* Le corps, la graisse et l'approche viennent de `.geant`, pose sur le meme
+   element : une seule definition du mot, et c'est elle que le calage mesure. */
 .mot3d__vrai {
   position: absolute; inset: 0;
   display: grid; place-items: center;
-  font-family: var(--display);
-  font-size: clamp(2.8rem, 12vw, 12.5rem);
-  font-weight: 800; letter-spacing: -.055em; line-height: .84;
-  white-space: nowrap;
   background: linear-gradient(176deg, #fff 6%, #CFF7E7 34%, var(--jade-clair) 68%, var(--jade-fonce) 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 70px rgba(16,185,129,.32));
