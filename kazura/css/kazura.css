@@ -563,15 +563,27 @@ section { position: relative; }
   padding-inline: var(--marge);
 }
 .scrub__lignes { position: relative; width: 100%; max-width: 900px; }
-/* Trois messages qui se relaient pendant la traversee, pilotes par --avance. */
+/* Trois messages qui se relaient pendant la traversee, pilotes par --avance.
+
+   LE TEXTE NE SE DEPLACE PLUS, IL SE FOND. Il montait de 24 px en apparaissant
+   et redescendait en partant, sur sept dixiemes de seconde. Or ce qui declenche
+   la bascule n'est pas le temps, c'est la POSITION DE DEFILEMENT : en remontant
+   d'un cran de molette on repasse la frontiere, la transition repart en sens
+   inverse, et le texte fait le yoyo. C'est ce que Matheo decrivait, « ca secoue
+   le texte, il monte, il descend », et ce n'etait pas l'epinglage, mesure exact
+   au pixel pres.
+
+   Regle a retenir : une animation declenchee par le defilement ne doit jamais
+   deplacer sa cible. Le visiteur controle l'axe vertical, il ne faut pas le lui
+   disputer. Un fondu, lui, se laisse traverser dans les deux sens sans jamais
+   donner l'impression que la page bouge toute seule. */
 .scrub__ligne {
   position: absolute; inset: 0;
   display: grid; place-items: center;
   opacity: 0;
-  transition: opacity .5s var(--doux), transform .7s var(--sortie);
-  transform: translateY(24px);
+  transition: opacity .34s var(--doux);
 }
-[data-epingle][data-avance] .scrub__ligne[data-actif='oui'] { opacity: 1; transform: none; }
+[data-epingle][data-avance] .scrub__ligne[data-actif='oui'] { opacity: 1; }
 
 .jauge {
   position: absolute; left: 50%; bottom: 8vh; translate: -50% 0; z-index: 3;
