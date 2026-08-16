@@ -634,7 +634,18 @@ html:not(.anime) [data-lever] { opacity: 1; transform: none; transition: none; }
   width: 100%;
   z-index: 0;
 }
-.vitrine__pistes { position: relative; z-index: 1; margin-top: -100svh; }
+/* `pointer-events: none` doit être posé sur le CONTENEUR, pas seulement sur
+   les volets. Un volet transparent au clic laisse passer le geste vers ce qui
+   est derrière, et ce qui est derrière, c'est justement son parent, qui couvre
+   la même surface et le récupère. La toile, plus bas, ne recevait donc jamais
+   rien : les pièces de la vitrine ne s'attrapaient pas, alors que celle de
+   l'ouverture, qui n'a pas de calque par-dessus, répondait très bien. */
+.vitrine__pistes {
+  position: relative;
+  z-index: 1;
+  margin-top: -100svh;
+  pointer-events: none;
+}
 .vitrine__piste {
   position: relative;
   min-height: 100svh;
