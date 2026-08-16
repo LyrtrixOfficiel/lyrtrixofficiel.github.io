@@ -8,7 +8,7 @@
  */
 import {
   THREE, NIVEAU, CALME, faireRendu, poserLumiere, poserEnvironnement,
-  chargerPiece, faireOmbre, suivrePointeur, boucler, observerTaille,
+  chargerPiece, faireOmbre, suivrePointeur, boucler, observerTaille, attraper,
 } from './scene.js';
 
 export async function ouvrir(toile, racineModeles) {
@@ -98,6 +98,12 @@ export async function ouvrir(toile, racineModeles) {
      accumulée y met une demi-minute au lieu de deux secondes. */
   let depart = null;
   const pointeur = suivrePointeur();
+  const prise = attraper(toile);
+  /* Ce que le visiteur a tourné à la main, gardé à part du balancement
+     automatique : les deux s'additionnent, donc la pièce continue de vivre
+     dans la position où on l'a laissée. */
+  const main = { y: 0, x: 0 };
+  toile.dataset.prenable = 'oui';
 
   function cadrer() {
     const l = toile.clientWidth || innerWidth;
@@ -120,10 +126,19 @@ export async function ouvrir(toile, racineModeles) {
     const entree = Math.min(1, (t - depart) / 1.8);
     const e = 1 - Math.pow(1 - entree, 3);
 
+    const geste = prise.prendre(dt);
+    main.y += geste.x;
+    /* Le basculement avant-arrière est bridé : au-delà, on regarde la pièce
+       par-dessous et la lumière d'atelier ne veut plus rien dire. */
+    main.x = Math.max(-0.7, Math.min(0.7, main.x + geste.y));
+
     if (bois) {
       /* Un balancement, pas un tour complet : le cadran est la seule face
-         intéressante de la pièce, et un tour la cache la moitié du temps. */
-      bois.rotation.y = Math.sin(t * 0.19) * 0.85 + pointeur.x * 0.35;
+         intéressante de la pièce, et un tour la cache la moitié du temps.
+         Le balancement continue sous la main du visiteur, plus discret. */
+      const libre = Math.sin(t * 0.19) * 0.85 * (1 - prise.emprise * 0.7);
+      bois.rotation.y = libre + pointeur.x * 0.35 * (1 - prise.emprise) + main.y;
+      bois.rotation.x = main.x;
       bois.position.y = Math.sin(t * 0.62) * 0.07 + (1 - e) * -1.4;
       bois.rotation.z = Math.sin(t * 0.41) * 0.025;
     }
@@ -143,10 +158,13 @@ export async function ouvrir(toile, racineModeles) {
     }
 
     pointeur.amortir();
-    socle.rotation.y = pointeur.x * 0.17;
-    socle.rotation.x = pointeur.y * 0.09;
-    camera.position.x = pointeur.x * -0.22;
-    camera.position.y = pointeur.y * -0.12;
+    /* Pendant la prise, le parallaxe s'efface : deux mouvements qui répondent
+       au même geste se contrarient et donnent une pièce qui glisse. */
+    const suivi = 1 - prise.emprise;
+    socle.rotation.y = pointeur.x * 0.17 * suivi;
+    socle.rotation.x = pointeur.y * 0.09 * suivi;
+    camera.position.x = pointeur.x * -0.22 * suivi;
+    camera.position.y = pointeur.y * -0.12 * suivi;
     camera.lookAt(camera.position.x * 0.5, 0, 0);
 
     rendu.render(scene, camera);

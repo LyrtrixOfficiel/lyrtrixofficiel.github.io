@@ -9,7 +9,7 @@
  */
 import {
   THREE, NIVEAU, CALME, faireRendu, poserLumiere, poserEnvironnement,
-  chargerPiece, faireOmbre, suivrePointeur, boucler, observerTaille,
+  chargerPiece, faireOmbre, suivrePointeur, boucler, observerTaille, attraper,
 } from './scene.js';
 
 const ECART = 3.4;
@@ -41,7 +41,11 @@ export async function dresser(section, toile, racineModeles, fichiers) {
     ombre.material.opacity = 0;
     support.add(ombre);
 
-    pieces.push({ support, ombre, corps: null, matieres: [], depart, balance });
+    pieces.push({
+      support, ombre, corps: null, matieres: [], depart, balance, inclinaison,
+      tour: 0,              /* la rotation automatique accumulée */
+      main: { y: 0, x: 0 }, /* ce que le visiteur a tourné lui-même */
+    });
 
     chargerPiece(`${racineModeles}/${fichier}`, { hauteur }).then((corps) => {
       corps.rotation.y = depart;
@@ -58,6 +62,8 @@ export async function dresser(section, toile, racineModeles, fichiers) {
   }
 
   const pointeur = suivrePointeur();
+  const prise = attraper(toile);
+  toile.dataset.prenable = 'oui';
   let avance = 0;      /* position sur le rail, en index de pièce */
   let avanceLisse = 0;
 
@@ -92,6 +98,16 @@ export async function dresser(section, toile, racineModeles, fichiers) {
     rail.position.y = avanceLisse * ECART;
     rail.position.x = decalage * Math.cos(avanceLisse * Math.PI);
 
+    /* Le geste ne va qu'à la pièce que le visiteur a devant lui. Le distribuer
+       à toutes ferait qu'en descendant d'un cran on trouverait la suivante
+       déjà tournée par une main qui ne la visait pas. */
+    const geste = prise.prendre(dt);
+    const vise = pieces[Math.max(0, Math.min(pieces.length - 1, Math.round(avanceLisse)))];
+    if (vise) {
+      vise.main.y += geste.x;
+      vise.main.x = Math.max(-0.8, Math.min(0.8, vise.main.x + geste.y));
+    }
+
     for (const [i, p] of pieces.entries()) {
       const d = Math.abs(avanceLisse - i);
       const presence = Math.max(0, 1 - d * 1.15);
@@ -101,12 +117,16 @@ export async function dresser(section, toile, racineModeles, fichiers) {
       p.ombre.material.opacity = doux * 0.85;
       for (const m of p.matieres) m.opacity = doux;
       p.support.visible = doux > 0.005;
+      p.support.rotation.x = p.inclinaison + p.main.x;
 
       if (p.corps) {
         /* Une pièce qui n'a qu'une face montrable se balance ; les autres,
-           symétriques autour de leur axe de tour, font le tour complet. */
-        if (p.balance) p.corps.rotation.y = p.depart + Math.sin(t * 0.22) * 0.8;
-        else p.corps.rotation.y += dt * (CALME.matches ? 0.05 : 0.22) * (0.4 + doux);
+           symétriques autour de leur axe de tour, font le tour complet.
+           La rotation libre est tenue à part de celle de la main, pour que les
+           deux s'additionnent au lieu de se remplacer. */
+        if (p.balance) p.tour = Math.sin(t * 0.22) * 0.8 * (1 - prise.emprise * 0.7);
+        else p.tour += dt * (CALME.matches ? 0.05 : 0.22) * (0.4 + doux) * (1 - prise.emprise);
+        p.corps.rotation.y = p.depart + p.tour + p.main.y;
         p.corps.rotation.z = Math.sin(t * 0.5 + i) * 0.03;
         /* La pièce qui sort part en arrière : la profondeur fait la
            différence entre un carrousel et un simple glissement. */
@@ -115,8 +135,9 @@ export async function dresser(section, toile, racineModeles, fichiers) {
     }
 
     pointeur.amortir(0.05);
-    rail.rotation.y = pointeur.x * 0.2;
-    camera.position.y = pointeur.y * -0.18;
+    const suivi = 1 - prise.emprise;
+    rail.rotation.y = pointeur.x * 0.2 * suivi;
+    camera.position.y = pointeur.y * -0.18 * suivi;
     /* On vise un point FIXE, pas le rail. Viser le rail annule exactement le
        décalage qu'on vient de lui donner, et la pièce reste plantée au centre
        quoi qu'on écrive. */

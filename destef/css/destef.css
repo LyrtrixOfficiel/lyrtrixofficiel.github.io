@@ -538,6 +538,49 @@ main { position: relative; z-index: 1; }
   to { opacity: 1; transform: none; filter: blur(0); }
 }
 
+/* --- 7 bis. La prise en main des pièces ---------------------------------- */
+/* `pan-y` est la ligne importante. Sans elle, le navigateur ne sait pas si un
+   doigt qui glisse sur la toile veut tourner la pièce ou faire défiler la
+   page : il attend de voir, et le défilement devient poisseux sur toute la
+   hauteur de la section. Avec elle, le vertical reste au navigateur et
+   l'horizontal nous revient sans délai. */
+
+canvas[data-prenable] {
+  cursor: grab;
+  touch-action: pan-y;
+  /* Sans cela, un geste qui part de la toile amorce une sélection de texte et
+     surligne au passage le volet posé à côté. */
+  user-select: none;
+  -webkit-user-select: none;
+}
+canvas[data-prenable][data-tenue] { cursor: grabbing; }
+
+.poignee {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .95rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  letter-spacing: .02em;
+  color: var(--encre-douce);
+  pointer-events: none;
+  transition: opacity .6s ease, transform .6s ease;
+}
+.poignee[data-vue='oui'] { opacity: 0; transform: translateY(6px); }
+.poignee svg { width: 16px; height: 16px; flex: none; color: var(--braise); }
+.bande--sombre .poignee svg { color: var(--ambre); }
+
+/* Dans l'ouverture, elle se pose sous la pièce, côté droit. */
+.ouverture .poignee { right: var(--lisiere); bottom: clamp(2rem, 7vh, 5rem); }
+/* Dans la vitrine, en bas au centre, où aucune carte ne passe. */
+.vitrine .poignee { left: 50%; transform: translateX(-50%); bottom: 3.5vh; }
+.vitrine .poignee[data-vue='oui'] { transform: translate(-50%, 6px); }
+
+@media (max-width: 640px) { .poignee { display: none; } }
+
 /* --- 8. Révélation au défilement ---------------------------------------- */
 /* Règle apprise à la dure sur un autre site de la maison : une animation
    déclenchée par le défilement ne doit JAMAIS pouvoir se rejouer à l'envers.
@@ -593,6 +636,7 @@ html:not(.anime) [data-lever] { opacity: 1; transform: none; transition: none; }
 }
 .vitrine__pistes { position: relative; z-index: 1; margin-top: -100svh; }
 .vitrine__piste {
+  position: relative;
   min-height: 100svh;
   display: grid;
   align-content: center;

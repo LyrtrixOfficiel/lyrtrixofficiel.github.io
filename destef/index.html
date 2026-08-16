@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="css/destef.css?v=ddb7db369b">
+<link rel="stylesheet" href="css/destef.css?v=35537fd793">
 
 <!-- La pièce de l'ouverture part en même temps que le code qui la charge :
      sans cela, elle attend que three.js soit arrivé du réseau distant. -->
@@ -98,6 +98,14 @@
         Lampes · Vases · Jeux · Écriture
       </p>
     </div>
+
+    <p class="poignee" data-poignee aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4.5 8.5a8 8 0 0 1 15 3.5"/><path d="M19.5 15.5a8 8 0 0 1-15-3.5"/>
+        <path d="M19.5 5.5v3.2h-3.2"/><path d="M4.5 18.5v-3.2h3.2"/>
+      </svg>
+      Attrapez le réveil pour le tourner
+    </p>
   </section>
 
   <!-- 2. Le manifeste ---------------------------------------------------- -->
@@ -168,6 +176,13 @@
              trois filets noirs à la jonction. Chez Stéphane, le même geste sert
              à faire un stylo ou un pied de lampe.</p>
         </div>
+        <p class="poignee" data-poignee aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 8.5a8 8 0 0 1 15 3.5"/><path d="M19.5 15.5a8 8 0 0 1-15-3.5"/>
+            <path d="M19.5 5.5v3.2h-3.2"/><path d="M4.5 18.5v-3.2h3.2"/>
+          </svg>
+          Attrapez la pièce pour la tourner
+        </p>
       </div>
       <div class="vitrine__piste">
         <div class="vitrine__carte verre">
@@ -194,8 +209,8 @@
           <p>Deux boules tournées, retenues l'une à l'autre par une cordelette.
              Un exercice de tour qui finit par devenir un objet.</p>
           <p class="discret" style="margin-top:.9rem">
-            Volumes dessinés d'après les pièces de l'atelier. Bougez le curseur
-            pour les faire tourner, ou continuez de défiler.
+            Volumes dessinés d'après les pièces de l'atelier. Attrapez-les et
+            faites-les tourner dans tous les sens, ou continuez de défiler.
           </p>
         </div>
       </div>
@@ -377,6 +392,6 @@
   <button class="bouton bouton--petit bouton--fantome" type="button" data-rappel-non>Non merci</button>
 </div>
 
-<script type="module" src="js/destef.js?v=ddb7db369b"></script>
+<script type="module" src="js/destef.js?v=35537fd793"></script>
 </body>
 </html>

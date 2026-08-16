@@ -188,6 +188,80 @@ export function suivrePointeur() {
   return p;
 }
 
+/* --- La prise en main ---------------------------------------------------- */
+/* Attraper la pièce et la tourner soi-même. Le survol donne déjà un léger
+   parallaxe, mais c'est un mouvement subi ; ici on rend la main.
+ *
+ * Deux précautions valent d'être dites :
+ *
+ * `touch-action: pan-y` sur la toile, posé en CSS. Sans lui, le navigateur ne
+ * sait pas si un doigt qui glisse veut tourner la pièce ou faire défiler la
+ * page : il attend, et le défilement devient poisseux sur toute la section.
+ * Avec lui, le vertical reste au navigateur et l'horizontal nous revient.
+ *
+ * On rend des ÉCARTS à consommer, pas une position. L'appelant décide à quoi
+ * il les applique, et peut n'en donner qu'à la pièce que le visiteur regarde. */
+
+export function attraper(toile, { sensibilite = 0.0062 } = {}) {
+  let tenu = false;
+  let dernierX = 0, dernierY = 0;
+  let dx = 0, dy = 0;   /* écart en attente */
+  let vx = 0, vy = 0;   /* élan, pour que le geste se prolonge */
+  let emprise = 0;      /* 0 au repos, 1 pendant la prise */
+
+  const debut = (e) => {
+    if (e.button > 0) return;
+    tenu = true;
+    vx = vy = 0;
+    dernierX = e.clientX;
+    dernierY = e.clientY;
+    try { toile.setPointerCapture(e.pointerId); } catch { /* sans capture, ça marche encore */ }
+    toile.dataset.tenue = 'oui';
+  };
+
+  const bouge = (e) => {
+    if (!tenu) return;
+    const ax = (e.clientX - dernierX) * sensibilite;
+    const ay = (e.clientY - dernierY) * sensibilite;
+    dernierX = e.clientX;
+    dernierY = e.clientY;
+    dx += ax; dy += ay;
+    vx = ax; vy = ay;
+  };
+
+  const fin = (e) => {
+    if (!tenu) return;
+    tenu = false;
+    try { toile.releasePointerCapture(e.pointerId); } catch { /* déjà relâché */ }
+    delete toile.dataset.tenue;
+  };
+
+  toile.addEventListener('pointerdown', debut);
+  addEventListener('pointermove', bouge, { passive: true });
+  addEventListener('pointerup', fin);
+  /* `pointercancel` arrive quand le navigateur décide que le geste était un
+     défilement. Sans lui, la pièce resterait « tenue » pour toujours. */
+  addEventListener('pointercancel', fin);
+
+  return {
+    get tenu() { return tenu; },
+    get emprise() { return emprise; },
+    prendre(dt) {
+      emprise += ((tenu ? 1 : 0) - emprise) * Math.min(1, dt * 7);
+      if (!tenu) {
+        dx += vx; dy += vy;
+        const frein = Math.pow(0.92, dt * 60);
+        vx *= frein; vy *= frein;
+        if (Math.abs(vx) < 1e-4) vx = 0;
+        if (Math.abs(vy) < 1e-4) vy = 0;
+      }
+      const ecart = { x: dx, y: dy };
+      dx = dy = 0;
+      return ecart;
+    },
+  };
+}
+
 /* --- Le cadrage ---------------------------------------------------------- */
 /* On surveille la TOILE, pas la fenêtre. La fenêtre ne bouge pas quand un
    panneau latéral s'ouvre, quand une barre d'outils apparaît, ou quand la

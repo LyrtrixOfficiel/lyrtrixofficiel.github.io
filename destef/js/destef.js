@@ -208,11 +208,13 @@ async function troisDimensions() {
     const toile = sectionVitrine.querySelector('canvas');
     const { dresser } = await import(`./vitrine.js${V}`);
     dresser(sectionVitrine, toile, 'modeles', [
-      /* `inclinaison` penche la pièce vers la caméra : sans elle, le
-         porte-bougie, qui est presque plat, se présente par la tranche et ne
-         montre rien de ce qui fait son intérêt. */
+      /* `inclinaison` bascule la pièce autour de l'axe horizontal. Le signe
+         compte : en POSITIF, la face du dessus vient vers la caméra ; en
+         négatif, on montre le dessous. Le porte-bougie, qui est presque plat,
+         était réglé à l'envers et présentait son fond, qui n'a ni le bourrelet
+         ni le logement de la bougie. */
       { fichier: 'bois-flotte.glb', hauteur: 2.5 },
-      { fichier: 'photophore.glb', hauteur: 2.3, inclinaison: -0.5 },
+      { fichier: 'photophore.glb', hauteur: 2.3, inclinaison: 0.7 },
       { fichier: 'reveil.glb', hauteur: 2.1, balance: true },
       { fichier: 'spheres.glb', hauteur: 2.2, depart: Math.PI },
     ]).catch(() => {});
@@ -224,6 +226,34 @@ function verifierWebGL() {
     const c = document.createElement('canvas');
     return !!(c.getContext('webgl2') || c.getContext('webgl'));
   } catch { return false; }
+}
+
+/* ==========================================================================
+   7 bis. L'invitation à attraper les pièces
+   ========================================================================== */
+/* Une pièce qui tourne toute seule n'a pas l'air de se laisser prendre : sans
+   un mot, personne n'essaie. Le mot disparaît dès la première prise, et ne
+   revient pas de la visite. */
+
+const PRIS = 'destef-prise';
+
+function poignees() {
+  const mots = document.querySelectorAll('[data-poignee]');
+  if (!mots.length) return;
+
+  if (sessionStorage.getItem(PRIS) === 'oui') {
+    for (const m of mots) m.dataset.vue = 'oui';
+    return;
+  }
+  /* Pas de `once` ici : il retirerait l'écouteur au premier clic n'importe où,
+     y compris à côté, et le mot resterait affiché pour toujours. */
+  const vu = (e) => {
+    if (!e.target.closest?.('canvas[data-prenable]')) return;
+    removeEventListener('pointerdown', vu);
+    sessionStorage.setItem(PRIS, 'oui');
+    for (const m of mots) m.dataset.vue = 'oui';
+  };
+  addEventListener('pointerdown', vu);
 }
 
 /* ==========================================================================
@@ -308,6 +338,7 @@ function annee() {
 lettres();
 entete();
 revelations();
+poignees();
 if (anime) bulles();
 annee();
 formulaire();
