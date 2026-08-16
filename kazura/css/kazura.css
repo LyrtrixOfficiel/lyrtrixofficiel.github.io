@@ -895,6 +895,111 @@ section { position: relative; }
 }
 .liste .coche svg { width: 11px; height: 11px; }
 
+/* ── Le sceau, plein cadre ────────────────────────────────────────────── */
+/* Il etait enferme dans une figure de la grille, a cote d'un paragraphe. Un
+   objet dans une vignette reste un objet qu'on REGARDE ; un objet qui tient
+   l'ecran est un objet qu'on RENCONTRE. Il passe donc derriere toute la
+   section, et le texte vit par dessus.
+
+   Il est place APRES le texte dans le document mais dessous a l'ecran : le
+   contenu reste lisible sans script et dans l'ordre pour un lecteur d'ecran,
+   pendant que le decor prend toute la place a l'oeil. */
+/* La hauteur venait du seul texte, donc l'objet etait coupe en bas. Une
+   section qui porte un objet plein cadre doit reserver sa place. */
+.identite--plein { overflow: hidden; isolation: isolate; min-height: 92svh; display: grid; align-items: center; }
+.identite--plein .enveloppe { position: relative; z-index: 2; }
+.identite__grille { align-items: center; }
+
+.sceau-plein {
+  position: absolute; inset: 0; z-index: 1;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.sceau-plein > * { grid-area: 1 / 1; }
+#toile-sceau {
+  /* Plus grand que la section, et decale a droite : le sceau deborde du cadre
+     au lieu d'y tenir sagement, et le texte occupe la moitie gauche restee
+     sombre. Un objet qui deborde parait plus grand que le cadre qui l'entoure. */
+  width: min(115%, 1500px);
+  aspect-ratio: 1 / 1;
+  max-height: 132%;
+  justify-self: end;
+  margin-right: clamp(-14vw, -6vw, 0px);
+  opacity: 0;
+  transition: opacity 1.1s var(--doux);
+  /* La toile reprend les evenements pour elle seule, sinon on ne peut plus la
+     tourner puisque le conteneur les a coupes. */
+  pointer-events: auto;
+  cursor: grab;
+}
+#toile-sceau[data-prete='oui'] { opacity: 1; }
+#toile-sceau[data-repli='oui'] { display: none; }
+
+.sceau-plein .sceau3d__repli {
+  width: min(46%, 620px); height: auto;
+  justify-self: end; margin-right: 4vw;
+  border-radius: var(--rayon-l);
+  border: 1px solid var(--verre-bord);
+  opacity: .9;
+  transition: opacity .9s var(--doux);
+}
+#toile-sceau[data-prete='oui'] + .sceau3d__repli { opacity: 0; }
+
+/* Un voile depuis la gauche, pour que le texte tienne sur le verre sans
+   assombrir l'objet lui-meme. */
+.identite--plein::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(100deg,
+    rgba(4,6,10,.94) 0%, rgba(4,6,10,.80) 34%, rgba(4,6,10,.22) 62%, transparent 82%);
+}
+@media (max-width: 900px) {
+  /* Sur un ecran etroit, le texte ne peut pas cohabiter avec l'objet : le
+     sceau repasse dessous, en pleine largeur, et le voile devient vertical. */
+  #toile-sceau { width: 118%; justify-self: center; margin-right: 0; }
+  .identite--plein::before {
+    background: linear-gradient(to bottom,
+      rgba(4,6,10,.92) 0%, rgba(4,6,10,.72) 42%, rgba(4,6,10,.30) 72%, transparent 100%);
+  }
+  .identite__grille { grid-template-columns: 1fr; }
+}
+
+/* ── Le bouton du son ─────────────────────────────────────────────────── */
+/* Trois barres qui respirent quand le son est allume, immobiles sinon. L'etat
+   se lit d'un coup d'oeil, sans icone barree ni texte : c'est le seul reglage
+   du site dont l'etat doit etre visible en permanence. */
+.nav__son {
+  width: 38px; height: 38px; flex: none;
+  display: grid; place-items: center;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: border-color .35s var(--doux), background .35s var(--doux);
+}
+.nav__son:hover { background: rgba(255,255,255,.06); }
+.nav__son:focus-visible { outline: 2px solid var(--jade-clair); outline-offset: 2px; }
+.nav__son[data-actif='oui'] { border-color: rgba(110,231,183,.34); background: rgba(16,185,129,.10); }
+
+.nav__son-barres { display: flex; align-items: center; gap: 2.5px; height: 15px; }
+.nav__son-barres i {
+  display: block; width: 2px; border-radius: 2px;
+  background: var(--gris);
+  height: 5px;
+  transition: height .3s var(--doux), background .3s var(--doux);
+}
+.nav__son[data-actif='oui'] .nav__son-barres i { background: var(--jade-clair); }
+/* Au repos, trois barres courtes et inegales : une icone, pas un graphique.
+   Allumees, elles montent et descendent, decalees, comme un vumetre. */
+.nav__son-barres i:nth-child(2) { height: 9px; }
+.nav__son[data-actif='oui'] .nav__son-barres i { animation: son-barre 1.15s var(--doux) infinite; }
+.nav__son[data-actif='oui'] .nav__son-barres i:nth-child(2) { animation-delay: .18s; }
+.nav__son[data-actif='oui'] .nav__son-barres i:nth-child(3) { animation-delay: .36s; }
+@keyframes son-barre {
+  0%, 100% { height: 4px; }
+  50%      { height: 14px; }
+}
+/* Le mode sobre coupe l'animation du bouton, pas le son lui-meme : le son
+   n'est pas du mouvement, et quelqu'un qui l'a allume veut l'entendre. */
+html[data-mouvement='sobre'] .nav__son-barres i { animation: none !important; }
+
 /* ── Le choix du mouvement ────────────────────────────────────────────── */
 /* En bas a droite, hors du chemin de lecture. Il ne bloque rien, ne couvre
    aucun bouton, et disparait des qu'on a repondu. */

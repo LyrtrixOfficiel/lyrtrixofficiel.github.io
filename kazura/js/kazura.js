@@ -727,6 +727,9 @@ function monterLeSeuil() {
     if (traversee || fini) return;
     traversee = true;
     ecran.dataset.traverse = 'oui';
+    /* Le son, s'il est allume, se branche la-dessus. Un evenement plutot qu'un
+       appel direct : le seuil n'a pas a savoir qu'un module audio existe. */
+    document.dispatchEvent(new CustomEvent('kazura:traversee'));
   };
 
   const franchir = () => {
@@ -876,6 +879,73 @@ function monterLesCompteurs() {
       return false;
     });
   });
+}
+
+/* ══ Le son ═════════════════════════════════════════════════════════════ */
+/* Coupe par defaut, et le module n'est meme pas telecharge tant que personne
+   ne l'allume. Un son qui demarre tout seul est la pire chose qu'un site
+   puisse faire ; un module audio charge pour rien est la deuxieme. */
+let _son = null;
+
+async function chargerLeSon() {
+  if (_son) return _son;
+  try { _son = await import('./son.js' + VERSION); } catch (e) { return null; }
+  return _son;
+}
+
+function monterLeSon() {
+  const bouton = $('[data-son]');
+  if (!bouton) return;
+
+  const peindre = (on) => {
+    bouton.dataset.actif = on ? 'oui' : 'non';
+    bouton.setAttribute('aria-pressed', on ? 'true' : 'false');
+    bouton.setAttribute('aria-label', on ? 'Couper le son' : 'Activer le son');
+  };
+  peindre(false);
+
+  /* Les declencheurs ne sont poses qu'une fois le son allume : inutile
+     d'ecouter la moitie de la page pour un module qui ne repondra pas. */
+  let branches = false;
+  const brancher = (s) => {
+    if (branches) return;
+    branches = true;
+
+    /* La hauteur suit la position horizontale de l'element. La barre se lit
+       donc de gauche a droite comme un clavier, ce qui rend le survol
+       coherent au lieu d'aleatoire. */
+    $$('.nav__lien, .bouton, .nav__marque').forEach(el => {
+      el.addEventListener('pointerenter', () => {
+        const r = el.getBoundingClientRect();
+        s.note(borne(r.left / Math.max(1, window.innerWidth), 0, 1), 0.55);
+      });
+    });
+
+    /* Le franchissement du seuil est le seul moment qui merite un accord. */
+    document.addEventListener('kazura:traversee', () => { s.souffler(2.4); s.accord(0.9); });
+  };
+
+  bouton.addEventListener('click', async () => {
+    const s = await chargerLeSon();
+    if (!s) return;
+    const on = s.basculer();
+    peindre(on);
+    if (on) brancher(s);
+  });
+
+  /* Si le visiteur avait deja allume lors d'une visite precedente, on recharge
+     son choix, mais le contexte audio, lui, attendra son premier geste : les
+     navigateurs l'exigent, et ils ont raison. */
+  let voulu = false;
+  try { voulu = localStorage.getItem('kazura-son') === '1'; } catch (e) {}
+  if (voulu) {
+    chargerLeSon().then(s => {
+      if (!s) return;
+      s.reprendreLeChoix();
+      peindre(true);
+      brancher(s);
+    });
+  }
 }
 
 /* ══ Le choix du mouvement ══════════════════════════════════════════════ */
@@ -1163,6 +1233,7 @@ function demarrer() {
   monterLeSceauSiPresent();
   monterLePortailSiPresent();
   monterLeFormulaire();
+  monterLeSon();
   monterLeChoixDuMouvement();
   monterLeMotSiPresent();
 

@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=5debe530fd">
+<link rel="stylesheet" href="css/kazura.css?v=77bf77fa05">
 
 <script type="importmap">
 { "imports": {
@@ -87,6 +87,10 @@
   <a class="bouton bouton--plein nav__cta" href="contact.html" data-aimant>
     Parler de mon site <span class="fleche" aria-hidden="true">→</span>
   </a>
+  <button class="nav__son" type="button" data-son aria-pressed="false" aria-label="Activer le son">
+    <span class="nav__son-barres" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
   <button class="nav__menu" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu">
     <span class="nav__barres" aria-hidden="true"><i></i><i></i></span>
   </button>
@@ -321,7 +325,9 @@
   </section>
 
   <!-- ══ Identité ═════════════════════════════════════════════════════ -->
-  <section class="identite" id="identite">
+  <!-- Le sceau n'est plus une vignette posee a cote d'un paragraphe : il
+       occupe la section entiere, le texte passe par dessus. -->
+  <section class="identite identite--plein" id="identite">
     <div class="identite__fond" data-parallaxe="0.08" aria-hidden="true"></div>
     <div class="enveloppe">
       <div class="identite__grille">
@@ -339,19 +345,12 @@
             <li><span class="coche" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.4 4.6 9 10 3"/></svg></span><span>Des <b>cartes de visite</b> prêtes à imprimer</span></li>
           </ul>
         </div>
-
-        <!-- Le sceau en verre, calculé image par image à partir du tracé
-             vectoriel du blason. Si WebGL manque ou si l'appareil est trop
-             petit, `data-repli` fait apparaître la photo des cartes à la
-             place : personne ne voit un rectangle noir. -->
-        <figure class="identite__objet identite__objet--vif" data-vient="bloc">
-          <div class="sceau3d">
-            <canvas id="toile-sceau" aria-hidden="true"></canvas>
-            <img class="sceau3d__repli" src="assets/carte.webp" alt="Deux cartes de visite noires gravées du blason de Kazura, trois folioles dans un cercle, marquées à chaud en vert émeraude" width="2000" height="1328" loading="lazy" decoding="async">
-          </div>
-          <figcaption>Le sceau, taillé dans le verre <span aria-hidden="true">·</span> rendu en direct, pas une vidéo</figcaption>
-        </figure>
       </div>
+    </div>
+
+    <div class="sceau-plein">
+      <canvas id="toile-sceau" aria-hidden="true"></canvas>
+      <img class="sceau3d__repli" src="assets/carte.webp" alt="Deux cartes de visite noires gravées du blason de Kazura, trois folioles dans un cercle, marquées à chaud en vert émeraude" width="2000" height="1328" loading="lazy" decoding="async">
     </div>
   </section>
 
@@ -436,6 +435,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=5debe530fd"></script>
+<script type="module" src="js/kazura.js?v=77bf77fa05"></script>
 </body>
 </html>
