@@ -598,6 +598,14 @@ canvas[data-prenable] {
 }
 canvas[data-prenable][data-tenue] { cursor: grabbing; }
 
+/* Sur téléphone, la toile de l'ouverture n'est qu'une bande sous l'en-tête :
+   elle peut donc refuser le défilement sans piéger personne, tout le reste de
+   la page reste défilable. Sur une tablette large, la même toile occupe le
+   premier écran entier, et là il n'en est pas question. */
+@media (pointer: coarse) and (max-width: 999px) {
+  .ouverture__toile[data-prenable] { touch-action: none; }
+}
+
 .poignee {
   position: absolute;
   z-index: 3;
@@ -622,7 +630,19 @@ canvas[data-prenable][data-tenue] { cursor: grabbing; }
 .vitrine .poignee { left: 50%; transform: translateX(-50%); bottom: 3.5vh; }
 .vitrine .poignee[data-vue='oui'] { transform: translate(-50%, 6px); }
 
-@media (max-width: 640px) { .poignee { display: none; } }
+/* Sur téléphone, l'invitation se pose dans la bande de la pièce, là où le
+   doigt doit aller : ailleurs elle désignerait une zone qui ne répond pas. */
+@media (max-width: 640px) {
+  .poignee { font-size: .72rem; padding: .4rem .75rem; gap: .4rem; }
+  .ouverture .poignee {
+    left: 50%; right: auto;
+    top: calc(var(--sous-entete) + var(--bande) - 2.4rem);
+    bottom: auto;
+    transform: translateX(-50%);
+  }
+  .ouverture .poignee[data-vue='oui'] { transform: translate(-50%, 6px); }
+  .vitrine .poignee { top: 5svh; bottom: auto; }
+}
 
 /* --- 8. Révélation au défilement ---------------------------------------- */
 /* Règle apprise à la dure sur un autre site de la maison : une animation
@@ -670,12 +690,33 @@ html:not(.anime) [data-lever] { opacity: 1; transform: none; transition: none; }
 /* --- 10. La vitrine 3D --------------------------------------------------- */
 
 .vitrine { position: relative; }
-.vitrine__toile {
+.vitrine__scene {
   position: sticky;
   top: 0;
   height: 100svh;
-  width: 100%;
   z-index: 0;
+}
+.vitrine__toile {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* La zone de prise n'existe qu'au doigt. À la souris, toute la toile se
+   saisit déjà, et une surface qui refuse le défilement n'aurait aucun sens
+   puisque le défilement passe par la molette. */
+.vitrine__manche { display: none; }
+@media (pointer: coarse) {
+  .vitrine__manche {
+    display: block;
+    position: absolute;
+    inset: 0 0 auto;
+    /* Assez haut pour couvrir la pièce en entier, pas plus : le reste de
+       l'écran doit rester défilable au doigt, et c'est le volet de texte du
+       bas qui sert de zone de défilement naturelle. */
+    height: 50svh;
+    touch-action: none;
+  }
 }
 /* `pointer-events: none` doit être posé sur le CONTENEUR, pas seulement sur
    les volets. Un volet transparent au clic laisse passer le geste vers ce qui

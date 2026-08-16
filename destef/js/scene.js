@@ -202,17 +202,25 @@ export function suivrePointeur() {
  * On rend des ÉCARTS à consommer, pas une position. L'appelant décide à quoi
  * il les applique, et peut n'en donner qu'à la pièce que le visiteur regarde. */
 
-export function attraper(toile, { sensibilite = 0.0062 } = {}) {
-  /* Au doigt, on n'engage la rotation qu'une fois l'intention connue, et on
-     ne retient alors que l'horizontale. Le premier jet tournait la pièce au
-     moindre mouvement : quiconque essayait simplement de faire défiler la page
-     la faisait tourner en même temps, et l'inverse aussi. */
+export function attraper(toile, { sensibilite = 0.0062, zones = [] } = {}) {
+  /* DEUX RÉGIMES, selon que le navigateur peut encore revendiquer le geste.
+   *
+   * Sur les surfaces en `touch-action: none`, il ne le peut pas : le doigt
+   * tourne la pièce dans tous les sens, tout de suite, et la page ne bouge
+   * pas d'un pixel. Ce sont les `zones`, taillées autour de la pièce.
+   *
+   * Partout ailleurs, en `pan-y`, le défilement reste au navigateur et nous
+   * recevons quand même tout le geste. Il faut donc trancher : on n'engage
+   * qu'après neuf pixels et seulement si l'horizontale l'emporte nettement,
+   * et on ignore alors la verticale. Sans ce verrou, un doigt qui veut faire
+   * défiler tourne la pièce, et un doigt qui veut tourner fait défiler. */
   const grossier = matchMedia('(pointer: coarse)').matches;
   const SEUIL = 9;    /* pixels parcourus avant de trancher */
   const PENTE = 1.4;  /* l'horizontale doit l'emporter d'autant pour engager */
 
   let suivi = false;  /* un doigt est posé, l'intention reste à connaître */
   let actif = false;  /* tranché : c'est bien une rotation */
+  let libre = false;  /* la surface saisie ne défile pas : les deux axes vivent */
   let ox = 0, oy = 0;
   let dernierX = 0, dernierY = 0;
   let dx = 0, dy = 0;   /* écart en attente */
@@ -228,8 +236,10 @@ export function attraper(toile, { sensibilite = 0.0062 } = {}) {
     if (e.button > 0) return;
     suivi = true;
     /* À la souris, il n'y a pas d'ambiguïté : le défilement passe par la
-       molette, on prend donc la main tout de suite et sur les deux axes. */
-    actif = !grossier;
+       molette. Sur une zone qui ne défile pas non plus. Dans les deux cas on
+       prend la main tout de suite, et sur les deux axes. */
+    libre = !grossier || getComputedStyle(e.currentTarget).touchAction === 'none';
+    actif = libre;
     vx = vy = 0;
     ox = dernierX = e.clientX;
     oy = dernierY = e.clientY;
@@ -253,7 +263,9 @@ export function attraper(toile, { sensibilite = 0.0062 } = {}) {
     }
 
     const ax = (e.clientX - dernierX) * sensibilite;
-    const ay = grossier ? 0 : (e.clientY - dernierY) * sensibilite;
+    /* La verticale n'est retenue que si la surface ne défile pas. Ailleurs,
+       elle appartient au navigateur et la reprendre ferait bouger les deux. */
+    const ay = libre ? (e.clientY - dernierY) * sensibilite : 0;
     dernierX = e.clientX;
     dernierY = e.clientY;
     dx += ax; dy += ay;
@@ -270,7 +282,7 @@ export function attraper(toile, { sensibilite = 0.0062 } = {}) {
     actif = false;
   };
 
-  toile.addEventListener('pointerdown', debut);
+  for (const surface of [toile, ...zones]) surface.addEventListener('pointerdown', debut);
   addEventListener('pointermove', bouge, { passive: true });
   addEventListener('pointerup', fin);
   /* `pointercancel` arrive quand le navigateur décide que le geste était un

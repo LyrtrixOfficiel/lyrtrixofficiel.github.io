@@ -14,7 +14,7 @@ import {
 
 const ECART = 3.4;
 
-export async function dresser(section, toile, racineModeles, fichiers) {
+export async function dresser(section, toile, manche, racineModeles, fichiers) {
   const rendu = faireRendu(toile);
   const scene = new THREE.Scene();
 
@@ -62,7 +62,7 @@ export async function dresser(section, toile, racineModeles, fichiers) {
   }
 
   const pointeur = suivrePointeur();
-  const prise = attraper(toile);
+  const prise = attraper(toile, { zones: manche ? [manche] : [] });
   toile.dataset.prenable = 'oui';
   let avance = 0;      /* position sur le rail, en index de pièce */
   let avanceLisse = 0;

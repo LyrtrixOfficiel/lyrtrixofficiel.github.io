@@ -206,8 +206,9 @@ async function troisDimensions() {
   }
   if (sectionVitrine) {
     const toile = sectionVitrine.querySelector('canvas');
+    const manche = sectionVitrine.querySelector('[data-manche]');
     const { dresser } = await import(`./vitrine.js${V}`);
-    dresser(sectionVitrine, toile, 'modeles', [
+    dresser(sectionVitrine, toile, manche, 'modeles', [
       /* `inclinaison` bascule la pièce autour de l'axe horizontal. Le signe
          compte : en POSITIF, la face du dessus vient vers la caméra ; en
          négatif, on montre le dessous. Le porte-bougie, qui est presque plat,
