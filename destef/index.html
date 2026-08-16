@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les Créas Bois Destef · Tournage sur bois et bois flotté, Armancourt</title>
+<meta name="description" content="Stéphane fabrique des lampes, des vases, des jeux et des stylos en bois tourné et en bois flotté, mariés au métal. Atelier à Armancourt, dans l'Oise. Chaque pièce est unique.">
+<meta name="theme-color" content="#f7f0e3">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://lyrtrixofficiel.github.io/destef/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Les Créas Bois Destef">
+<meta property="og:description" content="Bois tourné, bois flotté, métal. Des pièces uniques, faites à Armancourt dans l'Oise.">
+<meta property="og:image" content="https://lyrtrixofficiel.github.io/destef/assets/photos/grand/Da9og5Toqz_.webp">
+<meta property="og:locale" content="fr_FR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/destef.css?v=ddb7db369b">
+
+<!-- La pièce de l'ouverture part en même temps que le code qui la charge :
+     sans cela, elle attend que three.js soit arrivé du réseau distant. -->
+<link rel="preload" as="fetch" href="modeles/reveil.glb" crossorigin="anonymous">
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.171.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.171.0/examples/jsm/"
+} }
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Les Créas Bois Destef",
+  "description": "Tournage sur bois, bois flotté et travail du métal. Pièces uniques.",
+  "address": { "@type": "PostalAddress", "addressLocality": "Armancourt", "addressRegion": "Oise", "addressCountry": "FR" },
+  "sameAs": ["https://www.instagram.com/lescreasboisdestef/"]
+}
+</script>
+</head>
+
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<div class="voile" data-voile>
+  <div class="voile__anneau"></div>
+  <p>Le tour démarre</p>
+</div>
+
+<header class="entete" data-entete>
+  <div class="entete__barre verre">
+    <a class="marque" href="index.html">
+      <img class="marque__sceau" src="assets/logo-petit.webp" alt="" width="180" height="180">
+      <span class="marque__nom">Les Créas Bois<small>Destef</small></span>
+    </a>
+    <button class="bascule" type="button" data-bascule aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+      <span></span>
+    </button>
+    <ul class="menu" id="menu" data-menu data-ouvert="non">
+      <li><a href="index.html" aria-current="page">Accueil</a></li>
+      <li><a href="creations.html">Les créations</a></li>
+      <li><a href="creations.html?rayon=lampes">Les lampes</a></li>
+      <li><a href="index.html#atelier">L'atelier</a></li>
+      <li><a class="bouton bouton--petit" href="contact.html">Écrire à Stéphane</a></li>
+    </ul>
+    <a class="bouton bouton--petit" href="contact.html">Écrire à Stéphane</a>
+  </div>
+</header>
+
+<main id="contenu">
+
+  <!-- 1. L'ouverture ---------------------------------------------------- -->
+  <section class="ouverture">
+    <canvas class="ouverture__toile" data-ouverture aria-hidden="true"></canvas>
+
+    <div class="ouverture__dedans">
+      <div class="ouverture__mot">
+        <p class="sur-titre">Armancourt · Oise · Hauts-de-France</p>
+        <h1 data-lettres>Les Créas Bois <em>Destef</em></h1>
+        <p class="chapo ouverture__chapo" data-lever style="--retard:700ms">
+          Du bois flotté ramassé sur le sable, un tronc donné par une voisine,
+          un prunus de cent vingt ans. Stéphane cherche dedans ce que personne
+          n'y voit, puis il le fait tourner.
+        </p>
+        <div class="ouverture__actions" data-lever style="--retard:900ms">
+          <a class="bouton" href="creations.html">Voir les créations</a>
+          <a class="bouton bouton--fantome" href="contact.html">Écrire à Stéphane</a>
+        </div>
+      </div>
+
+      <p class="ouverture__pied" data-lever style="--retard:1200ms">
+        <span class="ouverture__fil" aria-hidden="true"></span>
+        Lampes · Vases · Jeux · Écriture
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Le manifeste ---------------------------------------------------- -->
+  <section class="bande" style="position:relative">
+    <div class="bulles" data-bulles="10" aria-hidden="true"></div>
+    <div class="dedans">
+      <div class="duo">
+        <div data-lever>
+          <p class="sur-titre">L'idée</p>
+          <h2>Un morceau de bois ramassé sur le sable, une deuxième vie commence.</h2>
+        </div>
+        <div data-lever style="--retard:140ms">
+          <p>
+            C'est Stéphane qui l'écrit, à propos d'une lampe. La phrase vaut pour
+            tout l'atelier. Rien ici ne part d'un plan : ça part d'une branche
+            tombée, d'un morceau donné il y a trois ans qui a traversé toutes
+            sortes d'idées non abouties, d'un bois qu'un coup de tronçonneuse a
+            fini par révéler. La forme vient après, au tour.
+          </p>
+          <p>
+            Quand le bois ne suffit plus, le métal prend le relais. Fer plat pour
+            la structure, fer rond pour le dessin, soudure pour tenir l'ensemble.
+            Les carcasses d'abat-jour, les anses et jusqu'aux aiguilles d'un
+            réveil sortent du même atelier.
+          </p>
+        </div>
+      </div>
+
+      <div class="gestes">
+        <article class="geste verre" data-lever>
+          <span class="geste__num">01</span>
+          <h3>Tourner</h3>
+          <p>Le tour donne la rondeur. Vases, soliflores, boîtes, toupies,
+             cache-douilles : tout ce qui est rond ici est passé entre les pointes.</p>
+        </article>
+        <article class="geste verre" data-lever style="--retard:90ms">
+          <span class="geste__num">02</span>
+          <h3>Ramasser</h3>
+          <p>Le bois flotté arrive déjà sculpté par l'eau et le sel. Beaucoup de
+             nettoyage, beaucoup de ponçage, et surtout aucune forme imposée.</p>
+        </article>
+        <article class="geste verre" data-lever style="--retard:180ms">
+          <span class="geste__num">03</span>
+          <h3>Souder</h3>
+          <p>Fer plat et fer rond, pliés et assemblés sur place. C'est de là que
+             viennent les abat-jour, les cercles et les anses.</p>
+        </article>
+        <article class="geste verre" data-lever style="--retard:270ms">
+          <span class="geste__num">04</span>
+          <h3>Graver</h3>
+          <p>La pyrogravure signe la pièce. Initiales, motifs, dates : c'est là
+             qu'un objet devient celui de quelqu'un.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. La vitrine en trois dimensions ---------------------------------- -->
+  <section class="bande--sombre vitrine" data-vitrine>
+    <canvas class="vitrine__toile" aria-hidden="true"></canvas>
+
+    <div class="vitrine__pistes">
+      <div class="vitrine__piste">
+        <div class="vitrine__carte verre">
+          <span class="vitrine__etiq">Forme 1 sur 4</span>
+          <h3>Le stylo</h3>
+          <p>Un corps tourné entre les pointes, les deux extrémités teintées, et
+             trois filets noirs à la jonction. Chez Stéphane, le même geste sert
+             à faire un stylo ou un pied de lampe.</p>
+        </div>
+      </div>
+      <div class="vitrine__piste">
+        <div class="vitrine__carte verre">
+          <span class="vitrine__etiq">Forme 2 sur 4</span>
+          <h3>Le porte-bougie</h3>
+          <p>Un plateau, un bourrelet, un logement au centre. Presque rien, et
+             c'est justement ce qui est difficile : sur une pièce plate, la
+             moindre hésitation du ciseau se voit.</p>
+        </div>
+      </div>
+      <div class="vitrine__piste">
+        <div class="vitrine__carte verre">
+          <span class="vitrine__etiq">Forme 3 sur 4</span>
+          <h3>Le réveil</h3>
+          <p>Quatre-vingt-dix-neuf pour cent de pin, avec ses cernes pour cadran
+             et deux cloches tournées sur le dessus. Les aiguilles en métal ont
+             été faites ici aussi.</p>
+        </div>
+      </div>
+      <div class="vitrine__piste">
+        <div class="vitrine__carte verre">
+          <span class="vitrine__etiq">Forme 4 sur 4</span>
+          <h3>Les sphères liées</h3>
+          <p>Deux boules tournées, retenues l'une à l'autre par une cordelette.
+             Un exercice de tour qui finit par devenir un objet.</p>
+          <p class="discret" style="margin-top:.9rem">
+            Volumes dessinés d'après les pièces de l'atelier. Bougez le curseur
+            pour les faire tourner, ou continuez de défiler.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Les lampes ------------------------------------------------------ -->
+  <section class="bande" id="lampes">
+    <div class="dedans">
+      <div class="duo">
+        <div data-lever>
+          <p class="sur-titre">Le rayon le plus fourni</p>
+          <h2>Les lampes</h2>
+        </div>
+        <div data-lever style="--retard:140ms">
+          <p>
+            Chacune a son histoire, et Stéphane la raconte mieux que personne.
+            Une lampe à tiroir, pour y cacher une friandise ou un bijou. Une
+            prisonnière, cadenassée, dont le propriétaire devra bien
+            s'expliquer un jour. Un chaudron pas magique, posé sur trois pieds
+            et paré de flammes.
+          </p>
+          <p>
+            Bois flotté, thuya, bois brûlé puis ciré, carcasses de fer soudées :
+            douze luminaires, et pas deux qui se ressemblent.
+          </p>
+          <p><a class="bouton" href="creations.html?rayon=lampes">Voir les douze lampes</a></p>
+        </div>
+      </div>
+
+      <div class="mosaique" data-lever>
+        <a href="creations.html?rayon=lampes"><img src="assets/photos/Da9og5Toqz_.webp" alt="Lampe bougie en bois flotté posée sur une table, face à la mer la nuit" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=lampes"><img src="assets/photos/C8BLbowOj7X.webp" alt="Lampe en bois percée, allumée dans un champ de coquelicots" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=lampes"><img src="assets/photos/DSLLLqNiG2n.webp" alt="Lampe en bois tourné à petit tiroir, abat-jour orange" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=lampes"><img src="assets/photos/C5MXua-uLZs.webp" alt="Lampe chaudron en bois tourné, cerclée de fer, aux flammes peintes" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=lampes"><img src="assets/photos/DB517bIoWub.webp" alt="Lampe en bois cadenassée, posée dans un jardin" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=lampes"><img src="assets/photos/Da8hlFCo2OR.webp" alt="Lampe en bois flotté à abat-jour de fer soudé, dans un salon" loading="lazy" decoding="async"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. L'atelier ------------------------------------------------------- -->
+  <section class="bande bande--sombre" id="atelier">
+    <div class="dedans">
+      <div class="duo duo--inverse">
+        <div class="duo__image" data-lever>
+          <img src="assets/photos/grand/DQnbN9RiAOB.webp"
+               alt="L'étal de Stéphane sur un marché de Noël : jeux, ustensiles et objets en bois tourné"
+               loading="lazy" decoding="async" style="aspect-ratio:1440/999">
+        </div>
+        <div data-lever style="--retard:120ms">
+          <p class="sur-titre">L'atelier</p>
+          <h2>Stéphane, dit Stef</h2>
+          <p>
+            « Moi c'est Stef, je fabrique des objets en bois, avec un tour à bois
+            ou en les assemblant, et en les mariant avec d'autres matériaux. »
+            C'est ainsi qu'il se présente, et il n'y a pas grand-chose à ajouter.
+          </p>
+          <p>
+            L'atelier est à Armancourt, dans l'Oise. Les bois viennent d'un peu
+            partout : pommier de la Nièvre, noyer de l'Orne, glycine, prunus de
+            plus de cent vingt ans, buis, thuya, bambou du jardin. Beaucoup sont
+            donnés, et il pense aux donateurs en les travaillant. Aucun n'est
+            acheté parce qu'il est joli.
+          </p>
+          <p>
+            L'hiver, l'étal monte sur les marchés de Noël de la région.
+          </p>
+
+          <div class="mesure">
+            <div><b>35</b><span>pièces présentées ici</span></div>
+            <div><b>12</b><span>lampes au catalogue</span></div>
+            <div><b>120</b><span>ans, l'âge du prunus d'un stylo</span></div>
+            <div><b>0</b><span>doublon, jamais</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. La boutique ----------------------------------------------------- -->
+  <section class="bande">
+    <div class="dedans">
+      <div class="duo">
+        <div data-lever>
+          <p class="sur-titre">La boutique</p>
+          <h2>Sans prix, et c'est voulu</h2>
+        </div>
+        <div data-lever style="--retard:140ms">
+          <p>
+            Chaque pièce est unique, parce que le morceau de bois qui l'a faite
+            l'était. Un prix affiché promettrait un catalogue qui n'existe pas,
+            et un stock qui n'existe pas non plus.
+          </p>
+          <p>
+            Alors on montre. Si une pièce vous arrête, vous écrivez, et Stéphane
+            répond. Une commande sur mesure, une pièce à personnaliser à la
+            pyrogravure, une idée dont vous ne savez pas encore si elle est
+            faisable : c'est le même bouton.
+          </p>
+          <p><a class="bouton" href="creations.html">Entrer dans la boutique</a></p>
+        </div>
+      </div>
+
+      <div class="mosaique" data-lever>
+        <a href="creations.html"><img src="assets/photos/DRDHUqMiPfe.webp" alt="Trois plumes d'oie montées sur des manches en bois tourné, sur un manuscrit" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=quotidien"><img src="assets/photos/C97CUSpIqJy.webp" alt="Horloge murale en bois flotté aux planches colorées" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=jeux"><img src="assets/photos/DEDgkUkojLU.webp" alt="Ballon de rugby en pommier, ligatures de rotin et initiales pyrogravées" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=jeux"><img src="assets/photos/C_hr430IpgX.webp" alt="Un plateau couvert de toupies en bois peintes de toutes les couleurs" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=vases"><img src="assets/photos/DRu44I5iB4g.webp" alt="Deux petits soliflores en glycine, très clairs, liés de cordelette noire" loading="lazy" decoding="async"></a>
+        <a href="creations.html?rayon=quotidien"><img src="assets/photos/C4yvodcoSE0.webp" alt="Phare en buis tourné, posé sur un rocher de cerisier sculpté" loading="lazy" decoding="async"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. L'appel --------------------------------------------------------- -->
+  <section class="bande bande--sombre" style="position:relative">
+    <div class="bulles" data-bulles="14" aria-hidden="true"></div>
+    <div class="dedans dedans--texte" style="text-align:center">
+      <p class="sur-titre" style="justify-content:center" data-lever>La suite</p>
+      <h2 data-lever style="--retard:80ms">Un coup de cœur sur un objet&nbsp;?</h2>
+      <p class="chapo" data-lever style="margin-top:1.4rem;--retard:160ms">
+        Écrivez à Stéphane. Dites-lui ce qui vous a arrêté, il vous dira si la
+        pièce existe encore et ce qu'il peut faire d'approchant.
+      </p>
+      <p data-lever style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;--retard:240ms">
+        <a class="bouton" href="contact.html">Faire une demande</a>
+        <a class="bouton bouton--fantome" href="https://www.instagram.com/lescreasboisdestef/" target="_blank" rel="noopener">Suivre l'atelier sur Instagram</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pied">
+  <div class="pied__dedans">
+    <div>
+      <p class="pied__marque">Les Créas Bois<br>Destef</p>
+      <p class="discret" style="margin-top:.7rem;color:#a2907c">
+        Bois tourné, bois flotté, métal.<br>Armancourt, Oise.
+      </p>
+    </div>
+    <div>
+      <h4>Le site</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="creations.html">Les créations</a></li>
+        <li><a href="index.html#atelier">L'atelier</a></li>
+        <li><a href="contact.html">Écrire à Stéphane</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Les rayons</h4>
+      <ul>
+        <li><a href="creations.html?rayon=lampes">Lampes</a></li>
+        <li><a href="creations.html?rayon=flotte">Bois flotté</a></li>
+        <li><a href="creations.html?rayon=vases">Vases et soliflores</a></li>
+        <li><a href="creations.html?rayon=jeux">Jeux et jouets</a></li>
+        <li><a href="creations.html?rayon=ecriture">Écriture</a></li>
+        <li><a href="creations.html?rayon=quotidien">Le quotidien</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Ailleurs</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lescreasboisdestef/" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pied__bas">
+    <span>© <span data-annee>2026</span> Les Créas Bois Destef</span>
+    <span>Photographies de l'atelier. Textes de Stéphane.</span>
+  </div>
+</footer>
+
+<div class="rappel verre" data-rappel hidden>
+  <span>Votre appareil demande à limiter les animations. Ce site en a quelques-unes.</span>
+  <button class="bouton bouton--petit" type="button" data-rappel-oui>Les activer</button>
+  <button class="bouton bouton--petit bouton--fantome" type="button" data-rappel-non>Non merci</button>
+</div>
+
+<script type="module" src="js/destef.js?v=ddb7db369b"></script>
+</body>
+</html>

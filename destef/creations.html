@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les créations · Les Créas Bois Destef</title>
+<meta name="description" content="Lampes, vases, soliflores, jeux, stylos et objets du quotidien en bois tourné et bois flotté. Trente-cinq pièces uniques de l'atelier de Stéphane, à Armancourt.">
+<meta name="theme-color" content="#f7f0e3">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://lyrtrixofficiel.github.io/destef/creations.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Les créations · Les Créas Bois Destef">
+<meta property="og:description" content="Trente-cinq pièces uniques en bois tourné et bois flotté.">
+<meta property="og:image" content="https://lyrtrixofficiel.github.io/destef/assets/photos/grand/DRDHUqMiPfe.webp">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/destef.css?v=ddb7db369b">
+</head>
+
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<header class="entete" data-entete>
+  <div class="entete__barre verre">
+    <a class="marque" href="index.html">
+      <img class="marque__sceau" src="assets/logo-petit.webp" alt="" width="180" height="180">
+      <span class="marque__nom">Les Créas Bois<small>Destef</small></span>
+    </a>
+    <button class="bascule" type="button" data-bascule aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+      <span></span>
+    </button>
+    <ul class="menu" id="menu" data-menu data-ouvert="non">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="creations.html" aria-current="page">Les créations</a></li>
+      <li><a href="creations.html?rayon=lampes">Les lampes</a></li>
+      <li><a href="index.html#atelier">L'atelier</a></li>
+      <li><a class="bouton bouton--petit" href="contact.html">Écrire à Stéphane</a></li>
+    </ul>
+    <a class="bouton bouton--petit" href="contact.html">Écrire à Stéphane</a>
+  </div>
+</header>
+
+<main id="contenu" data-boutique>
+
+  <section class="bande bande--serree" style="padding-top:clamp(8rem,16vh,12rem);position:relative">
+    <div class="bulles" data-bulles="8" aria-hidden="true"></div>
+    <div class="dedans">
+      <p class="sur-titre" data-lever>La boutique</p>
+      <h1 data-lever style="font-size:clamp(2.6rem,1.6rem+3.6vw,5.6rem);--retard:60ms">Les créations</h1>
+      <p class="chapo" data-lever style="max-width:56ch;margin-top:1.3rem;--retard:120ms">
+        Pas de prix, pas de stock, pas deux fois la même pièce. Chaque objet est
+        né d'un bois précis qui ne se retrouvera pas. Ouvrez une fiche : le texte
+        est de Stéphane, et le bouton mène droit à lui.
+      </p>
+
+      <div class="filtres" data-filtres role="group" aria-label="Filtrer par rayon"></div>
+      <p class="discret" data-compte aria-live="polite">35 pièces</p>
+    </div>
+  </section>
+
+  <section class="bande" style="padding-top:0">
+    <div class="dedans">
+      <div class="grille" data-grille></div>
+    </div>
+  </section>
+
+  <section class="bande bande--sombre">
+    <div class="dedans dedans--texte" style="text-align:center">
+      <p class="sur-titre" style="justify-content:center" data-lever>Rien ne vous arrête ?</p>
+      <h2 data-lever style="--retard:80ms">Le sur-mesure existe aussi</h2>
+      <p class="chapo" data-lever style="margin-top:1.3rem;--retard:140ms">
+        Un bois auquel vous tenez, une pièce à personnaliser à la pyrogravure,
+        une idée dont vous ne savez pas encore si elle est faisable. Dites-la,
+        Stéphane vous dira.
+      </p>
+      <p data-lever style="margin-top:2rem;--retard:200ms">
+        <a class="bouton" href="contact.html">Faire une demande</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- La fiche d'une pièce ------------------------------------------------ -->
+  <dialog class="fiche" data-fiche aria-label="Fiche de la pièce">
+    <button class="fiche__fermer" type="button" data-fiche-fermer aria-label="Fermer">✕</button>
+    <button class="fiche__nav fiche__nav--prec" type="button" data-fiche-prec aria-label="Pièce précédente">‹</button>
+    <button class="fiche__nav fiche__nav--suiv" type="button" data-fiche-suiv aria-label="Pièce suivante">›</button>
+    <div class="fiche__cadre">
+      <div class="fiche__image">
+        <img data-fiche-image src="" alt="" decoding="async">
+      </div>
+      <div class="fiche__texte">
+        <h3 data-fiche-titre></h3>
+        <ul class="fiche__matieres" data-fiche-matieres></ul>
+        <p data-fiche-texte></p>
+        <div class="fiche__pied">
+          <a class="bouton" data-fiche-demande href="contact.html">Demander cette pièce</a>
+          <a class="bouton bouton--fantome" data-fiche-source href="#" target="_blank" rel="noopener">Voir la publication</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+</main>
+
+<footer class="pied">
+  <div class="pied__dedans">
+    <div>
+      <p class="pied__marque">Les Créas Bois<br>Destef</p>
+      <p class="discret" style="margin-top:.7rem;color:#a2907c">
+        Bois tourné, bois flotté, métal.<br>Armancourt, Oise.
+      </p>
+    </div>
+    <div>
+      <h4>Le site</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="creations.html">Les créations</a></li>
+        <li><a href="index.html#atelier">L'atelier</a></li>
+        <li><a href="contact.html">Écrire à Stéphane</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Les rayons</h4>
+      <ul>
+        <li><a href="creations.html?rayon=lampes">Lampes</a></li>
+        <li><a href="creations.html?rayon=flotte">Bois flotté</a></li>
+        <li><a href="creations.html?rayon=vases">Vases et soliflores</a></li>
+        <li><a href="creations.html?rayon=jeux">Jeux et jouets</a></li>
+        <li><a href="creations.html?rayon=ecriture">Écriture</a></li>
+        <li><a href="creations.html?rayon=quotidien">Le quotidien</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Ailleurs</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lescreasboisdestef/" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pied__bas">
+    <span>© <span data-annee>2026</span> Les Créas Bois Destef</span>
+    <span>Photographies de l'atelier. Textes de Stéphane.</span>
+  </div>
+</footer>
+
+<div class="rappel verre" data-rappel hidden>
+  <span>Votre appareil demande à limiter les animations. Ce site en a quelques-unes.</span>
+  <button class="bouton bouton--petit" type="button" data-rappel-oui>Les activer</button>
+  <button class="bouton bouton--petit bouton--fantome" type="button" data-rappel-non>Non merci</button>
+</div>
+
+<script type="module" src="js/destef.js?v=ddb7db369b"></script>
+</body>
+</html>

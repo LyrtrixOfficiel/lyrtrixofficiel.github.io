@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Écrire à Stéphane · Les Créas Bois Destef</title>
+<meta name="description" content="Une pièce vous a arrêté, ou vous avez une idée sur mesure. Écrivez à Stéphane, atelier de tournage sur bois à Armancourt dans l'Oise.">
+<meta name="theme-color" content="#f7f0e3">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://lyrtrixofficiel.github.io/destef/contact.html">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Écrire à Stéphane · Les Créas Bois Destef">
+<meta property="og:description" content="Une pièce vous a arrêté ? Dites-le lui.">
+<meta property="og:image" content="https://lyrtrixofficiel.github.io/destef/assets/photos/grand/DQuqKrpiHQv.webp">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/destef.css?v=ddb7db369b">
+</head>
+
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<header class="entete" data-entete>
+  <div class="entete__barre verre">
+    <a class="marque" href="index.html">
+      <img class="marque__sceau" src="assets/logo-petit.webp" alt="" width="180" height="180">
+      <span class="marque__nom">Les Créas Bois<small>Destef</small></span>
+    </a>
+    <button class="bascule" type="button" data-bascule aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+      <span></span>
+    </button>
+    <ul class="menu" id="menu" data-menu data-ouvert="non">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="creations.html">Les créations</a></li>
+      <li><a href="creations.html?rayon=lampes">Les lampes</a></li>
+      <li><a href="index.html#atelier">L'atelier</a></li>
+      <li><a class="bouton bouton--petit" href="contact.html" aria-current="page">Écrire à Stéphane</a></li>
+    </ul>
+    <a class="bouton bouton--petit" href="contact.html" aria-current="page">Écrire à Stéphane</a>
+  </div>
+</header>
+
+<main id="contenu">
+
+  <section class="bande" style="padding-top:clamp(8rem,16vh,12rem);position:relative">
+    <div class="bulles" data-bulles="10" aria-hidden="true"></div>
+    <div class="dedans">
+      <div class="duo">
+
+        <div data-lever>
+          <p class="sur-titre">La demande</p>
+          <h1 style="font-size:clamp(2.4rem,1.5rem+3.2vw,5rem)">Dites-lui ce qui vous a arrêté</h1>
+          <p class="chapo" style="margin-top:1.3rem">
+            Une pièce du catalogue, un bois auquel vous tenez, un cadeau à
+            personnaliser à la pyrogravure, ou juste une idée dont vous ne
+            savez pas si elle est faisable. Tout se dit dans le même message.
+          </p>
+
+          <div class="verre" style="margin-top:2.2rem;padding:1.4rem 1.6rem;border-radius:22px">
+            <p style="margin:0 0 .5rem;font-weight:600">Ce qui aide Stéphane à répondre vite</p>
+            <ul style="margin:0;padding-left:1.1rem;color:var(--encre-douce);font-size:.95rem;line-height:1.7">
+              <li>La pièce qui vous plaît, ou celle qui s'en approche.</li>
+              <li>Une taille approximative, si vous en avez une en tête.</li>
+              <li>La date, s'il y a une date. Un marché de Noël se prépare tôt.</li>
+              <li>Le bois, si vous en avez un à lui confier.</li>
+            </ul>
+          </div>
+
+          <div style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:.7rem;align-items:center">
+            <img src="assets/logo.webp" alt="" width="72" height="72"
+                 style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 8px 22px -10px rgba(74,45,20,.6)">
+            <p style="margin:0;font-size:.94rem;color:var(--encre-douce)">
+              Stéphane, dit Stef<br>
+              <a href="https://www.instagram.com/lescreasboisdestef/" target="_blank" rel="noopener">@lescreasboisdestef</a>
+              · Armancourt, Oise
+            </p>
+          </div>
+        </div>
+
+        <!-- Le formulaire.
+             Il n'envoie rien : aucune adresse ni aucun service n'y est branché
+             pour l'instant. Plutôt que de faire semblant, il le dit et propose
+             de recopier le message vers Instagram, qui est le canal réel. -->
+        <form class="verre" data-demande novalidate
+              style="padding:clamp(1.4rem,3vw,2.4rem);border-radius:26px" data-lever>
+          <div class="formulaire">
+
+            <div class="champ">
+              <label for="nom">Votre nom <span aria-hidden="true">*</span></label>
+              <input id="nom" name="nom" type="text" required autocomplete="name" placeholder="Camille Dubois">
+            </div>
+
+            <div class="champ">
+              <label for="email">Votre e-mail <span aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" required autocomplete="email" placeholder="camille@exemple.fr">
+            </div>
+
+            <div class="champ">
+              <label for="telephone">Téléphone</label>
+              <input id="telephone" name="telephone" type="tel" autocomplete="tel" placeholder="Facultatif">
+            </div>
+
+            <div class="champ">
+              <label for="sujet">Le sujet</label>
+              <select id="sujet" name="sujet">
+                <option>Une pièce du catalogue</option>
+                <option>Une commande sur mesure</option>
+                <option>Une personnalisation à la pyrogravure</option>
+                <option>Un bois à confier</option>
+                <option>Un marché, un salon</option>
+                <option>Autre chose</option>
+              </select>
+            </div>
+
+            <div class="champ champ--large">
+              <label for="objet">Objet</label>
+              <input id="objet" name="objet" type="text" placeholder="Une lampe pour la chambre">
+            </div>
+
+            <div class="champ champ--large">
+              <label for="message">Votre message <span aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" required
+                        placeholder="Bonjour Stéphane, …"></textarea>
+            </div>
+
+            <div class="champ champ--large" style="flex-direction:row;align-items:flex-start;gap:.6rem">
+              <input id="accord" name="accord" type="checkbox" required
+                     style="width:18px;height:18px;margin-top:.28rem;flex:none;padding:0">
+              <label for="accord" style="font-weight:400;font-size:.87rem;line-height:1.5;color:var(--encre-douce)">
+                J'accepte que mes coordonnées servent uniquement à me répondre.
+              </label>
+            </div>
+
+            <p class="avis" data-avis hidden role="status">
+              <strong>Le formulaire n'est pas encore relié.</strong>
+              Ce site vient d'être construit et aucune boîte de réception n'y est
+              branchée : si on affichait « merci », votre message se perdrait.
+              Copiez-le d'un clic et envoyez-le en message privé sur Instagram,
+              c'est là que Stéphane lit.
+              <span style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.9rem">
+                <button class="bouton bouton--petit" type="button" data-copier>Copier mon message</button>
+                <a class="bouton bouton--petit bouton--fantome"
+                   href="https://www.instagram.com/lescreasboisdestef/" target="_blank" rel="noopener">Ouvrir Instagram</a>
+              </span>
+            </p>
+
+            <div class="champ--large" style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center">
+              <button class="bouton" type="submit">Envoyer la demande</button>
+              <span class="discret">Réponse en quelques jours.</span>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="bande bande--sombre bande--serree">
+    <div class="dedans dedans--texte" style="text-align:center">
+      <h2 data-lever>En attendant, regardez</h2>
+      <p class="chapo" data-lever style="margin-top:1.2rem;--retard:100ms">
+        Trente-cinq pièces, six rayons, et le texte de Stéphane sous chacune.
+      </p>
+      <p data-lever style="margin-top:1.8rem;--retard:160ms">
+        <a class="bouton" href="creations.html">Voir les créations</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pied">
+  <div class="pied__dedans">
+    <div>
+      <p class="pied__marque">Les Créas Bois<br>Destef</p>
+      <p class="discret" style="margin-top:.7rem;color:#a2907c">
+        Bois tourné, bois flotté, métal.<br>Armancourt, Oise.
+      </p>
+    </div>
+    <div>
+      <h4>Le site</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="creations.html">Les créations</a></li>
+        <li><a href="index.html#atelier">L'atelier</a></li>
+        <li><a href="contact.html">Écrire à Stéphane</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Les rayons</h4>
+      <ul>
+        <li><a href="creations.html?rayon=lampes">Lampes</a></li>
+        <li><a href="creations.html?rayon=flotte">Bois flotté</a></li>
+        <li><a href="creations.html?rayon=vases">Vases et soliflores</a></li>
+        <li><a href="creations.html?rayon=jeux">Jeux et jouets</a></li>
+        <li><a href="creations.html?rayon=ecriture">Écriture</a></li>
+        <li><a href="creations.html?rayon=quotidien">Le quotidien</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Ailleurs</h4>
+      <ul>
+        <li><a href="https://www.instagram.com/lescreasboisdestef/" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pied__bas">
+    <span>© <span data-annee>2026</span> Les Créas Bois Destef</span>
+    <span>Photographies de l'atelier. Textes de Stéphane.</span>
+  </div>
+</footer>
+
+<div class="rappel verre" data-rappel hidden>
+  <span>Votre appareil demande à limiter les animations. Ce site en a quelques-unes.</span>
+  <button class="bouton bouton--petit" type="button" data-rappel-oui>Les activer</button>
+  <button class="bouton bouton--petit bouton--fantome" type="button" data-rappel-non>Non merci</button>
+</div>
+
+<script type="module" src="js/destef.js?v=ddb7db369b"></script>
+</body>
+</html>

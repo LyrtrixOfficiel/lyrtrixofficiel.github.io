@@ -1,0 +1,1099 @@
+/* ==========================================================================
+   Les Créas Bois Destef
+   --------------------------------------------------------------------------
+   Un atelier de bois : du sable, de la braise, et du verre par-dessus.
+
+   La règle de couleur tient en une phrase : le fond est du papier, le texte
+   est du brou de noix, et l'orange ne sert QUE pour ce qui appelle un geste.
+   Un orange décoratif partout et l'orange ne veut plus rien dire.
+   ========================================================================== */
+
+/* --- 1. Jetons ----------------------------------------------------------- */
+
+:root {
+  /* Matières */
+  --sable:        #f7f0e3;
+  --sable-chaud:  #f0e5d2;
+  --sable-ombre:  #e3d4bb;
+  --lin:          #fbf7ef;
+
+  --noyer:        #241a13;
+  --brou:         #4b382a;
+  --gris-bois:    #7c6a58;
+
+  --braise:       #a8410f;   /* orange de texte, contraste tenu sur le sable */
+  --orange:       #d2691e;   /* orange de surface et de trait */
+  --ambre:        #eda54e;   /* orange de lumière, jamais du texte */
+  --miel:         #f6cb8a;
+
+  /* Rôles */
+  --fond:         var(--sable);
+  --encre:        var(--noyer);
+  --encre-douce:  var(--brou);
+  --accent:       var(--braise);
+
+  /* Verre */
+  --verre-fond:   rgba(255, 252, 245, 0.42);
+  --verre-bord:   rgba(255, 255, 255, 0.55);
+  --verre-ombre:  0 18px 50px -18px rgba(59, 38, 20, 0.35);
+  --verre-flou:   blur(22px) saturate(1.55);
+
+  /* Rythme */
+  --lisiere:      clamp(1.25rem, 5vw, 5rem);
+  --colonne:      min(72ch, 100%);
+  --large:        min(1680px, 100% - 2 * var(--lisiere));
+
+  /* Mouvement */
+  --lent:         1.1s cubic-bezier(.16, 1, .3, 1);
+  --moyen:        .55s cubic-bezier(.16, 1, .3, 1);
+  --court:        .22s cubic-bezier(.4, 0, .2, 1);
+
+  --rond:         18px;
+  --rond-grand:   30px;
+}
+
+/* --- 2. Socle ------------------------------------------------------------ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* La barre de défilement change la largeur utile et fait sauter le centrage
+     entre une page courte et une page longue. */
+  scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--encre);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: clamp(1rem, .96rem + .2vw, 1.125rem);
+  line-height: 1.65;
+  font-feature-settings: 'kern', 'liga';
+  overflow-x: clip;
+  /* Le grain. Sans lui, un aplat beige sur un grand écran a l'air d'un bug
+     d'affichage plutôt que d'une matière. */
+  background-image:
+    radial-gradient(120% 90% at 82% -10%, rgba(237, 165, 78, .22), transparent 58%),
+    radial-gradient(90% 70% at 8% 105%, rgba(168, 65, 15, .10), transparent 60%);
+  background-attachment: fixed;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+  opacity: .5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='.28'/%3E%3C/svg%3E");
+}
+
+img, canvas, svg { display: block; max-width: 100%; }
+img { height: auto; }
+
+:where(a) { color: var(--accent); text-underline-offset: .22em; text-decoration-thickness: 1px; }
+:where(a):hover { color: var(--noyer); }
+
+:focus-visible {
+  outline: 2px solid var(--braise);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection { background: var(--miel); color: var(--noyer); }
+
+/* --- 3. Typographie ------------------------------------------------------ */
+
+h1, h2, h3, .titre, .marque {
+  font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  font-weight: 500;
+  font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 100;
+  line-height: 1.04;
+  letter-spacing: -.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.6rem, 1.2rem + 6.4vw, 8.5rem); }
+h2 { font-size: clamp(2rem, 1.1rem + 3.4vw, 4.4rem); }
+h3 { font-size: clamp(1.3rem, 1.1rem + .9vw, 1.9rem); font-variation-settings: 'SOFT' 30, 'WONK' 0, 'opsz' 40; }
+
+p { margin: 0 0 1.1em; text-wrap: pretty; }
+p:last-child { margin-bottom: 0; }
+
+.sur-titre {
+  font-family: 'Inter', sans-serif;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--braise);
+  margin: 0 0 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.sur-titre::before {
+  content: '';
+  width: clamp(1.5rem, 4vw, 3.5rem);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+  flex: none;
+}
+
+.chapo {
+  font-size: clamp(1.1rem, 1rem + .6vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--encre-douce);
+  font-family: 'Fraunces', Georgia, serif;
+  font-variation-settings: 'SOFT' 60, 'WONK' 0, 'opsz' 20;
+  font-weight: 400;
+}
+
+.discret { color: var(--gris-bois); font-size: .9rem; }
+
+/* --- 4. Verre liquide ---------------------------------------------------- */
+/* Trois couches font le verre : le fond flouté, un liseré clair en haut qui
+   imite l'arête où la lumière se casse, et un reflet diagonal qui se déplace
+   au survol. Sans le liseré, une surface floue n'est que du brouillard. */
+
+.verre {
+  position: relative;
+  background: var(--verre-fond);
+  border: 1px solid var(--verre-bord);
+  border-radius: var(--rond-grand);
+  box-shadow: var(--verre-ombre),
+              inset 0 1px 0 rgba(255, 255, 255, .75),
+              inset 0 -14px 34px -22px rgba(120, 76, 34, .5);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .verre {
+    background: rgba(255, 252, 245, .34);
+    -webkit-backdrop-filter: var(--verre-flou);
+    backdrop-filter: var(--verre-flou);
+  }
+}
+
+/* Le reflet. Il balaie la surface au survol, et reste immobile au repos. */
+.verre::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(112deg,
+      transparent 34%,
+      rgba(255, 255, 255, .38) 46%,
+      rgba(255, 236, 205, .2) 52%,
+      transparent 62%);
+  transform: translateX(-38%);
+  transition: transform 1.3s cubic-bezier(.2, .8, .2, 1);
+}
+.verre:hover::before,
+.verre:focus-within::before { transform: translateX(38%); }
+
+/* Une bosse de lumière en haut à gauche : le verre a une épaisseur. */
+.verre::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(80% 60% at 12% 0%, rgba(255, 255, 255, .6), transparent 70%);
+}
+
+/* --- 5. En-tête ---------------------------------------------------------- */
+
+.entete {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  padding: clamp(.6rem, 1.6vw, 1.1rem) var(--lisiere);
+  display: flex;
+  justify-content: center;
+  transition: transform var(--moyen);
+}
+.entete[data-cachee='oui'] { transform: translateY(-130%); }
+
+.entete__barre {
+  width: var(--large);
+  display: flex;
+  align-items: center;
+  gap: clamp(.75rem, 2vw, 2rem);
+  padding: .55rem .7rem .55rem 1rem;
+  border-radius: 999px;
+}
+
+.marque {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  text-decoration: none;
+  color: var(--noyer);
+  font-size: clamp(.98rem, .9rem + .25vw, 1.18rem);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+  flex: none;
+}
+.marque__sceau {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, .8);
+  box-shadow: 0 3px 12px -4px rgba(74, 45, 20, .5);
+  flex: none;
+}
+.marque__nom small {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: .58em;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--braise);
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: clamp(.15rem, 1vw, .6rem);
+  margin-left: auto;
+  list-style: none;
+  padding: 0;
+  margin-block: 0;
+}
+.menu a {
+  display: block;
+  padding: .5rem .9rem;
+  border-radius: 999px;
+  color: var(--brou);
+  text-decoration: none;
+  font-size: .93rem;
+  font-weight: 500;
+  transition: background var(--court), color var(--court);
+  white-space: nowrap;
+}
+.menu a:hover { background: rgba(255, 255, 255, .55); color: var(--noyer); }
+.menu a[aria-current='page'] { color: var(--noyer); background: rgba(255, 255, 255, .68); }
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .78rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(168deg, var(--orange), var(--braise));
+  color: #fff8ee;
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 12px 26px -14px rgba(140, 54, 12, .85),
+              inset 0 1px 0 rgba(255, 255, 255, .38);
+  transition: transform var(--court), box-shadow var(--court), filter var(--court);
+}
+.bouton:hover {
+  color: #fff8ee;
+  transform: translateY(-2px);
+  filter: saturate(1.12);
+  box-shadow: 0 18px 34px -14px rgba(140, 54, 12, .9),
+              inset 0 1px 0 rgba(255, 255, 255, .5);
+}
+.bouton:active { transform: translateY(0); }
+.bouton--fantome {
+  background: transparent;
+  color: var(--brou);
+  border: 1px solid rgba(75, 56, 42, .3);
+  box-shadow: none;
+}
+.bouton--fantome:hover { color: var(--noyer); background: rgba(255, 255, 255, .5); box-shadow: none; }
+.bouton--petit { padding: .55rem 1.05rem; font-size: .87rem; }
+
+.entete .bouton { flex: none; }
+
+/* Le menu des petits écrans */
+.bascule {
+  display: none;
+  width: 42px; height: 42px;
+  border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, .5);
+  cursor: pointer;
+  padding: 0;
+  place-items: center;
+  flex: none;
+}
+.bascule span, .bascule span::before, .bascule span::after {
+  content: '';
+  display: block;
+  width: 17px; height: 1.6px;
+  background: var(--noyer);
+  border-radius: 2px;
+  transition: transform var(--court), opacity var(--court);
+}
+.bascule span::before { transform: translateY(-5.5px); }
+.bascule span::after  { transform: translateY(4px); }
+.bascule[aria-expanded='true'] span { background: transparent; }
+.bascule[aria-expanded='true'] span::before { transform: rotate(45deg); }
+.bascule[aria-expanded='true'] span::after  { transform: rotate(-45deg) translateY(0); }
+
+@media (max-width: 860px) {
+  .bascule { display: grid; margin-left: auto; }
+  .entete__barre { flex-wrap: wrap; }
+  .menu {
+    order: 3;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .1rem;
+    margin: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height var(--moyen), padding var(--moyen);
+  }
+  .menu[data-ouvert='oui'] { max-height: 22rem; padding: .5rem 0 .3rem; }
+  .menu a { padding: .7rem 1rem; }
+  .entete .bouton { display: none; }
+  .menu .bouton { display: inline-flex; margin-top: .4rem; }
+}
+@media (min-width: 861px) { .menu .bouton { display: none; } }
+
+/* --- 6. Mise en page ----------------------------------------------------- */
+
+main { position: relative; z-index: 1; }
+
+.bande {
+  padding-block: clamp(4.5rem, 9vw, 10rem);
+  position: relative;
+}
+.bande--serree { padding-block: clamp(3rem, 6vw, 6rem); }
+
+.dedans {
+  width: var(--large);
+  margin-inline: auto;
+}
+.dedans--texte { width: min(var(--colonne), var(--large)); margin-inline: auto; }
+
+.bande--sombre {
+  background: var(--noyer);
+  color: var(--sable);
+  --encre: var(--sable);
+  --encre-douce: #cfbfa9;
+  --verre-fond: rgba(255, 244, 226, .07);
+  --verre-bord: rgba(255, 230, 200, .16);
+}
+.bande--sombre .sur-titre { color: var(--ambre); }
+.bande--sombre .chapo { color: #d8c8b1; }
+.bande--sombre a { color: var(--ambre); }
+.bande--sombre a:hover { color: #fff; }
+.bande--sombre .verre {
+  box-shadow: 0 24px 60px -30px #000,
+              inset 0 1px 0 rgba(255, 236, 210, .18);
+}
+.bande--sombre .verre::after {
+  background: radial-gradient(80% 60% at 12% 0%, rgba(255, 214, 160, .14), transparent 70%);
+}
+.bande--sombre .verre::before {
+  background: linear-gradient(112deg, transparent 36%, rgba(255, 222, 178, .16) 48%, transparent 60%);
+}
+.bande--sombre .bouton--fantome { color: #e8d8c2; border-color: rgba(255, 230, 200, .3); }
+.bande--sombre .bouton--fantome:hover { background: rgba(255, 240, 220, .1); color: #fff; }
+
+/* Le raccord entre le sable et le brou : une courbe, pas un trait. */
+.bande--sombre::before,
+.bande--sombre::after {
+  content: '';
+  position: absolute;
+  left: -5vw; right: -5vw;
+  height: clamp(40px, 5vw, 90px);
+  background: var(--noyer);
+}
+.bande--sombre::before { top: 0; transform: translateY(-99%); border-radius: 0 0 50% 50% / 0 0 100% 100%; }
+.bande--sombre::after  { bottom: 0; transform: translateY(99%); border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+
+/* --- 7. Ouverture -------------------------------------------------------- */
+
+.ouverture {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding: clamp(7rem, 14vh, 11rem) var(--lisiere) clamp(3rem, 8vh, 6rem);
+  overflow: clip;
+}
+
+/* La toile occupe le premier écran, pas toute la section. Quand le texte
+   déborde et rend la section plus haute que la fenêtre, une toile en `inset:0`
+   place son centre sous la ligne de flottaison : la pièce apparaît en bas,
+   coupée, alors que le code la croit au milieu. */
+.ouverture__toile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: min(100%, 100svh);
+  z-index: 0;
+}
+
+.ouverture__dedans {
+  position: relative;
+  z-index: 2;
+  width: var(--large);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  pointer-events: none;
+}
+.ouverture__dedans > * { pointer-events: auto; }
+
+@media (min-width: 1000px) {
+  .ouverture__dedans { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; }
+  .ouverture__mot { grid-column: 1; }
+  .ouverture__pied { grid-column: 1; }
+}
+
+/* La largeur du titre se règle sur le titre, en `em`, pas sur son conteneur.
+   Un `max-width` en `ch` posé sur le bloc se calcule avec la police du BLOC,
+   c'est-à-dire le texte courant : sur une écriture d'affiche trois fois plus
+   grande, la mesure vaut le tiers de ce qu'on croit et le titre se casse mot
+   par mot. */
+.ouverture__mot h1 { max-width: 9em; }
+.ouverture__mot em {
+  font-style: normal;
+  display: block;
+  color: var(--braise);
+  font-variation-settings: 'SOFT' 90, 'WONK' 1, 'opsz' 144;
+}
+
+.ouverture__chapo {
+  max-width: 44ch;
+  margin-top: clamp(1.2rem, 3vw, 2.2rem);
+}
+
+.ouverture__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-top: clamp(1.6rem, 3vw, 2.5rem);
+}
+
+.ouverture__pied {
+  margin-top: clamp(2rem, 6vh, 4rem);
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  font-size: .86rem;
+  color: var(--gris-bois);
+  letter-spacing: .04em;
+}
+.ouverture__fil {
+  width: 1px; height: 46px;
+  background: linear-gradient(var(--braise), transparent);
+  position: relative;
+  overflow: hidden;
+  flex: none;
+}
+.ouverture__fil::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 14px;
+  background: var(--braise);
+  animation: goutte 2.6s cubic-bezier(.6, 0, .4, 1) infinite;
+}
+@keyframes goutte {
+  0%   { transform: translateY(-16px); opacity: 0; }
+  30%  { opacity: 1; }
+  100% { transform: translateY(48px); opacity: 0; }
+}
+
+/* Les lettres qui se posent une à une.
+   L'état caché n'existe QUE sous `.anime`. Écrit dans l'autre sens, un
+   visiteur qui refuse les animations recevrait un titre invisible : c'est
+   arrivé, et sur la page d'accueil ça ne pardonne pas. */
+.lettres { display: inline-block; }
+.lettres .l { display: inline-block; }
+.anime .lettres .l {
+  opacity: 0;
+  transform: translateY(.42em) rotate(2.5deg);
+  filter: blur(6px);
+  will-change: transform, opacity, filter;
+  animation: poser .95s cubic-bezier(.16, 1, .3, 1) forwards;
+  animation-delay: calc(var(--i) * 34ms + var(--retard, 0ms));
+}
+@keyframes poser {
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* --- 8. Révélation au défilement ---------------------------------------- */
+/* Règle apprise à la dure sur un autre site de la maison : une animation
+   déclenchée par le défilement ne doit JAMAIS pouvoir se rejouer à l'envers.
+   Sinon, en remontant d'un cran on repasse la frontière et le texte fait le
+   yoyo. L'observateur ne se déclenche donc qu'une fois, et l'état final reste. */
+
+[data-lever] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .9s cubic-bezier(.16, 1, .3, 1),
+              transform .9s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--retard, 0ms);
+}
+[data-lever][data-leve='oui'] { opacity: 1; transform: none; }
+html:not(.anime) [data-lever] { opacity: 1; transform: none; transition: none; }
+
+/* --- 9. Les gestes ------------------------------------------------------- */
+
+.gestes {
+  display: grid;
+  gap: clamp(.9rem, 1.6vw, 1.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr));
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+.geste {
+  padding: clamp(1.5rem, 2.4vw, 2.2rem);
+  border-radius: var(--rond-grand);
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  min-height: 240px;
+}
+.geste__num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--orange);
+  opacity: .5;
+  font-variation-settings: 'SOFT' 80, 'WONK' 1;
+}
+.geste h3 { margin-top: auto; }
+.geste p { font-size: .96rem; color: var(--encre-douce); margin: 0; }
+
+/* --- 10. La vitrine 3D --------------------------------------------------- */
+
+.vitrine { position: relative; }
+.vitrine__toile {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  width: 100%;
+  z-index: 0;
+}
+.vitrine__pistes { position: relative; z-index: 1; margin-top: -100svh; }
+.vitrine__piste {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: 14vh var(--lisiere);
+  pointer-events: none;
+}
+.vitrine__carte {
+  pointer-events: auto;
+  width: min(30rem, 100%);
+  padding: clamp(1.5rem, 2.6vw, 2.4rem);
+  border-radius: var(--rond-grand);
+}
+.vitrine__piste:nth-child(even) .vitrine__carte { margin-left: auto; }
+.vitrine__carte h3 { margin-bottom: .5rem; }
+.vitrine__carte p { color: var(--encre-douce); font-size: .98rem; margin: 0; }
+.vitrine__etiq {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ambre);
+  margin-bottom: .8rem;
+}
+
+/* --- 11. La boutique ----------------------------------------------------- */
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin: clamp(1.8rem, 3vw, 2.8rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+.filtre {
+  border: 1px solid rgba(75, 56, 42, .22);
+  background: rgba(255, 255, 255, .38);
+  color: var(--brou);
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 500;
+  padding: .5rem 1.05rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--court);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.filtre:hover { border-color: rgba(168, 65, 15, .45); color: var(--noyer); }
+.filtre[aria-pressed='true'] {
+  background: var(--noyer);
+  border-color: var(--noyer);
+  color: var(--sable);
+}
+.filtre small { opacity: .55; margin-left: .4em; font-variant-numeric: tabular-nums; }
+
+.grille {
+  columns: 4 300px;
+  column-gap: clamp(.9rem, 1.5vw, 1.4rem);
+}
+@media (max-width: 620px) { .grille { columns: 2 150px; column-gap: .7rem; } }
+
+.piece {
+  break-inside: avoid;
+  margin-bottom: clamp(.9rem, 1.5vw, 1.4rem);
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--rond);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 34px -20px rgba(59, 38, 20, .55);
+  transition: transform var(--moyen), box-shadow var(--moyen);
+  background: var(--sable-chaud);
+}
+.piece:hover, .piece:focus-visible {
+  transform: translateY(-5px);
+  box-shadow: 0 26px 48px -22px rgba(59, 38, 20, .6);
+}
+.piece[hidden] { display: none; }
+.piece img {
+  width: 100%;
+  aspect-ratio: var(--ratio, .8);
+  object-fit: cover;
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1), filter var(--moyen);
+}
+.piece:hover img { transform: scale(1.045); }
+.piece__voile {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 3.5rem .95rem .95rem;
+  background: linear-gradient(transparent, rgba(30, 19, 11, .82));
+  color: #fdf6ea;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: .7rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--moyen), transform var(--moyen);
+}
+.piece:hover .piece__voile,
+.piece:focus-visible .piece__voile { opacity: 1; transform: none; }
+.piece__titre {
+  font-family: 'Fraunces', serif;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  font-variation-settings: 'SOFT' 40, 'WONK' 0, 'opsz' 20;
+}
+.piece__loupe {
+  flex: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .22);
+  border: 1px solid rgba(255, 255, 255, .4);
+  display: grid; place-items: center;
+  font-size: .9rem;
+}
+/* Sur téléphone, il n'y a pas de survol : le voile est toujours là. */
+@media (hover: none) {
+  .piece__voile { opacity: 1; transform: none; padding-top: 2.6rem; }
+}
+
+/* --- 12. La fiche (dialogue) --------------------------------------------- */
+
+.fiche {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  max-width: min(1120px, 94vw);
+  max-height: 92svh;
+  width: 100%;
+  overflow: visible;
+  color: var(--encre);
+}
+.fiche::backdrop {
+  background: rgba(28, 18, 11, .62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.fiche__cadre {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  border-radius: var(--rond-grand);
+  overflow: hidden;
+  max-height: 92svh;
+  background: rgba(252, 247, 238, .84);
+  -webkit-backdrop-filter: var(--verre-flou);
+  backdrop-filter: var(--verre-flou);
+  border: 1px solid var(--verre-bord);
+  box-shadow: 0 40px 90px -30px rgba(30, 18, 8, .7);
+}
+@media (max-width: 800px) {
+  .fiche__cadre { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+}
+.fiche__image {
+  background: var(--sable-ombre);
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+.fiche__image img {
+  width: 100%; height: 100%;
+  max-height: 92svh;
+  object-fit: contain;
+}
+@media (max-width: 800px) { .fiche__image img { max-height: 42svh; } }
+.fiche__texte {
+  padding: clamp(1.5rem, 3vw, 2.6rem);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.fiche__texte h3 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.2rem); }
+.fiche__texte p { color: var(--encre-douce); margin: 0; }
+.fiche__matieres { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; padding: 0; margin: 0; }
+.fiche__matieres li {
+  font-size: .78rem;
+  padding: .28rem .7rem;
+  border-radius: 999px;
+  background: rgba(210, 105, 30, .12);
+  border: 1px solid rgba(168, 65, 15, .22);
+  color: var(--braise);
+}
+.fiche__pied { margin-top: auto; display: flex; flex-wrap: wrap; gap: .6rem; padding-top: .6rem; }
+.fiche__fermer {
+  position: absolute;
+  top: -.7rem; right: -.7rem;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--verre-bord);
+  background: rgba(252, 247, 238, .9);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--noyer);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  box-shadow: 0 8px 20px -8px rgba(30, 18, 8, .6);
+}
+.fiche__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--verre-bord);
+  background: rgba(252, 247, 238, .82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--noyer);
+  cursor: pointer;
+  font-size: 1.1rem;
+  z-index: 3;
+}
+.fiche__nav--prec { left: -.7rem; }
+.fiche__nav--suiv { right: -.7rem; }
+@media (max-width: 800px) {
+  .fiche__nav { top: auto; bottom: -.7rem; transform: none; }
+  .fiche__nav--prec { left: 1rem; }
+  .fiche__nav--suiv { left: 4.2rem; right: auto; }
+}
+
+/* --- 13. Mosaïque de l'atelier ------------------------------------------- */
+
+/* Six photos, trois formats. La grande tient trois rangées à gauche, les deux
+   larges se partagent la droite, et les trois carrées ferment en bas. Les
+   rangées ont une hauteur fixe : c'est ce qui permet aux blocs de s'aligner
+   malgré des photos de proportions toutes différentes. */
+.mosaique {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: clamp(84px, 9.5vw, 158px);
+  gap: clamp(.6rem, 1.2vw, 1.1rem);
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+}
+.mosaique a {
+  display: block;
+  border-radius: var(--rond);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 36px -22px rgba(0, 0, 0, .7);
+}
+.mosaique img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.16, 1, .3, 1); }
+.mosaique a:hover img { transform: scale(1.06); }
+.mosaique a:nth-child(1) { grid-column: span 3; grid-row: span 4; }
+.mosaique a:nth-child(2),
+.mosaique a:nth-child(3) { grid-column: span 3; grid-row: span 2; }
+.mosaique a:nth-child(n+4) { grid-column: span 2; grid-row: span 2; }
+@media (max-width: 760px) {
+  .mosaique { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 1fr; }
+  .mosaique a { grid-column: span 1 !important; grid-row: auto !important; aspect-ratio: 1; }
+}
+
+/* --- 14. Duo texte + image ----------------------------------------------- */
+
+.duo {
+  display: grid;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .duo { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); }
+  .duo--inverse > :first-child { order: 2; }
+}
+.duo__image {
+  border-radius: var(--rond-grand);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 30px 70px -34px rgba(45, 27, 12, .8);
+}
+.duo__image img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+
+/* --- 15. Les bulles ------------------------------------------------------ */
+/* Elles montent lentement derrière le texte. Purement décoratif : elles ne
+   captent aucun clic et disparaissent si les animations sont refusées. */
+
+.bulles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.bulle {
+  position: absolute;
+  bottom: -22vh;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .85), rgba(255, 255, 255, .08) 42%, transparent 55%),
+    radial-gradient(circle at 70% 78%, rgba(237, 165, 78, .38), transparent 60%);
+  border: 1px solid rgba(255, 255, 255, .38);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  animation: monter linear infinite;
+}
+@keyframes monter {
+  0%   { transform: translate3d(0, 0, 0) scale(.85); opacity: 0; }
+  12%  { opacity: .85; }
+  85%  { opacity: .6; }
+  100% { transform: translate3d(var(--derive, 24px), -132vh, 0) scale(1.12); opacity: 0; }
+}
+html:not(.anime) .bulles { display: none; }
+
+/* --- 16. Le formulaire --------------------------------------------------- */
+
+.formulaire {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 640px) { .formulaire { grid-template-columns: 1fr; } }
+.champ { display: flex; flex-direction: column; gap: .38rem; }
+.champ--large { grid-column: 1 / -1; }
+.champ label { font-size: .82rem; font-weight: 600; letter-spacing: .04em; color: var(--brou); }
+.champ label span { color: var(--braise); }
+.champ input, .champ textarea, .champ select {
+  font: inherit;
+  font-size: .98rem;
+  color: var(--noyer);
+  padding: .8rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(75, 56, 42, .22);
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: border-color var(--court), box-shadow var(--court), background var(--court);
+  width: 100%;
+}
+.champ textarea { min-height: 9rem; resize: vertical; line-height: 1.55; }
+.champ input:focus, .champ textarea:focus, .champ select:focus {
+  outline: none;
+  border-color: rgba(168, 65, 15, .6);
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 0 0 4px rgba(210, 105, 30, .14);
+}
+.champ input::placeholder, .champ textarea::placeholder { color: #a89684; }
+
+.avis {
+  grid-column: 1 / -1;
+  border-radius: var(--rond);
+  padding: 1rem 1.2rem;
+  font-size: .93rem;
+  line-height: 1.55;
+  border: 1px solid rgba(168, 65, 15, .3);
+  background: rgba(237, 165, 78, .15);
+  color: var(--brou);
+}
+.avis strong { color: var(--noyer); }
+.avis[hidden] { display: none; }
+
+/* --- 17. Pied ------------------------------------------------------------ */
+
+.pied {
+  background: var(--noyer);
+  color: #cfbfa9;
+  padding: clamp(3rem, 6vw, 5rem) var(--lisiere) 2rem;
+  position: relative;
+  z-index: 1;
+}
+.pied__dedans {
+  width: var(--large);
+  margin-inline: auto;
+  display: grid;
+  gap: 2.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+.pied h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: .74rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ambre);
+  margin: 0 0 .9rem;
+  font-weight: 600;
+}
+.pied ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; }
+.pied a { color: #e0d0ba; text-decoration: none; }
+.pied a:hover { color: #fff; text-decoration: underline; }
+.pied__marque { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--sable); line-height: 1.1; }
+.pied__bas {
+  width: var(--large);
+  margin: 2.8rem auto 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(255, 230, 200, .14);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem 1.6rem;
+  justify-content: space-between;
+  font-size: .82rem;
+  color: #a2907c;
+}
+
+/* --- 18. Le voile de chargement ------------------------------------------ */
+/* Filet de sécurité : rien de décoratif ne doit pouvoir enfermer un visiteur.
+   Le voile part de lui-même au bout de quatre secondes, quoi qu'il arrive. */
+
+.voile {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: var(--sable);
+  display: grid;
+  place-items: center;
+  gap: 1.2rem;
+  transition: opacity .8s ease, visibility .8s;
+}
+.voile[data-parti='oui'] { opacity: 0; visibility: hidden; pointer-events: none; }
+.voile__anneau {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(168, 65, 15, .18);
+  border-top-color: var(--braise);
+  animation: tourner 1.5s cubic-bezier(.6, .1, .4, .9) infinite;
+}
+@keyframes tourner { to { transform: rotate(1turn); } }
+.voile p { font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gris-bois); }
+
+/* --- 19. Le bandeau des animations --------------------------------------- */
+/* Beaucoup de gens ont désactivé les effets d'animation dans Windows sans le
+   savoir, ce qui met `prefers-reduced-motion` en marche. On respecte la
+   préférence, mais on la dit, sinon ils voient un site mort et nous croient
+   en panne. */
+
+.rappel {
+  position: fixed;
+  left: 50%;
+  bottom: 1.2rem;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: .7rem .8rem .7rem 1.2rem;
+  border-radius: 999px;
+  font-size: .87rem;
+  color: var(--brou);
+  max-width: calc(100vw - 2rem);
+}
+.rappel[hidden] { display: none; }
+
+/* --- 20. Divers ---------------------------------------------------------- */
+
+.saut {
+  position: absolute;
+  left: .6rem; top: .6rem;
+  z-index: 100;
+  padding: .7rem 1.1rem;
+  border-radius: 10px;
+  background: var(--noyer);
+  color: var(--sable);
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--court);
+}
+.saut:focus { transform: none; color: var(--sable); }
+
+.invisible {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.mesure {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.mesure div { border-left: 1px solid rgba(255, 230, 200, .18); padding-left: 1.1rem; }
+.mesure b {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.2rem);
+  line-height: 1;
+  color: var(--ambre);
+  font-variation-settings: 'SOFT' 60, 'WONK' 1;
+}
+.mesure span { font-size: .86rem; color: #c0af9a; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  /* Le reflet garde sa position de repos : le ramener au centre en fait une
+     tache lumineuse en travers de chaque carte, exactement ce qu'on ne veut
+     pas voir figé. */
+  .verre::before { transform: translateX(-38%); }
+}
