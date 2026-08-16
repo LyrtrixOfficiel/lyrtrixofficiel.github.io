@@ -203,26 +203,57 @@ export function suivrePointeur() {
  * il les applique, et peut n'en donner qu'à la pièce que le visiteur regarde. */
 
 export function attraper(toile, { sensibilite = 0.0062 } = {}) {
-  let tenu = false;
+  /* Au doigt, on n'engage la rotation qu'une fois l'intention connue, et on
+     ne retient alors que l'horizontale. Le premier jet tournait la pièce au
+     moindre mouvement : quiconque essayait simplement de faire défiler la page
+     la faisait tourner en même temps, et l'inverse aussi. */
+  const grossier = matchMedia('(pointer: coarse)').matches;
+  const SEUIL = 9;    /* pixels parcourus avant de trancher */
+  const PENTE = 1.4;  /* l'horizontale doit l'emporter d'autant pour engager */
+
+  let suivi = false;  /* un doigt est posé, l'intention reste à connaître */
+  let actif = false;  /* tranché : c'est bien une rotation */
+  let ox = 0, oy = 0;
   let dernierX = 0, dernierY = 0;
   let dx = 0, dy = 0;   /* écart en attente */
   let vx = 0, vy = 0;   /* élan, pour que le geste se prolonge */
   let emprise = 0;      /* 0 au repos, 1 pendant la prise */
 
-  const debut = (e) => {
-    if (e.button > 0) return;
-    tenu = true;
-    vx = vy = 0;
-    dernierX = e.clientX;
-    dernierY = e.clientY;
+  const saisir = (e) => {
     try { toile.setPointerCapture(e.pointerId); } catch { /* sans capture, ça marche encore */ }
     toile.dataset.tenue = 'oui';
   };
 
+  const debut = (e) => {
+    if (e.button > 0) return;
+    suivi = true;
+    /* À la souris, il n'y a pas d'ambiguïté : le défilement passe par la
+       molette, on prend donc la main tout de suite et sur les deux axes. */
+    actif = !grossier;
+    vx = vy = 0;
+    ox = dernierX = e.clientX;
+    oy = dernierY = e.clientY;
+    if (actif) saisir(e);
+  };
+
   const bouge = (e) => {
-    if (!tenu) return;
+    if (!suivi) return;
+
+    if (!actif) {
+      const tx = e.clientX - ox;
+      const ty = e.clientY - oy;
+      if (Math.hypot(tx, ty) < SEUIL) return;
+      if (Math.abs(tx) <= Math.abs(ty) * PENTE) { suivi = false; return; }
+      actif = true;
+      /* On repart d'ici, sinon les neuf pixels d'observation se déversent
+         d'un coup dans la rotation et la pièce sursaute. */
+      dernierX = e.clientX;
+      dernierY = e.clientY;
+      saisir(e);
+    }
+
     const ax = (e.clientX - dernierX) * sensibilite;
-    const ay = (e.clientY - dernierY) * sensibilite;
+    const ay = grossier ? 0 : (e.clientY - dernierY) * sensibilite;
     dernierX = e.clientX;
     dernierY = e.clientY;
     dx += ax; dy += ay;
@@ -230,10 +261,13 @@ export function attraper(toile, { sensibilite = 0.0062 } = {}) {
   };
 
   const fin = (e) => {
-    if (!tenu) return;
-    tenu = false;
-    try { toile.releasePointerCapture(e.pointerId); } catch { /* déjà relâché */ }
-    delete toile.dataset.tenue;
+    if (!suivi && !actif) return;
+    suivi = false;
+    if (actif) {
+      try { toile.releasePointerCapture(e.pointerId); } catch { /* déjà relâché */ }
+      delete toile.dataset.tenue;
+    }
+    actif = false;
   };
 
   toile.addEventListener('pointerdown', debut);
@@ -244,11 +278,11 @@ export function attraper(toile, { sensibilite = 0.0062 } = {}) {
   addEventListener('pointercancel', fin);
 
   return {
-    get tenu() { return tenu; },
+    get tenu() { return actif; },
     get emprise() { return emprise; },
     prendre(dt) {
-      emprise += ((tenu ? 1 : 0) - emprise) * Math.min(1, dt * 7);
-      if (!tenu) {
+      emprise += ((actif ? 1 : 0) - emprise) * Math.min(1, dt * 7);
+      if (!actif) {
         dx += vx; dy += vy;
         const frein = Math.pow(0.92, dt * 60);
         vx *= frein; vy *= frein;

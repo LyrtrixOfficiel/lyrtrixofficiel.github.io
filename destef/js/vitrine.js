@@ -67,7 +67,13 @@ export async function dresser(section, toile, racineModeles, fichiers) {
   let avance = 0;      /* position sur le rail, en index de pièce */
   let avanceLisse = 0;
 
+  /* Pendant qu'une main tient la pièce, le rail ne suit plus le défilement.
+     Au doigt, un geste horizontal emporte toujours un peu de vertical, et la
+     page glisse dessous : sans ce gel, la pièce partait vers le volet de texte
+     au moment même où on essayait de la tourner. Le décalage accumulé est
+     rattrapé en douceur au relâchement, par l'amortissement qui existe déjà. */
   function mesurer() {
+    if (prise.tenu) return;
     const r = section.getBoundingClientRect();
     const course = section.offsetHeight - innerHeight;
     if (course <= 0) { avance = 0; return; }
@@ -97,9 +103,13 @@ export async function dresser(section, toile, racineModeles, fichiers) {
     mesurer();
   }
   observerTaille(toile, cadrer);
-  addEventListener('scroll', mesurer, { passive: true });
 
   const arreter = boucler(section, (dt, t) => {
+    /* Mesuré à chaque image plutôt qu'à chaque événement de défilement : au
+       relâchement de la pièce, il n'y a pas forcément de nouvel événement, et
+       le rail resterait figé là où le gel l'avait laissé. */
+    mesurer();
+
     avanceLisse += (avance - avanceLisse) * Math.min(1, dt * 7.5);
     rail.position.y = avanceLisse * ECART + hausse;
     rail.position.x = decalage * Math.cos(avanceLisse * Math.PI);
