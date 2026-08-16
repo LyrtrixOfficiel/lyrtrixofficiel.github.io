@@ -113,10 +113,17 @@ export async function ouvrir(toile, racineModeles) {
 
     /* Sur un écran large, la pièce va à droite pour laisser le texte respirer.
        Sur un écran étroit, elle repasse au centre et recule. */
-    const large = l / h > 1.05;
+    /* Le seuil est celui de la feuille de style, pas la proportion de la
+       toile. Sur téléphone, la toile devient une bande large et basse : à
+       juger d'après ses proportions, on la croyait sur grand écran et la pièce
+       partait se coller à droite, hors de la bande. */
+    const large = innerWidth >= 1000;
     piece.position.x = large ? Math.min(1.55, l / h * 0.62) : 0;
-    piece.position.y = large ? 0 : 0.9;
-    camera.position.z = large ? 5.4 : 6.6;
+    piece.position.y = 0;
+    /* Sur écran étroit, c'est la mise en page qui place la pièce : la toile
+       est une bande sous l'en-tête et la pièce y est centrée. On se contente
+       de la rapprocher pour qu'elle remplisse la bande. */
+    camera.position.z = large ? 5.4 : 4.7;
     camera.updateProjectionMatrix();
   }
   observerTaille(toile, cadrer);

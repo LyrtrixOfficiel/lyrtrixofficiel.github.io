@@ -80,13 +80,19 @@ export async function dresser(section, toile, racineModeles, fichiers) {
      cosinus fait le va-et-vient sans à-coup : +1 sur les volets pairs, -1 sur
      les impairs, et un glissement continu entre les deux. */
   let decalage = 0;
+  let hausse = 0;
   function cadrer() {
     const l = toile.clientWidth || innerWidth;
     const h = toile.clientHeight || innerHeight;
     rendu.setSize(l, h, false);
     camera.aspect = l / h;
-    decalage = l >= 900 ? Math.min(1.6, (l / h) * 0.55) : 0;
-    camera.position.z = l >= 900 ? 6.2 : 7.6;
+    const large = l >= 900;
+    decalage = large ? Math.min(1.6, (l / h) * 0.55) : 0;
+    /* Sur écran étroit, le volet de texte prend toute la largeur en bas :
+       la pièce monte pour lui laisser la place. On relève le rail plutôt que
+       de viser plus bas avec la caméra, ce qui déformerait la perspective. */
+    hausse = large ? 0 : 1.15;
+    camera.position.z = large ? 6.2 : 8.4;
     camera.updateProjectionMatrix();
     mesurer();
   }
@@ -95,7 +101,7 @@ export async function dresser(section, toile, racineModeles, fichiers) {
 
   const arreter = boucler(section, (dt, t) => {
     avanceLisse += (avance - avanceLisse) * Math.min(1, dt * 7.5);
-    rail.position.y = avanceLisse * ECART;
+    rail.position.y = avanceLisse * ECART + hausse;
     rail.position.x = decalage * Math.cos(avanceLisse * Math.PI);
 
     /* Le geste ne va qu'à la pièce que le visiteur a devant lui. Le distribuer

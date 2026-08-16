@@ -24,10 +24,14 @@ export function monter(racine, { CREATIONS, FAMILLES }) {
     b.dataset.index = index;
     b.style.setProperty('--ratio', piece.ratio.toFixed(4));
     b.setAttribute('aria-label', `${piece.titre}, voir la fiche`);
+    /* Les premières vignettes ne sont pas différées : sur téléphone, deux
+       colonnes, ce sont les six premières qui remplissent le premier écran, et
+       les différer fait apparaître la page vide avant de se remplir. */
+    const pressee = index < 6;
     b.innerHTML = `
       <img src="${PHOTOS}/${piece.code}.webp" alt="${echapper(piece.titre)}"
-           loading="lazy" decoding="async" width="700"
-           height="${Math.round(700 / piece.ratio)}">
+           ${pressee ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"
+           width="700" height="${Math.round(700 / piece.ratio)}">
       <span class="piece__voile">
         <span class="piece__titre">${echapper(piece.titre)}</span>
         <span class="piece__loupe" aria-hidden="true">↗</span>
