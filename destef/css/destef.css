@@ -414,12 +414,18 @@ main { position: relative; z-index: 1; }
 .bande--sombre .bouton--fantome { color: #e8d8c2; border-color: rgba(255, 230, 200, .3); }
 .bande--sombre .bouton--fantome:hover { background: rgba(255, 240, 220, .1); color: #fff; }
 
-/* Le raccord entre le sable et le brou : une courbe, pas un trait. */
+/* Le raccord entre le sable et le brou : une courbe, pas un trait.
+ *
+ * Elle tient DANS la largeur, pas cinq pour cent de plus de chaque côté comme
+ * au premier jet. Un débordement de dix pour cent ne se voit pas sur un grand
+ * écran, où la page est de toute façon plus large que son contenu ; sur un
+ * téléphone, c'est la page entière qui cesse d'être au gabarit de l'écran, et
+ * le navigateur propose de la faire glisser latéralement. */
 .bande--sombre::before,
 .bande--sombre::after {
   content: '';
   position: absolute;
-  left: -5vw; right: -5vw;
+  left: 0; right: 0;
   height: clamp(40px, 5vw, 90px);
   background: var(--noyer);
 }

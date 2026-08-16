@@ -115,8 +115,14 @@ export async function dresser(section, toile, racineModeles, fichiers) {
     }
 
     for (const [i, p] of pieces.entries()) {
+      /* Un PLATEAU, puis un fondu. La première version faisait décroître
+         l'opacité dès qu'on s'écartait du centre exact du volet : il suffisait
+         de s'arrêter au tiers du volet, ce qui est le cas courant sur
+         téléphone où le défilement finit rarement pile, pour que la pièce
+         reste à moitié transparente et paraisse en panne. Elle est maintenant
+         pleine sur presque tout son volet, et ne se fond que sur la fin. */
       const d = Math.abs(avanceLisse - i);
-      const presence = Math.max(0, 1 - d * 1.15);
+      const presence = Math.min(1, Math.max(0, 1 - (d - 0.45) / 0.5));
       const doux = presence * presence * (3 - 2 * presence);
 
       p.support.scale.setScalar(0.72 + doux * 0.28);
