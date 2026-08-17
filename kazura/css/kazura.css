@@ -1431,6 +1431,13 @@ html[data-mouvement='sobre'] .nav__son-barres i { animation: none !important; }
 #toile-nuee {
   top: -34%; left: -18%;
   width: 136%; height: 168%;
+  /* SANS CETTE LIGNE LA TOILE EST DECENTREE, et le K disparait hors de
+     l'ecran. La regle generale du site borne toute image a la largeur de son
+     parent : elle ramenait la toile de 136 a 100 pour cent PENDANT QUE le
+     decalage de moins 18 restait en place, ce qui la poussait tout entiere
+     vers la gauche. Une largeur et un decalage qui se repondent doivent
+     echapper au meme bornage, sinon ils cessent de se repondre. */
+  max-width: none;
   opacity: 0;
   transition: opacity 1.1s var(--doux);
 }
