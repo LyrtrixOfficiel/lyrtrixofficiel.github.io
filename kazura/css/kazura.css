@@ -726,6 +726,29 @@ section { position: relative; }
   .demo__legende { left: 50%; translate: -50% 0; width: calc(100% - 2 * var(--marge)); }
 }
 
+/* ══ LE RYTHME VERTICAL SUR TELEPHONE ════════════════════════════════════
+   La mesure a donne le vrai chiffre : sur l'accueil, un seul trou de 1690
+   pixels, soit plus de deux ecrans de telephone d'affilee. La cause n'etait
+   pas du vide oublie, c'etait le rythme : chaque chapitre occupait un ecran
+   entier pour UNE phrase. Sur grand ecran, ou la scene en trois dimensions
+   remplit le fond et ou la phrase est immense, c'est un temps de respiration.
+   Sur telephone, c'est du defilement a vide.
+
+   On resserre donc, et on agrandit la phrase pour qu'elle occupe la place
+   qu'on vient de lui rendre. Compresser sans grossir donnerait une page plus
+   courte et tout aussi pauvre : ce qu'on cherche n'est pas moins de hauteur,
+   c'est plus de matiere par ecran. */
+@media (max-width: 700px) {
+  .chapitre {
+    min-height: 64svh;
+    padding-block: clamp(3rem, 7vh, 4.5rem);
+  }
+  .chapitre .grand { font-size: clamp(2.1rem, 9.6vw, 3.1rem); line-height: 1.06; }
+  .bloc { padding-block: clamp(3.6rem, 9vh, 6rem); }
+  .contact { min-height: 62svh; }
+  .hero { min-height: 88svh; }
+}
+
 /* ── Le miroir de palette ─────────────────────────────────────────────── */
 .miroir {
   border-radius: var(--rayon-l);
@@ -1403,6 +1426,21 @@ html[data-mouvement='sobre'] .nav__son-barres i { animation: none !important; }
   aspect-ratio: 1180 / 300;
   max-height: 46svh;
 }
+/* SUR TELEPHONE CE RAPPORT EST UNE BANDE, PAS UN CADRE. A 3,93 de large pour
+   1 de haut, un ecran de 390 px donnait un cadre de 335 sur 85 : le nom de la
+   maison tenait dans quatre-vingt-cinq pixels de haut, et la nuee, entassee
+   dans une toile huit fois plus petite, ressortait en tache blanche. Le
+   rapport se redresse donc a 2,15, et le mot reprend sa place.
+
+   C'est la meme erreur que le seuil plafonne a 210 px : un chiffre choisi en
+   regardant un grand ecran et jamais rejuge sur un petit. */
+@media (max-width: 700px) {
+  .mot3d {
+    width: 94vw;
+    aspect-ratio: 43 / 20;
+    max-height: 34svh;
+  }
+}
 /* Le corps, la graisse et l'approche viennent de `.geant`, pose sur le meme
    element : une seule definition du mot, et c'est elle que le calage mesure. */
 .mot3d__vrai {
@@ -1925,9 +1963,15 @@ html[data-mouvement='sobre'] .titre {
   filter: drop-shadow(0 0 4px rgba(110, 231, 183, .3));
 }
 
-/* Elles s'effacent sur telephone : la place y est trop rare pour qu'un decor
-   morde sur la colonne de lecture. */
-@media (max-width: 700px) { .lianes-marge { display: none; } }
+/* SUR TELEPHONE ELLES SE RESSERRENT, ELLES NE DISPARAISSENT PAS. Les cacher
+   revenait a retirer du telephone la seule idee qui tient le site, et c'est
+   justement l'ecran ou la page a le plus besoin d'etre habitee : un format
+   etroit se remplit surtout de vide. Bande deux fois moins large, trait plus
+   fin, et moins de presence pour qu'elles longent le texte sans le toucher. */
+@media (max-width: 700px) {
+  .lianes-marge { opacity: .46; }
+  .lianes-marge__tige { stroke-width: 1.1; }
+}
 html[data-mouvement='sobre'] .lianes-marge__tige,
 html[data-mouvement='sobre'] .lianes-marge__feuille { transition: none; }
 

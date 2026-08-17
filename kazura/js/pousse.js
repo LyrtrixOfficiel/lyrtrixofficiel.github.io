@@ -165,7 +165,12 @@ export function monterLesLianesDeMarge(nom) {
     hote.textContent = '';
     tiges = [];
     const H = innerHeight;
-    const bande = Math.max(58, Math.min(126, innerWidth * 0.062));
+    /* La bande se resserre avec l'ecran, jusqu'a vingt-six pixels environ sur
+       telephone : assez pour qu'une liane monte, trop peu pour mordre sur une
+       colonne de texte qui commence a vingt-quatre. */
+    const bande = innerWidth < 700
+      ? Math.max(22, innerWidth * 0.068)
+      : Math.max(58, Math.min(126, innerWidth * 0.062));
 
     for (const bord of ['gauche', 'droite']) {
       const alea = grainDe((nom || location.pathname) + bord);

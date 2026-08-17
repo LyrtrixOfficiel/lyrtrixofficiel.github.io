@@ -402,13 +402,28 @@ export async function monterLaNuee(toile, options = {}) {
   gl.bindVertexArray(null);
 
   /* ── Cadre du monde ─────────────────────────────────────────────────── */
-  let largeurMonde = 3.2, hauteurMonde = 1.0, definition = 1;
+  let largeurMonde = 3.2, hauteurMonde = 1.0, definition = 1, dessinees = N;
   function mesurer() {
     const r = toile.getBoundingClientRect();
     if (!r.width || !r.height) return;
     definition = Math.min(devicePixelRatio || 1, petit ? 1.5 : 2);
     toile.width  = Math.round(r.width * definition);
     toile.height = Math.round(r.height * definition);
+    /* ══ LA DENSITE SE DEDUIT DE LA SURFACE ═══════════════════════════
+       Sur telephone, les memes particules tombaient dans une toile huit fois
+       plus petite : 1,6 particule par pixel contre 0,6 sur grand ecran. Comme
+       le melange est additif, chaque pixel recevait la lumiere de plusieurs
+       particules et la nuee ressortait en TACHE BLANCHE saturee, ou le mot
+       ne se lisait plus du tout. Ce n'etait pas un probleme de reglage
+       d'ecran, c'etait une densite non bornee.
+
+       On plafonne donc a un peu plus d'une demi-particule par pixel, ce qui
+       tient la meme matiere sur toutes les tailles d'ecran. Les particules
+       en trop ne sont pas detruites, elles ne sont pas dessinees : la
+       simulation reste entiere et la densite redevient juste des que la
+       fenetre grandit. */
+    dessinees = Math.min(N, Math.max(20000, Math.round(toile.width * toile.height * 0.55)));
+
     hauteurMonde = 1.0;
     const neuve = hauteurMonde * (r.width / r.height);
     /* La cible ne se refait que si le cadre a vraiment change de forme.
@@ -514,7 +529,7 @@ export async function monterLaNuee(toile, options = {}) {
     gl.uniform2f(uPts.uCadre, largeurMonde, hauteurMonde);
     gl.uniform1f(uPts.uTaille, (petit ? 1.35 : 1.7) * definition);
     gl.uniform1f(uPts.uCohesion, cohesion);
-    gl.drawArrays(gl.POINTS, 0, allege ? (N / 2) | 0 : N);
+    gl.drawArrays(gl.POINTS, 0, allege ? (dessinees / 2) | 0 : dessinees);
     gl.disable(gl.BLEND);
   }
 
@@ -564,7 +579,8 @@ export async function monterLaNuee(toile, options = {}) {
     },
     bilan() {
       return {
-        particules: allege ? (N / 2) | 0 : N,
+        particules: allege ? (dessinees / 2) | 0 : dessinees,
+        elevees: N,
         cote: TAILLE,
         cohesion: +cohesion.toFixed(3),
         visee: +cohesionVisee.toFixed(3),
