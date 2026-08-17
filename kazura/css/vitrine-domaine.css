@@ -111,6 +111,14 @@ body {
 .acte--droite  { justify-items: end;    text-align: right; }
 .acte--centre  { justify-items: center; text-align: center; }
 
+/* La jauge du jour se tient contre le bord droit. Un acte aligne a droite
+   viendrait donc s'imprimer par-dessus, et sur grand ecran les mots « aube »
+   et « nuit » tombaient au milieu de l'adresse du domaine. On lui laisse sa
+   bande, exactement la ou elle existe. */
+@media (min-width: 901px) {
+  .acte--droite { padding-right: calc(var(--marge) + 3.6rem); }
+}
+
 .acte__bloc { max-width: 46ch; }
 .acte--centre .acte__bloc { max-width: 30ch; }
 
