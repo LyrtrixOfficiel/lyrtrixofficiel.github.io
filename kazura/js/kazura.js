@@ -1044,6 +1044,59 @@ async function monterLePortailSiPresent() {
   }
 }
 
+/* ══ Le bonsai de jade ══════════════════════════════════════════════════ */
+/* Le heros de la page d'accueil. Meme module que le portail : charger un
+   fichier, le recentrer, le poser dans le ciel de la maison, le faire suivre le
+   curseur. Seul le cadrage change, et il est passe en options.
+
+   IL SE CHARGE APRES LE RESTE, et n'apparait qu'une fois pret. Un objet de
+   1,2 Mo en tete de page ne doit jamais retarder l'affichage du titre : le
+   visiteur lit KAZURA tout de suite, l'arbre arrive ensuite.
+
+   DECALE A DROITE, volontairement. Un objet dense pose au centre mange un titre
+   pose au centre, et c'est le titre qui doit gagner. */
+async function monterLeBonsaiSiPresent() {
+  const toile = $('#toile-bonsai');
+  if (!toile) return;
+  const memoire = navigator.deviceMemory || 4;
+  if (memoire <= 2) { toile.dataset.repli = 'oui'; return; }
+
+  try {
+    const { monterLePortail } = await import('./portail.js' + VERSION);
+    const b = await monterLePortail(toile, {
+      fichier: 'modeles/bonsai.glb',
+      /* Cadrage. Il etait centre et mangeait le mot KAZURA : un objet dense
+         au centre et un titre au centre ne peuvent pas cohabiter. Pousse loin
+         a droite, plus bas, et reduit. */
+      echelle: 2.45,
+      distance: 5.4,
+      decalageX: 1.75,
+      decalageY: -0.55,
+      /* Le ciel de la maison porte deux barres blanches, faites pour allumer
+         les aretes du verre. Sur une pierre mate elles delavent tout et le jade
+         ressort gris. On baisse, et on ramene la couleur vers le jade. */
+      envIntensite: 0.75,
+      teinte: '#1FA97A',
+      forceTeinte: 0.38
+    });
+    if (!b) { toile.dataset.repli = 'oui'; return; }
+    (window.kazura ||= {}).bonsai = b;
+    b.montrer(true);
+
+    /* Il ne peint que tant que le hero est a l'ecran. Sans cet interrupteur il
+       calcule sa scene entiere pendant tout le reste de la page. */
+    const hero = $('.hero');
+    auDefilement(() => {
+      const r = hero.getBoundingClientRect();
+      b.montrer(r.bottom > 0);
+    });
+    toile.dataset.prete = 'oui';
+  } catch (e) {
+    console.warn('bonsai indisponible', e);
+    toile.dataset.repli = 'oui';
+  }
+}
+
 /* ══ Le formulaire ══════════════════════════════════════════════════════ */
 /* Il n'y a pas de serveur derriere ce site, et il n'y en aura pas pour un
    formulaire par semaine. L'envoi ouvre donc le courrielleur du visiteur avec
@@ -1233,6 +1286,7 @@ function demarrer() {
   monterLeSceauSiPresent();
   monterLePortailSiPresent();
   monterLeFormulaire();
+  monterLeBonsaiSiPresent();
   monterLeSon();
   monterLeChoixDuMouvement();
   monterLeMotSiPresent();

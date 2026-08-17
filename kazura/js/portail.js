@@ -40,7 +40,7 @@ export async function monterLePortail(toile, options = {}) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 60);
-  camera.position.set(0, 0, 4.6);
+  camera.position.set(0, 0, options.distance || 4.6);
 
   const env = monterLeCiel(renderer, scene);
 
@@ -75,8 +75,11 @@ export async function monterLePortail(toile, options = {}) {
   const centre = boite.getCenter(new THREE.Vector3());
   const taille = boite.getSize(new THREE.Vector3());
   objet.position.sub(centre);
-  objet.scale.setScalar(2.35 / Math.max(taille.x, taille.y, taille.z));
+  objet.scale.setScalar((options.echelle || 2.35) / Math.max(taille.x, taille.y, taille.z));
   groupe.add(objet);
+  /* Decalage libre : un objet centre mange un titre centre. */
+  groupe.position.x = options.decalageX || 0;
+  groupe.position.y = options.decalageY || 0;
 
   /* Meshy sort des materiaux prevus pour un rendu neutre. Ici la pierre doit
      boire la lumiere et le jade la rendre : on remonte l'environnement et on
@@ -85,9 +88,12 @@ export async function monterLePortail(toile, options = {}) {
     if (!o.isMesh) return;
     const m = o.material;
     if (!m) return;
-    m.envMapIntensity = 1.35;
+    m.envMapIntensity = options.envIntensite ?? 1.35;
     if ('metalness' in m) m.metalness = 0;
     if ('roughness' in m) m.roughness = Math.min(1, (m.roughness ?? 1) * 0.92);
+    /* Teinte optionnelle : le materiau sorti de Meshy est souvent gris-vert
+       delave. On le ramene vers le jade de la maison sans toucher a la texture. */
+    if (options.teinte && m.color) m.color.multiplyScalar(1).lerp(new THREE.Color(options.teinte), options.forceTeinte ?? 0.45);
     m.needsUpdate = true;
   });
 
