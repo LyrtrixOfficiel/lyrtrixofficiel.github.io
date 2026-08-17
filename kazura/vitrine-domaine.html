@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vitrine-domaine.css">
+<link rel="stylesheet" href="css/vitrine-domaine.css?v=0ac6ad63b4">
 <script type="importmap">
 { "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
@@ -182,34 +182,11 @@
   </div>
 </noscript>
 
-<script type="module">
-  import { monterLesActes, monterLeVoile, monterLeCurseur, monterLaLecture } from './js/vitrine.js';
-
-  const actes = monterLesActes();
-  monterLeCurseur();
-
-  /* Les actes se posent dès maintenant, même si la scène échoue : le texte
-     d'un site ne dépend jamais de sa décoration. */
-  monterLaLecture(p => actes && actes.poser(p));
-
-  const scene = (async () => {
-    try {
-      const { monterLaVitrine } = await import('./js/vitrine-domaine.js');
-      const v = await monterLaVitrine(document.getElementById('scene'));
-      if (v) window.vitrine = v;
-      return v;
-    } catch (e) {
-      console.warn('scène indisponible', e);
-      /* Repli : un dégradé de ciel fixe, pour que personne ne voie jamais un
-         rectangle noir. */
-      document.getElementById('scene').style.background =
-        'radial-gradient(120% 90% at 62% 78%, #C05C32 0%, #6B3A46 34%, #16244A 62%, #05070F 100%)';
-      return null;
-    }
-  })();
-
-  monterLeVoile(document.getElementById('voile'), scene);
-</script>
+<!-- Le branchement est dans un fichier et non ici, pour que la publication
+     puisse y poser l'empreinte du contenu. Un module cité en clair dans la
+     page se chargerait sans empreinte, et une page neuve pourrait recevoir
+     l'ancien code sans que rien ne le signale. -->
+<script type="module" src="js/domaine.js?v=0ac6ad63b4"></script>
 
 </body>
 </html>
