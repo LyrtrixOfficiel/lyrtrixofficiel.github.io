@@ -387,6 +387,41 @@ function monterLesBandeaux() {
   });
 }
 
+/* ══ 9 ter. La transition entre pages ═══════════════════════════════════ */
+/* La transition elle-meme est declaree dans la feuille de style, en une regle,
+   et c'est le navigateur qui fait tout le travail : aucun routeur, aucune
+   bibliotheque, huit fichiers HTML qui restent huit fichiers HTML.
+
+   Il ne reste qu'une chose a faire ici, l'annuler quand la maison a decide le
+   mode sobre. Une regle at-rule ne se conditionne pas a un attribut, mais
+   l'evenement d'ouverture donne la main sur la transition en cours. */
+addEventListener('pagereveal', e => {
+  if (document.documentElement.dataset.mouvement !== 'anime') e.viewTransition?.skipTransition();
+});
+
+/* ══ 9 bis. L'elan, ecrit une fois pour toute la page ═══════════════════ */
+/* Une seule variable sur la racine, --elan, entre zero a l'arret et un a
+   pleine vitesse. La feuille de style s'en sert pour resserrer les lettres
+   des grandes phrases : le texte devient le cadran de son propre mouvement.
+
+   POURQUOI UNE SEULE ECRITURE. Poser la valeur sur chaque titre voudrait dire
+   toucher au style de vingt elements par image, donc vingt invalidations de
+   mise en page. Ecrite sur la racine, elle descend par heritage et le
+   navigateur ne recalcule que ce qui la lit vraiment.
+
+   L'ELAN MONTE VITE ET REDESCEND LENTEMENT, comme une aiguille de compteur.
+   Symetrique, il ferait vibrer les lettres a chaque cran de molette. */
+function monterLElan() {
+  const racine = document.documentElement;
+  if (racine.dataset.mouvement !== 'anime') return;
+  let elan = 0;
+  auDefilement((y, p, v) => {
+    const brut = Math.min(1, Math.abs(v) / 46);
+    elan += (brut - elan) * (brut > elan ? 0.34 : 0.055);
+    racine.style.setProperty('--elan', elan.toFixed(3));
+  });
+}
+
 /* ══ 10. Barre et menu ══════════════════════════════════════════════════ */
 function monterLaBarre() {
   const nav = $('.nav');
@@ -632,10 +667,55 @@ async function monterLeMiroirSiPresent() {
   }
 }
 
-/* ══ 14 quater. Le mot en WebGL ═════════════════════════════════════════ */
+/* ══ 14 ter. La nuee ════════════════════════════════════════════════════ */
+/* Le nom du studio n'est plus ecrit : il est tenu par 262 144 particules
+   simulees sur la carte graphique, qui se dispersent quand on descend.
+
+   ELLE PASSE AVANT LE MOT DESSINE, et le remplace quand elle tient. Le mot en
+   WebGL reste, cache, comme repli : la nuee demande de savoir peindre dans des
+   textures a virgule flottante, ce que toutes les machines ne savent pas
+   faire, et personne ne doit jamais voir un rectangle vide a la place du nom
+   de la maison. */
+async function monterLaNueeSiPresente() {
+  const toile = $('#toile-nuee');
+  if (!toile) { monterLeMotSiPresent(); return; }
+
+  const sobre = document.documentElement.dataset.mouvement !== 'anime';
+  const memoire = navigator.deviceMemory || 4;
+  if (sobre || memoire <= 2) { toile.hidden = true; monterLeMotSiPresent(); return; }
+
+  try {
+    const { monterLaNuee } = await import('./nuee.js' + VERSION);
+    const nuee = await monterLaNuee(toile);
+    if (!nuee) { toile.hidden = true; monterLeMotSiPresent(); return; }
+    (window.kazura ||= {}).nuee = nuee;
+
+    toile.closest('.mot3d')?.setAttribute('data-prete', 'oui');
+    toile.dataset.vive = 'oui';
+
+    const hero = toile.closest('.hero') || toile.parentElement;
+    auDefilement(() => {
+      const r = hero.getBoundingClientRect();
+      /* Le mot est tenu tant que le heros occupe l'ecran, et se defait a
+         mesure qu'il sort. Remonter le rassemble. Le plateau en haut compte :
+         sans lui, la position de repos la plus frequente serait un mot a
+         moitie forme, donc illisible pile a l'arrivee. */
+      const dedans = borne((r.bottom - innerHeight * 0.18) / (innerHeight * 0.62), 0, 1);
+      nuee.tenir(borne(dedans * 1.18, 0, 1));
+      nuee.montrer(r.bottom > -60);
+    });
+  } catch (e) {
+    console.warn('nuee indisponible', e);
+    toile.hidden = true;
+    monterLeMotSiPresent();
+  }
+}
+
+/* ══ 14 quater. Le mot en WebGL, desormais le repli de la nuee ══════════ */
 async function monterLeMotSiPresent() {
   const toile = $('#toile-mot');
   if (!toile) return;
+  toile.hidden = false;
   try {
     const { monterLeMot } = await import('./mot-webgl.js' + VERSION);
     const mot = await monterLeMot(toile, toile.dataset.mot || 'KAZURA');
@@ -1269,6 +1349,7 @@ function demarrer() {
   monterLEpinglage();
   monterLeScrub();
   monterLesBandeaux();
+  monterLElan();
   monterLaBarre();
   monterLeCurseur();
   monterLesCartes();
@@ -1278,14 +1359,13 @@ function demarrer() {
   monterLaScene3D();
   monterLAtelierSiPresent();
   monterLEncreSiPresente();
-  monterLeJardinSiPresent();
   monterLeMiroirSiPresent();
   monterLeSceauSiPresent();
   monterLePortailSiPresent();
   monterLeFormulaire();
   monterLeSon();
   monterLeChoixDuMouvement();
-  monterLeMotSiPresent();
+  monterLaNueeSiPresente();
 
   const annee = $('[data-annee]');
   if (annee) annee.textContent = new Date().getFullYear();

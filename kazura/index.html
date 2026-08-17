@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=730761b1e5">
+<link rel="stylesheet" href="css/kazura.css?v=b207d47a4c">
 
 <script type="importmap">
 { "imports": {
@@ -115,12 +115,14 @@
       <div class="hero__centre">
         <p class="hero__kanji" aria-hidden="true">葛</p>
 
-        <!-- Le mot est rendu en WebGL. Le titre reste dans le document pour
-             les lecteurs d'ecran et les moteurs ; il s'efface a l'oeil des
-             que la toile est prete, et reste seul si WebGL manque. -->
+        <!-- Le nom n'est pas écrit, il est TENU par deux cent soixante mille
+             particules calculées sur la carte graphique. Le titre reste dans
+             le document pour les lecteurs d'écran et les moteurs ; il s'efface
+             à l'œil dès que la nuée est prête, et reste seul sinon. -->
         <div class="mot3d">
           <h1 class="mot3d__vrai geant">KAZURA</h1>
-          <canvas id="toile-mot" data-mot="KAZURA" aria-hidden="true"></canvas>
+          <canvas id="toile-nuee" data-mot="KAZURA" aria-hidden="true"></canvas>
+          <canvas id="toile-mot" data-mot="KAZURA" aria-hidden="true" hidden></canvas>
         </div>
         <p class="hero__ligne" data-vient="bloc">
           Studio de création de sites internet.
@@ -435,6 +437,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=730761b1e5"></script>
+<script type="module" src="js/kazura.js?v=b207d47a4c"></script>
 </body>
 </html>

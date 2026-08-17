@@ -1418,7 +1418,23 @@ html[data-mouvement='sobre'] .nav__son-barres i { animation: none !important; }
   /* Toujours lu par les lecteurs d'ecran et les moteurs, jamais par l'oeil. */
   pointer-events: none;
 }
-#toile-mot { position: absolute; inset: 0; width: 100%; height: 100%; }
+#toile-mot, #toile-nuee { position: absolute; inset: 0; width: 100%; height: 100%; }
+#toile-mot[hidden], #toile-nuee[hidden] { display: none; }
+
+/* La nuee deborde son cadre : dispersee, elle occupe bien plus de place que
+   le mot qu'elle formait. On lui laisse donc une marge de chaque cote, sans
+   quoi la fumee se coupe net sur une arete invisible. */
+/* Les tailles sont posees en clair, et surtout PAS en auto. Un canevas est un
+   element remplace : avec width auto, il reprend sa taille intrinseque de
+   300 sur 150, meme quand ses quatre bords sont fixes. La regle vaut pour
+   toute image et toute video qu'on croit etaler par ses bords. */
+#toile-nuee {
+  top: -34%; left: -18%;
+  width: 136%; height: 168%;
+  opacity: 0;
+  transition: opacity 1.1s var(--doux);
+}
+#toile-nuee[data-vive='oui'] { opacity: 1; }
 
 /* ── L'encre ──────────────────────────────────────────────────────────── */
 #toile-encre {
@@ -1776,4 +1792,76 @@ a.vitrine:hover .vitrine__lire i { transform: translateX(.42em); }
 @media (max-width: 860px) {
   .vitrine { grid-template-columns: 1fr; }
   .vitrine--venir { padding-block: 1.6rem; }
+}
+
+
+/* ══ LES TRANSITIONS ENTRE PAGES ═════════════════════════════════════════
+   Une seule regle, et le site cesse de clignoter en blanc a chaque lien.
+
+   CE QUE C'EST. Le navigateur photographie la page qu'on quitte, garde la
+   photo a l'ecran pendant qu'il monte la suivante, puis fait passer l'une
+   dans l'autre. C'est le navigateur qui le fait, pas nous : il n'y a pas une
+   ligne de JavaScript, pas de routeur, pas de bibliotheque. Le site reste
+   huit fichiers HTML qu'on peut ouvrir un par un, et il se comporte comme une
+   application.
+
+   POURQUOI PERSONNE NE LE FAIT. Parce que la version entre DOCUMENTS est
+   recente et que tout le monde a pris l'habitude d'installer un routeur en
+   JavaScript pour le meme resultat, plus lourd et plus fragile. Les
+   navigateurs qui ne la connaissent pas ignorent la regle et naviguent comme
+   avant : il n'y a donc rien a prevoir en repli.
+
+   Le sceau de la barre porte un NOM de transition : le navigateur le
+   reconnait d'une page a l'autre et le fait glisser de son ancienne place a
+   sa nouvelle au lieu de le fondre. C'est ce detail-la qui donne l'impression
+   qu'on ne change pas de page mais qu'on se deplace dedans. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root) {
+  animation: vt-partir 260ms cubic-bezier(.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  animation: vt-venir 520ms cubic-bezier(.16, 1, .3, 1) 60ms both;
+}
+@keyframes vt-partir {
+  to { opacity: 0; transform: scale(.985); }
+}
+@keyframes vt-venir {
+  from { opacity: 0; clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+
+.nav__marque { view-transition-name: sceau-de-barre; }
+.nav__cta    { view-transition-name: bouton-de-barre; }
+
+/* Le mouvement reste un choix, mais il se lit sur la DECISION de la maison,
+   pas directement sur le reglage du systeme. Une regle at-rule ne sait pas se
+   conditionner a un attribut, alors c'est le code qui annule la transition au
+   moment ou elle s'ouvre. Sans ce detour, Matheo, dont le Windows a les effets
+   coupes pour de tout autres raisons, ne verrait jamais rien de ce qui suit,
+   meme apres avoir demande le mouvement. */
+
+/* ══ LA TYPOGRAPHIE QUI REPOND ═══════════════════════════════════════════
+   Archivo porte deux axes reglables en continu, la graisse et la CHASSE,
+   c'est-a-dire la largeur des lettres. Presque personne ne se sert du second :
+   on choisit une largeur au dessin et on n'y revient plus.
+
+   Ici les phrases de chapitre s'etirent avec la vitesse du defilement. On
+   descend vite, les lettres se resserrent et s'allegent, comme un objet qui
+   file ; on s'arrete, elles reprennent leur pleine assise. Le texte devient
+   ainsi le cadran de son propre mouvement, sans une animation posee dessus.
+
+   La variable est ecrite par le code une fois par image sur l'element racine,
+   donc une seule ecriture pour toute la page, et le navigateur interpole les
+   axes lui-meme. */
+.grand, .titre {
+  font-variation-settings:
+    'wdth' calc(112 - var(--elan, 0) * 46),
+    'wght' calc(760 - var(--elan, 0) * 240);
+  transition: font-variation-settings .18s linear;
+}
+html[data-mouvement='sobre'] .grand,
+html[data-mouvement='sobre'] .titre {
+  font-variation-settings: 'wdth' 108, 'wght' 740;
+  transition: none;
 }
