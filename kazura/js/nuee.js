@@ -299,7 +299,12 @@ export async function monterLaNuee(toile, options = {}) {
     const g = c.getContext('2d', { willReadFrequently: true });
     g.fillStyle = '#000'; g.fillRect(0, 0, L, Hc);
 
-    const cible = L * 0.94;
+    /* Le mot occupe 68 % du canevas de cible, pas 94. La toile deborde son
+       cadre de 36 % pour laisser de la place a la dispersion : a 94 % le mot
+       finissait a 110 % de la largeur de la fenetre et se coupait aux deux
+       bouts. Ce qu'on regle ici est une part de la TOILE, pas de l'ecran, et
+       les deux ne sont pas la meme chose. */
+    const cible = L * 0.68;
     let corps = Hc * 0.9;
     g.textAlign = 'center'; g.textBaseline = 'middle';
     for (let i = 0; i < 26; i++) {
