@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=7a92efaf4a">
+<link rel="stylesheet" href="css/kazura.css?v=24a3ec7c3a">
 <script type="importmap">
 { "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
@@ -79,17 +79,79 @@
   <header class="bloc" style="padding-top:clamp(9rem,22vh,14rem);padding-bottom:clamp(3rem,7vh,5rem)">
     <div class="enveloppe">
       <span class="etiquette" data-vient="bloc">葛 · Démonstrations</span>
-      <h1 class="titre" data-vient="titre" style="margin:1.2rem 0 1.6rem;max-width:17ch">
-        Regardez ce qu’on sait faire.
+      <h1 class="titre" data-vient="titre" style="margin:1.2rem 0 1.6rem;max-width:15ch">
+        Des sites entiers, pas des effets.
       </h1>
       <p class="chapo" data-vient="bloc">
-        Quatre pièces qui répondent à votre geste pendant que vous les regardez.
-        Certaines sont calculées par votre carte graphique, une autre est un
-        objet sculpté qu’on est allé chercher. Le point n’est pas la méthode,
-        c’est qu’on choisit celle qui convient à ce que vous voulez.
+        Une vitrine n’est pas un exemple de technique. C’est un site complet,
+        pour un métier précis, avec sa propre typographie, ses propres couleurs
+        et son propre monde. Ouvrez-en une et faites-la défiler jusqu’au bout :
+        c’est exactement ce qu’on peut vous livrer.
       </p>
     </div>
   </header>
+
+  <!-- ══ Les vitrines ═════════════════════════════════════════════════════
+       Le coeur de la page. Chacune est un site à part entière, avec sa propre
+       feuille de style et son propre monde. Rien n'est partagé entre elles,
+       et c'est précisément la démonstration : un studio qui montrerait trois
+       vitrines bâties sur le même gabarit prouverait le contraire. -->
+  <section class="bloc" style="padding-top:0">
+    <div class="enveloppe">
+      <div class="vitrines">
+
+        <a class="vitrine" href="vitrine-domaine.html" data-vient="bloc">
+          <span class="vitrine__toile" aria-hidden="true">
+            <span class="vitrine__ciel"></span>
+            <span class="vitrine__soleil"></span>
+            <span class="vitrine__coteau"></span>
+            <span class="vitrine__flacon"></span>
+          </span>
+          <span class="vitrine__dire">
+            <span class="etiquette">Vitrine une · Domaine viticole</span>
+            <b>Vent d’Est</b>
+            <em>
+              Une journée entière en un seul défilement. Le soleil se lève sur
+              le coteau, traverse le ciel, se couche derrière la plaine, et la
+              bouteille se remplit en route. Pas une photographie dans toute la
+              page&nbsp;: le ciel, les nuages, les rangs de vigne, le verre et
+              le vin sont calculés au moment où vous les regardez.
+            </em>
+            <span class="vitrine__lire">Entrer dans la vitrine <i aria-hidden="true">→</i></span>
+          </span>
+        </a>
+
+        <div class="vitrine vitrine--venir" data-vient="bloc">
+          <span class="vitrine__dire">
+            <span class="etiquette">Les suivantes</span>
+            <b>Une par métier.</b>
+            <em>
+              Le restaurant, le salon, l’artisan, le gîte. Chacune reprend à
+              zéro&nbsp;: autre écriture, autres couleurs, autre rythme. On les
+              publie au fur et à mesure plutôt que d’en sortir quatre tièdes le
+              même jour.
+            </em>
+            <span class="vitrine__lire vitrine__lire--sourd">En chantier</span>
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc" style="padding-top:0">
+    <div class="enveloppe">
+      <span class="etiquette" data-vient="bloc">Les pièces</span>
+      <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.4rem;max-width:16ch">
+        Et les morceaux, un par un.
+      </h2>
+      <p class="chapo" data-vient="bloc">
+        Ce qui suit n’est pas un site, ce sont les pièces détachées&nbsp;: cinq
+        choses qui répondent à votre geste pendant que vous les regardez. Elles
+        servent à montrer d’où viennent les vitrines.
+      </p>
+    </div>
+  </section>
 
   <!-- ══ 1. Le jardin sec ═════════════════════════════════════════════ -->
   <section class="demo" id="jardin">
@@ -312,6 +374,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=7a92efaf4a"></script>
+<script type="module" src="js/kazura.js?v=24a3ec7c3a"></script>
 </body>
 </html>

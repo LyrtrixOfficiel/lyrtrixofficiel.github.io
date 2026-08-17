@@ -1,0 +1,484 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   VITRINE · DOMAINE VENT D'EST
+   --------------------------------------------------------------------------
+   Aucune ligne de la feuille de Kazura n'est reprise ici, et c'est le point.
+   Un studio qui montre trois vitrines batties sur le meme gabarit prouve
+   exactement ce qu'il essaie de nier.
+
+   La direction : un didone a fort contraste pour l'affichage, une geometrique
+   sans empattement pour tout ce qui informe, un ivoire chaud sur des noirs
+   bleus, et un seul or. Ce sont les codes du vin haut de gamme, tenus sans
+   les caricaturer : pas de dorure en relief, pas de bordure feuillue.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --ivoire:   #F4EDDF;
+  --ivoire-2: rgba(244, 237, 223, .72);
+  --ivoire-3: rgba(244, 237, 223, .48);
+  --or:       #D8B25F;
+  --nuit:     #06080E;
+
+  --display: 'Bodoni Moda', 'Times New Roman', serif;
+  --gestion: 'Jost', system-ui, sans-serif;
+
+  --marge: clamp(1.4rem, 4vw, 4.5rem);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: auto; }
+
+body {
+  margin: 0;
+  background: var(--nuit);
+  color: var(--ivoire);
+  font-family: var(--gestion);
+  font-weight: 300;
+  overflow-x: clip;
+  cursor: none;
+}
+@media (pointer: coarse) { body { cursor: auto; } }
+
+::selection { background: var(--or); color: #16110A; }
+
+/* ══ LA SCENE ════════════════════════════════════════════════════════════
+   Une seule toile, posee une fois, jamais demontee. Tout le reste flotte
+   au-dessus. C'est ce qui donne la continuite : le monde ne se recharge pas
+   d'une section a l'autre, il ne fait que tourner autour de nous. */
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* Un leger assombrissement sur les bords. L'oeil va au centre tout seul,
+   mais un cadre qui l'y aide fait paraitre l'image plus profonde. */
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 46%, transparent 42%, rgba(3, 5, 10, .58) 100%),
+    linear-gradient(to bottom, rgba(3, 5, 10, .42), transparent 22%, transparent 74%, rgba(3, 5, 10, .60));
+}
+
+/* Le grain. Une trame fine posee sur tout l'ecran : c'est ce qui empeche les
+   grands aplats de ciel de montrer leurs bandes de degrade, et ce qui donne
+   a une image calculee l'aspect d'une image photographiee. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: .16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grouiller 1.1s steps(3) infinite;
+}
+@keyframes grouiller {
+  0%   { transform: translate3d(0, 0, 0); }
+  33%  { transform: translate3d(-3%, 2%, 0); }
+  66%  { transform: translate3d(2%, -3%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .grain { animation: none; } }
+
+/* ══ LE RAIL ═════════════════════════════════════════════════════════════
+   La hauteur qu'on fait defiler. Elle ne contient rien : c'est une reglette,
+   et tout le contenu est fixe par dessus. Sept ecrans, c'est la duree qu'il
+   faut pour que la course du soleil se lise comme une journee et non comme
+   un fondu. */
+#rail { height: 760vh; position: relative; z-index: 3; pointer-events: none; }
+
+/* ══ LES ACTES ═══════════════════════════════════════════════════════════ */
+.acte {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  align-content: center;
+  padding: clamp(6rem, 12vh, 9rem) var(--marge) clamp(5rem, 10vh, 7rem);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.acte > * { pointer-events: auto; }
+.acte--gauche  { justify-items: start;  text-align: left; }
+.acte--droite  { justify-items: end;    text-align: right; }
+.acte--centre  { justify-items: center; text-align: center; }
+
+.acte__bloc { max-width: 46ch; }
+.acte--centre .acte__bloc { max-width: 30ch; }
+
+/* Le texte doit tenir sur un ciel de midi comme sur une nuit. Une ombre
+   portee large et tres douce fait ce travail sans qu'on la voie, la ou un
+   voile rectangulaire se verrait tout de suite. */
+.acte h1, .acte h2, .acte p, .acte .oeil, .acte .chiffres {
+  text-shadow: 0 .04em .9em rgba(4, 6, 12, .78), 0 0 2.4em rgba(4, 6, 12, .55);
+}
+
+.oeil {
+  font-family: var(--gestion);
+  font-weight: 400;
+  font-size: clamp(.66rem, .78vw, .78rem);
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin: 0 0 clamp(1rem, 2.4vh, 1.8rem);
+  display: block;
+}
+
+.titre {
+  font-family: var(--display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7.4vw, 8.2rem);
+  line-height: .94;
+  letter-spacing: -.015em;
+  margin: 0;
+}
+.titre em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--or);
+}
+.titre--geant { font-size: clamp(3.4rem, 13vw, 15rem); letter-spacing: -.03em; }
+
+.sous {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.4vw, 3.4rem);
+  line-height: 1.08;
+  margin: 0 0 1.2rem;
+}
+
+.acte p.dire {
+  font-family: var(--gestion);
+  font-weight: 300;
+  font-size: clamp(.98rem, 1.15vw, 1.16rem);
+  line-height: 1.72;
+  color: var(--ivoire-2);
+  margin: clamp(1.2rem, 2.6vh, 2rem) 0 0;
+  max-width: 42ch;
+}
+.acte--droite p.dire { margin-left: auto; }
+.acte--centre p.dire { margin-left: auto; margin-right: auto; }
+
+.filet {
+  width: clamp(3rem, 6vw, 6rem);
+  height: 1px;
+  background: linear-gradient(to right, var(--or), transparent);
+  margin: clamp(1.4rem, 3vh, 2.2rem) 0;
+  border: 0;
+}
+.acte--droite .filet { background: linear-gradient(to left, var(--or), transparent); margin-left: auto; }
+.acte--centre .filet { background: linear-gradient(to right, transparent, var(--or), transparent); margin-inline: auto; }
+
+/* ══ LES CHIFFRES ════════════════════════════════════════════════════════ */
+.chiffres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: clamp(2rem, 4vh, 3rem);
+}
+.chiffres div { min-width: 6rem; }
+.chiffres b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+  line-height: 1;
+  color: var(--ivoire);
+}
+.chiffres small {
+  display: block;
+  margin-top: .5rem;
+  font-size: .68rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ivoire-3);
+}
+
+/* ══ LA FICHE DE DEGUSTATION ═════════════════════════════════════════════ */
+.fiche {
+  margin-top: clamp(1.6rem, 3.4vh, 2.6rem);
+  border-top: 1px solid rgba(216, 178, 95, .28);
+}
+.fiche div {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 1.2rem;
+  padding: .82rem 0;
+  border-bottom: 1px solid rgba(244, 237, 223, .10);
+  font-size: clamp(.86rem, 1vw, .98rem);
+}
+.fiche dt, .fiche span:first-child {
+  font-size: .66rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--or);
+  padding-top: .3em;
+}
+.fiche span:last-child { color: var(--ivoire-2); line-height: 1.6; }
+
+/* ══ LES BOUTONS ═════════════════════════════════════════════════════════ */
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  gap: .8em;
+  padding: 1.05em 2.1em;
+  font-family: var(--gestion);
+  font-size: .74rem;
+  font-weight: 400;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--nuit);
+  background: var(--ivoire);
+  border: 1px solid var(--ivoire);
+  border-radius: 0;
+  transition: background .5s cubic-bezier(.22, 1, .36, 1),
+              color .5s cubic-bezier(.22, 1, .36, 1),
+              letter-spacing .5s cubic-bezier(.22, 1, .36, 1);
+}
+.bouton:hover { background: var(--or); border-color: var(--or); letter-spacing: .32em; }
+.bouton--nu { background: transparent; color: var(--ivoire); border-color: rgba(244, 237, 223, .34); }
+.bouton--nu:hover { background: var(--ivoire); color: var(--nuit); border-color: var(--ivoire); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: clamp(2rem, 4vh, 3rem); }
+.acte--centre .actions { justify-content: center; }
+
+/* ══ L'EN-TETE ═══════════════════════════════════════════════════════════ */
+.entete {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(1.1rem, 2.4vh, 1.9rem) var(--marge);
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+.entete > * { pointer-events: auto; }
+.entete__marque {
+  font-family: var(--display);
+  font-size: clamp(.95rem, 1.15vw, 1.15rem);
+  letter-spacing: .30em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #FFF;
+}
+.entete__liens {
+  display: flex;
+  gap: clamp(1.2rem, 2.6vw, 2.4rem);
+  font-size: .66rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+.entete__liens a { color: #FFF; text-decoration: none; opacity: .74; transition: opacity .4s; }
+.entete__liens a:hover { opacity: 1; }
+@media (max-width: 720px) { .entete__liens { display: none; } }
+
+/* ══ LA JAUGE ════════════════════════════════════════════════════════════
+   Une graduation verticale qui dit l'heure qu'il est dans la scene. Elle
+   remplace la barre de defilement, qu'on a cachee : sur une page dont la
+   hauteur ne veut rien dire, une barre de defilement ne renseigne sur rien,
+   alors qu'une heure se lit tout de suite. */
+.jauge {
+  position: fixed;
+  right: var(--marge);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 6;
+  display: grid;
+  gap: .55rem;
+  justify-items: end;
+  pointer-events: none;
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ivoire-3);
+}
+.jauge__barre {
+  width: 1px;
+  height: clamp(7rem, 18vh, 12rem);
+  background: rgba(244, 237, 223, .18);
+  position: relative;
+}
+.jauge__barre i {
+  position: absolute;
+  left: -2px; width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--or);
+  box-shadow: 0 0 12px var(--or);
+  top: calc(var(--avance, 0) * 100%);
+  transform: translateY(-50%);
+}
+@media (max-width: 900px) { .jauge { display: none; } }
+
+/* ══ L'INVITE A DEFILER ══════════════════════════════════════════════════ */
+.defiler {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1.6rem, 4vh, 2.8rem);
+  transform: translateX(-50%);
+  z-index: 6;
+  display: grid;
+  justify-items: center;
+  gap: .8rem;
+  font-size: .6rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ivoire-3);
+  pointer-events: none;
+  opacity: calc(1 - var(--avance, 0) * 14);
+}
+.defiler i {
+  display: block;
+  width: 1px; height: 3rem;
+  background: linear-gradient(to bottom, transparent, var(--ivoire-3));
+  overflow: hidden;
+  position: relative;
+}
+.defiler i::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--or);
+  animation: couler 2.4s cubic-bezier(.7, 0, .3, 1) infinite;
+}
+@keyframes couler {
+  0%   { transform: translateY(-100%); }
+  60%  { transform: translateY(100%); }
+  100% { transform: translateY(100%); }
+}
+@media (prefers-reduced-motion: reduce) { .defiler i::after { animation: none; opacity: .5; } }
+
+/* ══ LE VOILE DE CHARGEMENT ══════════════════════════════════════════════ */
+.voile {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-content: center;
+  gap: 1.6rem;
+  justify-items: center;
+  background: var(--nuit);
+  transition: opacity 1.2s cubic-bezier(.7, 0, .2, 1);
+}
+.voile[data-etat='leve'] { opacity: 0; pointer-events: none; }
+/* Un display pose sur la classe l'emporte sur le display: none par defaut de
+   l'attribut hidden. Sans cette ligne, le voile reste un calque plein ecran
+   pour toujours, invisible mais peint a chaque image. */
+.voile[hidden] { display: none; }
+.voile b {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ivoire);
+}
+.voile i {
+  display: block;
+  width: clamp(7rem, 16vw, 12rem);
+  height: 1px;
+  background: rgba(244, 237, 223, .16);
+  position: relative;
+  overflow: hidden;
+}
+.voile i::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--or);
+  transform-origin: left;
+  animation: remplir 2.6s cubic-bezier(.4, 0, .2, 1) infinite;
+}
+@keyframes remplir {
+  0%   { transform: scaleX(0); }
+  70%  { transform: scaleX(1); }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+.voile small {
+  font-size: .58rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ivoire-3);
+}
+
+/* ══ LE CURSEUR ══════════════════════════════════════════════════════════ */
+.curseur {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+}
+.curseur[data-vu='oui'] { opacity: 1; }
+.curseur i, .curseur b {
+  position: absolute;
+  top: 50%; left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.curseur i {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(255, 255, 255, .55);
+  transition: width .42s cubic-bezier(.22, 1, .36, 1),
+              height .42s cubic-bezier(.22, 1, .36, 1),
+              border-color .42s;
+}
+.curseur b { width: 4px; height: 4px; background: #FFF; }
+.curseur[data-pris='oui'] i { width: 62px; height: 62px; border-color: #FFF; }
+.curseur[data-appuye='oui'] i { width: 22px; height: 22px; }
+
+/* ══ LE BANDEAU KAZURA ═══════════════════════════════════════════════════
+   Le seul endroit ou le studio se montre. Discret par decision : une vitrine
+   couverte du logo de son auteur cesse d'etre une vitrine et devient une
+   publicite, et on ne se projette pas dans une publicite. */
+.signature {
+  position: fixed;
+  left: var(--marge);
+  bottom: clamp(1.1rem, 2.6vh, 1.9rem);
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .58rem .95rem .58rem .68rem;
+  text-decoration: none;
+  color: rgba(255, 255, 255, .82);
+  background: rgba(6, 8, 14, .42);
+  border: 1px solid rgba(244, 237, 223, .14);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  font-size: .58rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  transition: border-color .5s, background .5s, color .5s;
+}
+.signature:hover { border-color: rgba(216, 178, 95, .6); color: #FFF; background: rgba(6, 8, 14, .66); }
+.signature svg { width: 22px; height: 22px; flex: none; fill: currentColor; }
+.signature span { display: grid; }
+.signature em { font-style: normal; opacity: .52; letter-spacing: .14em; }
+@media (max-width: 720px) { .signature em { display: none; } }
+
+/* ══ TELEPHONE ═══════════════════════════════════════════════════════════
+   Rien ne depasse en largeur, jamais. La lecon coute cher a chaque fois
+   qu'on l'oublie : sur grand ecran un debordement ne se voit pas, sur
+   telephone c'est la page entiere qui se dezoome. */
+@media (max-width: 760px) {
+  .acte { padding: 5.5rem var(--marge) 8rem; align-content: end; }
+  .acte--droite { justify-items: start; text-align: left; }
+  .acte--droite .filet { margin-left: 0; background: linear-gradient(to right, var(--or), transparent); }
+  .acte--droite p.dire { margin-left: 0; }
+  .acte__bloc { max-width: 100%; }
+  .chiffres { gap: 1.6rem 2.4rem; }
+  .fiche div { grid-template-columns: 1fr; gap: .3rem; }
+  .defiler { display: none; }
+}

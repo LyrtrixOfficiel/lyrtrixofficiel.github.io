@@ -1045,16 +1045,13 @@ async function monterLePortailSiPresent() {
 }
 
 /* ══ Le bonsai de jade ══════════════════════════════════════════════════ */
-/* Le heros de la page d'accueil. Meme module que le portail : charger un
-   fichier, le recentrer, le poser dans le ciel de la maison, le faire suivre le
-   curseur. Seul le cadrage change, et il est passe en options.
+/* RETIRE DU HEROS le 17 aout, a la demande de Matheo. Le jugement etait juste
+   et vaut d'etre garde : un bel objet pose au fond d'une page d'accueil, sans
+   raison d'etre la, ne demontre rien. Le visiteur ne se demande pas comment
+   c'est fait, il se demande ce que ca vient faire.
 
-   IL SE CHARGE APRES LE RESTE, et n'apparait qu'une fois pret. Un objet de
-   1,2 Mo en tete de page ne doit jamais retarder l'affichage du titre : le
-   visiteur lit KAZURA tout de suite, l'arbre arrive ensuite.
-
-   DECALE A DROITE, volontairement. Un objet dense pose au centre mange un titre
-   pose au centre, et c'est le titre qui doit gagner. */
+   Le modele et le module restent, ils serviront dans une vitrine ou l'objet
+   aura un role. La fonction n'est plus appelee. */
 async function monterLeBonsaiSiPresent() {
   const toile = $('#toile-bonsai');
   if (!toile) return;
@@ -1286,7 +1283,6 @@ function demarrer() {
   monterLeSceauSiPresent();
   monterLePortailSiPresent();
   monterLeFormulaire();
-  monterLeBonsaiSiPresent();
   monterLeSon();
   monterLeChoixDuMouvement();
   monterLeMotSiPresent();

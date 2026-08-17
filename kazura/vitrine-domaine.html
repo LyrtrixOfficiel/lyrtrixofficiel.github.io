@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Domaine Vent d’Est · vitrine Kazura</title>
+<meta name="description" content="Vitrine Kazura : un site de domaine viticole alsacien, entièrement calculé, sans une seule photographie. Domaine imaginaire, créé pour la démonstration.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#06080E">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/vitrine-domaine.css">
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+} }
+</script>
+</head>
+
+<body>
+
+<!-- ══ Le voile ══════════════════════════════════════════════════════════ -->
+<div class="voile" id="voile">
+  <b>Vent d’Est</b>
+  <i></i>
+  <small>Beblenheim · Haut-Rhin</small>
+</div>
+
+<!-- ══ Le monde ══════════════════════════════════════════════════════════ -->
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ══ L'en-tête ═════════════════════════════════════════════════════════ -->
+<header class="entete">
+  <a class="entete__marque" href="#">Vent d’Est</a>
+  <nav class="entete__liens" aria-label="Navigation">
+    <a href="#">Le domaine</a>
+    <a href="#">Les vins</a>
+    <a href="#">Visiter</a>
+    <a href="#">Boutique</a>
+  </nav>
+</header>
+
+<!-- ══ La jauge du jour ══════════════════════════════════════════════════ -->
+<div class="jauge" aria-hidden="true">
+  <span>Aube</span>
+  <div class="jauge__barre"><i></i></div>
+  <span>Nuit</span>
+</div>
+
+<div class="defiler" aria-hidden="true"><i></i><span>Défiler</span></div>
+
+<!-- ══ Les actes ═════════════════════════════════════════════════════════
+     Six écrans qui se relaient le long d'une seule descente. Aucun n'est un
+     bloc de page : ils flottent au-dessus d'un monde qui, lui, ne s'arrête
+     jamais de tourner. -->
+
+<main>
+
+  <section class="acte acte--gauche" data-acte data-de="0" data-a="0.115" data-fondu="0.04" aria-label="Le domaine">
+    <div class="acte__bloc">
+      <span class="oeil">Alsace · Grand Cru Sonnenglanz</span>
+      <h1 class="titre titre--geant">Vent <em>d’Est</em></h1>
+      <p class="dire">
+        Quatre hectares sur le versant sud-est de Beblenheim.
+        Une famille depuis 1878, sept générations, un seul coteau.
+      </p>
+    </div>
+  </section>
+
+  <section class="acte acte--droite" data-acte data-de="0.145" data-a="0.285" data-fondu="0.045" aria-label="Le lever du jour">
+    <div class="acte__bloc">
+      <span class="oeil">Cinq heures quarante</span>
+      <h2 class="titre">Le jour se lève<br>sur le coteau.</h2>
+      <hr class="filet">
+      <p class="dire">
+        Sonnenglanz veut dire l’éclat du soleil. Le nom n’a pas été choisi par
+        un publicitaire : le versant prend la lumière quarante minutes avant
+        le village, et il la garde jusqu’au dernier moment du soir. C’est cette
+        avance-là, et rien d’autre, qui fait mûrir un riesling ici plutôt qu’à
+        deux cents mètres de distance.
+      </p>
+    </div>
+  </section>
+
+  <section class="acte acte--gauche" data-acte data-de="0.305" data-a="0.455" data-fondu="0.045" aria-label="Le terroir">
+    <div class="acte__bloc">
+      <span class="oeil">Le terroir</span>
+      <h2 class="titre">Marnes<br>et calcaire.</h2>
+      <hr class="filet">
+      <p class="dire">
+        Un sol qui retient l’eau juste assez pour que la vigne cherche, et qui
+        rend la nuit la chaleur prise le jour. On y travaille au cheval sur les
+        deux parcelles hautes, où le tracteur glisse.
+      </p>
+      <div class="chiffres">
+        <div><b>4,2</b><small>hectares</small></div>
+        <div><b>310</b><small>mètres</small></div>
+        <div><b>1878</b><small>première vendange</small></div>
+        <div><b>7</b><small>générations</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="acte acte--droite" data-acte data-de="0.475" data-a="0.625" data-fondu="0.045" aria-label="La vinification">
+    <div class="acte__bloc">
+      <span class="oeil">La cave</span>
+      <h2 class="titre">On ne corrige<br>pas une année.</h2>
+      <hr class="filet">
+      <p class="dire">
+        Pressurage lent, débourbage à froid, fermentation par les levures du
+        lieu. Huit mois sur lies fines dans des foudres de chêne que le
+        grand-père a fait monter en 1954, et qui n’ont jamais donné de goût de
+        bois parce qu’ils ont largement passé l’âge d’en donner.
+      </p>
+      <p class="dire">
+        Pas de collage, pas de chaptalisation, une filtration minimale.
+        Le reste, c’est le coteau qui le décide.
+      </p>
+    </div>
+  </section>
+
+  <section class="acte acte--gauche" data-acte data-de="0.645" data-a="0.785" data-fondu="0.045" aria-label="Le millésime">
+    <div class="acte__bloc">
+      <span class="oeil">Le millésime</span>
+      <h2 class="titre">Sonnenglanz<br><em>2021</em></h2>
+      <div class="fiche">
+        <div><span>Cépage</span><span>Riesling, 100&nbsp;%. Vignes de 38 ans de moyenne.</span></div>
+        <div><span>Robe</span><span>Or pâle, reflets verts sur les bords.</span></div>
+        <div><span>Nez</span><span>Citron confit, tilleul, une pierre mouillée qui met du temps à venir.</span></div>
+        <div><span>Bouche</span><span>Droite, tendue, une salinité qui reste longtemps après la dernière goutte.</span></div>
+        <div><span>Garde</span><span>À boire, ou à attendre jusqu’en 2035.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="acte acte--droite" data-acte data-de="0.805" data-a="1" data-fondu="0.05" aria-label="Visiter">
+    <div class="acte__bloc">
+      <span class="oeil">Le soir tombe</span>
+      <h2 class="titre">Venez goûter.</h2>
+      <p class="dire">
+        La cave est ouverte du mardi au samedi, de 9&nbsp;h à 12&nbsp;h et de
+        14&nbsp;h à 18&nbsp;h. On ne prend pas de rendez-vous pour deux
+        personnes, on en prend pour douze.
+      </p>
+      <div class="actions">
+        <a class="bouton" href="#">Réserver une dégustation</a>
+        <a class="bouton bouton--nu" href="#">La boutique</a>
+      </div>
+      <p class="dire" style="margin-top:2.4rem;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;opacity:.55">
+        3 rue du Sonnenglanz · 68980 Beblenheim
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ Le rail ═══════════════════════════════════════════════════════════
+     Sept écrans de hauteur, vides. C'est la réglette du défilement : tout le
+     contenu est fixe par dessus, rien ne se démonte en route. -->
+<div id="rail" aria-hidden="true"></div>
+
+<!-- ══ La signature ══════════════════════════════════════════════════════ -->
+<a class="signature" href="demonstrations.html">
+  <svg viewBox="0 0 100 100" fill-rule="evenodd" aria-hidden="true">
+    <path d="M50 2a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0 6a42 42 0 1 1 0 84 42 42 0 1 1 0-84z"/>
+    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z"/>
+    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(120 50 50)"/>
+    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(240 50 50)"/>
+    <circle cx="50" cy="50" r="4.6"/>
+  </svg>
+  <span>Vitrine Kazura<em>Domaine imaginaire</em></span>
+</a>
+
+<noscript>
+  <div style="position:fixed;inset:0;z-index:50;display:grid;place-content:center;text-align:center;padding:2rem;background:#06080E;color:#F4EDDF;font-family:Jost,sans-serif">
+    <p>Cette vitrine est une scène en trois dimensions calculée dans votre navigateur.<br>Elle a besoin de JavaScript pour exister.</p>
+  </div>
+</noscript>
+
+<script type="module">
+  import { monterLesActes, monterLeVoile, monterLeCurseur, monterLaLecture } from './js/vitrine.js';
+
+  const actes = monterLesActes();
+  monterLeCurseur();
+
+  /* Les actes se posent dès maintenant, même si la scène échoue : le texte
+     d'un site ne dépend jamais de sa décoration. */
+  monterLaLecture(p => actes && actes.poser(p));
+
+  const scene = (async () => {
+    try {
+      const { monterLaVitrine } = await import('./js/vitrine-domaine.js');
+      const v = await monterLaVitrine(document.getElementById('scene'));
+      if (v) window.vitrine = v;
+      return v;
+    } catch (e) {
+      console.warn('scène indisponible', e);
+      /* Repli : un dégradé de ciel fixe, pour que personne ne voie jamais un
+         rectangle noir. */
+      document.getElementById('scene').style.background =
+        'radial-gradient(120% 90% at 62% 78%, #C05C32 0%, #6B3A46 34%, #16244A 62%, #05070F 100%)';
+      return null;
+    }
+  })();
+
+  monterLeVoile(document.getElementById('voile'), scene);
+</script>
+
+</body>
+</html>

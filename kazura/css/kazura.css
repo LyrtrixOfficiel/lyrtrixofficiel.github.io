@@ -1674,3 +1674,106 @@ html[data-mouvement='sobre'] .nav__son-barres i { animation: none !important; }
     transform: none !important;
   }
 }
+
+
+/* ══ LES VITRINES ════════════════════════════════════════════════════════
+   Une vitrine est un site entier, pas une vignette. Sa carte doit donc peser
+   dans la page : grande, une seule par ligne sur un ecran normal, avec une
+   image qui donne le climat avant qu'on ait lu le titre.
+
+   L'APERCU EST DESSINE EN CSS, sans une image. Un couchant sur un coteau,
+   c'est un degrade, un disque et deux formes : le charger en photo couterait
+   plus cher que de le peindre, et il resterait a le refaire a chaque fois que
+   la vitrine change de teinte. */
+.vitrines {
+  display: grid;
+  gap: clamp(1.6rem, 3vw, 2.6rem);
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+
+.vitrine {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.4rem, 3vw, 3rem);
+  align-items: center;
+  padding: clamp(1.1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(174, 236, 213, .12);
+  border-radius: 22px;
+  background: rgba(9, 14, 18, .5);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: border-color .6s cubic-bezier(.22,1,.36,1),
+              background .6s cubic-bezier(.22,1,.36,1),
+              transform .6s cubic-bezier(.22,1,.36,1);
+}
+a.vitrine:hover { border-color: rgba(110, 231, 183, .42); background: rgba(12, 20, 25, .72); }
+a.vitrine:hover .vitrine__soleil { transform: translate(-50%, -34%) scale(1.12); }
+a.vitrine:hover .vitrine__lire i { transform: translateX(.42em); }
+
+.vitrine--venir { opacity: .62; }
+
+/* ── L'apercu peint ─────────────────────────────────────────────────────── */
+.vitrine__toile {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0A0C14;
+  isolation: isolate;
+}
+.vitrine__ciel {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, #14224A 0%, #4A2F52 38%, #B4552C 74%, #E0803A 100%);
+}
+.vitrine__soleil {
+  position: absolute;
+  left: 44%; top: 62%;
+  width: 16%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF6D8 0%, #FFC46A 42%, rgba(255,150,60,.5) 62%, transparent 72%);
+  transform: translate(-50%, -50%);
+  transition: transform .8s cubic-bezier(.22,1,.36,1);
+  filter: blur(.3px);
+}
+.vitrine__coteau {
+  position: absolute; left: -6%; right: -6%; bottom: -34%;
+  height: 62%;
+  border-radius: 50% 50% 0 0 / 70% 70% 0 0;
+  background: linear-gradient(to bottom, #34211A, #1A1210);
+  transform: rotate(-2.4deg);
+}
+.vitrine__flacon {
+  position: absolute;
+  left: 68%; bottom: 16%;
+  width: 3.1%; height: 42%;
+  background: linear-gradient(to bottom, transparent 0 8%, #0E1A12 8% 20%, #C8913C 20% 100%);
+  border-radius: 44% 44% 12% 12% / 26% 26% 4% 4%;
+  clip-path: polygon(38% 0, 62% 0, 62% 26%, 100% 46%, 100% 100%, 0 100%, 0 46%, 38% 26%);
+  box-shadow: 0 0 14px rgba(255, 190, 110, .5);
+}
+
+/* ── Le texte ───────────────────────────────────────────────────────────── */
+.vitrine__dire { display: grid; gap: .8rem; align-content: center; padding: clamp(.4rem, 1.4vw, 1.4rem) 0; }
+.vitrine__dire b {
+  font-family: var(--display);
+  font-weight: 620;
+  font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+  line-height: 1.02;
+  letter-spacing: -.015em;
+}
+.vitrine__dire em { font-style: normal; color: var(--gris); line-height: 1.68; max-width: 46ch; }
+.vitrine__lire {
+  display: inline-flex; align-items: center; gap: .55em;
+  margin-top: .5rem;
+  font-size: .78rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--jade);
+}
+.vitrine__lire i { font-style: normal; transition: transform .5s cubic-bezier(.22,1,.36,1); }
+.vitrine__lire--sourd { color: var(--gris-fonce); }
+
+@media (max-width: 860px) {
+  .vitrine { grid-template-columns: 1fr; }
+  .vitrine--venir { padding-block: 1.6rem; }
+}
