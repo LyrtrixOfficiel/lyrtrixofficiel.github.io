@@ -387,6 +387,49 @@ function monterLesBandeaux() {
   });
 }
 
+/* ══ 9 quater. La pousse ════════════════════════════════════════════════ */
+/* L'idee qui tient le site : la maison POUSSE pendant qu'on la visite, et
+   elle ne recommence pas a zero d'une page a l'autre. Le detail du calcul est
+   dans pousse.js ; ici on ne fait que la brancher sur ce qui doit en dependre.
+
+   ELLE SE CHARGE MEME EN MODE SOBRE. Une preference de mouvement demande de
+   ne pas AGITER, elle ne demande pas de retirer le contenu : les lianes
+   arrivent alors sans transition, posees d'un coup a leur hauteur. Couper la
+   chose entiere reviendrait a punir celui qui a demande du calme. */
+async function monterLaPousseDuSite() {
+  try {
+    const { monterLaPousse, monterLesLianesDeMarge } = await import('./pousse.js' + VERSION);
+    const p = monterLaPousse();
+    (window.kazura ||= {}).pousse = p;
+
+    const nom = location.pathname.split('/').pop() || 'index';
+    const lianes = monterLesLianesDeMarge(nom);
+
+    /* La marque dans la barre. Posee par le code et non dans les huit pages :
+       une chose qui doit exister partout n'a pas a etre recopiee partout. */
+    const nav = $('.nav');
+    let marque = null;
+    if (nav) {
+      marque = document.createElement('span');
+      marque.className = 'nav__pousse';
+      marque.setAttribute('aria-hidden', 'true');
+      marque.innerHTML = '<i></i>';
+      nav.insertBefore(marque, $('.nav__son', nav) || null);
+    }
+
+    const mots = { graine: 'À peine semé', jeune: 'Ça pousse', fournie: 'Ça prend', envahie: 'Envahi' };
+    p.surPousse(v => {
+      lianes?.rendre(v);
+      if (marque) marque.dataset.dire = mots[document.documentElement.dataset.pousse] || '';
+      /* La scene 3D en tient compte : plus on a visite, plus il y a de lianes
+         qui poussent derriere le texte. */
+      window.kazura?.scene?.densite?.(v);
+    });
+  } catch (e) {
+    console.warn('pousse indisponible', e);
+  }
+}
+
 /* ══ 9 ter. La transition entre pages ═══════════════════════════════════ */
 /* La transition elle-meme est declaree dans la feuille de style, en une regle,
    et c'est le navigateur qui fait tout le travail : aucun routeur, aucune
@@ -1366,6 +1409,7 @@ function demarrer() {
   monterLeSon();
   monterLeChoixDuMouvement();
   monterLaNueeSiPresente();
+  monterLaPousseDuSite();
 
   const annee = $('[data-annee]');
   if (annee) annee.textContent = new Date().getFullYear();

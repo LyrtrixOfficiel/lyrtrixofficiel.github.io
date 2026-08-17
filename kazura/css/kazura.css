@@ -1872,3 +1872,105 @@ html[data-mouvement='sobre'] .titre {
   font-variation-settings: 'wdth' 108, 'wght' 740;
   transition: none;
 }
+
+
+/* ══ LES LIANES DE MARGE ═════════════════════════════════════════════════
+   Le decor qui pousse pendant la visite. Elles vivent HORS du conteneur de
+   defilement, en position fixe : ce sont les bords de l'ECRAN qu'elles
+   longent, pas les bords du document. Une liane qui defilerait avec la page
+   serait une illustration de plus ; celle-ci accompagne.
+
+   Elle ne prend jamais le clic. C'est un decor, et un decor qui intercepte
+   un bouton est un defaut, pas un detail. */
+.lianes-marge {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Le decor s'efface quand la page a beaucoup a dire : il accompagne, il ne
+     dispute jamais. */
+  opacity: .70;
+}
+/* Deux bandes etroites collees aux bords, et rien entre elles. La colonne de
+   lecture est ainsi protegee par la mise en page elle-meme, pas par le
+   reglage prudent d'une amplitude. */
+.lianes-marge__bande {
+  position: absolute;
+  top: 0; bottom: 0;
+  display: block;
+}
+.lianes-marge__bande[data-bord='gauche'] { left: 0; }
+.lianes-marge__bande[data-bord='droite'] { right: 0; }
+
+.lianes-marge__tige {
+  fill: none;
+  stroke: url(#degrade-liane);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  /* Le pointille est pose par le code, qui seul connait la longueur du
+     trace. Ici on ne regle que la douceur de sa revelation. */
+  transition: stroke-dashoffset 1.6s cubic-bezier(.22, 1, .36, 1);
+  filter: drop-shadow(0 0 5px rgba(16, 185, 129, .28));
+}
+.lianes-marge__feuille {
+  /* Une feuille se voit a travers. Pleines, elles ressortaient en pastilles
+     de couleur et le decor devenait un motif. */
+  fill: rgba(6, 95, 70, .52);
+  stroke: rgba(52, 211, 153, .58);
+  stroke-width: .7;
+  opacity: .82;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .9s cubic-bezier(.22, 1, .36, 1);
+  filter: drop-shadow(0 0 4px rgba(110, 231, 183, .3));
+}
+
+/* Elles s'effacent sur telephone : la place y est trop rare pour qu'un decor
+   morde sur la colonne de lecture. */
+@media (max-width: 700px) { .lianes-marge { display: none; } }
+html[data-mouvement='sobre'] .lianes-marge__tige,
+html[data-mouvement='sobre'] .lianes-marge__feuille { transition: none; }
+
+/* ══ LA MARQUE DE POUSSE ═════════════════════════════════════════════════
+   Une graduation minuscule dans la barre, qui monte avec la visite. Elle ne
+   sert a rien, et c'est exactement pour ca qu'on la remarque : c'est le genre
+   de detail dont on se dit qu'il n'a pu etre mis la que volontairement. */
+.nav__pousse {
+  position: relative;
+  width: 2px;
+  height: 22px;
+  margin-inline: .2rem .1rem;
+  border-radius: 2px;
+  background: rgba(174, 236, 213, .16);
+  overflow: hidden;
+  flex: none;
+}
+.nav__pousse i {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: calc(var(--pousse, 0) * 100%);
+  background: linear-gradient(to top, var(--jade-fonce), var(--jade-clair));
+  box-shadow: 0 0 8px rgba(16, 185, 129, .8);
+  transition: height 1.4s cubic-bezier(.22, 1, .36, 1);
+}
+.nav__pousse::after {
+  content: attr(data-dire);
+  position: absolute;
+  top: calc(100% + .7rem);
+  right: -.6rem;
+  padding: .4em .7em;
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--jade-clair);
+  background: rgba(4, 8, 10, .92);
+  border: 1px solid rgba(16, 185, 129, .3);
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .4s, transform .4s;
+  pointer-events: none;
+}
+.nav__pousse:hover::after { opacity: 1; transform: translateY(0); }
+@media (max-width: 860px) { .nav__pousse { display: none; } }
