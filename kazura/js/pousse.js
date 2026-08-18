@@ -226,16 +226,35 @@ export function monterLesLianesDeMarge(nom) {
           const cote = alea() > 0.5 ? 1 : -1;
           const taille = 5.5 + alea() * 5.5;
 
-          const f = document.createElementNS(SVG, 'ellipse');
-          f.setAttribute('rx', taille.toFixed(1));
-          f.setAttribute('ry', (taille * 0.46).toFixed(1));
-          f.setAttribute('class', 'lianes-marge__feuille');
-          f.setAttribute('transform',
+          /* UNE ELLIPSE N'EST PAS UNE FEUILLE. C'est ce que Matheo a vu tout
+             de suite : des pastilles vertes, pas du feuillage. Une feuille a
+             un PETIOLE qui l'attache, un ventre asymetrique et surtout une
+             POINTE. On la trace donc en deux courbes qui se rejoignent en un
+             point, ce qui coute le meme prix qu'une ellipse. Le kudzu porte
+             des folioles ovales terminees en pointe : c'est exactement ce
+             dessin-la. */
+          const g = document.createElementNS(SVG, 'g');
+          g.setAttribute('class', 'lianes-marge__feuille');
+          g.setAttribute('transform',
             'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ') '
-            + 'rotate(' + (angle + cote * 52).toFixed(0) + ') '
-            + 'translate(' + (taille * 0.92).toFixed(1) + ' 0)');
-          svg.appendChild(f);
-          feuilles.push({ el: f, seuil: t * 0.92 });
+            + 'rotate(' + (angle + cote * 46).toFixed(0) + ') '
+            + 'scale(' + (taille / 9).toFixed(3) + ')');
+
+          const lame = document.createElementNS(SVG, 'path');
+          lame.setAttribute('d',
+            'M 0 0 C 3.4 -4.6 10.6 -6.2 16.5 -0.6 C 10.6 5.4 3.4 4.4 0 0 Z');
+          lame.setAttribute('class', 'feuille__lame');
+          g.appendChild(lame);
+
+          /* La nervure. Sans elle, la lame reste une tache ; avec elle, l'oeil
+             lit une feuille en un dixieme de seconde. */
+          const nerv = document.createElementNS(SVG, 'path');
+          nerv.setAttribute('d', 'M 0.6 0 C 6 -1.4 11 -1.4 15.6 -0.7');
+          nerv.setAttribute('class', 'feuille__nervure');
+          g.appendChild(nerv);
+
+          svg.appendChild(g);
+          feuilles.push({ el: g, seuil: t * 0.92 });
         }
 
         tiges.push({ tige, L, feuilles, retard: alea() * 0.18, portee: 0.58 + alea() * 0.34 });
@@ -312,11 +331,17 @@ export function monterLesVrilles(selecteur) {
     tige.setAttribute('class', 'vrille__tige');
     svg.appendChild(tige);
 
-    const feuille = document.createElementNS(SVG, 'ellipse');
-    feuille.setAttribute('cx', '26.6'); feuille.setAttribute('cy', '13.4');
-    feuille.setAttribute('rx', '5.4');  feuille.setAttribute('ry', '2.5');
-    feuille.setAttribute('transform', 'rotate(-34 26.6 13.4)');
+    const feuille = document.createElementNS(SVG, 'g');
     feuille.setAttribute('class', 'vrille__feuille');
+    feuille.setAttribute('transform', 'translate(23.4 15.6) rotate(-52) scale(0.62)');
+    const lame = document.createElementNS(SVG, 'path');
+    lame.setAttribute('d', 'M 0 0 C 3.4 -4.6 10.6 -6.2 16.5 -0.6 C 10.6 5.4 3.4 4.4 0 0 Z');
+    lame.setAttribute('class', 'feuille__lame');
+    feuille.appendChild(lame);
+    const nerv = document.createElementNS(SVG, 'path');
+    nerv.setAttribute('d', 'M 0.6 0 C 6 -1.4 11 -1.4 15.6 -0.7');
+    nerv.setAttribute('class', 'feuille__nervure');
+    feuille.appendChild(nerv);
     svg.appendChild(feuille);
 
     h.appendChild(svg);

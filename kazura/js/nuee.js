@@ -104,13 +104,19 @@ void main() {
      jamais : c'est l'amortissement plus bas qui le pose. La raideur depend
      de la cohesion, donc quand elle tombe le mot ne se disloque pas d'un
      coup, il se laisse emporter. */
+  /* LE RESSORT EST FRANC. A 26, les particules mettaient trop longtemps a se
+     poser et le mot restait flou sur ses bords : Matheo l'a dit tout de
+     suite, « le KAZURA est mal fait ». Un mot fait de points ne vaut que par
+     la NETTETE de son contour ; en dessous, il ressemble a une tache. */
   vec3 versCible = cible - p;
-  v += versCible * (26.0 * uCohesion) * uDt;
+  v += versCible * (52.0 * uCohesion) * uDt;
 
   /* La turbulence. Elle grandit quand la cohesion tombe : tenue, la nuee
      fremit a peine ; libre, elle part en fumee. L'echelle depend de la
      graine, donc deux particules voisines ne suivent jamais la meme veine. */
-  float ampleur = mix(2.35, 0.16, uCohesion);
+  /* Et la turbulence au repos tombe presque a rien : c'est elle qui faisait
+     baver le contour. Elle reste entiere une fois la nuee libre. */
+  float ampleur = mix(2.35, 0.045, uCohesion);
   vec3 q = p * mix(0.55, 1.30, graine) + vec3(0.0, uTemps * 0.11, uTemps * 0.05);
   v += rotationnel(q) * ampleur * uDt;
 
@@ -135,7 +141,7 @@ void main() {
      obtenait un nuage violet de la forme du mot, mais pas le mot. Une
      particule qui rejoint sa place doit y etre RETENUE, c'est tout le role de
      l'amortissement, et c'est la moitie d'un ressort qu'on oublie. */
-  v *= pow(mix(0.55, 0.020, uCohesion), uDt);
+  v *= pow(mix(0.55, 0.006, uCohesion), uDt);
 
   p += v * uDt;
 
@@ -199,7 +205,7 @@ void main() {
      deux cent mille points se lisent comme une matiere et non comme du bruit. */
   vec2 c = gl_PointCoord - 0.5;
   float r = dot(c, c) * 4.0;
-  float a = exp(-r * 3.2);
+  float a = exp(-r * 4.4);
   if (a < 0.004) discard;
 
   /* Le jade pour ce qui est calme, le violet pour ce qui file. La couleur
@@ -335,11 +341,27 @@ export async function monterLaNuee(toile, options = {}) {
     const data = new Float32Array(N * 4);
     const nEncre = encre.length / 2;
     for (let i = 0; i < N; i++) {
-      const k = (Math.random() * nEncre) | 0;
+      /* ══ UN TIRAGE REPARTI, PAS UN TIRAGE AU HASARD ══════════════════
+         Tirer chaque destination au hasard dans la lettre semble juste et ne
+         l'est pas : le hasard fait des paquets. Sur deux cent mille tirages,
+         certaines zones recoivent trois fois plus de points que leurs
+         voisines, et la lettre ressort grumeleuse, plus dense par endroits,
+         trouee ailleurs. C'est ce qui donnait au mot son air sale.
+
+         On parcourt donc l'encre REGULIEREMENT, un point tous les nEncre/N,
+         avec un jeu d'un intervalle pour casser la regularite visible. La
+         couverture devient uniforme et la lettre prend un grain de velours
+         au lieu d'un grain de sable. */
+      const k = Math.min(nEncre - 1, ((i + Math.random()) * nEncre / N) | 0);
       const x = encre[k * 2], y = encre[k * 2 + 1];
-      /* Un demi-point de flou pour que la grille du canevas ne se voie pas. */
-      data[i * 4]     = ((x + Math.random()) / L - 0.5) * largeurMonde;
-      data[i * 4 + 1] = (0.5 - (y + Math.random()) / Hc) * hauteurMonde;
+      /* LE JEU DOIT COUVRIR TOUT L'ECART DE LA GRILLE. L'encre est relevee un
+         point sur deux ; un jeu d'un seul pixel laissait donc une ligne vide
+         sur deux, et le tirage reparti, qui parcourt l'encre ligne par ligne,
+         rendait ces vides parfaitement reguliers. Le mot sortait raye
+         d'horizontales. On joue donc sur DEUX pixels, centres sur le point
+         releve, et la grille disparait. */
+      data[i * 4]     = ((x + Math.random() * 2 - 0.5) / L - 0.5) * largeurMonde;
+      data[i * 4 + 1] = (0.5 - (y + Math.random() * 2 - 0.5) / Hc) * hauteurMonde;
       data[i * 4 + 2] = (Math.random() - 0.5) * 0.55;
       data[i * 4 + 3] = 1;
     }
@@ -422,7 +444,7 @@ export async function monterLaNuee(toile, options = {}) {
        en trop ne sont pas detruites, elles ne sont pas dessinees : la
        simulation reste entiere et la densite redevient juste des que la
        fenetre grandit. */
-    dessinees = Math.min(N, Math.max(20000, Math.round(toile.width * toile.height * 0.55)));
+    dessinees = Math.min(N, Math.max(20000, Math.round(toile.width * toile.height * 0.72)));
 
     hauteurMonde = 1.0;
     const neuve = hauteurMonde * (r.width / r.height);
@@ -527,7 +549,7 @@ export async function monterLaNuee(toile, options = {}) {
     gl.uniform1i(uPts.uPos, 0);
     gl.uniform1i(uPts.uVit, 1);
     gl.uniform2f(uPts.uCadre, largeurMonde, hauteurMonde);
-    gl.uniform1f(uPts.uTaille, (petit ? 1.35 : 1.7) * definition);
+    gl.uniform1f(uPts.uTaille, (petit ? 1.25 : 1.5) * definition);
     gl.uniform1f(uPts.uCohesion, cohesion);
     gl.drawArrays(gl.POINTS, 0, allege ? (dessinees / 2) | 0 : dessinees);
     gl.disable(gl.BLEND);

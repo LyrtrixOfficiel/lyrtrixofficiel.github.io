@@ -446,28 +446,19 @@ addEventListener('pagereveal', e => {
   if (document.documentElement.dataset.mouvement !== 'anime') e.viewTransition?.skipTransition();
 });
 
-/* ══ 9 bis. L'elan, ecrit une fois pour toute la page ═══════════════════ */
-/* Une seule variable sur la racine, --elan, entre zero a l'arret et un a
-   pleine vitesse. La feuille de style s'en sert pour resserrer les lettres
-   des grandes phrases : le texte devient le cadran de son propre mouvement.
+/* ══ 9 bis. L'ELAN, RETIRE ═════════════════════════════════════════════
+   J'avais accroche la CHASSE des grandes phrases a la vitesse de defilement :
+   les lettres se resserraient quand on descendait vite. Sur le papier c'etait
+   joli. A l'ecran c'etait un defaut, et Matheo l'a decrit exactement :
+   « les animations de texte se reinitialisent en boucle ».
 
-   POURQUOI UNE SEULE ECRITURE. Poser la valeur sur chaque titre voudrait dire
-   toucher au style de vingt elements par image, donc vingt invalidations de
-   mise en page. Ecrite sur la racine, elle descend par heritage et le
-   navigateur ne recalcule que ce qui la lit vraiment.
+   Deux raisons, et les deux sont de moi. Un, la valeur etait reecrite a chaque
+   image, donc chaque titre etait remis en page soixante fois par seconde,
+   lettre par lettre puisqu'ils sont decoupes en spans. Deux, l'elan monte et
+   redescend a chaque coup de molette, donc le texte respirait sans arret sans
+   qu'on comprenne pourquoi.
 
-   L'ELAN MONTE VITE ET REDESCEND LENTEMENT, comme une aiguille de compteur.
-   Symetrique, il ferait vibrer les lettres a chaque cran de molette. */
-function monterLElan() {
-  const racine = document.documentElement;
-  if (racine.dataset.mouvement !== 'anime') return;
-  let elan = 0;
-  auDefilement((y, p, v) => {
-    const brut = Math.min(1, Math.abs(v) / 46);
-    elan += (brut - elan) * (brut > elan ? 0.34 : 0.055);
-    racine.style.setProperty('--elan', elan.toFixed(3));
-  });
-}
+   Une typographie qui bouge doit servir la lecture. Celle-la la genait. */
 
 /* ══ 10. Barre et menu ══════════════════════════════════════════════════ */
 function monterLaBarre() {
@@ -594,8 +585,8 @@ function monterLaTrace() {
   mesurer();
   addEventListener('resize', mesurer);
 
-  const VIE = 1.45;                 /* secondes avant disparition complete */
-  const PAS_FEUILLE = 52;           /* pixels entre deux feuilles */
+  const VIE = 0.95;                 /* secondes avant disparition complete */
+  const PAS_FEUILLE = 78;           /* pixels entre deux feuilles */
   const points = [];
   const feuilles = [];
   let depuis = 0, dernierX = 0, dernierY = 0, aDejaBouge = false;
@@ -646,10 +637,14 @@ function monterLaTrace() {
       const vif = 1 - age;
       /* La tige s'affine vers la queue, et vire du jade au violet en fanant :
          c'est le meme degrade que partout ailleurs sur le site. */
-      g.strokeStyle = 'rgba(' + Math.round(52 + 90 * age) + ','
-                    + Math.round(211 - 100 * age) + ','
-                    + Math.round(153 + 70 * age) + ',' + (vif * 0.5).toFixed(3) + ')';
-      g.lineWidth = 0.5 + vif * 2.1;
+      /* UNE TEINTE SOURDE, ET DISCRETE. La premiere version tracait en jade
+         vif a moitie opaque : sur quatre pages de visite, avec les lianes de
+         marge et les vrilles, l'ecran devenait vert. Un decor doit se voir
+         quand on le cherche, pas quand on lit. */
+      g.strokeStyle = 'rgba(' + Math.round(120 + 40 * age) + ','
+                    + Math.round(186 - 40 * age) + ','
+                    + Math.round(160 + 30 * age) + ',' + (vif * 0.30).toFixed(3) + ')';
+      g.lineWidth = 0.4 + vif * 1.5;
       g.beginPath();
       g.moveTo(a.x, a.y);
       g.lineTo(b.x, b.y);
@@ -665,12 +660,25 @@ function monterLaTrace() {
       g.save();
       g.translate(f.x, f.y);
       g.rotate(f.a);
+      /* La meme anatomie que partout ailleurs : deux courbes qui se
+         rejoignent en pointe, et une nervure. Une ellipse ne fait pas une
+         feuille, elle fait une pastille. */
+      const l = r * 2.1;
       g.beginPath();
-      g.ellipse(r * 0.9, 0, r, r * 0.46, 0, 0, Math.PI * 2);
-      g.fillStyle = 'rgba(16,185,129,' + (vif * 0.34).toFixed(3) + ')';
+      g.moveTo(0, 0);
+      g.bezierCurveTo(l * 0.21, -r * 0.62, l * 0.64, -r * 0.84, l, -r * 0.08);
+      g.bezierCurveTo(l * 0.64, r * 0.72, l * 0.21, r * 0.60, 0, 0);
+      g.closePath();
+      g.fillStyle = 'rgba(34,74,60,' + (vif * 0.30).toFixed(3) + ')';
       g.fill();
-      g.strokeStyle = 'rgba(110,231,183,' + (vif * 0.55).toFixed(3) + ')';
-      g.lineWidth = 0.9;
+      g.strokeStyle = 'rgba(126,190,162,' + (vif * 0.34).toFixed(3) + ')';
+      g.lineWidth = 0.7;
+      g.stroke();
+      g.beginPath();
+      g.moveTo(l * 0.05, 0);
+      g.bezierCurveTo(l * 0.36, -r * 0.16, l * 0.68, -r * 0.16, l * 0.94, -r * 0.09);
+      g.strokeStyle = 'rgba(150,205,180,' + (vif * 0.22).toFixed(3) + ')';
+      g.lineWidth = 0.5;
       g.stroke();
       g.restore();
     }
@@ -1530,7 +1538,6 @@ function demarrer() {
   monterLEpinglage();
   monterLeScrub();
   monterLesBandeaux();
-  monterLElan();
   monterLaBarre();
   monterLeCurseur();
   monterLaTrace();
