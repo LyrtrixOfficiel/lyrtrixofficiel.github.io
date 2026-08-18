@@ -265,3 +265,112 @@ export function monterLesLianesDeMarge(nom) {
 
   return { rendre, detruire() { hote.remove(); } };
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LES VRILLES
+   --------------------------------------------------------------------------
+   Une vrille s'enroule au bout du dernier mot de chaque grand titre, et elle
+   ne se deroule qu'a mesure que la visite avance.
+
+   POURQUOI CE DETAIL-LA PLUTOT QU'UN AUTRE. C'est le genre de chose qu'on ne
+   voit pas d'abord, qu'on remarque au troisieme titre, et dont on comprend
+   alors qu'elle n'a pas pu arriver la toute seule. Un visiteur ne juge pas un
+   site sur son effet le plus spectaculaire, il le juge sur le plus petit
+   detail qu'il decouvre par hasard : c'est celui-la qui dit combien de temps
+   quelqu'un y a passe.
+
+   ELLE SE POSE AU BOUT DE LA DERNIERE LIGNE, pas au bout du bloc. Un titre de
+   trois lignes n'a pas sa fin a droite du rectangle qui le contient, il l'a
+   ou le texte s'arrete vraiment. On demande donc au navigateur les rectangles
+   de la SELECTION du titre et on prend le dernier : c'est la seule mesure qui
+   reste juste quand la fenetre change, quand la police charge en retard, ou
+   quand la chasse des lettres se resserre au defilement.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+export function monterLesVrilles(selecteur) {
+  const SVG = 'http://www.w3.org/2000/svg';
+  const titres = [...document.querySelectorAll(selecteur || '.titre, .grand')]
+    .filter(h => h.textContent.trim().length > 3 && !h.closest('.nav, .pied'));
+  if (!titres.length) return null;
+
+  const poussees = [];
+
+  titres.forEach((h, i) => {
+    /* Le titre devient le repere de position de sa vrille. On ne touche a
+       rien d'autre : ni au flux, ni a la hauteur de ligne, ni au debordement. */
+    if (getComputedStyle(h).position === 'static') h.style.position = 'relative';
+
+    const svg = document.createElementNS(SVG, 'svg');
+    svg.setAttribute('class', 'vrille');
+    svg.setAttribute('viewBox', '0 0 40 40');
+    svg.setAttribute('aria-hidden', 'true');
+
+    /* Une spirale qui part droit puis s'enroule sur elle-meme. Trois courbes
+       suffisent : au dela, on ne lit plus une vrille, on lit un ressort. */
+    const tige = document.createElementNS(SVG, 'path');
+    tige.setAttribute('d', 'M 2 30 C 9 30 13 27 15 22 C 17 16 24 13 28 17 C 32 21 27 27 22 24 C 18 21.6 19 16 24 15');
+    tige.setAttribute('class', 'vrille__tige');
+    svg.appendChild(tige);
+
+    const feuille = document.createElementNS(SVG, 'ellipse');
+    feuille.setAttribute('cx', '26.6'); feuille.setAttribute('cy', '13.4');
+    feuille.setAttribute('rx', '5.4');  feuille.setAttribute('ry', '2.5');
+    feuille.setAttribute('transform', 'rotate(-34 26.6 13.4)');
+    feuille.setAttribute('class', 'vrille__feuille');
+    svg.appendChild(feuille);
+
+    h.appendChild(svg);
+
+    const L = tige.getTotalLength();
+    tige.style.strokeDasharray = L;
+    tige.style.strokeDashoffset = L;
+
+    /* Chaque vrille a son seuil : la premiere du document s'ouvre tot, les
+       suivantes plus tard. On decouvre donc le detail progressivement au lieu
+       de le voir tout entier d'un coup, ce qui le tuerait. */
+    poussees.push({ h, svg, tige, feuille, L, seuil: 0.24 + (i % 5) * 0.11 });
+  });
+
+  function placer() {
+    for (const v of poussees) {
+      /* LA VRILLE EST EXCLUE DE SA PROPRE MESURE. Elle vit dans le titre :
+         mesurer tout le contenu revenait a inclure sa boite, donc a se
+         poursuivre elle-meme a chaque replacement. Elle atteignait 327 pixels
+         de large sur un titre, et repartait a chaque redimensionnement. La
+         plage s'arrete donc juste AVANT elle. */
+      const plage = document.createRange();
+      plage.setStart(v.h, 0);
+      plage.setEndBefore(v.svg);
+      const rects = [...plage.getClientRects()].filter(r => r.width > 1 && r.height > 1);
+      if (!rects.length) continue;
+      const fin = rects[rects.length - 1];
+      const boite = v.h.getBoundingClientRect();
+      const corps = fin.height;
+      v.svg.style.width = v.svg.style.height = (corps * 0.50).toFixed(1) + 'px';
+      v.svg.style.left = (fin.right - boite.left + corps * 0.05).toFixed(1) + 'px';
+      /* Un peu SOUS le haut de la ligne : la boite d'une ligne monte bien
+         au-dessus des capitales, et une vrille calee sur ce haut flotte. */
+      v.svg.style.top  = (fin.top - boite.top + corps * 0.16).toFixed(1) + 'px';
+    }
+  }
+
+  function rendre(p) {
+    for (const v of poussees) {
+      const a = Math.max(0, Math.min(1, (p - v.seuil) / 0.30));
+      const e = a * a * (3 - 2 * a);
+      v.tige.style.strokeDashoffset = (v.L * (1 - e)).toFixed(1);
+      v.feuille.style.opacity = e > 0.82 ? '' : '0';
+      v.svg.style.transform = 'rotate(' + ((1 - e) * -22).toFixed(1) + 'deg)';
+    }
+  }
+
+  /* Les polices arrivent apres le premier calcul, et elles changent la
+     largeur du texte : sans ce second placement, chaque vrille se retrouve
+     decalee de quelques pixels sur toutes les machines a connexion lente. */
+  placer();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placer).catch(() => {});
+  let minuterie = 0;
+  addEventListener('resize', () => { clearTimeout(minuterie); minuterie = setTimeout(placer, 200); });
+
+  return { rendre, placer };
+}

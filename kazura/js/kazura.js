@@ -398,12 +398,15 @@ function monterLesBandeaux() {
    chose entiere reviendrait a punir celui qui a demande du calme. */
 async function monterLaPousseDuSite() {
   try {
-    const { monterLaPousse, monterLesLianesDeMarge } = await import('./pousse.js' + VERSION);
+    const { monterLaPousse, monterLesLianesDeMarge, monterLesVrilles } = await import('./pousse.js' + VERSION);
     const p = monterLaPousse();
     (window.kazura ||= {}).pousse = p;
 
     const nom = location.pathname.split('/').pop() || 'index';
     const lianes = monterLesLianesDeMarge(nom);
+    /* Les vrilles attendent la mise en page : posees avant, elles se
+       placeraient au bout d'un titre qui n'a pas encore sa largeur finale. */
+    const vrilles = monterLesVrilles();
 
     /* La marque dans la barre. Posee par le code et non dans les huit pages :
        une chose qui doit exister partout n'a pas a etre recopiee partout. */
@@ -420,6 +423,7 @@ async function monterLaPousseDuSite() {
     const mots = { graine: 'À peine semé', jeune: 'Ça pousse', fournie: 'Ça prend', envahie: 'Envahi' };
     p.surPousse(v => {
       lianes?.rendre(v);
+      vrilles?.rendre(v);
       if (marque) marque.dataset.dire = mots[document.documentElement.dataset.pousse] || '';
       /* La scene 3D en tient compte : plus on a visite, plus il y a de lianes
          qui poussent derriere le texte. */
@@ -548,6 +552,140 @@ function monterLeCurseur() {
     });
     b.addEventListener('pointerleave', () => { b.style.transform = ''; });
   });
+}
+
+/* ══ 11 bis. LA TRACE ═══════════════════════════════════════════════════
+   La souris laisse pousser une liane derriere elle, qui se fane en une
+   seconde et demie.
+
+   POURQUOI CA VAUT LE COUP. Une trainee de curseur, on en a vu ; une trainee
+   qui est une TIGE, avec des feuilles qui s'ouvrent tous les cinquante
+   pixels et qui fanent en partant, on n'en voit pas. Et surtout, c'est le
+   sujet meme de la maison : le visiteur fait pousser du kudzu rien qu'en
+   bougeant la main, sur toutes les pages, en permanence.
+
+   ELLE EST DESSINEE EN DEUX DIMENSIONS, pas en WebGL. Un trait qui vit une
+   seconde et demie ne justifie pas un contexte graphique de plus, et une
+   toile 2D se contente de ce qu'on lui demande. Le cout tient en une
+   centaine de segments par image.
+
+   ELLE S'EFFACE PENDANT LE DEFILEMENT. Une trainee accrochee a l'ecran alors
+   que le contenu glisse dessous se lit comme une salissure : elle n'appartient
+   plus a rien. On la coupe donc des que la page bouge, et on la laisse
+   revenir des que la main reprend la main. */
+function monterLaTrace() {
+  if (tactile || sobre) return;
+
+  const toile = document.createElement('canvas');
+  toile.className = 'trace';
+  toile.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(toile);
+  const g = toile.getContext('2d');
+  if (!g) return;
+
+  let L = 0, H = 0, def = 1;
+  const mesurer = () => {
+    def = Math.min(devicePixelRatio || 1, 2);
+    L = innerWidth; H = innerHeight;
+    toile.width = Math.round(L * def);
+    toile.height = Math.round(H * def);
+    g.setTransform(def, 0, 0, def, 0, 0);
+  };
+  mesurer();
+  addEventListener('resize', mesurer);
+
+  const VIE = 1.45;                 /* secondes avant disparition complete */
+  const PAS_FEUILLE = 52;           /* pixels entre deux feuilles */
+  const points = [];
+  const feuilles = [];
+  let depuis = 0, dernierX = 0, dernierY = 0, aDejaBouge = false;
+  let gele = 0;                     /* horodatage du dernier defilement */
+
+  addEventListener('pointermove', e => {
+    const t = performance.now() / 1000;
+    const x = e.clientX, y = e.clientY;
+    if (aDejaBouge) {
+      const d = Math.hypot(x - dernierX, y - dernierY);
+      /* Un point tous les trois pixels au minimum : sans ce filtre, une
+         souris rapide en depose deux cents par image et le trait devient
+         une bouillie de segments superposes. */
+      if (d < 3) return;
+      depuis += d;
+      if (depuis >= PAS_FEUILLE) {
+        depuis = 0;
+        feuilles.push({
+          x, y, t,
+          a: Math.atan2(y - dernierY, x - dernierX) + (Math.random() > 0.5 ? 1 : -1) * 0.95,
+          r: 4.5 + Math.random() * 3.5
+        });
+      }
+    }
+    dernierX = x; dernierY = y; aDejaBouge = true;
+    points.push({ x, y, t });
+  }, { passive: true });
+
+  auDefilement((y, p, v) => { if (Math.abs(v) > 0.6) gele = performance.now() / 1000; });
+
+  function peindre() {
+    const t = performance.now() / 1000;
+
+    while (points.length && t - points[0].t > VIE) points.shift();
+    while (feuilles.length && t - feuilles[0].t > VIE) feuilles.shift();
+
+    g.clearRect(0, 0, L, H);
+    /* Un dixieme de seconde apres le dernier cran de molette, la trace
+       revient. Assez pour qu'elle ne clignote pas, assez peu pour qu'elle ne
+       manque pas a la main qui reprend. */
+    if (t - gele < 0.12 || points.length < 3) return;
+
+    g.lineCap = 'round';
+    g.lineJoin = 'round';
+    for (let i = 1; i < points.length; i++) {
+      const a = points[i - 1], b = points[i];
+      const age = (t - b.t) / VIE;            /* 0 tout frais, 1 fane */
+      const vif = 1 - age;
+      /* La tige s'affine vers la queue, et vire du jade au violet en fanant :
+         c'est le meme degrade que partout ailleurs sur le site. */
+      g.strokeStyle = 'rgba(' + Math.round(52 + 90 * age) + ','
+                    + Math.round(211 - 100 * age) + ','
+                    + Math.round(153 + 70 * age) + ',' + (vif * 0.5).toFixed(3) + ')';
+      g.lineWidth = 0.5 + vif * 2.1;
+      g.beginPath();
+      g.moveTo(a.x, a.y);
+      g.lineTo(b.x, b.y);
+      g.stroke();
+    }
+
+    for (const f of feuilles) {
+      const age = (t - f.t) / VIE, vif = 1 - age;
+      /* Elle s'ouvre en un quart de sa vie puis se ferme : une feuille qui
+         apparait a sa taille finale a l'air collee, pas poussee. */
+      const ouvre = Math.min(1, (t - f.t) / (VIE * 0.22));
+      const r = f.r * ouvre * (0.35 + 0.65 * vif);
+      g.save();
+      g.translate(f.x, f.y);
+      g.rotate(f.a);
+      g.beginPath();
+      g.ellipse(r * 0.9, 0, r, r * 0.46, 0, 0, Math.PI * 2);
+      g.fillStyle = 'rgba(16,185,129,' + (vif * 0.34).toFixed(3) + ')';
+      g.fill();
+      g.strokeStyle = 'rgba(110,231,183,' + (vif * 0.55).toFixed(3) + ')';
+      g.lineWidth = 0.9;
+      g.stroke();
+      g.restore();
+    }
+  }
+
+  (function battre() { requestAnimationFrame(battre); peindre(); })();
+
+  /* La poignee de reglage passe par le CHEMIN NORMAL de peinture : ce qu'elle
+     montre est ce que la page dessine. Elle sert quand l'onglet n'est pas au
+     premier plan, cas ou le navigateur gele les images et ou une toile vide ne
+     prouve rien du tout. */
+  (window.kazura ||= {}).trace = {
+    peindreUneFois: peindre,
+    bilan: () => ({ points: points.length, feuilles: feuilles.length, toile: [toile.width, toile.height] })
+  };
 }
 
 /* ══ 12. Cartes : halo et inclinaison ═══════════════════════════════════ */
@@ -1395,6 +1533,7 @@ function demarrer() {
   monterLElan();
   monterLaBarre();
   monterLeCurseur();
+  monterLaTrace();
   monterLesCartes();
   monterLesImages();
   monterLesCompteurs();

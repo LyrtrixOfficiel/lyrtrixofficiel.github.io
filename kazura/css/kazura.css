@@ -2018,3 +2018,57 @@ html[data-mouvement='sobre'] .lianes-marge__feuille { transition: none; }
 }
 .nav__pousse:hover::after { opacity: 1; transform: translateY(0); }
 @media (max-width: 860px) { .nav__pousse { display: none; } }
+
+/* ══ LES VRILLES ═════════════════════════════════════════════════════════
+   Elles se posent DANS le titre, en absolu, et n'occupent aucune place dans
+   le flux : un decor qui deplacerait le texte d'un pixel serait un defaut.
+   Le point de transformation est en bas a gauche, la ou la vrille s'attache
+   au mot, pour qu'elle se deroule depuis son attache et non depuis son
+   milieu. */
+.vrille {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  transform-origin: 8% 78%;
+  transition: transform 1.2s cubic-bezier(.22, 1, .36, 1);
+}
+.vrille__tige {
+  fill: none;
+  stroke: var(--jade-clair);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s cubic-bezier(.22, 1, .36, 1);
+  filter: drop-shadow(0 0 5px rgba(110, 231, 183, .45));
+}
+.vrille__feuille {
+  fill: rgba(6, 95, 70, .8);
+  stroke: var(--jade-clair);
+  stroke-width: 1.1;
+  transition: opacity .8s cubic-bezier(.22, 1, .36, 1) .25s;
+}
+html[data-mouvement='sobre'] .vrille,
+html[data-mouvement='sobre'] .vrille__tige,
+html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
+/* Sur telephone la vrille se fait plus discrete : le titre y occupe deja
+   presque toute la largeur, et un ornement au bout de la derniere ligne
+   pousserait l'oeil hors de l'ecran. */
+@media (max-width: 700px) { .vrille { opacity: .62; } }
+
+/* ══ LA TRACE ════════════════════════════════════════════════════════════
+   La toile de la liane que la souris laisse derriere elle. Elle est POSEE
+   SOUS le curseur mais AU-DESSUS du contenu, et transparente au clic : une
+   trainee qui intercepterait un lien serait un defaut, pas un detail.
+
+   Le mode d'ecran fait que le trait s'ajoute a la lumiere de la page au lieu
+   de la couvrir : sur un fond noir il brille, sur une carte claire il
+   s'efface tout seul, sans qu'on ait a le prevoir. */
+.trace {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 199;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+@media (hover: none), (prefers-reduced-motion: reduce) { .trace { display: none; } }
