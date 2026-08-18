@@ -420,6 +420,26 @@ async function monterLaPousseDuSite() {
       nav.insertBefore(marque, $('.nav__son', nav) || null);
     }
 
+    /* ══ LE DECOR SE RETIRE DEVANT UNE PIECE ═════════════════════════════
+       Sur l'accueil, trois systemes de lianes tournaient EN MEME TEMPS : la
+       scene en trois dimensions derriere les chapitres, les lianes de marge,
+       et la trace du curseur. Chacune est defendable seule ; ensemble elles
+       font le « deluge vert » que Matheo decrit, et surtout elles se volent
+       l'attention au lieu de se la passer.
+
+       Les lianes de marge s'effacent donc tant que la zone de la scene occupe
+       l'ecran, et reviennent apres. C'est une decision de direction, pas un
+       reglage : quand une piece forte tient l'ecran, tout le reste se tait. */
+    const zone = $('[data-scene-zone]');
+    if (zone) {
+      const decor = $('.lianes-marge');
+      if (decor) auDefilement(() => {
+        const r = zone.getBoundingClientRect();
+        const dessus = r.top < innerHeight * 0.55 && r.bottom > innerHeight * 0.45;
+        decor.dataset.efface = dessus ? 'oui' : 'non';
+      });
+    }
+
     const mots = { graine: 'À peine semé', jeune: 'Ça pousse', fournie: 'Ça prend', envahie: 'Envahi' };
     p.surPousse(v => {
       lianes?.rendre(v);
@@ -591,6 +611,7 @@ function monterLaTrace() {
   const feuilles = [];
   let depuis = 0, dernierX = 0, dernierY = 0, aDejaBouge = false;
   let gele = 0;                     /* horodatage du dernier defilement */
+  let vide = true;                  /* la toile est-elle deja nettoyee */
 
   addEventListener('pointermove', e => {
     const t = performance.now() / 1000;
@@ -623,7 +644,14 @@ function monterLaTrace() {
     while (points.length && t - points[0].t > VIE) points.shift();
     while (feuilles.length && t - feuilles[0].t > VIE) feuilles.shift();
 
+    /* ON NE NETTOIE PAS UNE TOILE DEJA VIDE. Sans ce garde-fou, la boucle
+       effacait quatre millions de pixels soixante fois par seconde meme
+       quand la souris n'avait pas bouge depuis une minute. Une animation au
+       repos doit couter zero, sinon elle fait chauffer la machine de
+       quelqu'un qui est simplement en train de lire. */
+    if (vide && !points.length) return;
     g.clearRect(0, 0, L, H);
+    vide = !points.length;
     /* Un dixieme de seconde apres le dernier cran de molette, la trace
        revient. Assez pour qu'elle ne clignote pas, assez peu pour qu'elle ne
        manque pas a la main qui reprend. */

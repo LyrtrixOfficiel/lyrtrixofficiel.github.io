@@ -1903,7 +1903,10 @@ a.vitrine:hover .vitrine__lire i { transform: translateX(.42em); }
      dispute jamais. Descendu de 0,70 a 0,42 : a la premiere valeur, quatre
      pages de visite donnaient un rideau vert des deux cotes de l'ecran. */
   opacity: .42;
+  transition: opacity 1.1s cubic-bezier(.22, 1, .36, 1);
 }
+/* Effacees tant qu'une piece forte tient l'ecran. Voir monterLaPousseDuSite. */
+.lianes-marge[data-efface='oui'] { opacity: 0; }
 /* Deux bandes etroites collees aux bords, et rien entre elles. La colonne de
    lecture est ainsi protegee par la mise en page elle-meme, pas par le
    reglage prudent d'une amplitude. */
@@ -2063,7 +2066,14 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   height: 100%;
   z-index: 199;
   pointer-events: none;
-  mix-blend-mode: screen;
+  /* PAS DE MODE DE FUSION ICI, et c'est une correction, pas un gout. Un
+     calque en fusion pose sur TOUTE la fenetre oblige le navigateur a
+     recomposer la page entiere a chaque fois que ce calque change, donc a
+     chaque mouvement de souris. Sur un ecran de 3440 pixels, cela fait
+     retramer le texte en permanence, et c'est exactement ce que Matheo
+     decrivait : des animations de texte qui se reinitialisent des qu'on
+     bouge la main. Les couleurs de la trace sont deja assez sourdes pour
+     s'en passer. */
 }
 @media (hover: none), (prefers-reduced-motion: reduce) { .trace { display: none; } }
 
