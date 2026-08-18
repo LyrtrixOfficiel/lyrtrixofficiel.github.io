@@ -75,8 +75,12 @@ export function monterLAtelier(toile) {
          On les resserre chacun sur un bout de la plage en laissant entre eux un
          large creux qui reste sombre. Le noir est la matiere par defaut, la
          couleur est l'exception. */
-      float mVert   = smoothstep(0.34, 0.12, f);
-      float mViolet = smoothstep(0.70, 0.92, f);
+      /* LE JADE EST LA COULEUR DE LA MAISON, le violet n'est qu'un accent.
+         La premiere balance donnait l'inverse : un ecran entier violet, ce
+         qui est joli et ne nous ressemble pas. Le masque vert prend donc la
+         plus grande part de la plage, le violet la plus etroite. */
+      float mVert   = smoothstep(0.58, 0.08, f);
+      float mViolet = smoothstep(0.74, 0.96, f);
 
       /* LA PRESENCE. Resserrer les masques ne suffisait pas : la couleur
          restait repartie sur toute la surface, simplement moins forte, et
@@ -86,29 +90,41 @@ export function monterLAtelier(toile) {
          tout. Il laisse de larges plages presque noires entre les zones vives,
          ce qui est exactement la densite du fond des lianes, et il derive
          lentement pour que ces plages se deplacent. */
-      float presence = smoothstep(0.48, 0.88, fbm(q * 0.32 + t * 0.35));
+      /* PORTE ROUVERTE. Reglee de 0,48 a 0,88, elle ne s'ouvrait presque
+         jamais : combinee au puits central et au vignettage, elle laissait un
+         ecran entier NOIR sous un titre qui promet une matiere recalculee
+         soixante fois par seconde. La promesse etait donc dementie par
+         l'image, ce qui est pire que de ne rien promettre. On garde l'idee,
+         de la couleur PAR ENDROITS et non partout, mais avec un plancher :
+         meme au creux du bruit, il reste un tiers de matiere. */
+      float presence = 0.34 + 0.66 * smoothstep(0.30, 0.72, fbm(q * 0.32 + t * 0.35));
 
-      vec3 col = vec3(0.004, 0.018, 0.026);
-      col += jade   * mVert   * 0.46 * presence;
-      col += violet * mViolet * 0.80 * presence;
+      vec3 col = vec3(0.008, 0.032, 0.044);
+      col += jade   * mVert   * 1.30 * presence;
+      col += violet * mViolet * 0.62 * presence;
 
       /* Les nervures gardent leur eclat : ce sont elles qui portent la vie, et
          elles sont assez fines pour ne jamais noyer le texte. C'est la lecon du
          sceau de verre, ou trois traits pales disaient mieux la refraction que
          sept barres epaisses. */
       float nerf = abs(sin(f * 11.0 + t * 5.5));
-      col += vec3(0.43, 0.94, 0.74) * pow(nerf, 8.0) * 0.70 * mVert * presence;
-      col += vec3(0.72, 0.55, 1.00) * pow(abs(sin(f * 7.5 - t * 3.6)), 9.0) * 0.70 * presence;
+      col += vec3(0.43, 0.94, 0.74) * pow(nerf, 6.0) * 1.35 * mVert * presence;
+      col += vec3(0.72, 0.55, 1.00) * pow(abs(sin(f * 7.5 - t * 3.6)), 9.0) * 0.55 * presence;
 
-      col += violet * exp(-d * 3.2) * 0.30;
+      col += violet * exp(-d * 3.2) * 0.22;
+      col += jade   * exp(-d * 2.2) * 0.30;
 
       /* Un puits sombre au centre, exactement la ou le titre se pose. Le texte
          est blanc : sans ce creux il tombait sur du vert clair. */
+      /* Le puits et le vignettage se CUMULAIENT : soixante-dix pour cent de
+         moins au centre, cinquante-cinq de moins sur les bords, il ne restait
+         qu'un anneau. Le puits sert a poser un titre blanc, il n'a pas besoin
+         d'aller si loin, et le vignettage encore moins. */
       vec2 pu = uv * vec2(1.15, 1.85);
-      col *= 1.0 - 0.70 * exp(-dot(pu, pu) * 2.0);
+      col *= 1.0 - 0.46 * exp(-dot(pu, pu) * 2.0);
 
-      col *= 1.0 - 0.55 * length(uv * vec2(0.72, 1.0));
-      col = pow(max(col, 0.0), vec3(1.16));
+      col *= 1.0 - 0.34 * length(uv * vec2(0.72, 1.0));
+      col = pow(max(col, 0.0), vec3(1.04));
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -189,6 +205,14 @@ export function monterLAtelier(toile) {
   setTimeout(() => { if (!visible) visible = true; }, 2500);
 
   const debut = performance.now();
+
+  /* La poignee de reglage : elle peint UNE image par le chemin normal, a
+     l'instant qu'on lui donne. Sans elle, une toile animee dans un onglet
+     d'arriere-plan reste noire et on ne peut rien conclure de ce qu'on voit. */
+  (window.kazura ||= {}).atelier = {
+    poser(sec = 3) { visible = true; peindre(sec); }
+  };
+
   (function boucle() {
     if (visible) {
       lx += (sx - lx) * 0.06;
