@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perdu dans les lianes · Kazura</title>
+<meta name="description" content="Cette page n’existe pas. Les lianes ont dû la recouvrir.">
+<!-- Apercu sur GitHub Pages : on ne veut pas que Google reference le site
+     sous cette adresse plutot que sous kazura.fr. A RETIRER a la mise en
+     ligne sur le vrai domaine. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#04060A">
+<meta property="og:title" content="Le studio · Kazura">
+<meta property="og:image" content="assets/portail.webp">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/kazura.css?v=837589113f">
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+} }
+</script>
+</head>
+
+<body>
+
+<div class="rideau" id="rideau" data-etat="baisse" aria-hidden="true"><i></i><i></i></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="degrade-liane" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6EE7B7"/><stop offset="55%" stop-color="#10B981"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient></defs></svg>
+
+<div class="fond-halo" aria-hidden="true"></div>
+<div class="fond-trame" aria-hidden="true"></div>
+
+<nav class="nav" data-cache="non" data-dense="oui">
+  <a class="nav__marque" href="index.html" aria-label="Kazura, accueil">
+    <svg viewBox="0 0 100 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true">
+      <path d="M50 2a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0 6a42 42 0 1 1 0 84 42 42 0 1 1 0-84z"/>
+      <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z"/>
+      <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(120 50 50)"/>
+      <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(240 50 50)"/>
+      <circle cx="50" cy="50" r="4.6"/>
+    </svg>
+    <span>Kazura</span>
+  </a>
+  <div class="nav__liens">
+    <a class="nav__lien" href="demonstrations.html">Démonstrations</a>
+    <a class="nav__lien" href="savoir-faire.html">Savoir-faire</a>
+    <a class="nav__lien" href="studio.html">Le studio</a>
+    <a class="nav__lien" href="index.html#offre">La maquette</a>
+  </div>
+  <a class="bouton bouton--plein nav__cta" href="contact.html" data-aimant>
+    Parler de mon site <span class="fleche" aria-hidden="true">→</span>
+  </a>
+  <button class="nav__son" type="button" data-son aria-pressed="false" aria-label="Activer le son">
+    <span class="nav__son-barres" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+
+  <button class="nav__menu" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu">
+    <span class="nav__barres" aria-hidden="true"><i></i><i></i></span>
+  </button>
+</nav>
+
+<div class="panneau" id="menu" hidden>
+  <nav class="panneau__liens" aria-label="Navigation principale">
+    <a href="index.html">Accueil</a>
+    <a href="demonstrations.html">Démonstrations</a>
+    <a href="savoir-faire.html">Savoir-faire</a>
+    <a href="studio.html">Le studio</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div>
+
+<div id="defile">
+
+  <!-- ══ Le 404 ═══════════════════════════════════════════════════════════
+       Le nombre n'est pas ecrit, il est TENU par la nuée, comme le nom sur
+       l'accueil : c'est le même module, on ne change que le mot. Il se
+       disperse quand on descend, ce qui est assez juste pour une page qui
+       n'existe pas. -->
+  <header class="hero" id="haut" style="min-height:82svh">
+    <div class="hero__centre">
+      <p class="hero__kanji" aria-hidden="true">葛</p>
+
+      <div class="mot3d">
+        <h1 class="mot3d__vrai geant">404</h1>
+        <canvas id="toile-nuee" data-mot="404" aria-hidden="true"></canvas>
+      </div>
+
+      <p class="hero__ligne" data-vient="bloc">
+        Cette page n’existe pas, ou n’existe plus.
+        Les lianes ont dû la recouvrir pendant qu’on avait le dos tourné.
+      </p>
+      <div class="hero__actions" data-vient="bloc">
+        <a class="bouton bouton--plein" href="index.html" data-aimant>
+          Revenir à l’accueil <span class="fleche" aria-hidden="true">→</span>
+        </a>
+        <a class="bouton bouton--verre" href="demonstrations.html" data-aimant>Voir les démonstrations</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="bloc" style="padding-top:0">
+    <div class="enveloppe">
+      <div class="doc">
+        <span class="etiquette" data-vient="bloc">Si vous cherchiez</span>
+        <h2 class="titre" data-vient="titre" style="margin:1rem 0 1.6rem;max-width:18ch">
+          Voilà tout ce qu’il y a.
+        </h2>
+        <ul data-vient="bloc" style="margin:0 0 0 1.1rem;display:grid;gap:.7rem">
+          <li><a href="index.html">L’accueil</a>, et le nom qui se tient tout seul.</li>
+          <li><a href="demonstrations.html">Les démonstrations</a>, dont une vitrine complète de domaine viticole.</li>
+          <li><a href="savoir-faire.html">Le savoir-faire</a>, c’est-à-dire ce qu’un site peut faire.</li>
+          <li><a href="studio.html">Le studio</a>, qui tient en une personne et beaucoup de nuits.</li>
+          <li><a href="contact.html">Le contact</a>, avec la maquette gratuite au bout.</li>
+        </ul>
+        <p data-vient="bloc" style="margin-top:2.4rem;color:var(--gris)">
+          Et si vous êtes arrivé ici par un lien qu’on vous a donné, écrivez-nous&nbsp;:
+          c’est nous qui avons cassé quelque chose, pas vous.
+        </p>
+      </div>
+    </div>
+  </section>
+
+<footer class="pied">
+    <div class="enveloppe">
+      <div class="pied__haut">
+        <div class="pied__sceau">
+          <img src="assets/blason.webp" alt="Le sceau de Kazura" width="74" height="74" loading="lazy" decoding="async">
+          <div><b>Kazura</b><small>Beblenheim · Alsace</small></div>
+        </div>
+        <nav class="pied__nav" aria-label="Pied de page">
+          <a href="index.html">Accueil</a>
+    <a href="savoir-faire.html">Savoir-faire</a>
+    <a href="studio.html">Le studio</a>
+          <a href="contact.html">Contact</a>
+          <a href="mentions-legales.html">Mentions légales</a>
+        </nav>
+      </div>
+      <div class="pied__bas">
+        <span>© <span data-annee>2026</span> Kazura · Matheo Schmitt</span>
+        <span>SIREN 100 165 455 · TVA non applicable, art. 293 B du CGI</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script type="module" src="js/kazura.js?v=837589113f"></script>
+</body>
+</html>
