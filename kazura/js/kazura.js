@@ -137,8 +137,18 @@ let dernierY = 0;
    page verifiable et deboguable depuis la console (`kazura.pas()`). */
 let _dernierTemps = 0;
 
-function pas() {
-  const brut = window.scrollY || document.documentElement.scrollTop;
+/* `pas(force)` accepte une position IMPOSEE, en pixels.
+
+   Elle n'existe que pour les controles automatiques. Un panneau de navigateur
+   qui ne compose pas rend innerHeight a zero et refuse de defiler : impossible
+   alors d'amener une piece a l'ecran, donc impossible de verifier une piece
+   qui se charge paresseusement. Sans cette porte, tout mon audit s'arretait a
+   « jamais montee » sur une piece qui marche parfaitement.
+
+   Un visiteur ne peut pas l'atteindre : il faudrait appeler la fonction a la
+   main depuis la console. */
+function pas(force) {
+  const brut = force !== undefined ? force : (window.scrollY || document.documentElement.scrollTop);
 
   /* Amortissement INDEPENDANT DU NOMBRE D'IMAGES. Un `y += (cible - y) * k`
      avance d'autant plus vite qu'il y a d'images par seconde : a 120 images il
