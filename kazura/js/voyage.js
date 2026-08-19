@@ -896,7 +896,7 @@ export async function monterLeVoyage(toile, options = {}) {
     /* Sa place de depart : juste devant l'oeil, de biais. De face elle serait
        un logo, de trois quarts c'est un objet. Elle ne restera pas la : c'est
        elle qui ouvre le voyage en s'eloignant. */
-    feuilleGeante.position.set(5.60, 4.40, 15.00);
+    feuilleGeante.position.set(-8.40, 4.60, 15.00);
     feuilleGeante.rotation.set(-0.22, 0.55, 0.12);
     monde.add(feuilleGeante);
 
@@ -1254,12 +1254,16 @@ export async function monterLeVoyage(toile, options = {}) {
            n'en a pas. */
         const d = Math.min(1, avance / 0.60);
         const e = d * d * (3 - 2 * d);
-        /* Elle est posee A DROITE de l'axe du regard : au centre, elle passe
-           en travers du nom en particules et les deux s'annulent. Le premier
-           temps a un seul sujet, et c'est le nom. */
+        /* Elle est posee A DROITE DE L'IMAGE, donc en x NEGATIF : la camera
+           regarde vers les z croissants, et dans ce sens l'axe des x pointe
+           vers la gauche de l'ecran. Je l'ai pose en positif la premiere fois
+           et la feuille est allee se mettre exactement en travers du nom, du
+           mauvais cote. Un signe d'axe se verifie a l'image, jamais de tete.
+
+           Le premier temps a un seul sujet, et c'est le nom. */
         feuilleGeante.position.set(
-          5.60 + e * 1.60 + Math.sin(t * 0.31) * 0.22,
-          4.40 + e * 1.30 + Math.sin(t * 0.44) * 0.16,
+          -8.40 - e * 1.20 + Math.sin(t * 0.31) * 0.22,
+           4.40 + e * 1.30 + Math.sin(t * 0.44) * 0.16,
           15.00 + e * 8.00
         );
         feuilleGeante.rotation.y = 0.55 + e * 1.15 + Math.sin(t * 0.13) * 0.10;
