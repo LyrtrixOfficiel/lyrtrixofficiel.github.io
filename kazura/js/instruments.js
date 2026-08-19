@@ -74,6 +74,17 @@ export function monterLesInstruments(toile, camera, options = {}) {
   function placer() {
     const r = toile.getBoundingClientRect();
     if (!r.width || !r.height) return;
+
+    /* LA MATRICE DE LA CAMERA EST RAFRAICHIE ICI, et ce n'est pas un detail.
+       three ne la recalcule qu'au moment de peindre : si le placement passe
+       avant le premier rendu, ou si la scene ne peint pas du tout, on projette
+       avec une matrice restee a l'identite et TOUTES les etiquettes se croient
+       hors cadre. On demande donc a la camera de se mettre a jour elle-meme,
+       sans importer three ici : ce sont ses propres methodes. */
+    if (camera.updateMatrixWorld) {
+      camera.updateMatrixWorld();
+      if (camera.matrixWorldInverse?.copy) camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+    }
     traits.setAttribute('viewBox', '0 0 ' + r.width.toFixed(0) + ' ' + r.height.toFixed(0));
 
     for (const p of releves) {
