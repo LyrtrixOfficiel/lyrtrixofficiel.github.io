@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=a5b5f953f0">
+<link rel="stylesheet" href="css/kazura.css?v=6eff781631">
 
 <script type="importmap">
 { "imports": {
@@ -195,43 +195,7 @@
     </div>
   </div>
 
-  <!-- ══ Vidéo pilotée au défilement ══════════════════════════════════ -->
-  <section class="bloc-scrub" data-epingle style="height:300svh" aria-label="La pousse">
-    <div data-epingle-contenu>
-      <div class="scrub">
-        <video data-scrub muted playsinline preload="auto"
-               poster="assets/affiche-jardin.webp" aria-hidden="true">
-          <source src="video/pousse-scrub-mobile.mp4" type="video/mp4" media="(max-width: 760px)">
-          <source src="video/pousse-scrub.mp4" type="video/mp4">
-        </video>
-
-        <div class="scrub__texte">
-          <div class="scrub__lignes" style="min-height:min(46vh,340px)">
-            <div class="scrub__ligne" data-fenetre="0,0.30">
-              <div>
-                <span class="etiquette">Image par image</span>
-                <p class="titre" style="margin-top:1rem">Vous ne faites pas défiler.<br>Vous rembobinez.</p>
-              </div>
-            </div>
-            <div class="scrub__ligne" data-fenetre="0.30,0.64">
-              <div>
-                <span class="etiquette">Deux cent quarante et une images</span>
-                <p class="titre" style="margin-top:1rem">Chaque cran de molette<br>vaut une image.</p>
-              </div>
-            </div>
-            <div class="scrub__ligne" data-fenetre="0.64,1.01">
-              <div>
-                <span class="etiquette">Et ça marche dans les deux sens</span>
-                <p class="titre" style="margin-top:1rem">Remontez.<br>Elle se rétracte.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="jauge" aria-hidden="true"><i></i></div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- ══ Le studio ════════════════════════════════════════════════════ -->
   <section class="bloc" id="studio">
@@ -271,20 +235,7 @@
     </div>
   </section>
 
-  <!-- ══ L'encre, simulation de fluide ════════════════════════════════ -->
-  <section class="atelier" id="encre">
-    <canvas id="toile-encre" data-texte="KAZURA" aria-hidden="true"></canvas>
-    <div class="atelier__centre">
-      <span class="etiquette" data-vient="bloc">Simulation, en direct</span>
-      <h2 class="titre" data-vient="titre" style="margin-top:1rem">Remuez l’encre.</h2>
-      <p class="chapo" data-vient="bloc" style="margin:1.4rem auto 0">
-        Ce n’est ni une vidéo, ni une texture qui ondule. C’est l’équation de
-        Navier-Stokes résolue dans votre navigateur, soixante fois par seconde :
-        un vrai fluide incompressible, dont vous poussez le courant du doigt.
-      </p>
-      <p class="atelier__indice" data-vient="bloc">Passez la main dessus</p>
-    </div>
-  </section>
+  
 
   <!-- ══ Savoir-faire ═════════════════════════════════════════════════ -->
   <section class="bloc" id="savoir-faire">
@@ -437,6 +388,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=a5b5f953f0"></script>
+<script type="module" src="js/kazura.js?v=6eff781631"></script>
 </body>
 </html>

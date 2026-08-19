@@ -2103,3 +2103,65 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   .scrub__texte { align-content: end; padding-bottom: 9svh; }
   .bloc-scrub { height: 240svh !important; }
 }
+
+/* ══ LA COUCHE D'INSTRUMENTS ═════════════════════════════════════════════
+   Des etiquettes minuscules reliees par un trait a un point de la scene en
+   trois dimensions. Le procede releve sur igloo.inc, et c'est lui, pas la 3D,
+   qui donne la sensation d'instrument.
+
+   TOUT EST EN CHASSE FIXE ET TRES PETIT. Une etiquette d'instrument qui
+   grossit devient un titre, et un titre dispute l'attention a l'objet. Elle
+   doit se lire quand on la cherche, pas s'imposer. */
+.instruments {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+.instruments__traits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.instrument__trait, .instrument__croix {
+  fill: none;
+  stroke: rgba(226, 244, 237, .52);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: opacity .5s var(--doux);
+}
+.instrument__croix { stroke: rgba(226, 244, 237, .82); }
+
+.instrument {
+  position: absolute;
+  top: 0; left: 0;
+  font-family: var(--mono);
+  font-size: .58rem;
+  line-height: 1.45;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(226, 244, 237, .92);
+  text-shadow: 0 .04em .7em rgba(4, 6, 10, .9);
+  transition: opacity .5s var(--doux);
+  /* Le point d'ancrage suit le cote d'ou part le trait : l'etiquette se pose
+     TOUJOURS au bout du trait, jamais a cheval dessus. */
+  transform-origin: 0 50%;
+  padding-left: .45em;
+  padding-bottom: .3em;
+}
+.instrument[data-cote='gauche'] {
+  transform-origin: 100% 50%;
+  padding-left: 0;
+  padding-right: .45em;
+  text-align: right;
+  translate: -100% -100%;
+}
+.instrument[data-cote='droite'] { translate: 0 -100%; }
+.instrument b { display: block; font-weight: 500; }
+.instrument span { display: block; color: var(--jade-clair); }
+
+@media (max-width: 700px) { .instrument { font-size: .5rem; } .instruments { display: none; } }

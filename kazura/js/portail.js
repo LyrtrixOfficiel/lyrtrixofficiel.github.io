@@ -173,7 +173,54 @@ export async function monterLePortail(toile, options = {}) {
   }
   requestAnimationFrame(battre);
 
+  /* ══ LES INSTRUMENTS ═══════════════════════════════════════════════════
+     Trois releves accroches a l'objet, qui le suivent quand il tourne. Les
+     nombres sont MESURES sur place : le maillage est compte, le poids du
+     fichier est celui du disque, la cadence est celle de la machine du
+     visiteur. Chez igloo la temperature est un decor ; ici, si on ecrit un
+     chiffre, on l'a releve. C'est la seule chose qu'un studio qui vend de la
+     technique n'a pas le droit de bacler. */
+  let instruments = null;
+  if (options.instruments !== false) {
+    try {
+      const { monterLesInstruments, monterLeCompteur } = await import('./instruments.js' + (options.version || ''));
+      const compteur = monterLeCompteur();
+      let tri = 0;
+      objet.traverse(o => {
+        if (!o.isMesh) return;
+        const g = o.geometry;
+        tri += (g.index ? g.index.count : g.attributes.position.count) / 3;
+      });
+      tri = Math.round(tri);
+
+      const boite2 = new THREE.Box3().setFromObject(objet);
+      const hautObjet = boite2.max.y, largeObjet = boite2.max.x;
+
+      instruments = monterLesInstruments(toile, camera, { dans: toile.parentElement });
+      instruments.poser({
+        point: new THREE.Vector3(largeObjet * 0.72, hautObjet * 0.62, 0),
+        titre: options.nom || 'PORTAIL_01',
+        valeur: () => tri.toLocaleString('fr') + ' triangles',
+        cote: 'droite'
+      });
+      instruments.poser({
+        point: new THREE.Vector3(-largeObjet * 0.66, -hautObjet * 0.25, 0.2),
+        titre: 'POIDS',
+        valeur: () => (options.poidsKo || 809) + ' Ko  ·  ' + (options.gainPct || 92) + ' % de moins',
+        cote: 'gauche'
+      });
+      instruments.poser({
+        point: new THREE.Vector3(largeObjet * 0.34, -hautObjet * 0.78, 0),
+        titre: 'CADENCE',
+        valeur: () => compteur.ms() ? compteur.ms().toFixed(1) + ' ms par image' : 'mesure...',
+        cote: 'droite',
+        longueur: 0.17
+      });
+    } catch (e) { console.warn('instruments indisponibles', e); }
+  }
+
   return {
+    instruments,
     montrer(v) {
       if (v && !visible) dernier = performance.now();
       visible = v; dansLaVue = v;

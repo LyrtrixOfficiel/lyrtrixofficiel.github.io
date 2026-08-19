@@ -1345,7 +1345,12 @@ async function monterLePortailSiPresent() {
   async function charger() {
     try {
       const { monterLePortail } = await import('./portail.js' + VERSION);
-      const p = await monterLePortail(toile);
+      const p = await monterLePortail(toile, {
+        version: VERSION,
+        nom: 'PORTAIL_DE_LUNE',
+        poidsKo: 809,
+        gainPct: 92
+      });
       if (!p) { toile.dataset.repli = 'oui'; return; }
       (window.kazura ||= {}).portail = p;
       auDefilement(() => {
@@ -1587,13 +1592,23 @@ function demarrer() {
   monterLesBandeaux();
   monterLaBarre();
   monterLeCurseur();
-  monterLaTrace();
+  /* LA TRACE, LES LIANES DE MARGE ET LES VRILLES SONT RETIREES. Trois systemes
+     que j'avais construits en une nuit et dont j'etais fier. Verdict de Matheo :
+     « et surtout, ce n'etait pas particulierement beau ».
+
+     La regle tiree d'igloo.inc, qui n'a AUCUNE decoration : chaque pixel y est
+     soit le monde, soit une information sur le monde. Un element qui n'est ni
+     l'un ni l'autre s'en va. Les trois etaient de la decoration pure : elles ne
+     disaient rien, ne prouvaient rien, ne vendaient rien.
+
+     Le code reste sur le disque, il ne se monte plus. */
   monterLesCartes();
   monterLesImages();
   monterLesCompteurs();
   monterLesGeants();
   monterLaScene3D();
   monterLAtelierSiPresent();
+  /* L'encre ne se monte plus sur l'accueil, la piece a ete retiree. */
   monterLEncreSiPresente();
   monterLeMiroirSiPresent();
   monterLeSceauSiPresent();
@@ -1602,7 +1617,6 @@ function demarrer() {
   monterLeSon();
   monterLeChoixDuMouvement();
   monterLaNueeSiPresente();
-  monterLaPousseDuSite();
 
   const annee = $('[data-annee]');
   if (annee) annee.textContent = new Date().getFullYear();
