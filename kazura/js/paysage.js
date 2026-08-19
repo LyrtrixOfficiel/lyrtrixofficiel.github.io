@@ -176,112 +176,152 @@ export function monterLePaysage(scene, options = {}) {
   groupe.add(ciel);
   aJeter.push(ciel.geometry, ciel.material);
 
-  /* ══ LES MONTS ══════════════════════════════════════════════════════════
-     Trois rangs de silhouettes, de plus en plus loin et de plus en plus
-     pales. C'est le procede le plus ancien du paysage peint, et il n'a pas
-     ete surpasse : ce qui donne la distance n'est pas la taille, c'est la
-     PERTE DE CONTRASTE.
+  /* ══ LES MONTS, EN VRAI RELIEF ═══════════════════════════════════════════
+     Ils etaient des SILHOUETTES : des plans verticaux dont on avait decoupe le
+     haut. De loin ca tient, et c'est ce que font la plupart des decors ; mais
+     une silhouette n'a ni flanc, ni ombre portee, ni arete qui prend la
+     lumiere, et surtout elle ne tourne pas quand on se deplace. Un mont qui ne
+     tourne pas est un decor peint, et l'oeil s'en rend compte des qu'il bouge.
 
-     Le rang du fond porte le mont. Il est symetrique, isole, plus haut que
-     tout, avec une neige qui prend la lueur de l'horizon. On ne le nomme pas
-     sur le site : un lieu qu'on nomme devient une carte postale. */
-  function faireUnRang(z, largeur, hauteurMax, teinte, opacite, mont) {
-    const N = petit ? 130 : 260;
-    const pos = new Float32Array((N + 1) * 2 * 3);
-    const bas = -60;
+     POURQUOI PAS UN MODELE TELECHARGE. Un mont n'est pas un objet : c'est un
+     champ de hauteur. Un maillage genere en pese des dizaines de mega-octets
+     pour une forme qu'on decrit ici en quinze lignes, il arrive avec une
+     texture peinte qu'on ne peut plus eclairer, et il faut le recharger a
+     chaque fois qu'on veut changer sa taille. Le calcul, lui, donne la
+     silhouette exacte, les normales exactes, et une neige qui suit vraiment
+     l'altitude et la pente.
 
-    for (let i = 0; i <= N; i++) {
-      const u = i / N;
-      const x = (u - 0.5) * largeur;
+     C'est le meme raisonnement que pour le blason : ce qui se DECRIT se
+     calcule, ce qui se PHOTOGRAPHIE se telecharge. Une feuille se
+     photographie, une montagne se decrit.
+     ────────────────────────────────────────────────────────────────────────
+     La forme : une base de bruit a aretes, plus un massif dominant a flancs
+     concaves. La concavite est la signature d'un grand volcan ; un cone a
+     flancs droits fait terril. */
+  function faireUnMassif(opt) {
+    const { z, largeur, profondeur, hauteurMax, teinte, mont, cotes } = opt;
+    const NX = petit ? Math.round(cotes * 0.55) : cotes;
+    const NZ = Math.max(12, Math.round(NX * 0.35));
 
-      /* La crete : deux octaves de bruit, redressees en aretes. Un bruit brut
-         donne des collines molles ; sa valeur absolue repliee donne des
-         aretes, ce qui est la forme d'une montagne. */
-      /* ══ UNE CHAINE N'A PAS DE PAS REGULIER ═════════════════════════════
-         Deux octaves de meme allure donnaient une DENT DE SCIE : dix pics
-         quasiment identiques, egalement espaces, qui se lisaient comme un
-         motif et non comme un relief. Ce qui trahit une montagne calculee,
-         c'est la regularite de ses sommets.
+    const geo = new THREE.PlaneGeometry(largeur, profondeur, NX, NZ);
+    geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position;
 
-         Trois choses le reglent. Des frequences sans rapport simple, pour que
-         la somme ne se repete jamais. Une ENVELOPPE tres lente, qui fait des
-         massifs hauts et des cols bas. Et un exposant qui creuse les vallees
-         plus qu'il n'abaisse les cretes. */
-      let h = (1 - Math.abs(relief(x * 0.0031 + z * 0.01, 3.7) * 2 - 1)) * 0.58
-            + (1 - Math.abs(relief(x * 0.0087 - 9.1, z * 0.01 + 2.2) * 2 - 1)) * 0.29
-            + (1 - Math.abs(relief(x * 0.0233 + 4.4, z * 0.01 - 6.5) * 2 - 1)) * 0.13;
-      const massif = 0.34 + 0.66 * relief(x * 0.00092 - 3.3, z * 0.004 + 1.9);
-      h = Math.pow(Math.max(0, h), 1.9) * hauteurMax * massif;
+    let cime = 0;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const zz = pos.getZ(i);
+
+      /* Le bruit a aretes : on replie la valeur autour de son milieu, ce qui
+         transforme des collines molles en cretes. Trois frequences sans
+         rapport simple, pour que la somme ne se repete jamais. */
+      let h = (1 - Math.abs(relief(x * 0.0031 + 7.1, zz * 0.0031 - 2.3) * 2 - 1)) * 0.56
+            + (1 - Math.abs(relief(x * 0.0089 - 9.1, zz * 0.0089 + 2.2) * 2 - 1)) * 0.30
+            + (1 - Math.abs(relief(x * 0.0242 + 4.4, zz * 0.0242 - 6.5) * 2 - 1)) * 0.14;
+      const massif = 0.30 + 0.70 * relief(x * 0.00088 - 3.3, zz * 0.0016 + 1.9);
+      h = Math.pow(Math.max(0, h), 2.0) * hauteurMax * massif;
 
       if (mont) {
-        /* Le cone. Des flancs legerement CONCAVES, ce qui est la signature
-           d'un volcan : un cone a flancs droits fait terril. */
-        const dx = Math.abs(x - mont.x) / mont.large;
-        if (dx < 1) {
-          const flanc = Math.pow(1 - dx, 1.32);
-          h = Math.max(h, flanc * mont.haut);
+        const dx = (x - mont.x) / mont.large;
+        const dz = (zz - (mont.z || 0)) / (mont.large * 0.82);
+        const r = Math.sqrt(dx * dx + dz * dz);
+        if (r < 1) {
+          /* Le profil. L'exposant sous un fait un flanc CONCAVE, qui s'evase
+             vers le pied : c'est ce galbe-la qu'on reconnait, pas la pointe. */
+          let c = Math.pow(1 - r, 1.34) * mont.haut;
+          /* Les aretes qui descendent du sommet. Sans elles le cone est lisse
+             comme un chapeau chinois, et rien ne dit son echelle. */
+          const ang = Math.atan2(dz, dx);
+          c *= 1 + 0.085 * Math.sin(ang * 9) * Math.pow(r, 0.7)
+                 + 0.045 * Math.sin(ang * 21 + 1.4) * Math.pow(r, 0.6);
+          h = Math.max(h, c);
         }
       }
 
-      pos[i * 6]     = x; pos[i * 6 + 1] = bas;     pos[i * 6 + 2] = 0;
-      pos[i * 6 + 3] = x; pos[i * 6 + 4] = h;       pos[i * 6 + 5] = 0;
-    }
+      /* Les bords fondent vers le bas : sans cela le massif se termine par une
+         falaise verticale a chaque extremite du plan. */
+      const bordX = Math.min(1, (largeur * 0.5 - Math.abs(x)) / (largeur * 0.10));
+      h *= Math.max(0, Math.min(1, bordX));
 
-    const idx = [];
-    for (let i = 0; i < N; i++) {
-      const a = i * 2, b = i * 2 + 1, c = i * 2 + 2, d = i * 2 + 3;
-      idx.push(a, c, b, b, c, d);
+      pos.setY(i, h - 14);
+      /* Mesuree APRES le decalage : sinon les seuils de neige portent sur une
+         echelle differente de celle des sommets, de quatorze unites. */
+      if (h - 14 > cime) cime = h - 14;
     }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    geo.setIndex(idx);
+    geo.computeVertexNormals();
 
+    /* ══ LES MONTS ONT LEUR PROPRE BRUME ═══════════════════════════════════
+       En les passant du plan decoupe au vrai relief, je les ai soumis au
+       brouillard de la scene. Celui-ci est exponentiel et regle pour un
+       couloir de cent unites : a cinq cent soixante, il rend cent pour cent
+       de sa couleur, et les monts ONT PURENENT ET SIMPLEMENT DISPARU. Il n'y
+       avait plus d'horizon du tout, et aucune erreur nulle part.
+
+       Un brouillard n'a pas la meme loi a cent metres et a un kilometre. On
+       les sort donc de la brume commune et on leur en donne une, beaucoup plus
+       lente, plafonnee : meme tres loin, une crete garde un reste de contraste,
+       sinon le paysage n'a plus de fond. */
     const mat = new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, fog: false, side: THREE.DoubleSide,
+      fog: false,
       uniforms: {
-        uTeinte: { value: new THREE.Color(teinte) },
+        uTeinte:  { value: new THREE.Color(teinte) },
         uHorizon: { value: HORIZON },
-        uOpacite: { value: opacite },
-        uNeige: { value: mont ? 1 : 0 },
-        uCime: { value: mont ? mont.haut : 1 }
+        uBrume:   { value: new THREE.Color('#08161C') },
+        uNeige:   { value: mont ? 1 : 0.35 },
+        uCime:    { value: cime }
       },
       vertexShader: /* glsl */`
-        varying float vY;
+        varying vec3 vN; varying float vY; varying float vLoin;
         void main() {
+          vN = normalize(mat3(modelMatrix) * normal);
           vY = position.y;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          vLoin = -mvPosition.z;
+          gl_Position = projectionMatrix * mvPosition;
         }
       `,
       fragmentShader: /* glsl */`
         precision highp float;
-        uniform vec3 uTeinte, uHorizon;
-        uniform float uOpacite, uNeige, uCime;
-        varying float vY;
+        uniform vec3 uTeinte, uHorizon, uBrume;
+        uniform float uNeige, uCime;
+        varying vec3 vN; varying float vY; varying float vLoin;
         void main() {
-          /* Le pied du mont est plus clair que sa crete : la brume s'accumule
-             en bas. Sans ce degrade la silhouette est un aplat de carton. */
-          /* ══ UNE CRETE DOIT SE DETACHER DU CIEL ═══════════════════════
-             Le bas des monts se noyait dans la brume, ce qui est juste, mais
-             leur haut prenait la teinte sombre du rang, exactement celle du
-             ciel derriere. On ne voyait plus qu'un LISERE : une montagne
-             dessinee au trait, sans masse.
+          vec3 N = normalize(vN);
+          /* La meme lumiere basse et de face que le sol : c'est elle qui
+             dessine les cretes et laisse les versants nord dans le noir. */
+          vec3 L = normalize(vec3(0.20, 0.16, 1.0));
+          float k = clamp(dot(N, L), 0.0, 1.0);
 
-             En altitude, une crete recoit le ciel entier au-dessus d'elle et
-             non la seule bande de l'horizon : elle est donc plus claire que le
-             ciel qu'elle cache, pas plus sombre. C'est aussi ce qui fait
-             qu'on voit les montagnes de nuit. */
-          float bas = 1.0 - smoothstep(-8.0, uCime * 0.65, vY);
-          float haut = smoothstep(uCime * 0.10, uCime * 0.92, vY);
-          /* La brume du pied doit rester une SUGGESTION. A 0,75 d'un horizon
-             a pleine valeur, le bas de chaque rang virait au teal clair sur
-             plus de mille unites de large : une bande pale en travers de tout
-             le cadre, qu'on lisait comme un defaut et non comme de l'air. */
-          vec3 col = mix(uTeinte, uHorizon * 0.55, bas * 0.30);
-          col += vec3(0.040, 0.062, 0.084) * haut;
-          /* La neige ne se pose que tout en haut, et elle prend la couleur de
-             l'horizon, pas du blanc : rien n'est blanc dans une nuit. */
-          col = mix(col, uHorizon * 2.2 + vec3(0.055, 0.075, 0.085), uNeige * smoothstep(uCime * 0.72, uCime * 0.99, vY));
-          gl_FragColor = vec4(col, uOpacite);
+          /* ══ UN SOMMET SE VOIT LA NUIT ═══════════════════════════════════
+             Il etait teinte trop sombre : dans un ciel deja sombre, un massif
+             sombre ne fait aucun contraste et disparait. Or c'est exactement
+             l'element qu'on veut voir de loin.
+
+             En montagne, la nuit, ce qui se voit est ce qui recoit le ciel :
+             les cretes et les faces tournees vers le haut. On remonte donc
+             franchement l'ambiante et le versant eclaire. */
+          vec3 col = uTeinte * (0.85 + k * 1.45);
+          col += uHorizon * pow(k, 2.4) * 0.95;
+
+          /* ══ LA NEIGE TIENT A L'ALTITUDE ET A LA PENTE ═══════════════════
+             Une ligne de neige posee sur la seule altitude fait un TRAIT
+             HORIZONTAL en travers du massif, ce qu'aucune montagne n'a. La
+             neige ne tient pas sur une paroi verticale : on la pondere donc
+             par la platitude, et la limite devient une dentelle qui suit les
+             pentes, ce qui est exactement ce qu'on voit. */
+          float altitude = smoothstep(uCime * 0.40, uCime * 0.86, vY);
+          float plat = smoothstep(0.30, 0.78, N.y);
+          float neige = uNeige * altitude * plat;
+          col = mix(col, uHorizon * 2.4 + vec3(0.125, 0.155, 0.175), neige);
+
+          /* La brume de l'eloignement, plafonnee a quatre-vingt-douze pour
+             cent : ce qui reste de contraste est ce qui fait qu'on voit
+             encore une montagne, et pas un aplat. */
+          float d = vLoin * 0.0016;
+          float brume = 1.0 - exp(-d * d);
+          col = mix(col, uBrume, clamp(brume, 0.0, 0.80));
+
+          gl_FragColor = vec4(col, 1.0);
         }
       `
     });
@@ -289,18 +329,29 @@ export function monterLePaysage(scene, options = {}) {
     const m = new THREE.Mesh(geo, mat);
     m.position.z = z;
     m.frustumCulled = false;
-    m.renderOrder = -5;
     groupe.add(m);
     aJeter.push(geo, mat);
     return m;
   }
 
-  /* Le mont doit DOMINER, sinon ce n'est qu'une bosse de plus. Il est plus
-     pres, plus large et beaucoup plus haut que la chaine qui l'entoure : c'est
-     ce rapport-la, et non sa forme, qui fait qu'on le regarde. */
-  faireUnRang(545, 2300, 88, '#050A12', 0.96, { x: 46, large: 300, haut: 158 });
-  faireUnRang(372, 1600, 54,  '#060D14', 0.72, null);
-  faireUnRang(276, 1200, 30,  '#07121A', 0.52, null);
+  /* Trois massifs. Le plus lointain porte le sommet : plus haut que tout le
+     reste, isole, et c'est ce RAPPORT qui fait qu'on le regarde, pas sa forme. */
+  faireUnMassif({ z: 560, largeur: 2100, profondeur: 620, hauteurMax: 78,
+                  teinte: '#16293C', cotes: petit ? 96 : 190,
+                  /* ══ IL EST DECALE, PAS CENTRE ═════════════════════════
+                     A quarante unites de l'axe et six cents de distance, il
+                     tombait a quatre degres du centre : c'est-a-dire
+                     exactement derriere le portail, qui le cachait pendant
+                     tout le temps ou on le regarde. Une montagne qu'on ne
+                     voit qu'entre deux objets n'existe pas.
+
+                     A droite, parce que le texte occupe la gauche : les deux
+                     ne se disputent alors jamais le meme endroit du cadre. */
+                  mont: { x: 205, z: 40, large: 380, haut: 212 } });
+  faireUnMassif({ z: 372, largeur: 1500, profondeur: 380, hauteurMax: 50,
+                  teinte: '#101E2E', cotes: petit ? 70 : 140, mont: null });
+  faireUnMassif({ z: 268, largeur: 1150, profondeur: 260, hauteurMax: 28,
+                  teinte: '#0A1622', cotes: petit ? 56 : 110, mont: null });
 
   /* ══ LE SOL ═════════════════════════════════════════════════════════════
      Un vrai relief, pas une image : le terrain se deforme sous la camera, les
@@ -318,23 +369,57 @@ export function monterLePaysage(scene, options = {}) {
     }
     geoSol.computeVertexNormals();
   }
+  /* ══ LA MATIERE DU SOL EST UNE PHOTOGRAPHIE ═══════════════════════════
+     Le terrain n'avait qu'une couleur et une normale de maillage : de pres,
+     une pente lisse et morte, quel que soit le soin mis a son relief. Un
+     relief donne la FORME du sol, il ne donne pas sa MATIERE, et c'est la
+     matiere qu'on regarde quand on est dessus.
+
+     C'est la lecon d'igloo, chiffree : douze mille quatre cents kilo-octets de
+     texture pour cinq cent soixante-dix-huit de geometrie. On pose donc une
+     vraie mousse, photographiee, libre de droits, quatre-vingt-quatorze
+     kilo-octets pour les deux cartes.
+
+     PROJECTION TRIPLANAIRE, pas des coordonnees de texture. Le terrain est un
+     plan deforme : ses coordonnees s'etirent la ou la pente est raide, et la
+     mousse ressort tiree en trainees sur tous les flancs. En projetant depuis
+     les trois axes du monde et en melangeant selon la normale, la matiere
+     garde partout la meme echelle, y compris sur une falaise.
+
+     DEUX ECHELLES SUPERPOSEES, dont l'une n'est pas un multiple de l'autre :
+     une seule repetition se voit au bout de trois carreaux, deux periodes sans
+     rapport simple donnent un motif dont on ne retrouve jamais la maille. */
+  const chargeurSol = new THREE.TextureLoader();
+  const texSol = chargeurSol.load('assets/sol-mousse.webp');
+  const texSolRelief = chargeurSol.load('assets/sol-mousse-relief.webp');
+  for (const t of [texSol, texSolRelief]) {
+    /* Repetition EN MIROIR : un raccord parfait n'existe pas sur une
+       photographie, le miroir supprime la couture sans retoucher l'image. */
+    t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
+    t.anisotropy = 8;
+  }
+  texSol.colorSpace = THREE.SRGBColorSpace;
+
   const matSol = new THREE.ShaderMaterial({
     fog: true,
     uniforms: THREE.UniformsUtils.merge([
       THREE.UniformsLib.fog,
       {
-        uSombre: { value: new THREE.Color('#050A0B') },
-        uMousse: { value: new THREE.Color('#0B2A22') },
+        uSombre:  { value: new THREE.Color('#050A0B') },
+        uMousse:  { value: new THREE.Color('#0B2A22') },
         uHorizon: { value: HORIZON },
-        uEau: { value: NIVEAU_EAU }
+        uEau:     { value: NIVEAU_EAU },
+        uMatiere: { value: null },
+        uRelief:  { value: null }
       }
     ]),
     vertexShader: /* glsl */`
       #include <fog_pars_vertex>
-      varying vec3 vN; varying float vH;
+      varying vec3 vN; varying vec3 vMonde; varying float vH;
       void main() {
         vN = normalize(mat3(modelMatrix) * normal);
-        vH = (modelMatrix * vec4(position, 1.0)).y;
+        vMonde = (modelMatrix * vec4(position, 1.0)).xyz;
+        vH = vMonde.y;
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
         gl_Position = projectionMatrix * mvPosition;
         #include <fog_vertex>
@@ -345,14 +430,58 @@ export function monterLePaysage(scene, options = {}) {
       #include <fog_pars_fragment>
       uniform vec3 uSombre, uMousse, uHorizon;
       uniform float uEau;
-      varying vec3 vN; varying float vH;
+      uniform sampler2D uMatiere, uRelief;
+      varying vec3 vN; varying vec3 vMonde; varying float vH;
+
+      /* Le melange triplanaire : trois echantillons, ponderes par le carre de
+         la normale, ce qui donne une transition douce et sans couture. */
+      vec3 tri(sampler2D carte, vec3 p, vec3 n, float ech) {
+        vec3 m = pow(abs(n), vec3(4.0));
+        m /= (m.x + m.y + m.z);
+        return texture2D(carte, p.yz * ech).rgb * m.x
+             + texture2D(carte, p.xz * ech).rgb * m.y
+             + texture2D(carte, p.xy * ech).rgb * m.z;
+      }
+
       void main() {
+        vec3 N = normalize(vN);
+
+        vec3 fine  = tri(uMatiere, vMonde, N, 0.115);
+        vec3 large = tri(uMatiere, vMonde, N, 0.0163);
+        vec3 matiere = fine * 0.62 + large * 0.68;
+
+        /* Le relief de la photographie vient PERTURBER la normale du
+           maillage. C'est lui qui fait qu'une pente cesse d'etre un plan
+           incline : la lumiere accroche des milliers d'aspérites qu'aucune
+           geometrie raisonnable ne pourrait porter. */
+        vec3 rel = tri(uRelief, vMonde, N, 0.115) * 2.0 - 1.0;
+        N = normalize(N + vec3(rel.x, 0.0, rel.y) * 0.85);
+
         /* La lumiere vient de l'horizon, tres bas et de face : c'est elle qui
            dessine les cretes et laisse les creux noirs. */
         vec3 L = normalize(vec3(0.18, 0.13, 1.0));
-        float k = clamp(dot(normalize(vN), L), 0.0, 1.0);
-        vec3 col = mix(uSombre, uMousse, pow(k, 1.9) * 0.70);
-        col += uHorizon * pow(k, 5.5) * 0.55;
+        float k = clamp(dot(N, L), 0.0, 1.0);
+
+        /* La photographie est diurne et verte ; la scene est nocturne. On ne
+           retouche pas le fichier, on l'ECLAIRE : sa valeur module nos deux
+           couleurs de nuit au lieu de fournir sa propre couleur. */
+        float v = dot(matiere, vec3(0.30, 0.59, 0.11));
+
+        /* ══ UN SOL RECOIT LE CIEL AVANT DE RECEVOIR UNE LAMPE ═══════════
+           Il n'etait eclaire que par la lumiere de l'horizon, qui est presque
+           rasante : sur une surface horizontale, son produit scalaire vaut
+           treize centiemes, eleve a la puissance deux, soit un centieme et
+           demi. Le terrain etait donc NOIR, et la mousse qu'on venait d'y
+           poser parfaitement invisible.
+
+           C'est physiquement exact et scenographiquement faux. Dehors, la
+           nuit, ce qui eclaire le sol n'est pas une source ponctuelle : c'est
+           toute la voute au-dessus. Une face tournee vers le haut recoit
+           l'hemisphere entier, une face verticale la moitie. On ajoute donc ce
+           terme-la, et la matiere apparait enfin. */
+        float ciel = clamp(N.y * 0.5 + 0.5, 0.0, 1.0);
+        vec3 col = mix(uSombre, uMousse, ciel * ciel * 0.92) * (0.40 + v * 1.30);
+        col += uHorizon * pow(k, 3.0) * 0.75 * (0.35 + v);
         /* Une frange plus claire juste au bord de l'eau, comme un sable
            mouille : c'est ce qui fait qu'on lit une RIVE et non une decoupe. */
         col += uHorizon * 0.5 * smoothstep(2.6, 0.0, abs(vH - uEau));
@@ -361,10 +490,13 @@ export function monterLePaysage(scene, options = {}) {
       }
     `
   });
+  matSol.uniforms.uMatiere.value = texSol;
+  matSol.uniforms.uRelief.value = texSolRelief;
+
   const sol = new THREE.Mesh(geoSol, matSol);
   sol.frustumCulled = false;
   groupe.add(sol);
-  aJeter.push(geoSol, matSol);
+  aJeter.push(geoSol, matSol, texSol, texSolRelief);
 
   /* ══ LE LAC ═════════════════════════════════════════════════════════════
      Pas de vraie reflexion : elle couterait un second rendu de toute la scene
