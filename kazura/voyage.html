@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr" data-mouvement="anime">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kazura · le voyage</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="css/kazura.css?v=a6b7662ed9">
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+} }
+</script>
+
+<style>
+/* ══ POURQUOI CETTE PAGE A SA PROPRE FEUILLE ═══════════════════════════════
+   Elle ne construit pas une suite de blocs, elle pose un MONDE derriere une
+   colonne de texte. Presque rien du gabarit du site ne s'y applique : il n'y
+   a ni section, ni carte, ni grille. On garde la typographie et les couleurs
+   de la maison, on refait la mise en page.
+
+   Le principe tient en une phrase : la toile ne bouge jamais, le texte non
+   plus, et c'est la CAMERA qui avance. Faire glisser des blocs dans la page
+   ramenerait le diaporama qu'on cherche a quitter. */
+
+.voyage { position: fixed; inset: 0; z-index: 0; }
+.voyage canvas { display: block; width: 100%; height: 100%; }
+
+/* La toile du nom, posee par-dessus le monde, pour le premier temps
+   seulement. La nuee est un effet plat : elle n'a pas a entrer dans la scene
+   en trois dimensions, elle a a s'y effacer. */
+.voyage__nom {
+  position: fixed; z-index: 2;
+  left: 50%; top: 42%; transform: translate(-50%, -50%);
+  width: min(94vw, 1500px); height: min(34vh, 320px);
+  pointer-events: none;
+}
+.voyage__nom canvas { display: block; width: 100%; height: 100%; }
+
+/* La hauteur de defilement. Neuf ecrans : en dessous, le rail defile trop
+   vite pour qu'on ait le temps de regarder ; au-dela, on scrolle dans le
+   vide entre deux temps. */
+.voyage__course { height: 900svh; }
+
+/* ── Les temps ──────────────────────────────────────────────────────────── */
+.acte {
+  position: fixed; z-index: 3;
+  left: clamp(1.25rem, 6vw, 7rem);
+  bottom: clamp(3rem, 12vh, 8rem);
+  max-width: 34ch;
+  opacity: 0;
+  transform: translateY(1.1rem);
+  transition: opacity .55s var(--doux), transform .55s var(--doux);
+  pointer-events: none;
+}
+.acte[data-vu='oui'] { opacity: 1; transform: none; pointer-events: auto; }
+
+.acte--centre {
+  left: 50%; right: auto;
+  transform: translate(-50%, 1.1rem);
+  text-align: center;
+  max-width: 30ch;
+  bottom: clamp(4rem, 16vh, 10rem);
+}
+.acte--centre[data-vu='oui'] { transform: translate(-50%, 0); }
+
+.acte__num {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--jade-clair); display: block;
+  margin-bottom: .9rem;
+}
+.acte h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.9rem);
+  line-height: 1.08; margin: 0 0 .8rem;
+}
+.acte p {
+  font-size: clamp(.92rem, 1.15vw, 1.02rem);
+  line-height: 1.72; color: var(--gris); margin: 0;
+  /* Un texte pose sur un monde sombre n'a pas besoin d'un cartouche : une
+     ombre tres large suffit a le decoller du fond sans poser de rectangle. */
+  text-shadow: 0 .06em 1.4em rgba(4, 6, 10, .96);
+}
+.acte h2 { text-shadow: 0 .06em 1.2em rgba(4, 6, 10, .92); }
+
+/* Le premier temps : le nom est tenu par la nuee, le texte se contente de
+   dire ce qu'on fait. */
+.acte--premier { bottom: clamp(5rem, 22vh, 12rem); }
+
+.voyage__descendez {
+  position: fixed; z-index: 3;
+  right: clamp(1.25rem, 5vw, 4rem); bottom: clamp(1.5rem, 4vh, 3rem);
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--jade-clair);
+  transition: opacity .6s var(--doux);
+}
+
+/* La barre d'avancement : elle dit ou on en est du voyage. C'est une
+   information sur le monde, pas un ornement, donc elle a le droit d'etre la. */
+.voyage__jauge {
+  position: fixed; z-index: 3; left: 0; top: 0; height: 2px;
+  background: var(--jade); width: 0;
+  box-shadow: 0 0 1.2em rgba(16, 185, 129, .7);
+}
+
+@media (max-width: 700px) {
+  .acte { left: 1.1rem; right: 1.1rem; max-width: none; bottom: clamp(4rem, 14vh, 8rem); }
+  .acte--centre { left: 1.1rem; right: 1.1rem; transform: translateY(1.1rem); max-width: none; }
+  .acte--centre[data-vu='oui'] { transform: none; }
+  .voyage__nom { width: 96vw; height: min(26vh, 220px); top: 38%; }
+}
+</style>
+</head>
+
+<body class="voyage-page">
+
+<div class="voyage" aria-hidden="true">
+  <canvas id="toile-voyage"></canvas>
+</div>
+
+<div class="voyage__nom" aria-hidden="true">
+  <canvas id="toile-nuee" data-mot="KAZURA"></canvas>
+</div>
+
+<div class="voyage__jauge" id="jauge" aria-hidden="true"></div>
+
+<main>
+  <!-- Le titre reste dans le document pour les lecteurs d'ecran et les
+       moteurs : la nuee ne peint que des pixels, elle n'ecrit rien. -->
+  <h1 class="sr-only">Kazura, studio de création de sites internet</h1>
+
+  <section class="acte acte--premier" data-de="0.00" data-a="0.11">
+    <p>Studio de création de sites internet.<br>Trois dimensions temps réel, animation,
+       direction artistique. Beblenheim, Alsace.</p>
+  </section>
+
+  <section class="acte" data-de="0.15" data-a="0.31">
+    <span class="acte__num">01 · Pueraria montana</span>
+    <h2>Le kudzu recouvre ce qu’il touche.</h2>
+    <p>Il monte de trente centimètres par jour et ne lâche plus. On lui a pris son
+       nom parce qu’un site doit faire pareil : prendre la place, et la garder.</p>
+  </section>
+
+  <section class="acte" data-de="0.36" data-a="0.54">
+    <span class="acte__num">02 · Ce que vous regardez</span>
+    <h2>Rien de tout ceci n’est une vidéo.</h2>
+    <p>Chaque tige, chaque feuille et chaque poussière est calculée sur votre
+       machine pendant que vous descendez. C’est pour cette raison que vous
+       pouvez la traverser.</p>
+  </section>
+
+  <section class="acte" data-de="0.60" data-a="0.80">
+    <span class="acte__num">03 · La maquette</span>
+    <h2>On vous montre le site avant que vous décidiez.</h2>
+    <p>Une maquette complète, à votre nom, avec vos textes et vos photos.
+       Gratuite. Vous la regardez tranquillement, et vous dites oui ou non.</p>
+  </section>
+
+  <section class="acte acte--centre" data-de="0.87" data-a="1.00">
+    <h2>Parlons de votre site.</h2>
+    <p style="margin-bottom:1.6rem">On répond dans la journée, et on ne rappelle pas
+       quinze fois.</p>
+    <a class="bouton bouton--plein" href="contact.html">Parler de mon site <span aria-hidden="true">→</span></a>
+  </section>
+</main>
+
+<div class="voyage__course" aria-hidden="true"></div>
+<span class="voyage__descendez" id="descendez" aria-hidden="true">Descendez</span>
+
+<script type="module">
+/* ══ LE LIEN ENTRE LE DEFILEMENT ET LE MONDE ══════════════════════════════
+   Une seule valeur circule dans toute la page : l'avancee, de zero a un.
+   Elle pilote la camera, l'opacite des temps, la jauge et la cohesion du
+   nom. Tout ce qui bouge sur cette page descend de ce nombre-la, et c'est ce
+   qui garantit qu'aucun element ne peut se desynchroniser des autres. */
+
+const toile = document.getElementById('toile-voyage');
+const jauge = document.getElementById('jauge');
+const descendez = document.getElementById('descendez');
+const actes = [...document.querySelectorAll('.acte')].map(e => ({
+  e, de: +e.dataset.de, a: +e.dataset.a
+}));
+
+let voyage = null, nuee = null;
+
+function avancee() {
+  const course = document.documentElement.scrollHeight - innerHeight;
+  return course > 0 ? Math.min(1, Math.max(0, scrollY / course)) : 0;
+}
+
+function poser(t) {
+  voyage?.avancer(t);
+  jauge.style.width = (t * 100).toFixed(2) + '%';
+  descendez.style.opacity = t > 0.03 ? '0' : '1';
+
+  for (const a of actes) {
+    const vu = t >= a.de && t <= a.a;
+    if ((a.e.dataset.vu === 'oui') !== vu) a.e.dataset.vu = vu ? 'oui' : 'non';
+  }
+
+  /* ══ LE NOM SE DEFAIT PENDANT QUE LE MONDE SE FORME ════════════════════
+     La nuee tient le mot tant que la camera est collee a la feuille, puis le
+     relache exactement pendant que la camera recule. Les particules partent
+     au moment ou le decor devient lisible : une seule chose a la fois occupe
+     le regard, et la transition ne coute aucun fondu.
+
+     C'est le seul endroit du site ou deux pieces se passent le relais, et
+     elles le font par la meme valeur, sans se connaitre. */
+  if (nuee) {
+    const cohesion = 1 - Math.min(1, Math.max(0, (t - 0.045) / 0.075));
+    nuee.tenir(cohesion);
+    const boite = document.querySelector('.voyage__nom');
+    boite.style.opacity = String(Math.max(0, 1 - Math.max(0, (t - 0.075) / 0.065)));
+  }
+}
+
+/* ══ ON LIT LE DEFILEMENT, ON NE L'ATTEND PAS ═══════════════════════════
+   La page etait pilotee par l'evenement `scroll`. Il a deux defauts. Le
+   premier est qu'il n'est pas garanti : un onglet qui ne compose pas ses
+   images n'en envoie aucun, et la position peut changer sans qu'on le sache.
+   Le second est qu'il arrive par rafales, parfois plusieurs fois entre deux
+   images et parfois pas du tout pendant l'inertie d'un telephone.
+
+   Lire la position une fois par image regle les deux : c'est exactement une
+   mesure par image affichee, jamais plus, jamais moins, et elle est toujours
+   a jour. On ne recalcule que si la valeur a bouge, pour ne pas toucher le
+   document soixante fois par seconde sans raison. */
+let derniereAvancee = -1;
+(function battre() {
+  requestAnimationFrame(battre);
+  const t = avancee();
+  if (Math.abs(t - derniereAvancee) < 0.0002) return;
+  derniereAvancee = t;
+  poser(t);
+})();
+
+addEventListener('resize', () => poser(avancee()), { passive: true });
+
+(async () => {
+  try {
+    const { monterLeVoyage } = await import('./js/voyage.js');
+    voyage = await monterLeVoyage(toile);
+    (window.kazura ||= {}).voyage = voyage;
+    /* Poignee de service : elle permet d'imposer une position et de verifier
+       que TOUT suit, meme quand le navigateur n'envoie pas ses evenements de
+       defilement. Sans elle, un controle ne peut pas distinguer une page
+       cassee d'un onglet gele, et j'ai deja pris l'un pour l'autre. */
+    window.kazura.voyagePage = { poser, avancee };
+  } catch (e) { console.warn('voyage indisponible', e); }
+
+  try {
+    const { monterLaNuee } = await import('./js/nuee.js');
+    /* La nuee n'apporte pas ses propres etiquettes : la page en a deja quatre,
+       accrochees au monde. Sept a l'ecran ne se lisent plus. */
+    nuee = await monterLaNuee(document.getElementById('toile-nuee'), { instruments: false });
+    if (nuee) {
+      (window.kazura ||= {}).nuee = nuee;
+      nuee.tenir(1);
+    }
+  } catch (e) { console.warn('nuee indisponible', e); }
+
+  poser(avancee());
+})();
+</script>
+
+</body>
+</html>

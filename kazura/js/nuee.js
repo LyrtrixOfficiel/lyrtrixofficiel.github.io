@@ -630,6 +630,9 @@ export async function monterLaNuee(toile, options = {}) {
      Les ancres sont donnees en FRACTIONS du cadre, jamais en unites fixes :
      le cadre suit la forme de la fenetre, et une ancre figee a 1,2 sortirait
      du mot sur un ecran etroit pour se planter dans le vide sur un large. */
+  /* Une page qui possede DEJA une couche d'instruments accrochee a son monde
+     n'a pas besoin de celle de la nuee : sept etiquettes a l'ecran ne se
+     lisent plus, elles se comptent. Le voyage l'eteint pour cette raison. */
   let instruments = null;
   /* Les ancres sont posees SUR le mot, au bord du dessin, jamais dans le vide :
      une croix qui ne touche rien ne designe rien. Les deux premieres tiennent
@@ -643,7 +646,7 @@ export async function monterLaNuee(toile, options = {}) {
     { x: -0.45, y:  0.27, cote: 'gauche', vers: 'haut', l: 112 },
     { x:  0.13, y: -0.28, cote: 'droite', vers: 'bas',  l: 128 }
   ];
-  import('./instruments.js' + (options.version || '')).then(({ monterLesInstruments }) => {
+  (options.instruments === false ? Promise.reject(new Error('eteints')) : import('./instruments.js' + (options.version || ''))).then(({ monterLesInstruments }) => {
     instruments = monterLesInstruments(toile, fauxOeil, { dans: toile.parentElement });
     const point = i => ({ x: ANCRES[i].x * largeurMonde, y: ANCRES[i].y * hauteurMonde, z: 0 });
     const pose = (i, titre, valeur) => instruments.poser({
@@ -661,7 +664,7 @@ export async function monterLaNuee(toile, options = {}) {
     });
     addEventListener('resize', recaler, { passive: true });
     recaler();
-  }).catch(e => console.warn('instruments indisponibles', e));
+  }).catch(e => { if (e && e.message !== 'eteints') console.warn('instruments indisponibles', e); });
 
   return {
     /* La couche d'instruments, exposee pour pouvoir la FORCER a se replacer.

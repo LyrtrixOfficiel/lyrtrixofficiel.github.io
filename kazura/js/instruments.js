@@ -52,7 +52,7 @@ export function monterLesInstruments(toile, camera, options = {}) {
      `vers` dit de quel cote le coude part. Une etiquette se pose toujours au
      bout du coude : pour la mettre SOUS un objet, il faut que le coude descende,
      sinon elle revient se coller sur l'objet qu'elle designe. */
-  function poser({ point, titre, valeur, cote = 'droite', longueur = 0.14, vers = 'haut' }) {
+  function poser({ point, titre, valeur, cote = 'droite', longueur = 0.14, vers = 'haut', portee = 0 }) {
     const boite = document.createElement('div');
     boite.className = 'instrument';
     boite.dataset.cote = cote;
@@ -77,7 +77,7 @@ export function monterLesInstruments(toile, camera, options = {}) {
     traits.appendChild(croix);
     hote.appendChild(boite);
 
-    releves.push({ point: point.clone ? point.clone() : { ...point }, boite, valeur: v, lireValeur: valeur, croix, trait, cote, longueur, vers });
+    releves.push({ point: point.clone ? point.clone() : { ...point }, boite, valeur: v, lireValeur: valeur, croix, trait, cote, longueur, vers, portee });
     return releves[releves.length - 1];
   }
 
@@ -124,6 +124,25 @@ export function monterLesInstruments(toile, camera, options = {}) {
       /* On projette le point du monde sur l'ecran. C'est la seule ligne de
          mathematique de tout le module, et c'est elle qui fait que l'etiquette
          reste accrochee a l'objet quand la camera tourne. */
+      /* ══ UNE ETIQUETTE A UNE PORTEE ════════════════════════════════════
+         Dans une page en sections, l'objet est toujours a la meme distance et
+         la question ne se pose pas. Dans un voyage, on DEPASSE les objets :
+         a la fin du parcours, l'etiquette de la feuille designait encore un
+         point situe soixante-dix unites derriere la camera, ou il n'y avait
+         plus rien a voir qu'un peu de brouillard.
+
+         Au-dela de sa portee, un releve s'efface. Ce qui est trop loin pour
+         etre reconnu est trop loin pour etre annote. */
+      if (p.portee && camera.position) {
+        const dx = p.point.x - camera.position.x;
+        const dy = p.point.y - camera.position.y;
+        const dz = p.point.z - camera.position.z;
+        if (dx * dx + dy * dy + dz * dz > p.portee * p.portee) {
+          p.boite.style.opacity = '0'; p.trait.style.opacity = '0'; p.croix.style.opacity = '0';
+          continue;
+        }
+      }
+
       const proj = projeter(p.point, camera);
 
       /* Derriere la camera, ou hors du cadre : on efface plutot que de coller

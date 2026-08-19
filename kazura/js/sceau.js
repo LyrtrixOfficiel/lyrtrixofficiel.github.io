@@ -27,19 +27,13 @@ import { EffectComposer }   from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass }       from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass }  from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass }       from 'three/addons/postprocessing/ShaderPass.js';
+import { BLASON } from './blason.js';
 
 /* Le blason, sans le fond sombre du favicon : trois folioles dans un anneau.
    Ecrit ici plutot que charge, pour que le module ne dependent d'aucun fichier
    et que la forme soit versionnee avec le code qui l'extrude. */
-const BLASON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <g fill="#000" fill-rule="evenodd">
-    <path d="M50 2a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm0 6a42 42 0 1 1 0 84 42 42 0 1 1 0-84z"/>
-    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z"/>
-    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(120 50 50)"/>
-    <path d="M50 46C39.5 37 34.5 23.5 50 7c15.5 16.5 10.5 30 0 39zm0-7.4c6.2-6 8.6-14.4 0-23.6-8.6 9.2-6.2 17.6 0 23.6z" transform="rotate(240 50 50)"/>
-    <circle cx="50" cy="50" r="4.6"/>
-  </g>
-</svg>`;
+/* Le trace vit dans son propre fichier : le voyage le lit aussi, et deux
+   copies d'un logo finissent toujours par diverger. Voir js/blason.js. */
 
 const alea = (a, b) => a + Math.random() * (b - a);
 
