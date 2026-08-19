@@ -200,9 +200,19 @@ export function monterLaScene(toile, options = {}) {
         float front = smoothstep(seuil - 0.03, seuil, vUv.x);
         col += vec3(0.55, 1.00, 0.80) * front * 0.55;
 
-        // Nervure longitudinale, pour que le tube ne soit pas lisse et mort.
-        float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + vUv.x * 26.0)), 16.0);
-        col += uJade * nerv * 0.28;
+        /* ══ LA NERVURE COURT LE LONG DE LA TIGE ═══════════════════════════
+           Elle etait ecrite sin(vUv.y * PI * 5 + vUv.x * 26), c'est-a-dire
+           qu'elle tournait vingt-six fois AUTOUR de la tige sur sa longueur.
+           Le resultat ne ressemblait pas a une plante mais a un metre-ruban :
+           des barreaux clairs reguliers en travers du tube, sur toute la
+           scene. C'est ce que Matheo voyait sans pouvoir le nommer.
+
+           Sur une vraie tige, les cotes courent dans le SENS de la longueur.
+           On enleve donc la dependance a vUv.x, qui est l'axe long, et on
+           garde cinq cotes autour de la circonference. Un tres leger
+           serpentement reste, sinon les cotes sont des rails. */
+        float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + sin(vUv.x * 2.3) * 0.55)), 14.0);
+        col += uJade * nerv * 0.22;
 
         // Brouillard applique a la main : le materiau est personnalise, donc
         // celui de la scene ne s'y applique pas tout seul.
@@ -472,14 +482,32 @@ export function monterLaScene(toile, options = {}) {
         vec2 c = vUv - 0.5;
         float r2 = dot(c, c);
 
-        // L'ecart des trois canaux croit vers les bords, comme une optique.
-        vec2 ecart = c * r2 * 0.028 * uForce;
+        /* L'ecart des trois canaux croit vers les bords, comme une optique.
+           DIVISE PAR TROIS. A 0,028 les bords de l'ecran portaient des franges
+           arc-en-ciel franches, visibles sur toute la hauteur : ce n'etait plus
+           un defaut d'objectif, c'etait un effet. Un defaut d'optique se
+           remarque quand on le cherche, jamais avant. */
+        vec2 ecart = c * r2 * 0.009 * uForce;
         vec3 col;
         col.r = texture2D(tDiffuse, vUv - ecart).r;
         col.g = texture2D(tDiffuse, vUv).g;
         col.b = texture2D(tDiffuse, vUv + ecart).b;
 
         col *= 1.0 - r2 * 0.58;                         // vignette
+
+        /* ══ LE PUITS CENTRAL ═══════════════════════════════════════════════
+           La colonne du milieu s'assombrit. C'est la que se posent le nom, la
+           phrase et les boutons, et la scene s'y battait avec eux : rubans,
+           gousses vives et franges passaient derriere le mot et le rendaient
+           illisible. Le sujet d'une page n'est jamais son decor, et quand les
+           deux se disputent le meme endroit c'est toujours au decor de ceder.
+
+           Il est LARGE et TRES DOUX : un cercle net se verrait comme une
+           tache, alors qu'une bande verticale attenuee se lit comme une
+           profondeur de champ. */
+        vec2 pu = vec2(c.x * 1.15, c.y * 2.30);
+        col *= 1.0 - 0.62 * exp(-dot(pu, pu) * 3.2);
+
         col += (alea(vUv * 900.0 + uTemps) - 0.5) * 0.030;  // grain
         gl_FragColor = vec4(col, 1.0);
       }

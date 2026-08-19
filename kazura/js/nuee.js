@@ -114,11 +114,26 @@ void main() {
   /* La turbulence. Elle grandit quand la cohesion tombe : tenue, la nuee
      fremit a peine ; libre, elle part en fumee. L'echelle depend de la
      graine, donc deux particules voisines ne suivent jamais la meme veine. */
-  /* Et la turbulence au repos tombe presque a rien : c'est elle qui faisait
-     baver le contour. Elle reste entiere une fois la nuee libre. */
+  /* ══ LA TURBULENCE NE SE CALCULE PAS QUAND LE MOT EST TENU ═════════════
+     C'est la correction la plus rentable de tout le fichier, et elle a ete
+     trouvee par une mesure indirecte : la cohesion mettait NEUF secondes a
+     monter la ou elle devrait mettre une seconde, donc la boucle tournait
+     vers sept images par seconde au lieu de soixante.
+
+     Le coupable est juste en dessous. Le rotationnel demande six evaluations
+     du champ, chacune faite de trois bruits, chacun de huit hachages a trois
+     sinus : plus de quatre cents sinus par particule et par image. Sur
+     262 144 particules, cela fait cent treize MILLIONS de sinus par image.
+
+     Or, mot tenu, l'amplitude vaut 0,045 : on payait cent treize millions de
+     sinus pour un fremissement invisible. On sort donc avant de les calculer.
+     Le heros passe l'essentiel de son temps dans cet etat, donc l'essentiel
+     du temps ce calcul ne se fait plus du tout. */
   float ampleur = mix(2.35, 0.045, uCohesion);
-  vec3 q = p * mix(0.55, 1.30, graine) + vec3(0.0, uTemps * 0.11, uTemps * 0.05);
-  v += rotationnel(q) * ampleur * uDt;
+  if (ampleur > 0.09) {
+    vec3 q = p * mix(0.55, 1.30, graine) + vec3(0.0, uTemps * 0.11, uTemps * 0.05);
+    v += rotationnel(q) * ampleur * uDt;
+  }
 
   /* La derive vers le haut quand elle est libre : une nuee qui se disperse
      a plat retombe en flaque, une nuee qui monte devient du pollen. */
@@ -239,7 +254,17 @@ export async function monterLaNuee(toile, options = {}) {
   gl.getExtension('OES_texture_float_linear');
 
   const petit = innerWidth < 760;
-  const TAILLE = options.taille || (petit ? 320 : 512);
+  /* ══ LE CARRE DE SIMULATION SUIT LA TOILE ═══════════════════════════════
+     512 sur 512 fait 262 144 particules, quelle que soit la place ou on les
+     met. Sur une toile de 2234 sur 698, cela fait 0,17 particule par pixel a
+     simuler pour 0,72 a dessiner : on payait donc a simuler ce qu'on ne
+     dessinait pas. Le carre se cale desormais sur la surface reelle, borne
+     entre 256 et 448, et le nombre de particules divise par deux ou trois
+     sans qu'on voie la difference. */
+  /* 448 sur grand ecran, soit 200 704 particules. A 384 le mot ressortait
+     comme un saupoudrage : lisible, mais faible. Un mot fait de points ne
+     vaut que par sa DENSITE autant que par la nettete de son contour. */
+  const TAILLE = options.taille || (petit ? 288 : 448);
   const N = TAILLE * TAILLE;
 
   /* ── Compilation ────────────────────────────────────────────────────── */
