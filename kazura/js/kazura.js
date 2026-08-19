@@ -1452,6 +1452,12 @@ async function monterLePortailSiPresent() {
     charger();
   });
 
+  /* Le chargement paresseux, ouvrable a la demande. Il sert au controle
+     automatique : dans un panneau sans fenetre, on ne peut pas approcher la
+     piece, donc on ne peut pas la verifier. Un visiteur ne peut pas
+     l'atteindre, il faudrait appeler la fonction a la main. */
+  (window.kazura ||= {}).forcerPortail = () => { if (!lance) { lance = true; charger(); } };
+
   async function charger() {
     try {
       const { monterLePortail } = await import('./portail.js' + VERSION);
