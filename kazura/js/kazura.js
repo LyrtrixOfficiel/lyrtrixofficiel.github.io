@@ -530,7 +530,20 @@ function monterLaBarre() {
 
 /* ══ 11. Curseur et aimants ═════════════════════════════════════════════ */
 function monterLeCurseur() {
+  /* ══ L'ANNEAU AUTOUR DE LA SOURIS EST RETIRE ═══════════════════════════
+     Verdict de Matheo, sans appel : « un petit rond autour de ma souris,
+     c'est assez nul ». Il a raison et la raison est simple : un curseur
+     personnalise ne se justifie que s'il DIT quelque chose que le curseur du
+     systeme ne dit pas. Le notre grossissait sur les liens, ce que le
+     curseur du systeme fait deja en devenant une main. Il ne restait donc
+     qu'un anneau qui suit la main avec du retard, c'est-a-dire un curseur
+     moins precis que celui qu'on avait avant.
+
+     Ce qui reste ici : les boutons magnetiques, eux, ajoutent bien quelque
+     chose. */
   if (tactile || sobre) return;
+  const AVEC_ANNEAU = false;
+  if (!AVEC_ANNEAU) { monterLesAimants(); return; }
   const c = document.createElement('div');
   c.className = 'curseur';
   c.innerHTML = '<span></span>';
@@ -554,6 +567,12 @@ function monterLeCurseur() {
     el.addEventListener('pointerleave', marquer('non'));
   });
 
+  monterLesAimants();
+}
+
+/* Les boutons qui viennent a la main. Sortis du curseur pour survivre a son
+   retrait : ils n'ont jamais eu de rapport avec lui. */
+function monterLesAimants() {
   $$('[data-aimant]').forEach(b => {
     b.addEventListener('pointermove', e => {
       const r = b.getBoundingClientRect();
