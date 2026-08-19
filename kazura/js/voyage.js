@@ -35,6 +35,7 @@ import { BokehPass }       from 'three/addons/postprocessing/BokehPass.js';
 import { ShaderPass }      from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass }      from 'three/addons/postprocessing/OutputPass.js';
 import { BLASON } from './blason.js';
+import { monterLePaysage, hauteurSol, NIVEAU_EAU } from './paysage.js';
 
 const JADE   = new THREE.Color('#10B981');
 const JADE_F = new THREE.Color('#04352A');
@@ -180,16 +181,39 @@ const ETALON = {
 
    Les valeurs sont donnees a la main plutot que calculees. Un rail de camera
    est une decision de mise en scene, pas un probleme d'optimisation. */
+/* ══ LE RAIL ══════════════════════════════════════════════════════════════
+   Une position et un point vise pour chaque temps.
+
+   UNE REGLE ABSOLUE, APPRISE EN LA VIOLANT : la camera ne regarde JAMAIS en
+   arriere. Mon premier rail ouvrait en visant z negatif, puis visait z positif
+   au troisieme temps : cent quatre-vingts degres de rotation quelque part au
+   milieu, et Matheo l'a senti tout de suite, « la camera elle tourne tres
+   brutalement ». On ne peut pas lisser un demi-tour, on peut seulement ne pas
+   le faire.
+
+   Le point vise est donc TOUJOURS devant l'oeil, et la profondeur de l'oeil ne
+   recule jamais. Le mouvement d'ouverture, celui ou l'on decouvre qu'on etait
+   sur une feuille, ne se fait plus en reculant la camera : c'est la FEUILLE
+   qui s'eloigne, portee par l'air, et on la suit. Une feuille qui derive est
+   d'ailleurs plus juste qu'une camera qui recule, parce qu'elle a une raison
+   de bouger.
+
+   Les valeurs sont posees a la main. Un rail de camera est une decision de
+   mise en scene, pas un probleme d'optimisation. */
 const REPERES = [
-  { t: 0.00, oeil: [0.00, 0.10,  2.15], vise: [0.0,  0.05, -0.6] },
-  { t: 0.12, oeil: [0.35, 0.35,  4.20], vise: [0.0,  0.10, -0.4] },
-  { t: 0.24, oeil: [1.10, 1.05,  7.20], vise: [0.0,  0.20, -0.2] },
-  { t: 0.38, oeil: [2.40, 2.10, 12.80], vise: [0.4,  1.10,  3.0] },
-  { t: 0.52, oeil: [1.20, 2.60, 26.00], vise: [0.2,  2.40, 40.0] },
-  { t: 0.66, oeil: [0.20, 2.55, 39.00], vise: [0.0,  2.55, 52.0] },
-  { t: 0.78, oeil: [0.00, 2.50, 50.50], vise: [0.0,  2.40, 62.0] },
-  { t: 0.88, oeil: [0.00, 2.60, 63.00], vise: [0.0,  2.60, 76.0] },
-  { t: 1.00, oeil: [0.90, 2.80, 71.20], vise: [0.0,  2.60, 82.0] }
+  { t: 0.00, oeil: [ 1.10, 2.45,  5.60], vise: [ 2.10, 2.25,  9.30] },
+  { t: 0.13, oeil: [ 0.70, 2.60,  7.20], vise: [ 2.60, 2.55, 13.60] },
+  { t: 0.26, oeil: [ 0.20, 2.85, 10.50], vise: [ 3.10, 2.90, 20.00] },
+  { t: 0.40, oeil: [-0.30, 3.05, 16.00], vise: [ 1.60, 2.90, 30.00] },
+  { t: 0.54, oeil: [ 0.20, 3.00, 25.00], vise: [ 0.40, 2.85, 42.00] },
+  { t: 0.68, oeil: [ 0.10, 2.90, 38.00], vise: [ 0.00, 2.80, 55.00] },
+  { t: 0.80, oeil: [ 0.00, 2.80, 50.00], vise: [ 0.00, 2.70, 66.00] },
+  { t: 0.90, oeil: [ 0.00, 3.30, 61.00], vise: [ 0.00, 3.30, 78.00] },
+  /* Le dernier temps leve les yeux : le sceau passe au tiers bas et le
+     PAYSAGE s'ouvre derriere lui, lac, monts et ciel. C'est la seule image du
+     voyage ou l'on voit jusqu'a l'horizon, et c'est pour cela qu'elle arrive
+     en dernier. */
+  { t: 1.00, oeil: [ 0.70, 6.40, 68.50], vise: [ 0.00, 6.10, 92.00] }
 ];
 
 function courbeDe(cle) {
@@ -234,9 +258,21 @@ export async function monterLeVoyage(toile, options = {}) {
      qui est loin palit vers la couleur du fond. Sans lui, un objet a soixante
      unites a exactement le meme contraste qu'un objet a deux, et l'oeil perd
      toute notion de distance dans une scene sans horizon. */
-  scene.fog = new THREE.FogExp2(NUIT, 0.019);
+  /* ══ LE BROUILLARD S'ACCORDE A L'HORIZON, PAS AU NOIR ══════════════════
+     Il etait dense et de la couleur de la nuit : tout ce qui depassait
+     soixante unites disparaissait, ce qui allait tres bien tant qu'il n'y
+     avait rien au-dela. Maintenant qu'il y a des monts a cinq cents unites,
+     un brouillard noir les effacerait purement et simplement.
 
-  const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 260);
+     On le desserre et on le teinte vers le bleu de l'horizon. Les monts
+     s'estompent alors vers cette teinte, qui est plus SOMBRE que la lueur du
+     ciel derriere eux : ils restent donc lisibles en silhouette tout en
+     perdant leur contraste avec la distance. C'est exactement la perspective
+     atmospherique, et c'est elle qui fabrique l'echelle. */
+  const BRUME = new THREE.Color('#08161C');
+  scene.fog = new THREE.FogExp2(BRUME, 0.0058);
+
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 1600);
   const railOeil = courbeDe('oeil');
   const railVise = courbeDe('vise');
 
@@ -295,7 +331,7 @@ export async function monterLeVoyage(toile, options = {}) {
   lampeFeuille.position.set(3.0, 2.4, 6.5);
   scene.add(lampeFeuille);
 
-  const remplissage = new THREE.DirectionalLight(0xBFE9DA, 1.0);
+  const remplissage = new THREE.DirectionalLight(0xBFE9DA, 0.55);
   remplissage.position.set(-4, 8, 62);
   scene.add(remplissage);
 
@@ -328,12 +364,28 @@ export async function monterLeVoyage(toile, options = {}) {
   const monde = new THREE.Group();
   scene.add(monde);
 
+  /* Le paysage d'abord : c'est lui qui fixe l'echelle de tout le reste, et
+     c'est sur son sol que les lianes vont s'enraciner. */
+  const paysage = monterLePaysage(scene, { petit, nuit: '#04060A', horizon: '#0F4038' });
+
   /* ── Le materiau du feuillage ───────────────────────────────────────── */
   const empreinteVide = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1);
   empreinteVide.needsUpdate = true;
 
+  /* ══ LA VEGETATION EST OPAQUE ══════════════════════════════════════════
+     Elle etait transparente et n'ecrivait pas sa profondeur, ce qui etait le
+     bon reglage tant qu'elle etait un decor pose sur du noir : rien a occulter,
+     rien derriere. Maintenant qu'il y a un ciel, un lac et des monts, une
+     plante translucide qui ne s'occulte pas devient un RUBAN PLAT : elle laisse
+     passer le fond a travers elle, elle se melange a ses voisines, et vingt
+     tiges empilees font une masse bleue sans forme.
+
+     Une feuille arrete la lumiere. Une tige aussi. En les rendant opaques on
+     recupere d'un coup l'occultation, donc la profondeur, donc la silhouette
+     contre l'horizon, qui est ce qui rend une plante lisible de nuit. Le
+     decoupage se fait deja au seuil dans le nuanceur, il n'y a rien a ajouter. */
   const matFeuillage = new THREE.ShaderMaterial({
-    transparent: true, side: THREE.DoubleSide, depthWrite: false,
+    transparent: false, side: THREE.DoubleSide, depthWrite: true,
     uniforms: {
       uEmpreinte: { value: empreinteVide }, uTemps: { value: 0 },
       uJade: { value: JADE }, uViolet: { value: VIOLET },
@@ -377,10 +429,35 @@ export async function monterLeVoyage(toile, options = {}) {
         float dos  = pow(clamp(dot(-N, L), 0.0, 1.0), 1.5);
         float face = clamp(dot(N, L), 0.0, 1.0);
         float tr = dos * mix(0.42, 1.75, fract(vGraine * 2.0));
-        vec3 col = t.rgb * 0.060 + t.rgb * uJade * 1.55 * tr + uViolet * face * 0.10;
+        /* ══ CE QUI ECLAIRE UNE FEUILLE DE FACE, LA NUIT, C'EST LE CIEL ═══
+           Le terme de face etait teinte en violet, ce qui passait inapercu
+           tant que la feuille etait a trente pour cent d'opacite. Devenue
+           opaque, la moitie du feuillage est ressortie EN VIOLET : des
+           petales de plastique accroches a des tiges.
+
+           De nuit, une face tournee vers le haut recoit la voute, qui est
+           bleu-vert tres sourd. On lui donne cette couleur-la, et on remonte
+           le corps de la feuille, qui n'a plus besoin d'etre efface par
+           l'opacite pour rester discret. */
+        /* ══ LA REGLE DES QUATRE-VINGTS POUR CENT ═════════════════════════
+           Dans une image de nuit qui tient, la tres grande majorite du cadre
+           est SOUS quinze pour cent de luminosite, et une seule chose est
+           claire. C'est vrai d'Hokusai comme d'igloo.
+
+           Mon feuillage etait a mi-valeur partout : cinquante feuilles vertes
+           moyennes, egalement eclairees, sur un fond de meme valeur. Rien ne
+           se detachait de rien, et l'ensemble se lisait comme un economiseur
+           d'ecran plutot que comme une nuit.
+
+           On divise donc par trois. Ce qu'on perd en lisibilite de chaque
+           feuille, on le gagne en lisibilite de l'IMAGE : le regard va enfin
+           quelque part, vers la seule zone qui reste claire. */
+        vec3 col = t.rgb * 0.055
+                 + t.rgb * uJade * 0.62 * tr
+                 + t.rgb * vec3(0.30, 0.42, 0.52) * face * 0.11;
         float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
         col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
-        gl_FragColor = vec4(col, clamp(0.30 + tr * 0.60, 0.0, 0.95));
+        gl_FragColor = vec4(col, 1.0);
       }
     `
   });
@@ -395,7 +472,7 @@ export async function monterLeVoyage(toile, options = {}) {
 
   /* ── Le materiau des tiges ──────────────────────────────────────────── */
   const matTige = new THREE.ShaderMaterial({
-    transparent: true, side: THREE.DoubleSide, depthWrite: false,
+    transparent: false, side: THREE.DoubleSide, depthWrite: true,
     uniforms: {
       uJade: { value: JADE }, uJadeF: { value: JADE_F }, uViolet: { value: VIOLET },
       uBrouillard: { value: NUIT }, uDensite: { value: scene.fog.density }
@@ -448,12 +525,21 @@ export async function monterLeVoyage(toile, options = {}) {
           + 0.12 * sin(vUv.x * 53.7);
         grain = clamp(grain, 0.10, 1.0);
 
-        vec3 col = uJadeF * 0.14 + uJade * dos * 0.62 * grain + uViolet * fres * 0.16;
+        /* Un corps presque noir et une arete qui s'allume : c'est la seule
+           facon dont une plante se lit devant un horizon eclaire. Le violet
+           redevient un accent sur le contour, pas une teinte de fond. */
+        /* Meme raison pour l'arete des tiges : un liseré violet franc sur
+           chaque tube faisait un reseau de neons mauves. Le ciel, lui, pose un
+           reflet froid et discret, et le violet ne revient que dans les hautes
+           lumieres, par l'etalonnage, ou il a sa place. */
+        vec3 col = uJadeF * 0.22
+                 + uJade * dos * 0.30 * grain
+                 + vec3(0.26, 0.40, 0.50) * fres * 0.13;
         float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + sin(vUv.x * 2.3) * 0.55)), 14.0);
-        col += uJade * nerv * 0.16 * grain;
+        col += uJade * nerv * 0.09 * grain;
         float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
         col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
-        gl_FragColor = vec4(col, clamp(0.055 + fres * 0.17 + dos * 0.20 * grain, 0.0, 0.62));
+        gl_FragColor = vec4(col, 1.0);
       }
     `
   });
@@ -471,7 +557,7 @@ export async function monterLeVoyage(toile, options = {}) {
 
      On monte donc a soixante lianes, dont un tiers tres loin et tres pales :
      elles ne se lisent pas comme des objets, elles font le fond du decor. */
-  const NB_LIANES = petit ? 16 : 44;
+  const NB_LIANES = petit ? 14 : 36;
   const SEG = petit ? 70 : 130;
   const RAD = petit ? 6 : 9;
 
@@ -489,6 +575,13 @@ export async function monterLeVoyage(toile, options = {}) {
     const z0 = i % 2 ? alea(-4, 50) : alea(-4, 82);
     const ecart = (loin ? alea(17, 30) : alea(4.6, 10.0)) * cote;
     const montee = loin ? alea(16, 30) : alea(7, 17);
+    /* ══ ELLES PARTENT DU SOL, PAS DE NULLE PART ═══════════════════════════
+       Elles demarraient toutes a moins trois, une hauteur inventee, dans un
+       monde qui n'avait pas de sol. Maintenant qu'il y en a un, une tige qui
+       commence au-dessus ou en dessous se voit immediatement : au-dessus elle
+       flotte, en dessous elle sort d'un trou. On demande donc au terrain sa
+       hauteur a l'endroit exact ou la liane prend racine. */
+    const solLiane = hauteurSol(ecart, z0) - 0.6;
     /* ══ UN ALEA PAR LIANE, JAMAIS PAR POINT ══════════════════════════════
        La derive en profondeur etait ecrite `u * alea(-6, 6)` DANS la boucle :
        chaque point de controle recevait donc sa propre derive, tiree au sort
@@ -509,7 +602,7 @@ export async function monterLeVoyage(toile, options = {}) {
       const u = j / N;
       points.push(new THREE.Vector3(
         ecart + Math.sin(u * 3.2 * mx + ph) * 1.6 + Math.sin(u * 8.1 * mx) * 0.5,
-        -3 + u * montee,
+        solLiane + u * montee,
         z0 + Math.cos(u * 2.4 + ph) * serpent + u * derive
       ));
     }
@@ -526,7 +619,7 @@ export async function monterLeVoyage(toile, options = {}) {
     geo.setAttribute('aCentre', new THREE.BufferAttribute(centres, 3));
     monde.add(new THREE.Mesh(geo, matTige));
 
-    const nf = loin ? (petit ? 3 : 6) : (petit ? 7 : 15);
+    const nf = loin ? (petit ? 3 : 5) : (petit ? 5 : 9);
     for (let k = 0; k < nf; k++) {
       const u = 0.1 + (k / nf) * 0.85 + alea(-0.03, 0.03);
       const uc = Math.min(0.999, Math.max(0.001, u));
@@ -545,17 +638,18 @@ export async function monterLeVoyage(toile, options = {}) {
      et assez proches pour le tenir. Elles cadrent, elles donnent l'echelle, et
      elles disent que la plante est arrivee jusque-la. */
   for (let i = 0; i < (petit ? 6 : 14); i++) {
-    const ang = (i / (petit ? 6 : 14)) * Math.PI * 2 + alea(-0.2, 0.2);
-    const r0 = alea(6.5, 13.5);
+    const ang = (i / (petit ? 6 : 14)) * Math.PI * 2 + alea(-0.55, 0.55);
+    const r0 = alea(11.0, 24.0);
     const points = [];
     const N = 32;
     const ph = alea(0, 6.283), mx = alea(0.7, 1.6);
     const montee = alea(11, 22);
+    const solBosquet = hauteurSol(Math.cos(ang) * r0, 82 + Math.sin(ang) * (r0 * 0.55)) - 0.6;
     for (let j = 0; j <= N; j++) {
       const u = j / N;
       points.push(new THREE.Vector3(
         Math.cos(ang) * (r0 + Math.sin(u * 2.6 * mx + ph) * 1.9),
-        -5 + u * montee,
+        solBosquet + u * montee,
         82 + Math.sin(ang) * (r0 * 0.55) + Math.cos(u * 2.1 + ph) * 2.6 + u * alea(-5, 5)
       ));
     }
@@ -573,7 +667,7 @@ export async function monterLeVoyage(toile, options = {}) {
     for (let k = 0; k < (petit ? 5 : 10); k++) {
       const u = 0.12 + (k / (petit ? 5 : 10)) * 0.82 + alea(-0.03, 0.03);
       const uc = Math.min(0.999, Math.max(0.001, u));
-      feuillesPos.push({ p: courbe.getPointAt(uc), tangente: courbe.getTangentAt(uc), taille: alea(0.6, 1.6) });
+      feuillesPos.push({ p: courbe.getPointAt(uc), tangente: courbe.getTangentAt(uc), taille: alea(0.5, 1.1) });
     }
   }
 
@@ -675,7 +769,7 @@ export async function monterLeVoyage(toile, options = {}) {
     const b = new THREE.Box3().setFromObject(o);
     const t = b.getSize(new THREE.Vector3()), c = b.getCenter(new THREE.Vector3());
     o.position.sub(c);
-    o.scale.setScalar(5.2 / Math.max(t.x, t.y, t.z));
+    o.scale.setScalar(7.4 / Math.max(t.x, t.y, t.z));
     o.traverse(m => {
       if (!m.isMesh) return;
       const mt = m.material;
@@ -694,7 +788,10 @@ export async function monterLeVoyage(toile, options = {}) {
     feuilleGeante.add(o);
     /* Posee de biais, jamais de face : de face c'est un logo, de trois quarts
        c'est un objet. */
-    feuilleGeante.position.set(0.1, 0.25, -0.4);
+    /* Sa place de depart : juste devant l'oeil, de biais. De face elle serait
+       un logo, de trois quarts c'est un objet. Elle ne restera pas la : c'est
+       elle qui ouvre le voyage en s'eloignant. */
+    feuilleGeante.position.set(2.10, 2.25, 9.30);
     feuilleGeante.rotation.set(-0.22, 0.55, 0.12);
     monde.add(feuilleGeante);
 
@@ -913,7 +1010,28 @@ export async function monterLeVoyage(toile, options = {}) {
     if (!sobre) {
       matFeuillage.uniforms.uTemps.value = t;
       matP.uniforms.uTemps.value = t;
-      if (feuilleGeante) feuilleGeante.rotation.y = 0.55 + Math.sin(t * 0.13) * 0.10;
+      /* ══ C'EST LA FEUILLE QUI PART, PAS LA CAMERA QUI RECULE ═════════════
+         Le premier temps demandait de reculer pour decouvrir qu'on etait pose
+         sur une feuille. Reculer obligeait la camera a se retourner ensuite,
+         et un demi-tour ne se lisse pas.
+
+         Une feuille arrachee DERIVE. Elle monte, elle s'ecarte, elle tourne
+         sur elle-meme, et elle s'eloigne de qui la regarde. On obtient
+         exactement le meme recit, la camera n'a plus qu'a avancer, et le
+         mouvement a en plus une cause : le vent. Un mouvement dont on comprend
+         la cause ne se remarque pas comme un mouvement de camera. */
+      if (feuilleGeante) {
+        const d = Math.min(1, avance / 0.42);
+        const e = d * d * (3 - 2 * d);
+        feuilleGeante.position.set(
+          2.10 + e * 5.40 + Math.sin(t * 0.31) * 0.22,
+          2.25 + e * 3.10 + Math.sin(t * 0.44) * 0.16,
+          9.30 + e * 17.5
+        );
+        feuilleGeante.rotation.y = 0.55 + e * 1.15 + Math.sin(t * 0.13) * 0.10;
+        feuilleGeante.rotation.z = 0.12 + e * 0.55 + Math.sin(t * 0.19) * 0.07;
+        feuilleGeante.rotation.x = -0.22 + Math.sin(t * 0.23) * 0.09;
+      }
       if (sceau) {
         sceau.rotation.y = Math.sin(t * 0.16) * 0.42;
         sceau.rotation.x = Math.sin(t * 0.11) * 0.10;
@@ -954,6 +1072,16 @@ export async function monterLeVoyage(toile, options = {}) {
     const veut = dedans ? monte * descend * 0.44 * centre : 0;
     rais.uniforms.uForce.value += (veut - rais.uniforms.uForce.value) * 0.08;
 
+    if (instruments && feuilleGeante) {
+      for (let i = 0; i < 2; i++) {
+        const r = instruments.releve(i);
+        if (r) r.point.copy(ancresFeuille[i])
+                 .applyEuler(feuilleGeante.rotation)
+                 .add(feuilleGeante.position);
+      }
+    }
+    paysage.avancer(t);
+    paysage.suivre(camera);
     etalon.uniforms.uTemps.value = t;
     composer.render();
   }
@@ -980,6 +1108,13 @@ export async function monterLeVoyage(toile, options = {}) {
      autant qu'il y a d'objets sans encombrer un seul instant. */
   let instruments = null;
   const ancres = [];
+  /* Les deux premiers releves sont accroches a la FEUILLE, qui derive : leurs
+     points doivent deriver avec elle, sinon les etiquettes designent l'endroit
+     ou elle etait au chargement. */
+  const ancresFeuille = [
+    new THREE.Vector3( 1.30, 1.35, -0.30),
+    new THREE.Vector3(-1.30, -1.55, -0.30)
+  ];
   import('./instruments.js').then(({ monterLesInstruments, monterLeCompteur }) => {
     const compteur = monterLeCompteur();
     instruments = monterLesInstruments(toile, camera, { dans: options.releves || toile.parentElement });
@@ -989,10 +1124,10 @@ export async function monterLeVoyage(toile, options = {}) {
       instruments.poser({ point: point.clone(), titre, valeur, cote, vers, longueur: 120, portee });
     };
 
-    pose(new THREE.Vector3(1.55, 1.25, -0.35), 'PUERARIA_MONTANA',
+    pose(new THREE.Vector3(3.4, 3.6, 9.0), 'PUERARIA_MONTANA',
       () => triFeuille ? triFeuille.toLocaleString('fr') + ' triangles' : 'chargement…',
       'droite', 'haut', 26);
-    pose(new THREE.Vector3(-1.30, -0.60, -0.35), 'MATIERE',
+    pose(new THREE.Vector3(0.8, 0.7, 9.0), 'MATIERE',
       () => defFeuille ? defFeuille + '  ·  ' + poidsFeuille.toLocaleString('fr') + ' Ko' : 'chargement…',
       'gauche', 'bas', 26);
     pose(new THREE.Vector3(4.4, 5.4, 55), 'PORTAIL',
@@ -1001,7 +1136,7 @@ export async function monterLeVoyage(toile, options = {}) {
     pose(new THREE.Vector3(-4.6, 0.2, 55), 'CADENCE',
       () => compteur.ms() ? compteur.ms().toFixed(1) + ' ms par image' : 'mesure…',
       'gauche', 'bas', 46);
-    pose(new THREE.Vector3(3.4, 5.0, 82), 'SCEAU_KAZURA',
+    pose(new THREE.Vector3(3.4, 6.6, 82), 'SCEAU_KAZURA',
       () => formesSceau ? formesSceau + ' formes  ·  verre, indice 1,66' : 'chargement…',
       'droite', 'haut', 34);
   }).catch(e => console.warn('instruments indisponibles', e));
@@ -1062,9 +1197,13 @@ export async function monterLeVoyage(toile, options = {}) {
        C'est de la direction artistique, pas une incoherence. */
     const matiere = new THREE.MeshPhysicalMaterial({
       color: 0x0C4436,
-      metalness: 0.05,
-      roughness: 0.30,
-      clearcoat: 1.0,
+      metalness: 0.04,
+      /* Plus rugueux qu'il n'y parait necessaire : chaque cran de brillance
+         gagne ici revient en tache blanche apres le halo. Un corps mat dont
+         seule l'arete s'allume laisse LIRE les trois folioles, ce qui est la
+         seule chose qu'on lui demande. */
+      roughness: 0.46,
+      clearcoat: 0.35,
       /* ══ UN VERNIS TROP LISSE EST UN MIROIR ══════════════════════════
          A 0,06 de rugosite, la lampe violette se reflechissait en un point
          minuscule et extremement lumineux. Le halo l'a repris, le flou l'a
@@ -1076,9 +1215,9 @@ export async function monterLeVoyage(toile, options = {}) {
       clearcoatRoughness: 0.30,
       /* Une emission tres basse pour que le corps ne tombe jamais au noir
          complet quand rien ne l'eclaire de face. */
-      emissive: new THREE.Color(0x04241C),
+      emissive: new THREE.Color(0x03170F),
       emissiveIntensity: 1.0,
-      envMapIntensity: 1.15,
+      envMapIntensity: 0.55,
       side: THREE.DoubleSide
     });
     let n = 0;
@@ -1096,62 +1235,17 @@ export async function monterLeVoyage(toile, options = {}) {
         n++;
       }
     }
-    /* ══ UN VERRE A BESOIN DE QUELQUE CHOSE DERRIERE LUI ═══════════════
-       Le sceau etait un aplat sombre au bout du voyage, alors qu'il est
-       exactement le meme materiau que celui de la page d'accueil, ou il
-       brille. La difference n'est pas dans le verre, elle est dans ce qu'il y
-       a a traverser : ici, rien. Un materiau a transmission refracte le monde
-       derriere lui, et derriere celui-ci il n'y avait que du brouillard noir.
-
-       Une lueur posee au fond suffit. Elle n'eclaire pas la scene, elle donne
-       au verre une matiere a plier, et c'est ce pliage qu'on lit comme du
-       verre. Attention : la cible de transmission ne contient QUE les objets
-       opaques, donc cette lueur doit etre opaque pour se voir a travers. */
-    const lueur = document.createElement('canvas');
-    lueur.width = lueur.height = 256;
-    const lx = lueur.getContext('2d');
-    const rd = lx.createRadialGradient(128, 128, 6, 128, 128, 128);
-    /* ══ UN ANNEAU, PAS UN PROJECTEUR ══════════════════════════════════
-       Une lueur pleine derriere un objet de verre le transperce : la
-       transmission ramene toute cette lumiere vers l'avant, le halo la
-       ramasse, et le sceau finissait en TACHE BLANCHE VIOLACEE ou l'on ne
-       distinguait plus le blason.
-
-       Un anneau laisse le centre sombre. Le sceau se detache alors en
-       silhouette avec un liseré tout autour, ce qui est exactement la maniere
-       dont on photographie un objet transparent : on ne l'eclaire pas de
-       face, on eclaire ce qu'il y a derriere lui, en couronne. */
-    rd.addColorStop(0.00, '#050A0C');
-    rd.addColorStop(0.26, '#07120F');
-    rd.addColorStop(0.44, '#0D3A2F');
-    rd.addColorStop(0.60, '#071F1A');
-    rd.addColorStop(0.82, '#050A10');
-    rd.addColorStop(1.00, '#04060A');
-    lx.fillStyle = rd; lx.fillRect(0, 0, 256, 256);
-    const texLueur = new THREE.CanvasTexture(lueur);
-    texLueur.colorSpace = THREE.SRGBColorSpace;
-    const fond = new THREE.Mesh(
-      new THREE.PlaneGeometry(44, 44),
-      /* Un plan de three regarde vers +z. On avance dans ce sens, donc on lui
-         voit le DOS, et le dos d'une face est elimine par defaut : la lueur
-         etait bien la, invisible, et le sceau restait une silhouette noire.
-         Deux faces plutot qu'une rotation : le plan sert des deux cotes si un
-         jour la camera repasse derriere. */
-      /* `toneMapped: false` : sans cela le bord du plan se VOIT. Le fond de
-         l'ecran est peint avec la couleur de nuit telle quelle, alors que le
-         plan, lui, passe par la courbe de tonalite du rendu. Les deux noirs
-         cessent d'etre le meme noir, et un rectangle plus clair apparait au
-         milieu de l'image, avec deux aretes verticales franches. */
-      new THREE.MeshBasicMaterial({ map: texLueur, fog: false, toneMapped: false, side: THREE.DoubleSide })
-    );
-    fond.position.set(0, 2.6, 99);
-    monde.add(fond);
+    /* La lueur artificielle qui servait de fond au sceau est retiree : il y a
+       maintenant un vrai horizon derriere lui, un lac et des monts. Un faux
+       fond pose a quinze unites derriere un objet est une bequille ; des qu'on
+       a un monde, il devient un rectangle lumineux qu'on voit pour ce qu'il
+       est. */
 
     const b = new THREE.Box3().setFromObject(groupe);
     const c = b.getCenter(new THREE.Vector3()), t = b.getSize(new THREE.Vector3());
     groupe.children.forEach(m => m.geometry.translate(-c.x, -c.y, -c.z));
     groupe.scale.setScalar(6.0 / Math.max(t.x, t.y));
-    groupe.position.set(0, 2.6, 82);
+    groupe.position.set(0, 4.2, 82);
     monde.add(groupe);
     sceau = groupe;
     formesSceau = n;
@@ -1185,6 +1279,7 @@ export async function monterLeVoyage(toile, options = {}) {
       removeEventListener('resize', mesurer);
       removeEventListener('pointermove', suivreMain);
       scene.traverse(o => { o.geometry?.dispose?.(); });
+      paysage.detruire();
       matTige.dispose(); matFeuillage.dispose(); matP.dispose();
       composer.dispose?.();
       rendu.dispose();
