@@ -309,6 +309,7 @@ export function monterLaScene(toile, options = {}) {
       attribute float aLong;      // position de la feuille le long de la tige
       attribute float aDecalage;
       attribute float aGraine;    // pour desynchroniser le frisson
+      attribute float aCase;      // laquelle des deux feuilles de l'image
       varying vec2  vUv;
       varying float vOuverte;
       varying float vGraine;
@@ -317,16 +318,25 @@ export function monterLaScene(toile, options = {}) {
       uniform float uPousse, uTemps;
 
       void main() {
-        /* ══ UNE FEUILLE SUR DEUX EST RETOURNEE ═══════════════════════════
-           On n'a qu'une empreinte, donc cinquante silhouettes rigoureusement
-           identiques, toutes penchees du meme cote. L'oeil ne compte pas les
-           feuilles mais il repere une repetition en une seconde, et des qu'il
-           l'a vue il ne voit plus que ca.
+        /* ══ DEUX EMPREINTES, ET UNE SUR DEUX RETOURNEE ═══════════════════
+           Une seule silhouette repetee cinquante fois se repere en une
+           seconde, et des qu'on l'a vue on ne voit plus qu'elle. L'image
+           porte donc DEUX feuilles cote a cote, tirees de deux modeles
+           differents, et on choisit la case par instance : quatre silhouettes
+           en tout avec le retournement, pour vingt-quatre kilo-octets.
 
-           Retourner la coordonnee horizontale coute un soustraction et donne
-           une seconde feuille, symetrique de la premiere. Avec les tailles et
-           les ports deja tires au sort, la serie devient illisible. */
-        vUv = vec2(aGraine < 0.5 ? 1.0 - uv.x : uv.x, uv.y);
+           LE RETOURNEMENT DOIT PRENDRE LA GEOMETRIE AVEC LUI, et ma premiere
+           version ne retournait que l'image. Le petiole passait alors du bord
+           gauche au bord droit du rectangle pendant que l'origine, elle,
+           restait a gauche : une feuille sur deux se retrouvait accrochee PAR
+           SA POINTE, a une longueur de feuille de sa tige. C'est ce qui
+           donnait ces feuilles qui semblaient flotter dans les vides.
+
+           En retournant aussi la position, le petiole revient sur l'origine
+           et la feuille part de l'autre cote de la tige. */
+        float miroir = aGraine < 0.5 ? -1.0 : 1.0;
+        float u = miroir < 0.0 ? 1.0 - uv.x : uv.x;
+        vUv = vec2((u + aCase) * 0.5, uv.y);
         vGraine = aGraine;
         float seuil = clamp(uPousse * (1.0 + aDecalage) - aDecalage, 0.0, 1.0);
 
@@ -334,7 +344,7 @@ export function monterLaScene(toile, options = {}) {
         // d'attache, puis reste ouverte.
         vOuverte = smoothstep(aLong, aLong + 0.05, seuil);
 
-        vec3 p = position * vOuverte;
+        vec3 p = vec3(position.x * miroir, position.y, position.z) * vOuverte;
         // Un frisson tres lent, pour que rien ne soit jamais parfaitement fixe.
         p.xy += vec2(sin(uTemps * 0.55 + aGraine * 6.28),
                      cos(uTemps * 0.42 + aGraine * 4.13)) * 0.045 * vOuverte;
@@ -406,7 +416,7 @@ export function monterLaScene(toile, options = {}) {
      sans l'attendre. Tant qu'elle n'est pas la, les feuilles se decoupent sur
      une image vide et ne se voient pas, ce qui est exactement ce qu'on veut
      pendant les quelques dizaines de millisecondes que dure l'attente. */
-  new THREE.TextureLoader().load('assets/feuille-empreinte.webp', (tex) => {
+  new THREE.TextureLoader().load('assets/feuilles-empreinte.webp', (tex) => {
     tex.colorSpace = THREE.SRGBColorSpace;
     /* Pas de repetition : la feuille est un sujet decoupe, pas un motif. Si
        l'echantillonnage deborde, il ramene un bout du bord oppose et on
@@ -527,15 +537,16 @@ export function monterLaScene(toile, options = {}) {
      On decale donc la geometrie pour que le coin bas-gauche, la ou l'empreinte
      a son petiole, tombe sur l'origine. L'instance peut alors etre posee
      exactement sur la tige, et le limbe part vers le premier quadrant. La
-     proportion suit celle de l'image, 420 sur 309 : un rectangle carre
+     proportion suit celle d'une case de l'image, 420 sur 320 : un rectangle carre
      etirerait la feuille sans qu'on sache pourquoi elle a l'air fausse. */
-  const LARG_F = 1.36, HAUT_F = 1.0;
+  const LARG_F = 1.31, HAUT_F = 1.0;   /* la proportion d'une case : 420 sur 320 */
   const geoFeuille = new THREE.PlaneGeometry(LARG_F, HAUT_F);
   geoFeuille.translate(LARG_F / 2, HAUT_F / 2, 0);
   const feuilles = new THREE.InstancedMesh(geoFeuille, matFeuille, feuillesPos.length);
   const aLong = new Float32Array(feuillesPos.length);
   const aDec  = new Float32Array(feuillesPos.length);
   const aGrn  = new Float32Array(feuillesPos.length);
+  const aCas  = new Float32Array(feuillesPos.length);
   const mat4 = new THREE.Matrix4();
   const quat = new THREE.Quaternion();
   const haut = new THREE.Vector3(0, 1, 0);
@@ -569,10 +580,15 @@ export function monterLaScene(toile, options = {}) {
     aLong[i] = f.long;
     aDec[i]  = f.decalage;
     aGrn[i]  = Math.random();
+    /* La case est tiree independamment de la graine : la graine sert deja au
+       miroir et a l'epaisseur, et s'en resservir lierait la silhouette au
+       port, ce qui recreerait une regle visible la ou on cherche du desordre. */
+    aCas[i]  = Math.random() < 0.5 ? 0 : 1;
   });
   geoFeuille.setAttribute('aLong', new THREE.InstancedBufferAttribute(aLong, 1));
   geoFeuille.setAttribute('aDecalage', new THREE.InstancedBufferAttribute(aDec, 1));
   geoFeuille.setAttribute('aGraine', new THREE.InstancedBufferAttribute(aGrn, 1));
+  geoFeuille.setAttribute('aCase', new THREE.InstancedBufferAttribute(aCas, 1));
   feuilles.instanceMatrix.needsUpdate = true;
   feuilles.frustumCulled = false;
   groupe.add(feuilles);

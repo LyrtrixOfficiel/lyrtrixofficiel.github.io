@@ -373,7 +373,10 @@ export function monterLeSceau(toile, options = {}) {
     composer.addPass(bloom);
   }
   const dispersion = new ShaderPass(DISPERSION);
-  dispersion.uniforms.uForce.value = petit ? 0.16 : 0.30;
+  /* La dispersion bordait chaque arete d'un arc-en-ciel franc : a trente
+     centiemes on ne voyait plus le verre, on voyait le defaut d'optique. Un
+     prisme se remarque quand on le cherche, il ne se signale pas. */
+  dispersion.uniforms.uForce.value = petit ? 0.11 : 0.18;
   composer.addPass(dispersion);
 
   /* ── Dimensions ───────────────────────────────────────────────────────── */
@@ -473,7 +476,7 @@ export function monterLeSceau(toile, options = {}) {
        lumiere traverse plus loin dans l'epaisseur. */
     matiere.attenuationDistance = 3.2 + survol * 2.2;
     matiere.iridescence = 0.5 + survol * 0.28;
-    dispersion.uniforms.uForce.value = (petit ? 0.16 : 0.30) * (1 + survol * 0.6);
+    dispersion.uniforms.uForce.value = (petit ? 0.11 : 0.18) * (1 + survol * 0.6);
 
     if (!sobre) poussieres.material.uniforms.uTemps.value = t;
     composer.render();
@@ -501,6 +504,16 @@ export function monterLeSceau(toile, options = {}) {
        positions qui n'existent nulle part. Deux fois ce soir j'ai failli
        corriger une mise en page d'apres ces chiffres-la. */
     instruments: { placer: () => instruments?.placer(), bilan: () => instruments?.bilan() },
+    /* Avancer la piece a la main, par le CHEMIN NORMAL. Elle sert quand
+       l'onglet n'est pas au premier plan : le navigateur gele alors les
+       images, l'animation d'arrivee reste a zero, et le sceau se montre de
+       profil et hors cadre. Toute conclusion tiree de cet etat-la est fausse,
+       et j'en ai tire deux ce soir avant de m'en apercevoir. */
+    avancer(images = 120, dt = 1 / 60) {
+      visible = true;
+      for (let i = 0; i < images; i++) peindre(dt);
+      return this.bilan();
+    },
     /* Une toile plein cadre coupe toujours l'observateur : c'est a l'appelant
        de dire quand la section est reellement a l'ecran. Sans ce interrupteur,
        le sceau continue de calculer sa refraction en bas de page. */

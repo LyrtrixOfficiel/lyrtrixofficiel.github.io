@@ -960,10 +960,21 @@ section { position: relative; }
 #toile-sceau {
   /* Plus grand que la section, et decale a droite : le sceau deborde du cadre
      au lieu d'y tenir sagement, et le texte occupe la moitie gauche restee
-     sombre. Un objet qui deborde parait plus grand que le cadre qui l'entoure. */
-  width: min(115%, 1500px);
+     sombre. Un objet qui deborde parait plus grand que le cadre qui l'entoure.
+
+     MAIS IL DOIT RESTER RECONNAISSABLE. A 132 pour cent de la hauteur de la
+     section, la toile faisait mille cent pixels dans une fenetre de sept cent
+     quarante : on n'en voyait que la bande centrale, et le blason se reduisait
+     a deux arcs verts abstraits. Matheo a dit du logo qu'il etait cool ; le
+     couper en deux jusqu'a le rendre meconnaissable, c'est jeter la seule
+     piece dont il ait dit du bien.
+
+     La hauteur est donc bornee par celle de la fenetre, pas seulement par
+     celle de la section : l'objet deborde toujours a droite, il ne sort plus
+     par le haut et par le bas. */
+  width: min(105%, 1320px);
   aspect-ratio: 1 / 1;
-  max-height: 132%;
+  max-height: min(120%, 88svh);
   justify-self: end;
   margin-right: clamp(-14vw, -6vw, 0px);
   opacity: 0;

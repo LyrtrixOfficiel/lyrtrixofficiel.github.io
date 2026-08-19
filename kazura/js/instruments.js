@@ -132,7 +132,21 @@ export function monterLesInstruments(toile, camera, options = {}) {
 
       const x = (proj.x * 0.5 + 0.5) * r.width;
       const y = (0.5 - proj.y * 0.5) * r.height;
-      const dedans = x > -40 && x < r.width + 40 && y > -40 && y < r.height + 40;
+      /* ══ LA LIMITE EST LA FENETRE, PAS LA TOILE ════════════════════════
+         Une toile peut deborder tres largement l'ecran : celle du sceau fait
+         treize cent vingt pixels et commence a six cent quatre-vingt-dix,
+         donc sa moitie droite est DEHORS. Tant que le module raisonnait sur
+         la toile, il trouvait de la place la ou il n'y en avait pas, et
+         l'etiquette du sceau s'affichait « 41 316 SOMMETS · 5 FOR », coupee
+         net par le bord de la fenetre.
+
+         On travaille donc sur l'INTERSECTION de la toile et de la fenetre,
+         exprimee dans le repere de la toile. Quand la toile tient dans
+         l'ecran, c'est la toile entiere et rien ne change. */
+      const largeurEcran = window.innerWidth || document.documentElement.clientWidth || r.width;
+      const gMin = Math.max(0, -r.left);
+      const gMax = Math.min(r.width, largeurEcran - r.left);
+      const dedans = x > gMin - 40 && x < gMax + 40 && y > -40 && y < r.height + 40;
       const op = dedans ? '1' : '0';
       p.boite.style.opacity = op; p.trait.style.opacity = op; p.croix.style.opacity = op;
       if (!dedans) continue;
@@ -153,10 +167,10 @@ export function monterLesInstruments(toile, camera, options = {}) {
       const longueurTrait = p.longueur > 1 ? p.longueur : r.width * p.longueur;
       const largeurBoite = p.boite.offsetWidth || 90;
       let sens = p.cote === 'gauche' ? -1 : 1;
-      if (sens > 0 && x + longueurTrait + largeurBoite > r.width - 4
-                   && x - longueurTrait - largeurBoite > 4) sens = -1;
-      else if (sens < 0 && x - longueurTrait - largeurBoite < 4
-                        && x + longueurTrait + largeurBoite < r.width - 4) sens = 1;
+      if (sens > 0 && x + longueurTrait + largeurBoite > gMax - 6
+                   && x - longueurTrait - largeurBoite > gMin + 6) sens = -1;
+      else if (sens < 0 && x - longueurTrait - largeurBoite < gMin + 6
+                        && x + longueurTrait + largeurBoite < gMax - 6) sens = 1;
 
       const dx = longueurTrait * sens;
       const dy = (p.vers === 'bas' ? 1 : -1) * r.height * 0.055;
