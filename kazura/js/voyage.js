@@ -28,6 +28,12 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+import { EffectComposer }  from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }      from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { BokehPass }       from 'three/addons/postprocessing/BokehPass.js';
+import { ShaderPass }      from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass }      from 'three/addons/postprocessing/OutputPass.js';
 import { BLASON } from './blason.js';
 
 const JADE   = new THREE.Color('#10B981');
@@ -36,6 +42,136 @@ const VIOLET = new THREE.Color('#7C3AED');
 const NUIT   = new THREE.Color('#04060A');
 
 const alea = (a, b) => a + Math.random() * (b - a);
+
+/* ══ LES RAIS DE LUMIERE ═══════════════════════════════════════════════════
+   Le procede porte un nom savant, diffusion volumetrique, et se resume a une
+   idee simple : on part du point ou se trouve la source, et on etire l'image
+   dans toutes les directions qui s'en eloignent. Ce qui est clair laisse une
+   trainee, ce qui est sombre n'en laisse pas.
+
+   POURQUOI C'EST LE MEILLEUR RAPPORT DE CETTE PAGE. Quand on approche du
+   portail, la lueur qui est derriere lui traverse l'anneau : les rais sortent
+   de l'ouverture et balaient la pierre. On ne peut pas obtenir cela en
+   ajoutant des objets, parce que ce n'est pas un objet, c'est de la lumiere
+   dans de la poussiere. Vingt lignes, et la scene cesse d'etre un rendu pour
+   devenir une prise de vue. */
+const RAIS = {
+  uniforms: {
+    tDiffuse: { value: null },
+    uCentre:  { value: new THREE.Vector2(0.5, 0.5) },
+    uForce:   { value: 0.0 },
+    uDensite: { value: 0.52 },
+    uSeuil:   { value: 0.74 }
+  },
+  vertexShader: /* glsl */`
+    varying vec2 vUv;
+    void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }
+  `,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D tDiffuse;
+    uniform vec2  uCentre;
+    uniform float uForce, uDensite, uSeuil;
+    varying vec2 vUv;
+
+    void main() {
+      vec4 base = texture2D(tDiffuse, vUv);
+      if (uForce < 0.001) { gl_FragColor = base; return; }
+
+      /* Vingt-quatre pas. En dessous on voit les marches, au-dessus on paie
+         sans rien gagner : la trainee est un fondu, pas un detail. */
+      const int PAS = 24;
+      vec2 ecart = (vUv - uCentre) * (uDensite / float(PAS));
+      vec2 p = vUv;
+      float poids = 1.0;
+      vec3 somme = vec3(0.0);
+
+      for (int i = 0; i < PAS; i++) {
+        p -= ecart;
+        vec3 c = texture2D(tDiffuse, p).rgb;
+        /* Seules les zones DEJA claires laissent une trainee. Sans ce seuil,
+           tout l'ecran bave et l'image devient une bouillie laiteuse. */
+        float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+        somme += c * smoothstep(uSeuil, uSeuil + 0.35, l) * poids;
+        poids *= 0.93;
+      }
+      gl_FragColor = vec4(base.rgb + somme * (uForce / float(PAS)), base.a);
+    }
+  `
+};
+
+/* ══ L'ETALONNAGE, LE GRAIN ET LA VIGNETTE ════════════════════════════════
+   La derniere passe, celle qui fait qu'une image ressemble a de la pellicule
+   plutot qu'a une capture d'ecran. Trois choses, dans cet ordre :
+
+   LE GRAIN. Un rendu numerique est PARFAITEMENT propre, et c'est exactement
+   ce qui le trahit. Aucune image tournee n'est propre. Un grain tres fin, qui
+   bouge, suffit a faire douter l'oeil.
+
+   LA VIGNETTE. Tout objectif assombrit ses bords. Sans elle, le cadre est
+   uniforme et le regard n'est pas tenu au centre.
+
+   L'ETALONNAGE. On separe les ombres et les hautes lumieres et on les teinte
+   dans des sens opposes : les ombres vers le bleu-violet, les hautes lumieres
+   vers le jade. C'est la maniere dont on tient une palette au cinema, et
+   c'est ce qui donne a deux plans tres differents l'air d'appartenir au meme
+   film. */
+const ETALON = {
+  uniforms: {
+    tDiffuse: { value: null },
+    uTemps:   { value: 0 },
+    uGrain:   { value: 0.038 },
+    uVignette:{ value: 0.42 },
+    uOmbre:   { value: new THREE.Color(0x1A1533) },
+    uHaute:   { value: new THREE.Color(0xBFF3E0) }
+  },
+  vertexShader: /* glsl */`
+    varying vec2 vUv;
+    void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }
+  `,
+  fragmentShader: /* glsl */`
+    precision highp float;
+    uniform sampler2D tDiffuse;
+    uniform float uTemps, uGrain, uVignette;
+    uniform vec3 uOmbre, uHaute;
+    varying vec2 vUv;
+
+    /* Un hachage a partir de la PARTIE FRACTIONNAIRE, jamais un sinus
+       multiplie par un grand nombre : loin de l'origine, cette formule-la
+       s'effondre en taches de cinquante pixels. Deja paye une fois. */
+    float bruit(vec2 p) {
+      vec3 q = fract(vec3(p.xyx) * 0.1031);
+      q += dot(q, q.yzx + 33.33);
+      return fract((q.x + q.y) * q.z);
+    }
+
+    void main() {
+      vec3 col = texture2D(tDiffuse, vUv).rgb;
+
+      float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      /* ══ ON TEINTE, ON N'ECRASE PAS ══════════════════════════════════════
+         Ma premiere version multipliait les ombres par la couleur de teinte :
+         un facteur de zero virgule deux sur tout ce qui etait sombre, donc la
+         quasi-totalite d'une scene de nuit. L'image entiere est tombee au
+         noir, il n'est reste que les reflets speculaires, et le portail de
+         pierre s'est transforme en eclats blancs sur fond noir.
+
+         Un etalonnage AJOUTE de la couleur la ou il en veut. Il ne retire pas
+         de lumiere : c'est le travail de l'exposition, qui est reglee ailleurs
+         et une seule fois. */
+      float ombre = 1.0 - smoothstep(0.0, 0.30, l);
+      col += uOmbre * ombre * 0.12;
+      col += uHaute * smoothstep(0.55, 1.0, l) * 0.08;
+
+      vec2 c = vUv - 0.5;
+      col *= 1.0 - uVignette * dot(c, c) * (1.0 + dot(c, c));
+
+      col += (bruit(vUv * 1024.0 + fract(uTemps) * 91.7) - 0.5) * uGrain;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `
+};
 
 /* ══ LE RAIL ══════════════════════════════════════════════════════════════
    Une position et un point vise pour chaque temps. Entre deux reperes, on
@@ -52,8 +188,8 @@ const REPERES = [
   { t: 0.52, oeil: [1.20, 2.60, 26.00], vise: [0.2,  2.40, 40.0] },
   { t: 0.66, oeil: [0.20, 2.55, 39.00], vise: [0.0,  2.55, 52.0] },
   { t: 0.78, oeil: [0.00, 2.50, 50.50], vise: [0.0,  2.40, 62.0] },
-  { t: 0.88, oeil: [0.00, 2.60, 60.50], vise: [0.0,  2.60, 74.0] },
-  { t: 1.00, oeil: [1.20, 3.00, 66.50], vise: [0.0,  2.60, 82.0] }
+  { t: 0.88, oeil: [0.00, 2.60, 63.00], vise: [0.0,  2.60, 76.0] },
+  { t: 1.00, oeil: [0.90, 2.80, 71.20], vise: [0.0,  2.60, 82.0] }
 ];
 
 function courbeDe(cle) {
@@ -296,12 +432,28 @@ export async function monterLeVoyage(toile, options = {}) {
         float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
         vec3 L = normalize(vec3(0.45, 0.35, -1.0));
         float dos = pow(clamp(dot(-N, L), 0.0, 1.0), 2.2);
-        vec3 col = uJadeF * 0.16 + uJade * dos * 1.20 + uViolet * fres * 0.20;
+        /* ══ UNE TIGE N'EST PAS EGALE SUR SA LONGUEUR ══════════════════════
+           Elle etait eclairee de la meme facon d'un bout a l'autre, et vingt
+           tiges translucides qui se recouvrent additionnent leurs opacites :
+           sous le halo, elles devenaient des TUBES DE NEON cyan, et elles
+           mangeaient toutes les images du voyage.
+
+           Trois frequences sans rapport simple donnent des passages sombres
+           et des passages clairs qui ne se repetent jamais. C'est ce qui
+           separe une plante d'un tube de verre : la plante a de l'ombre sur
+           elle-meme. */
+        float grain = 0.52
+          + 0.30 * sin(vUv.x * 11.3 + 1.7)
+          + 0.18 * sin(vUv.x * 27.1 + 4.1)
+          + 0.12 * sin(vUv.x * 53.7);
+        grain = clamp(grain, 0.10, 1.0);
+
+        vec3 col = uJadeF * 0.14 + uJade * dos * 0.62 * grain + uViolet * fres * 0.16;
         float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + sin(vUv.x * 2.3) * 0.55)), 14.0);
-        col += uJade * nerv * 0.22;
+        col += uJade * nerv * 0.16 * grain;
         float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
         col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
-        gl_FragColor = vec4(col, clamp(0.09 + fres * 0.26 + dos * 0.34, 0.0, 1.0));
+        gl_FragColor = vec4(col, clamp(0.055 + fres * 0.17 + dos * 0.20 * grain, 0.0, 0.62));
       }
     `
   });
@@ -311,19 +463,32 @@ export async function monterLeVoyage(toile, options = {}) {
      s'ecartent de l'axe du voyage, pour que le regard file vers le portail
      au lieu de se perdre. C'est tout ce que le decor a a faire ici. */
   const feuillesPos = [];
-  const NB_LIANES = petit ? 14 : 38;
+  /* ══ LA DENSITE FAIT LA MOITIE DE L'EFFET ══════════════════════════════
+     Un cadre a moitie noir n'est pas sobre, il est vide. Sur igloo, chaque
+     image est PLEINE : il y a toujours quelque chose au premier plan, quelque
+     chose au fond, et de la matiere entre les deux. C'est cette superposition
+     qui donne la profondeur, bien plus que le brouillard.
+
+     On monte donc a soixante lianes, dont un tiers tres loin et tres pales :
+     elles ne se lisent pas comme des objets, elles font le fond du decor. */
+  const NB_LIANES = petit ? 16 : 44;
   const SEG = petit ? 70 : 130;
   const RAD = petit ? 6 : 9;
 
   for (let i = 0; i < NB_LIANES; i++) {
     const cote = i % 2 ? 1 : -1;
+    /* Un tiers des lianes est repousse tres loin sur les cotes : elles
+       sortent du champ de la mise au point, le flou les dissout, et il reste
+       une masse vegetale sans detail. C'est exactement ce qu'on veut d'un
+       arriere-plan : de la presence, pas de l'information. */
+    const loin = i % 3 === 2;
     /* La moitie des lianes est semee entre zero et cinquante, la ou le
        couloir etait vide entre la feuille et le portail : sans elles, on
        traverse quinze unites sans rien voir passer, et le voyage s'arrete
        alors qu'il continue. */
     const z0 = i % 2 ? alea(-4, 50) : alea(-4, 82);
-    const ecart = alea(4.0, 9.2) * cote;
-    const montee = alea(7, 17);
+    const ecart = (loin ? alea(17, 30) : alea(4.6, 10.0)) * cote;
+    const montee = loin ? alea(16, 30) : alea(7, 17);
     /* ══ UN ALEA PAR LIANE, JAMAIS PAR POINT ══════════════════════════════
        La derive en profondeur etait ecrite `u * alea(-6, 6)` DANS la boucle :
        chaque point de controle recevait donc sa propre derive, tiree au sort
@@ -349,7 +514,7 @@ export async function monterLeVoyage(toile, options = {}) {
       ));
     }
     const courbe = new THREE.CatmullRomCurve3(points);
-    const geo = new THREE.TubeGeometry(courbe, SEG, alea(0.10, 0.30), RAD, false);
+    const geo = new THREE.TubeGeometry(courbe, loin ? Math.round(SEG * 0.5) : SEG, loin ? alea(0.16, 0.36) : alea(0.09, 0.26), loin ? 6 : RAD, false);
 
     const pos = geo.attributes.position, uvs = geo.attributes.uv;
     const centres = new Float32Array(pos.count * 3);
@@ -361,15 +526,54 @@ export async function monterLeVoyage(toile, options = {}) {
     geo.setAttribute('aCentre', new THREE.BufferAttribute(centres, 3));
     monde.add(new THREE.Mesh(geo, matTige));
 
-    const nf = petit ? 7 : 13;
+    const nf = loin ? (petit ? 3 : 6) : (petit ? 7 : 15);
     for (let k = 0; k < nf; k++) {
       const u = 0.1 + (k / nf) * 0.85 + alea(-0.03, 0.03);
       const uc = Math.min(0.999, Math.max(0.001, u));
       feuillesPos.push({
         p: courbe.getPointAt(uc),
         tangente: courbe.getTangentAt(uc),
-        taille: alea(0.55, 1.45)
+        taille: loin ? alea(1.8, 3.4) : alea(0.55, 1.45)
       });
+    }
+  }
+
+  /* ══ LE BOSQUET DE LA FIN ══════════════════════════════════════════════
+     Le dernier plan se jouait dans un cadre noir avec un objet au milieu. Une
+     arrivee doit etre un LIEU, pas un fond de studio : on plante donc une
+     douzaine de lianes autour du sceau, assez ecartees pour ne pas le cacher
+     et assez proches pour le tenir. Elles cadrent, elles donnent l'echelle, et
+     elles disent que la plante est arrivee jusque-la. */
+  for (let i = 0; i < (petit ? 6 : 14); i++) {
+    const ang = (i / (petit ? 6 : 14)) * Math.PI * 2 + alea(-0.2, 0.2);
+    const r0 = alea(6.5, 13.5);
+    const points = [];
+    const N = 32;
+    const ph = alea(0, 6.283), mx = alea(0.7, 1.6);
+    const montee = alea(11, 22);
+    for (let j = 0; j <= N; j++) {
+      const u = j / N;
+      points.push(new THREE.Vector3(
+        Math.cos(ang) * (r0 + Math.sin(u * 2.6 * mx + ph) * 1.9),
+        -5 + u * montee,
+        82 + Math.sin(ang) * (r0 * 0.55) + Math.cos(u * 2.1 + ph) * 2.6 + u * alea(-5, 5)
+      ));
+    }
+    const courbe = new THREE.CatmullRomCurve3(points);
+    const geo = new THREE.TubeGeometry(courbe, petit ? 60 : 110, alea(0.09, 0.24), petit ? 6 : 8, false);
+    const pos = geo.attributes.position, uvs = geo.attributes.uv;
+    const centres = new Float32Array(pos.count * 3);
+    const pc = new THREE.Vector3();
+    for (let v = 0; v < pos.count; v++) {
+      courbe.getPointAt(Math.min(1, Math.max(0, uvs.getX(v))), pc);
+      centres[v * 3] = pc.x; centres[v * 3 + 1] = pc.y; centres[v * 3 + 2] = pc.z;
+    }
+    geo.setAttribute('aCentre', new THREE.BufferAttribute(centres, 3));
+    monde.add(new THREE.Mesh(geo, matTige));
+    for (let k = 0; k < (petit ? 5 : 10); k++) {
+      const u = 0.12 + (k / (petit ? 5 : 10)) * 0.82 + alea(-0.03, 0.03);
+      const uc = Math.min(0.999, Math.max(0.001, u));
+      feuillesPos.push({ p: courbe.getPointAt(uc), tangente: courbe.getTangentAt(uc), taille: alea(0.6, 1.6) });
     }
   }
 
@@ -408,7 +612,7 @@ export async function monterLeVoyage(toile, options = {}) {
      Elles ne decorent pas : elles donnent l'ECHELLE et la vitesse. Sans un
      grain quelconque entre la camera et le sujet, un deplacement de vingt
      unites dans le vide ne se voit pas, et le voyage n'avance plus. */
-  const NB_P = petit ? 400 : 1400;
+  const NB_P = petit ? 700 : 2600;
   const posP = new Float32Array(NB_P * 3), grnP = new Float32Array(NB_P);
   for (let i = 0; i < NB_P; i++) {
     posP[i * 3]     = alea(-16, 16);
@@ -531,23 +735,110 @@ export async function monterLeVoyage(toile, options = {}) {
     poidsPortail = poidsDe('modeles/portail.glb');
   }
 
+  /* ══ LA CHAINE DE POST-TRAITEMENT ══════════════════════════════════════
+     C'est ce qui manquait entierement, et c'est le gouffre entre un rendu et
+     un plan de cinema. Un moteur ne sort jamais une image finie : il sort une
+     matiere premiere, propre, nette partout, sans halo et sans grain. Aucune
+     image tournee n'a jamais eu ces qualites-la, et c'est precisement a cela
+     que l'oeil reconnait du calcul.
+
+     Cinq passes, dans l'ordre ou une salle de montage les poserait :
+
+       1. le rendu de la scene ;
+       2. la PROFONDEUR DE CHAMP. Une camera a une distance de mise au point
+          et tout ce qui n'y est pas se dissout. C'est le procede le plus
+          puissant de la liste : il dit ou regarder sans un mot ;
+       3. les RAIS de lumiere, qui sortent de l'ouverture du portail ;
+       4. le HALO sur ce qui est deja lumineux, tres bas ;
+       5. l'ETALONNAGE, le grain et la vignette.
+
+     Le seuil du halo est haut : un halo qui prend tout lave l'image. Ici il ne
+     doit attraper que la lueur, les eclats de verre et le mot en particules. */
+  const composer = new EffectComposer(rendu);
+  composer.addPass(new RenderPass(scene, camera));
+
+  const flou = new BokehPass(scene, camera, {
+    focus: 3.0, aperture: 0.00016, maxblur: petit ? 0.006 : 0.012
+  });
+  if (!petit) composer.addPass(flou);
+
+  const rais = new ShaderPass(RAIS);
+  composer.addPass(rais);
+
+  /* Le seuil est HAUT. A 0,72 le halo attrapait le corps des tiges et non
+     leurs aretes : vingt tubes translucides qui se recouvrent additionnent
+     leurs opacites, passent le seuil sur toute leur longueur, et la liane
+     devient un tube de neon. Un halo doit prendre les eclats, jamais la
+     matiere. */
+  const halo = new UnrealBloomPass(new THREE.Vector2(1, 1), petit ? 0.34 : 0.48, 0.78, 0.90);
+  composer.addPass(halo);
+
+  const etalon = new ShaderPass(ETALON);
+  etalon.uniforms.uGrain.value = petit ? 0.028 : 0.038;
+  composer.addPass(etalon);
+
+  /* La conversion vers l'espace de l'ecran se fait EN DERNIER, une seule fois.
+     Sans cette passe, la chaine rend en lineaire et toute l'image ressort
+     delavee : c'est la faute la plus frequente quand on ajoute un composer a
+     une scene qui marchait. */
+  composer.addPass(new OutputPass());
+
+  /* Le point vise par la mise au point suit le rail : c'est toujours ce que la
+     camera regarde qui est net. Une mise au point fixe rendrait floue la seule
+     chose qu'on veut montrer des que la camera bouge. */
+  const versLumiere = new THREE.Vector3(0, 2.6, 99);
+
   /* ── Dimensions ─────────────────────────────────────────────────────── */
   function mesurer() {
     const r = toile.getBoundingClientRect();
     const L = Math.max(2, Math.round(r.width)), H = Math.max(2, Math.round(r.height));
     camera.aspect = L / H;
     camera.updateProjectionMatrix();
-    rendu.setPixelRatio(Math.min(devicePixelRatio || 1, petit ? 1.6 : 2));
+    /* ══ ON PLAFONNE LA DEFINITION QUAND IL Y A DU POST-TRAITEMENT ═══════
+       A deux fois la definition de l'ecran, le tampon fait 3415 sur 1222, et
+       CHAQUE passe le retraverse : la profondeur de champ, les rais, le halo,
+       l'etalonnage. C'est quatre fois quatre millions de pixels par image.
+
+       Un plafond a une fois et demie retire quarante-cinq pour cent des pixels
+       sans que rien ne se voie, parce que le grain et le halo mangent de toute
+       facon la nettete du dernier demi-point. La finesse d'un rendu ne se joue
+       pas la, elle se joue dans la matiere. */
+    rendu.setPixelRatio(Math.min(devicePixelRatio || 1, petit ? 1.4 : 1.5));
     rendu.setSize(L, H, false);
+    composer.setSize(L, H);
+    halo.setSize(L, H);
     matP.uniforms.uEchelle.value = H * 0.055;
   }
   mesurer();
   addEventListener('resize', mesurer, { passive: true });
 
+  /* ══ LA CAMERA REPOND A LA MAIN ════════════════════════════════════════
+     Un rail seul donne un train fantome : le parcours est le meme a chaque
+     passage, rien ne depend de celui qui regarde, et l'oeil le sent en trois
+     secondes. Chez igloo, tout repond au curseur, et c'est une bonne moitie
+     de la sensation de jeu video.
+
+     Deux degres de liberte suffisent, et TRES PEU : la camera se decale de
+     quelques dixiemes d'unite selon la position du pointeur, perpendiculaire
+     a sa direction de marche. On ne prend pas la main au visiteur, on lui
+     laisse sentir qu'il tient quelque chose.
+
+     Et par-dessus, une respiration : deux sinus lents et sans rapport, une
+     amplitude minuscule. Aucune camera portee n'est parfaitement immobile, et
+     une camera parfaitement immobile est le signe le plus sur d'un calcul. */
+  const main = { x: 0, y: 0 }, mainVue = { x: 0, y: 0 };
+  const suivreMain = e => {
+    main.x = (e.clientX / Math.max(1, innerWidth)) * 2 - 1;
+    main.y = (e.clientY / Math.max(1, innerHeight)) * 2 - 1;
+  };
+  addEventListener('pointermove', suivreMain, { passive: true });
+
   /* ── L'avancee ──────────────────────────────────────────────────────── */
   let avance = 0, avanceVisee = 0, visible = true, actif = true;
   let dernier = performance.now();
   const pOeil = new THREE.Vector3(), pVise = new THREE.Vector3();
+  const avant = new THREE.Vector3(), lateral = new THREE.Vector3();
+  const HAUT = new THREE.Vector3(0, 1, 0);
 
   function peindre(dt) {
     /* L'avance suit sa consigne avec du retard. Un rail qui colle au
@@ -570,8 +861,26 @@ export async function monterLeVoyage(toile, options = {}) {
        couloir, ce qui est aussi ce qu'on veut. */
     railOeil.getPoint(u, pOeil);
     railVise.getPoint(u, pVise);
+    const a2 = 1 - Math.pow(1 - 0.06, dt * 60);
+    mainVue.x += (main.x - mainVue.x) * a2;
+    mainVue.y += (main.y - mainVue.y) * a2;
+
+    /* Le decalage se fait dans le repere de la MARCHE, pas dans celui du
+       monde : sinon la camera glisse vers le nord quel que soit le sens dans
+       lequel elle avance, et le geste cesse d'avoir un rapport avec l'image. */
+    avant.copy(pVise).sub(pOeil).normalize();
+    lateral.crossVectors(avant, HAUT).normalize();
+
+    const t0 = performance.now() / 1000;
+    const respire = sobre ? 0 : 1;
+    pOeil.addScaledVector(lateral, mainVue.x * 0.55 + Math.sin(t0 * 0.23) * 0.10 * respire);
+    pOeil.y += -mainVue.y * 0.32 + Math.sin(t0 * 0.31) * 0.07 * respire;
+
     camera.position.copy(pOeil);
     camera.lookAt(pVise);
+    /* Le roulis, minuscule et decorrele du reste. C'est ce qui empeche
+       l'horizon d'etre une regle parfaite. */
+    if (!sobre) camera.rotation.z += Math.sin(t0 * 0.17) * 0.010 + mainVue.x * 0.012;
 
     /* ══ LE NOIR DU PREMIER TEMPS ══════════════════════════════════════════
        Le recit dit : « le nom se forme en particules, TRES PRES, DANS LE
@@ -610,7 +919,43 @@ export async function monterLeVoyage(toile, options = {}) {
         sceau.rotation.x = Math.sin(t * 0.11) * 0.10;
       }
     }
-    rendu.render(scene, camera);
+
+    /* ── La mise au point suit le regard ────────────────────────────────── */
+    flou.uniforms.focus.value = Math.max(0.6, camera.position.distanceTo(pVise));
+    /* L'ouverture se referme quand on est loin : de pres, un fond dissous
+       isole le sujet ; de loin, le meme reglage brouillerait tout le decor
+       qu'on vient de traverser. */
+    flou.uniforms.aperture.value = 0.00030 * (1 - avance * 0.62) + 0.00004;
+
+    /* ── Les rais partent de la lueur, quand elle est devant nous ────────── */
+    const p = versLumiere.clone().project(camera);
+    const devant = p.z < 1;
+    rais.uniforms.uCentre.value.set(p.x * 0.5 + 0.5, 0.5 - p.y * 0.5);
+    /* Ils ne s'allument que dans la seconde moitie du voyage, et s'eteignent
+       des que la source sort du cadre : des rais qui viennent d'un point
+       invisible se lisent comme un defaut d'optique, pas comme de la lumiere. */
+    const dedans = devant && Math.abs(p.x) < 1.5 && Math.abs(p.y) < 1.5;
+    /* ══ UN RAI DE LUMIERE EST UNE LUEUR, PAS UN LASER ══════════════════
+       A 1,35 de force et 0,86 d'etalement, la passe tirait un TRAIT VIOLET en
+       travers du cadre : elle prenait le liseré du portail pour une source et
+       l'etirait sur la moitie de l'ecran. Un rai doit se deviner, se perdre
+       dans la poussiere, et disparaitre des qu'on regarde ailleurs.
+
+       On coupe aussi la force quand la source s'ecarte du centre : de biais,
+       une trainee radiale ne ressemble plus a de la lumiere mais a un defaut
+       de capteur. */
+    const centre = 1 - Math.min(1, Math.hypot(p.x, p.y) / 1.1);
+    /* Ils montent a l'approche du portail et S'ETEIGNENT une fois franchi.
+       Leur role est de faire sentir la lumiere qui passe par l'ouverture ;
+       apres, ils n'ont plus d'ouverture a traverser et ils ne font plus que
+       transformer le sceau en etoile. */
+    const monte = Math.min(1, Math.max(0, (avance - 0.44) / 0.20));
+    const descend = 1 - Math.min(1, Math.max(0, (avance - 0.80) / 0.10));
+    const veut = dedans ? monte * descend * 0.44 * centre : 0;
+    rais.uniforms.uForce.value += (veut - rais.uniforms.uForce.value) * 0.08;
+
+    etalon.uniforms.uTemps.value = t;
+    composer.render();
   }
 
   function battre(maintenant) {
@@ -699,16 +1044,42 @@ export async function monterLeVoyage(toile, options = {}) {
   function poserLeSceau() {
     const donnees = new SVGLoader().parse(BLASON);
     const groupe = new THREE.Group();
+    /* ══ AU BOUT DU VOYAGE, LE SCEAU EST MASSIF, PAS TRANSPARENT ═══════════
+       Il etait du meme verre que celui de la page d'accueil, et il y est
+       superbe. Ici il explosait : un materiau a transmission ramene vers
+       l'avant toute la lumiere qui est derriere lui, le halo la reprend, et le
+       flou de profondeur de champ, dont le noyau est carre, etalait la tache
+       en CARRE VIOLET LUMINEUX au milieu du cadre. Trois effets qui exaltent
+       chacun les hautes lumieres se multiplient au lieu de s'additionner.
+
+       Sur l'accueil, le sceau est seul devant un fond calme et sans
+       post-traitement : le verre y a sa place. Au bout du voyage il est vu de
+       loin, devant une couronne de lumiere, a travers toute la chaine. Un
+       corps massif et poli y tient beaucoup mieux : il rend la lumiere sur ses
+       aretes au lieu de la laisser passer, donc le blason se LIT.
+
+       Le meme objet n'appelle pas le meme materiau dans deux mises en scene.
+       C'est de la direction artistique, pas une incoherence. */
     const matiere = new THREE.MeshPhysicalMaterial({
-      /* La couleur de base d'un verre MULTIPLIE la lumiere qui le traverse :
-         une teinte sombre ici et il ne passe plus rien. On tient donc le
-         corps presque blanc et on colore par l'attenuation, qui est faite
-         pour cela. */
-      color: 0xF2FFFA, metalness: 0, roughness: 0.08,
-      transmission: 1, thickness: 2.6, ior: 1.66,
-      attenuationColor: new THREE.Color(0x0FA97A), attenuationDistance: 3.4,
-      iridescence: 0.45, iridescenceIOR: 1.32, iridescenceThicknessRange: [110, 460],
-      envMapIntensity: 2.2, side: THREE.DoubleSide
+      color: 0x0C4436,
+      metalness: 0.05,
+      roughness: 0.30,
+      clearcoat: 1.0,
+      /* ══ UN VERNIS TROP LISSE EST UN MIROIR ══════════════════════════
+         A 0,06 de rugosite, la lampe violette se reflechissait en un point
+         minuscule et extremement lumineux. Le halo l'a repris, le flou l'a
+         etale, et il en restait un CARRE VIOLET sur le blason. Une haute
+         lumiere concentree est toujours le point de depart de ce genre
+         d'accident : en depolissant le vernis, le meme reflet s'etale sur
+         une large plage, ne depasse jamais le seuil du halo, et devient ce
+         qu'il aurait toujours du etre, un lustre. */
+      clearcoatRoughness: 0.30,
+      /* Une emission tres basse pour que le corps ne tombe jamais au noir
+         complet quand rien ne l'eclaire de face. */
+      emissive: new THREE.Color(0x04241C),
+      emissiveIntensity: 1.0,
+      envMapIntensity: 1.15,
+      side: THREE.DoubleSide
     });
     let n = 0;
     for (const chemin of donnees.paths) {
@@ -740,9 +1111,21 @@ export async function monterLeVoyage(toile, options = {}) {
     lueur.width = lueur.height = 256;
     const lx = lueur.getContext('2d');
     const rd = lx.createRadialGradient(128, 128, 6, 128, 128, 128);
-    rd.addColorStop(0.00, '#145846');
-    rd.addColorStop(0.30, '#0B2E27');
-    rd.addColorStop(0.62, '#070F18');
+    /* ══ UN ANNEAU, PAS UN PROJECTEUR ══════════════════════════════════
+       Une lueur pleine derriere un objet de verre le transperce : la
+       transmission ramene toute cette lumiere vers l'avant, le halo la
+       ramasse, et le sceau finissait en TACHE BLANCHE VIOLACEE ou l'on ne
+       distinguait plus le blason.
+
+       Un anneau laisse le centre sombre. Le sceau se detache alors en
+       silhouette avec un liseré tout autour, ce qui est exactement la maniere
+       dont on photographie un objet transparent : on ne l'eclaire pas de
+       face, on eclaire ce qu'il y a derriere lui, en couronne. */
+    rd.addColorStop(0.00, '#050A0C');
+    rd.addColorStop(0.26, '#07120F');
+    rd.addColorStop(0.44, '#0D3A2F');
+    rd.addColorStop(0.60, '#071F1A');
+    rd.addColorStop(0.82, '#050A10');
     rd.addColorStop(1.00, '#04060A');
     lx.fillStyle = rd; lx.fillRect(0, 0, 256, 256);
     const texLueur = new THREE.CanvasTexture(lueur);
@@ -800,8 +1183,10 @@ export async function monterLeVoyage(toile, options = {}) {
       actif = false;
       instruments?.detruire();
       removeEventListener('resize', mesurer);
+      removeEventListener('pointermove', suivreMain);
       scene.traverse(o => { o.geometry?.dispose?.(); });
       matTige.dispose(); matFeuillage.dispose(); matP.dispose();
+      composer.dispose?.();
       rendu.dispose();
     },
     bilan() {
