@@ -39,7 +39,23 @@ const sobre = _forceMouvement === '1' ? false
    chacun de leur cote a partir de la seule adresse : sans quoi le choix garde
    ne les atteindrait pas. Pose AVANT le moindre import dynamique. */
 document.documentElement.dataset.mouvement = sobre ? 'sobre' : 'anime';
-const tactile = matchMedia('(hover: none)').matches;
+/* ══ LE MODE TELEPHONE FORCE ═══════════════════════════════════════════
+   `?telephone=1` fait croire au moteur qu'il tourne sur un vrai telephone :
+   pas de survol, pointeur grossier, peu de memoire.
+
+   POURQUOI CET INTERRUPTEUR EXISTE. Matheo a regarde le site sur son
+   telephone et n'a RIEN vu, alors que tous mes essais passaient. La raison
+   est simple : une fenetre etroite sur un ordinateur n'est pas un telephone.
+   Elle a le survol, elle a de la memoire, elle n'a pas le mouvement reduit.
+   Je testais donc une chose et j'en livrais une autre.
+
+   Cet interrupteur ne change RIEN pour un visiteur : il faut l'ecrire dans
+   l'adresse. Il sert a ce qu'on ne puisse plus jamais livrer un telephone
+   casse sans le savoir. */
+const _telephoneForce = new URLSearchParams(location.search).get('telephone') === '1';
+const tactile = _telephoneForce || matchMedia('(hover: none)').matches;
+const memoireMachine = _telephoneForce ? 2 : (navigator.deviceMemory || 4);
+const coeursMachine  = _telephoneForce ? 4 : (navigator.hardwareConcurrency || 4);
 
 /* VERSION. GitHub Pages garde chaque fichier dix minutes dans le cache du
    navigateur, HTML compris, mais chacun expire pour son compte. Un visiteur qui
@@ -794,13 +810,27 @@ async function monterLaScene3D() {
      On garde un plancher, mais mesure sur l'appareil et non sur sa vitre. Les
      navigateurs qui ne repondent pas passent, parce qu'ils sont sur des
      machines rapides, et la qualite adaptative de la scene rattrape le reste. */
-  const memoire = navigator.deviceMemory || 4;
-  const coeurs  = navigator.hardwareConcurrency || 4;
-  if (memoire <= 2 || coeurs <= 2) { toile.dataset.repli = 'oui'; return; }
+  /* ══ ON ALLEGE, ON NE REMPLACE PAS ═════════════════════════════════════
+     Une machine modeste recevait une PHOTOGRAPHIE a la place du monde. Le
+     site devenait alors une autre chose, beaucoup plus pauvre, et c'est
+     exactement ce que Matheo a vu sur son telephone.
+
+     Un monde a trois lianes vaut infiniment mieux qu'une image fixe : il
+     bouge, il repond, il prouve. On ne garde le repli que pour ce qui ne peut
+     vraiment pas, c'est-a-dire l'absence de WebGL. */
+  const faible = memoireMachine <= 2 || coeursMachine <= 2;
+  if (!document.createElement('canvas').getContext('webgl2')
+      && !document.createElement('canvas').getContext('webgl')) {
+    toile.dataset.repli = 'oui';
+    return;
+  }
 
   try {
     const { monterLaScene } = await import('./scene.js' + VERSION);
-    const scene = monterLaScene(toile);
+    const scene = monterLaScene(toile, { faible });
+    /* Exposee pour pouvoir la regarder depuis la console : sans poignee, une
+       piece qui ne s'affiche pas ne se distingue pas d'une piece absente. */
+    (window.kazura ||= {}).scene = scene;
     const zone = $('[data-scene-zone]') || document.body;
 
     auDefilement(() => {
@@ -917,8 +947,23 @@ async function monterLaNueeSiPresente() {
   if (!toile) { monterLeMotSiPresent(); return; }
 
   const sobre = document.documentElement.dataset.mouvement !== 'anime';
-  const memoire = navigator.deviceMemory || 4;
-  if (sobre || memoire <= 2) { toile.hidden = true; monterLeMotSiPresent(); return; }
+  /* ══ LA NUEE EXISTE SUR TELEPHONE, ET MEME EN MODE SOBRE ═══════════════
+     Elle etait coupee dans les deux cas, et c'est la cause principale du
+     « je n'ai rien vu » de Matheo. Deux erreurs de jugement de ma part.
+
+     UNE PREFERENCE DE MOUVEMENT DEMANDE DE NE PAS AGITER, elle ne demande pas
+     de vider la page. Un mot tenu par des particules IMMOBILES n'est pas une
+     animation, c'est une image, et c'est une bien plus belle image qu'un
+     texte en degrade. On la monte donc, et on la fige.
+
+     ET LA MEMOIRE N'EST PAS LE BON CRITERE. iOS ne publie pas deviceMemory du
+     tout, donc on lisait la valeur par defaut et on decidait sur du vent. Ce
+     qui compte est la CAPACITE REELLE : savoir peindre dans une texture a
+     virgule flottante. Si la machine sait, elle peut ; sinon le mot dessine
+     reprend sa place. On demande a la machine plutot que de la deviner. */
+  const essai = document.createElement('canvas').getContext('webgl2');
+  const sait = !!(essai && essai.getExtension('EXT_color_buffer_float'));
+  if (!sait) { toile.hidden = true; monterLeMotSiPresent(); return; }
 
   try {
     const { monterLaNuee } = await import('./nuee.js' + VERSION);
@@ -928,6 +973,10 @@ async function monterLaNueeSiPresente() {
 
     toile.closest('.mot3d')?.setAttribute('data-prete', 'oui');
     toile.dataset.vive = 'oui';
+
+    /* En mode sobre, la nuee tient le mot et n'en bouge plus. Pas
+       d'abonnement au defilement, donc pas de dispersion. */
+    if (sobre) { nuee.tenir(1); return; }
 
     const hero = toile.closest('.hero') || toile.parentElement;
     auDefilement(() => {

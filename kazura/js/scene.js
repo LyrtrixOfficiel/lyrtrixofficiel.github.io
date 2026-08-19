@@ -36,10 +36,19 @@ export function monterLaScene(toile, options = {}) {
 
   /* Budget adapte a la machine. Sur un telephone on divise tout par deux et
      on coupe le bloom, qui est de loin la passe la plus chere. */
-  const NB_LIANES = petit ? 9 : 18;
-  const SEGMENTS  = petit ? 90 : 160;
-  const RADIAUX   = petit ? 6 : 10;
-  const NB_FEUILLES = petit ? 8 : 15;
+  /* Trois paliers au lieu de deux. Le palier « faible » sert aux machines
+     modestes, qui recevaient jusqu'ici une image fixe a la place du monde :
+     trois lianes qui poussent valent mieux qu'une photographie. */
+  const faible = !!options.faible;
+  /* Huit lianes au palier faible, pas cinq. Le cout d'une liane tient dans
+     ses SEGMENTS et ses cotes, pas dans son existence : on garde donc leur
+     nombre, qui fait la densite, et on rabote leur finesse, que personne ne
+     compte. Cinq lianes donnaient un decor vide, ce qui revenait au meme que
+     l'image fixe qu'on venait de retirer. */
+  const NB_LIANES = faible ? 8 : (petit ? 9 : 18);
+  const SEGMENTS  = faible ? 54 : (petit ? 90 : 160);
+  const RADIAUX   = faible ? 5 : (petit ? 6 : 10);
+  const NB_FEUILLES = faible ? 5 : (petit ? 8 : 15);
   const HAUTEUR   = 60;
 
   const renderer = new THREE.WebGLRenderer({
@@ -50,7 +59,7 @@ export function monterLaScene(toile, options = {}) {
      descendant puis en remontant : chaque pixel coute une dizaine de fois son
      prix. A 1,75 la scene etait deux fois plus chere qu'a 1,25 sans que
      personne ne voie la difference sur un fond sombre et flou. */
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, petit ? 1.2 : 1.35));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, faible ? 1.0 : (petit ? 1.2 : 1.35)));
   renderer.setClearColor(0x04060A, 1);
 
   const scene = new THREE.Scene();
@@ -396,7 +405,7 @@ export function monterLaScene(toile, options = {}) {
   groupe.add(feuilles);
 
   /* ── Spores en suspension ──────────────────────────────────────────── */
-  const NB_SPORES = petit ? 260 : 700;
+  const NB_SPORES = faible ? 140 : (petit ? 260 : 700);
   const posSpores = new Float32Array(NB_SPORES * 3);
   const grnSpores = new Float32Array(NB_SPORES);
   for (let i = 0; i < NB_SPORES; i++) {
