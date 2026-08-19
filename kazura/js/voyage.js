@@ -249,7 +249,12 @@ export async function monterLeVoyage(toile, options = {}) {
   rendu.setClearColor(NUIT, 1);
   rendu.outputColorSpace = THREE.SRGBColorSpace;
   rendu.toneMapping = THREE.ACESFilmicToneMapping;
-  rendu.toneMappingExposure = 1.12;
+  /* L'exposition remonte apres la mise au noir de la vegetation : la regle
+     des quatre-vingts pour cent porte sur la REPARTITION des valeurs, pas sur
+     l'exposition generale. En la laissant basse, le sujet lui-meme devenait
+     invisible et l'image ne disait plus rien, ce qui est l'autre facon de la
+     rater. */
+  rendu.toneMappingExposure = 1.30;
 
   const scene = new THREE.Scene();
   scene.background = NUIT;
@@ -330,6 +335,23 @@ export async function monterLeVoyage(toile, options = {}) {
   const lampeFeuille = new THREE.PointLight(0x6EE7B7, 70, 26, 2);
   lampeFeuille.position.set(3.0, 2.4, 6.5);
   scene.add(lampeFeuille);
+
+  /* ══ LA LAMPE RASANTE DE LA PREMIERE IMAGE ═════════════════════════════
+     L'ouverture montre la feuille de tres pres, dans le noir, pendant que le
+     nom se forme. Matheo a dit de cette image qu'elle n'etait pas jolie, et il
+     avait raison : une feuille eclairee de face est un APLAT. Sa nervation
+     existe pourtant, elle est dans sa carte de relief, en deux mille
+     quarante-huit points de cote.
+
+     Une carte de relief ne se voit QUE si la lumiere arrive presque parallele
+     a la surface : c'est l'angle qui fabrique les micro-ombres, pas la
+     resolution. On pose donc une lampe sur le cote, a la hauteur du limbe,
+     assez pres pour que sa chute soit rapide. Elle ne sert qu'a l'ouverture et
+     s'eteint exactement quand le monde s'allume : deux lumieres pour deux
+     moments, jamais les deux en meme temps. */
+  const rasante = new THREE.PointLight(0xCFF3E6, 60, 17, 2);
+  rasante.position.set(6.8, 3.5, 8.7);
+  scene.add(rasante);
 
   const remplissage = new THREE.DirectionalLight(0xBFE9DA, 0.55);
   remplissage.position.set(-4, 8, 62);
@@ -997,6 +1019,7 @@ export async function monterLeVoyage(toile, options = {}) {
        la. Le noir complet ne serait pas mysterieux, il serait vide. */
     const k = 0.12 + 0.88 * doux;
     lampeFeuille.intensity = 70 * doux;
+    rasante.intensity = 60 * (1 - doux) * (1 - Math.min(1, avance / 0.30));
     cle.intensity = 2.4 * k;
     contre.intensity = 1.9 * k;
     remplissage.intensity = 1.0 * k;

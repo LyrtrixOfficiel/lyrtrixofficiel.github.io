@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=6ec4ca3b72">
+<link rel="stylesheet" href="css/kazura.css?v=938ef632d1">
 
 <script type="importmap">
 { "imports": {
@@ -80,49 +80,92 @@
       rgba(4, 6, 10, .34) 50%, transparent 76%); }
 }
 
-/* ── Les temps ──────────────────────────────────────────────────────────── */
+/* ══ LES TEMPS ════════════════════════════════════════════════════════════
+   Trois defauts corriges d'un coup, tous nommes par Matheo : « le texte que tu
+   mets est toujours au meme endroit, il est assez petit, il change, on voit un
+   pack il change, il n'y a pas d'animation ».
+
+   UN, LA PLACE. Un texte toujours ancre en bas a gauche fait un bandeau : le
+   regard cesse de le chercher et finit par ne plus le lire. Chaque temps a
+   desormais son coin, et le passage de l'un a l'autre fait deplacer l'oeil
+   dans le cadre, ce qui est un mouvement de mise en scene gratuit.
+
+   DEUX, LA TAILLE. Un titre a deux virgule neuf rem sur un monde plein cadre
+   n'est pas un titre, c'est une legende. On passe a quatre virgule six, et le
+   texte devient un element de composition au meme titre que la montagne.
+
+   TROIS, L'ARRIVEE. Un bloc qui apparait d'un coup se lit comme un changement
+   de diapositive, exactement ce que le voyage cherche a ne pas etre. Les mots
+   montent un par un depuis sous une ligne invisible, avec un retard qui
+   s'accumule : le titre s'ECRIT au lieu de se substituer. */
 .acte {
   position: fixed; z-index: 3;
-  left: clamp(1.25rem, 6vw, 7rem);
-  bottom: clamp(3rem, 12vh, 8rem);
-  max-width: 34ch;
+  max-width: 30ch;
   opacity: 0;
-  transform: translateY(1.1rem);
-  transition: opacity .55s var(--doux), transform .55s var(--doux);
+  transition: opacity .5s var(--doux);
   pointer-events: none;
 }
-.acte[data-vu='oui'] { opacity: 1; transform: none; pointer-events: auto; }
+.acte[data-vu='oui'] { opacity: 1; pointer-events: auto; }
 
-.acte--centre {
-  left: 50%; right: auto;
-  transform: translate(-50%, 1.1rem);
-  text-align: center;
-  max-width: 30ch;
-  bottom: clamp(4rem, 16vh, 10rem);
-}
-.acte--centre[data-vu='oui'] { transform: translate(-50%, 0); }
+/* Les quatre coins. Le texte suit l'endroit ou le monde laisse du noir. */
+.acte--premier { left: 50%; transform: translateX(-50%); bottom: clamp(4rem, 18vh, 11rem);
+                 text-align: center; max-width: 44ch; }
+.acte--bg { left: clamp(1.25rem, 6vw, 7rem);  bottom: clamp(3rem, 11vh, 7rem); }
+.acte--hd { right: clamp(1.25rem, 6vw, 7rem); top: clamp(5rem, 16vh, 9rem); text-align: right; }
+.acte--bd { right: clamp(1.25rem, 6vw, 7rem); bottom: clamp(3rem, 11vh, 7rem); text-align: right; }
+.acte--centre { left: 50%; transform: translateX(-50%); bottom: clamp(4rem, 16vh, 10rem);
+                text-align: center; max-width: 26ch; }
 
 .acte__num {
-  font-family: var(--mono); font-size: .62rem; letter-spacing: .18em;
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .2em;
   text-transform: uppercase; color: var(--jade-clair); display: block;
-  margin-bottom: .9rem;
+  margin-bottom: 1.1rem;
+  opacity: 0; transform: translateY(.7rem);
+  transition: opacity .5s var(--doux), transform .5s var(--doux);
 }
+.acte[data-vu='oui'] .acte__num { opacity: 1; transform: none; }
+
 .acte h2 {
-  font-size: clamp(1.6rem, 3.4vw, 2.9rem);
-  line-height: 1.08; margin: 0 0 .8rem;
+  font-size: clamp(2rem, 4.6vw, 4.6rem);
+  line-height: 1.02; margin: 0 0 1.1rem;
+  letter-spacing: -.015em;
 }
+/* ══ LE MOT MONTE DE SOUS SA PROPRE LIGNE ══════════════════════════════════
+   Chaque mot est enferme dans une boite qui coupe ce qui deborde, et le mot
+   commence sous elle. Il n'apparait donc pas : il ENTRE. La difference tient a
+   ce qu'on ne voit jamais son premier instant, ce qui est precisement ce qui
+   distingue un mouvement d'un changement d'etat. */
+.mot { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .06em; }
+.mot > i {
+  display: inline-block; font-style: inherit;
+  transform: translateY(105%);
+  transition: transform .72s cubic-bezier(.19, 1, .22, 1);
+  transition-delay: 0ms;
+}
+.acte[data-vu='oui'] .mot > i {
+  transform: none;
+  /* Le retard s'accumule mot par mot. Quarante-cinq millisecondes : en dessous
+     on ne le percoit pas, au-dessus la phrase se traine et on attend la fin. */
+  transition-delay: calc(var(--i) * 45ms);
+}
+
 .acte p {
-  font-size: clamp(.92rem, 1.15vw, 1.02rem);
-  line-height: 1.72; color: var(--gris); margin: 0;
+  font-size: clamp(.95rem, 1.2vw, 1.12rem);
+  line-height: 1.7; color: var(--gris); margin: 0;
   /* Un texte pose sur un monde sombre n'a pas besoin d'un cartouche : une
      ombre tres large suffit a le decoller du fond sans poser de rectangle. */
   text-shadow: 0 .06em 1.4em rgba(4, 6, 10, .96);
+  opacity: 0; transform: translateY(.8rem);
+  transition: opacity .6s var(--doux) .18s, transform .6s var(--doux) .18s;
 }
+.acte[data-vu='oui'] p { opacity: 1; transform: none; }
 .acte h2 { text-shadow: 0 .06em 1.2em rgba(4, 6, 10, .92); }
 
-/* Le premier temps : le nom est tenu par la nuee, le texte se contente de
-   dire ce qu'on fait. */
-.acte--premier { bottom: clamp(5rem, 22vh, 12rem); }
+.acte .bouton {
+  opacity: 0; transform: translateY(.8rem);
+  transition: opacity .6s var(--doux) .34s, transform .6s var(--doux) .34s;
+}
+.acte[data-vu='oui'] .bouton { opacity: 1; transform: none; }
 
 .voyage__descendez {
   position: fixed; z-index: 3;
@@ -140,11 +183,18 @@
   box-shadow: 0 0 1.2em rgba(16, 185, 129, .7);
 }
 
-@media (max-width: 700px) {
-  .acte { left: 1.1rem; right: 1.1rem; max-width: none; bottom: clamp(4rem, 14vh, 8rem); }
-  .acte--centre { left: 1.1rem; right: 1.1rem; transform: translateY(1.1rem); max-width: none; }
-  .acte--centre[data-vu='oui'] { transform: none; }
-  .voyage__nom { width: 96vw; height: min(26vh, 220px); top: 38%; }
+@media (max-width: 860px) {
+  /* Sur telephone, les quatre coins n'existent plus : la largeur ne permet
+     qu'une colonne. On garde la variation par le HAUT et le BAS, qui reste
+     lisible, et on aligne tout a gauche : un texte long centre se lit mal. */
+  .acte, .acte--premier, .acte--bg, .acte--hd, .acte--bd, .acte--centre {
+    left: 1.15rem; right: 1.15rem; max-width: none; transform: none; text-align: left;
+  }
+  .acte--bg, .acte--bd, .acte--premier { top: auto; bottom: clamp(4rem, 15vh, 9rem); }
+  .acte--hd { bottom: auto; top: clamp(4.5rem, 13vh, 8rem); }
+  .acte--centre { top: auto; bottom: clamp(5rem, 18vh, 10rem); }
+  .acte h2 { font-size: clamp(1.9rem, 8.4vw, 2.9rem); }
+  .voyage__nom { width: 96vw; height: min(26vh, 220px); top: 34%; }
 }
 </style>
 </head>
@@ -178,14 +228,14 @@
        direction artistique. Beblenheim, Alsace.</p>
   </section>
 
-  <section class="acte" data-de="0.15" data-a="0.31">
+  <section class="acte acte--bg" data-de="0.15" data-a="0.31">
     <span class="acte__num">01 · Pueraria montana</span>
     <h2>Le kudzu recouvre ce qu’il touche.</h2>
     <p>Il monte de trente centimètres par jour et ne lâche plus. On lui a pris son
        nom parce qu’un site doit faire pareil : prendre la place, et la garder.</p>
   </section>
 
-  <section class="acte" data-de="0.36" data-a="0.54">
+  <section class="acte acte--hd" data-de="0.36" data-a="0.54">
     <span class="acte__num">02 · Ce que vous regardez</span>
     <h2>Rien de tout ceci n’est une vidéo.</h2>
     <p>Chaque tige, chaque feuille et chaque poussière est calculée sur votre
@@ -193,7 +243,7 @@
        pouvez la traverser.</p>
   </section>
 
-  <section class="acte" data-de="0.60" data-a="0.80">
+  <section class="acte acte--bd" data-de="0.60" data-a="0.80">
     <span class="acte__num">03 · La maquette</span>
     <h2>On vous montre le site avant que vous décidiez.</h2>
     <p>Une maquette complète, à votre nom, avec vos textes et vos photos.
@@ -226,6 +276,28 @@ const actes = [...document.querySelectorAll('.acte')].map(e => ({
 }));
 
 let voyage = null, nuee = null;
+
+/* ══ ON DECOUPE LES TITRES EN MOTS ════════════════════════════════════════
+   Le balisage reste une phrase : c'est lui que lisent les moteurs et les
+   lecteurs d'ecran, et il ne doit surtout pas devenir une liste de mots
+   separes. On le reecrit donc APRES coup, en gardant les espaces entre les
+   boites, et l'element garde son texte d'origine mot pour mot.
+
+   Chaque mot recoit son rang, dont la feuille de style tire son retard. */
+for (const t of document.querySelectorAll('.acte h2')) {
+  const mots = t.textContent.trim().split(/\s+/);
+  t.textContent = '';
+  mots.forEach((mot, i) => {
+    const boite = document.createElement('span');
+    boite.className = 'mot';
+    boite.style.setProperty('--i', String(i));
+    const dedans = document.createElement('i');
+    dedans.textContent = mot;
+    boite.appendChild(dedans);
+    t.appendChild(boite);
+    if (i < mots.length - 1) t.appendChild(document.createTextNode(' '));
+  });
+}
 
 function avancee() {
   const course = document.documentElement.scrollHeight - innerHeight;
