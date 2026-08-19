@@ -1020,7 +1020,7 @@ async function monterLaFeuilleSiPresente() {
 
   try {
     const { monterLaFeuille } = await import('./feuille.js' + VERSION);
-    const f = await monterLaFeuille(toile, { version: VERSION, nom: 'PUERARIA_MONTANA', poidsKo: 2431 });
+    const f = await monterLaFeuille(toile, { version: VERSION, nom: 'PUERARIA_MONTANA' });
     if (!f) { toile.hidden = true; return; }
     (window.kazura ||= {}).feuille = f;
     toile.dataset.prete = 'oui';

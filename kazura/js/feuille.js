@@ -36,7 +36,7 @@ export async function monterLaFeuille(toile, options = {}) {
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, petit ? 1.4 : 1.8));
   renderer.setClearAlpha(0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.55;
+  renderer.toneMappingExposure = 1.18;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 60);
@@ -47,11 +47,23 @@ export async function monterLaFeuille(toile, options = {}) {
      tres bas. C'est tout. La lecon d'igloo est qu'une seule condition
      d'eclairage, tenue jusqu'au bout, bat trois eclairages qui se disputent :
      ce qui donne le realisme est la COHERENCE, pas la quantite de lampes. */
-  const cle = new THREE.DirectionalLight(0xFFF6E8, 4.2);
-  cle.position.set(-2.2, 3.0, 3.4);
+  /* ══ LA CLE ETAIT CHAUDE, ET LA FEUILLE SORTAIT TILLEUL ════════════════
+     Une lampe a 0xFFF6E8, c'est-a-dire creme, sur un albedo deja jaune-vert :
+     le modele ressortait vert tilleul au milieu d'un site jade et violet. Il
+     avait l'air pose la, venu d'ailleurs, ce qui est exactement l'impression
+     qu'on cherche a eviter quand on montre son propre savoir-faire.
+
+     On ne touche PAS a la texture pour cela. C'est la matiere du modele, elle
+     est juste, et la retoucher serait mentir sur ce qu'on sait produire. On
+     change la LAMPE, ce qui est le geste d'un eclairagiste et non d'un
+     retoucheur, et la feuille rentre dans la palette en gardant ses veines. */
+  const cle = new THREE.DirectionalLight(0xDCF2FF, 2.5);
+  cle.position.set(-2.8, 2.6, 2.6);
   scene.add(cle);
 
-  const contre = new THREE.DirectionalLight(0x6EE7B7, 4.6);
+  /* Le contre-jour porte tout le sujet : ce qui fait qu'on RECONNAIT une
+     feuille, c'est la lumiere qui la traverse, pas celle qui rebondit dessus. */
+  const contre = new THREE.DirectionalLight(0x6EE7B7, 5.4);
   contre.position.set(2.6, 1.2, -3.0);
   scene.add(contre);
 
@@ -62,14 +74,32 @@ export async function monterLaFeuille(toile, options = {}) {
   const groupe = new THREE.Group();
   scene.add(groupe);
 
-  let objet = null, triangles = 0, definitionTexture = '';
+  let objet = null, triangles = 0, definitionTexture = '', poidsKo = 0;
+  const fichier = options.fichier || 'modeles/feuille-kudzu.glb';
   try {
-    const gltf = await new GLTFLoader().loadAsync(options.fichier || 'modeles/feuille-kudzu.glb');
+    const gltf = await new GLTFLoader().loadAsync(fichier);
     objet = gltf.scene;
   } catch (e) {
     renderer.dispose();
     return null;
   }
+
+  /* ══ LE POIDS SE MESURE, IL NE S'ECRIT PAS ═════════════════════════════
+     Il etait en dur dans l'appel : 2431 Ko. Le modele a change deux fois
+     depuis, et le chiffre affiche a l'ecran est donc reste faux les deux
+     fois. Une etiquette qui promet des mesures vraies n'a pas le droit de
+     porter une constante que personne ne pense a remettre a jour.
+
+     Le navigateur tient le compte exact des octets recus pour chaque
+     ressource. On le lui demande : rien a telecharger en plus, et le nombre
+     redevient juste tout seul au prochain modele. */
+  try {
+    const e = performance.getEntriesByType('resource')
+      .filter(r => r.name.endsWith(fichier))
+      .pop();
+    if (e && e.encodedBodySize) poidsKo = Math.round(e.encodedBodySize / 1024);
+  } catch (e) { /* pas de chronometrie : on retombe sur la valeur donnee */ }
+  if (!poidsKo) poidsKo = options.poidsKo || 0;
 
   /* On ne fait jamais confiance a l'echelle ni au centre d'un fichier recu. */
   const boite = new THREE.Box3().setFromObject(objet);
@@ -100,6 +130,24 @@ export async function monterLaFeuille(toile, options = {}) {
     if ('metalness' in m) m.metalness = 0;
     if ('roughness' in m) m.roughness = Math.min(1, (m.roughness ?? 1) * 0.86);
     m.envMapIntensity = 1.1;
+
+    /* ══ FAIRE PASSER LA LUMIERE A TRAVERS LE LIMBE ════════════════════════
+       three ne sait pas simuler la diffusion sous la surface, et la
+       transmission de MeshPhysicalMaterial est faite pour le verre : elle
+       refracte au lieu de diffuser, et une feuille refractante ressemble a
+       une feuille en plastique mouille.
+
+       Une emission tres basse qui reprend la texture de base fait le meme
+       office pour ce qu'on en voit : le limbe s'eclaire par l'interieur avec
+       SES nervures et SES accidents, puisque c'est la meme image qui la
+       pilote. Cela coute un echantillonnage de plus et rien d'autre, et cela
+       accorde le grand modele avec le feuillage du decor, qui est eclaire
+       exactement sur ce principe. */
+    if ('emissive' in m) {
+      m.emissive = new THREE.Color(0x0C5540);
+      m.emissiveMap = m.map || null;
+      m.emissiveIntensity = 0.62;
+    }
     m.side = THREE.DoubleSide;   /* une feuille se voit des deux cotes */
     if (m.map?.image) definitionTexture = m.map.image.width + ' × ' + m.map.image.height;
     m.needsUpdate = true;
@@ -155,7 +203,7 @@ export async function monterLaFeuille(toile, options = {}) {
     instruments.poser({
       point: new THREE.Vector3(-l * 0.62, -h * 0.10, 0),
       titre: 'MATIERE',
-      valeur: () => definitionTexture ? definitionTexture + '  ·  ' + (options.poidsKo || 2431) + ' Ko' : (options.poidsKo || 2431) + ' Ko',
+      valeur: () => (definitionTexture ? definitionTexture + '  ·  ' : '') + (poidsKo ? poidsKo.toLocaleString('fr') + ' Ko' : 'poids inconnu'),
       cote: 'gauche'
     });
     instruments.poser({

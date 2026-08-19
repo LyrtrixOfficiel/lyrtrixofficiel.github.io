@@ -308,6 +308,61 @@ export function monterLeSceau(toile, options = {}) {
   sceau.scale.setScalar(k);
   groupe.add(sceau);
 
+  /* ══ LES INSTRUMENTS ═══════════════════════════════════════════════════
+     Trois releves accroches au sceau, qui tournent avec lui. Ce ne sont pas
+     des legendes : ce sont les vraies valeurs de la matiere, relues a chaque
+     image. L'irisation monte quand la souris touche le verre, et le nombre
+     bouge sous les yeux du visiteur. C'est ce lien entre un geste et un
+     chiffre qui donne la sensation d'instrument, bien plus que le rendu.
+
+     `monterLeSceau` n'est pas asynchrone, donc l'import se fait en chaine
+     plutot qu'en attente : la piece doit peindre sa premiere image sans
+     attendre un module d'affichage secondaire. */
+  let instruments = null, majAncres = null;
+  import('./instruments.js' + (options.version || '')).then(({ monterLesInstruments, monterLeCompteur }) => {
+    const compteur = monterLeCompteur();
+    instruments = monterLesInstruments(toile, camera, { dans: toile.parentElement });
+
+    /* Les ancres sont donnees a l'echelle pleine du sceau. Elles seront
+       remultipliees par le facteur d'entree, puis tournees comme le groupe :
+       sans cela l'etiquette reste plantee dans le vide pendant que l'objet
+       pivote, ce qui est exactement l'effet qu'on cherche a eviter. */
+    const ancres = [
+      new THREE.Vector3(1.18, 1.24, 0.30),
+      new THREE.Vector3(-1.34, -0.18, 0.30),
+      new THREE.Vector3(0.78, -1.42, 0.30)
+    ];
+    majAncres = (facteur) => {
+      ancres.forEach((a, i) => {
+        const p = instruments.releve(i);
+        if (p) p.point.copy(a).multiplyScalar(facteur).applyEuler(groupe.rotation).add(groupe.position);
+      });
+    };
+
+    let sommets = 0;
+    groupe.traverse(o => { if (o.geometry) sommets += o.geometry.attributes.position.count; });
+
+    instruments.poser({
+      point: ancres[0].clone(),
+      titre: 'SCEAU_KAZURA',
+      valeur: () => sommets.toLocaleString('fr') + ' sommets  ·  ' + geos.length + ' formes',
+      cote: 'droite'
+    });
+    instruments.poser({
+      point: ancres[1].clone(),
+      titre: 'VERRE',
+      valeur: () => 'indice ' + matiere.ior.toFixed(2) + '  ·  irisation ' + matiere.iridescence.toFixed(2),
+      cote: 'gauche'
+    });
+    instruments.poser({
+      point: ancres[2].clone(),
+      titre: 'CADENCE',
+      valeur: () => compteur.ms() ? compteur.ms().toFixed(1) + ' ms par image' : 'mesure…',
+      cote: 'droite',
+      longueur: 0.17
+    });
+  }).catch(e => console.warn('instruments indisponibles', e));
+
   /* ── Post-traitement ──────────────────────────────────────────────────── */
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -412,6 +467,7 @@ export function monterLeSceau(toile, options = {}) {
     groupe.rotation.x = vu.x + (sobre ? 0 : Math.sin(t * 0.31) * 0.07);
     groupe.position.y = sobre ? 0 : Math.sin(t * 0.45) * 0.055;
     sceau.scale.setScalar(k * (0.86 + 0.14 * e));
+    if (majAncres) majAncres(0.86 + 0.14 * e);
 
     /* Le verre s'eclaircit quand on le touche : l'attenuation recule, donc la
        lumiere traverse plus loin dans l'epaisseur. */
@@ -438,6 +494,13 @@ export function monterLeSceau(toile, options = {}) {
   requestAnimationFrame(battre);
 
   return {
+    /* La couche d'instruments, exposee pour pouvoir la FORCER a se replacer.
+       Elle se replace d'elle-meme a chaque image, ce qui suffit partout sauf
+       dans un panneau d'essai qui ne compose pas : la, aucune image n'a lieu,
+       les etiquettes restent la ou elles ont ete creees, et on mesure des
+       positions qui n'existent nulle part. Deux fois ce soir j'ai failli
+       corriger une mise en page d'apres ces chiffres-la. */
+    instruments: { placer: () => instruments?.placer(), bilan: () => instruments?.bilan() },
     /* Une toile plein cadre coupe toujours l'observateur : c'est a l'appelant
        de dire quand la section est reellement a l'ecran. Sans ce interrupteur,
        le sceau continue de calculer sa refraction en bas de page. */
@@ -447,6 +510,7 @@ export function monterLeSceau(toile, options = {}) {
     montrer(v) { if (v && !visible) dernier = performance.now(); visible = v; },
     detruire() {
       actif = false;
+      instruments?.detruire();
       window.removeEventListener('resize', mesurer);
       window.removeEventListener('pointermove', suivre);
       groupe.traverse(o => { o.geometry?.dispose?.(); });

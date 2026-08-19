@@ -35,13 +35,24 @@ export function monterLesInstruments(toile, camera, options = {}) {
   hote.appendChild(traits);
 
   const releves = [];
+  let posX = null, posY = null, larg = null, haut = null;
 
   /* ══ POSER UN RELEVE ═══════════════════════════════════════════════════
      `point` est une position dans le monde en trois dimensions. `cote` dit de
      quel bord part l'etiquette, ce qui evite qu'elles se marchent dessus.
      `valeur` est une fonction : elle est rappelee a chaque image, donc un
      releve peut afficher une mesure qui change. */
-  function poser({ point, titre, valeur, cote = 'droite', longueur = 0.14 }) {
+  /* `longueur` : une fraction de la largeur de la toile si elle vaut moins de
+     un, un nombre de pixels au-dela. La fraction suffit quand la toile fait la
+     taille de la fenetre ; elle ne suffit plus quand la toile DEBORDE, comme
+     celle de la nuee qui fait deux mille deux cents pixels pour une fenetre de
+     mille cinq cents. Quatorze pour cent d'une toile qui deborde, ce sont trois
+     cents pixels de trait, et l'etiquette part se poser hors de l'ecran.
+
+     `vers` dit de quel cote le coude part. Une etiquette se pose toujours au
+     bout du coude : pour la mettre SOUS un objet, il faut que le coude descende,
+     sinon elle revient se coller sur l'objet qu'elle designe. */
+  function poser({ point, titre, valeur, cote = 'droite', longueur = 0.14, vers = 'haut' }) {
     const boite = document.createElement('div');
     boite.className = 'instrument';
     boite.dataset.cote = cote;
@@ -66,7 +77,7 @@ export function monterLesInstruments(toile, camera, options = {}) {
     traits.appendChild(croix);
     hote.appendChild(boite);
 
-    releves.push({ point: point.clone ? point.clone() : { ...point }, boite, valeur: v, lireValeur: valeur, croix, trait, cote, longueur });
+    releves.push({ point: point.clone ? point.clone() : { ...point }, boite, valeur: v, lireValeur: valeur, croix, trait, cote, longueur, vers });
     return releves[releves.length - 1];
   }
 
@@ -74,6 +85,28 @@ export function monterLesInstruments(toile, camera, options = {}) {
   function placer() {
     const r = toile.getBoundingClientRect();
     if (!r.width || !r.height) return;
+
+    /* LA COUCHE SE CALE SUR LA TOILE, PAS SUR LE PARENT, et cette difference
+       a deja decale toutes les etiquettes d'une pleine largeur d'ecran. La
+       toile du sceau fait cent quinze pour cent de sa section et deborde a
+       droite : un hote pose en inset:0 sur le parent n'a alors ni la meme
+       origine ni la meme taille que le repere dans lequel on projette, et
+       chaque etiquette se retrouve a cote de ce qu'elle designe.
+
+       On recopie donc la boite de la toile a chaque image. Deux mesures par
+       image, c'est le prix d'un module qui marche dans n'importe quelle mise
+       en page au lieu d'exiger que la toile remplisse exactement son parent. */
+    const hr = hote.offsetParent ? hote.offsetParent.getBoundingClientRect() : { left: 0, top: 0 };
+    const gx = (r.left - hr.left), gy = (r.top - hr.top);
+    if (gx !== posX || gy !== posY || r.width !== larg || r.height !== haut) {
+      posX = gx; posY = gy; larg = r.width; haut = r.height;
+      hote.style.left = gx.toFixed(1) + 'px';
+      hote.style.top = gy.toFixed(1) + 'px';
+      hote.style.width = r.width.toFixed(1) + 'px';
+      hote.style.height = r.height.toFixed(1) + 'px';
+      hote.style.right = 'auto';
+      hote.style.bottom = 'auto';
+    }
 
     /* LA MATRICE DE LA CAMERA EST RAFRAICHIE ICI, et ce n'est pas un detail.
        three ne la recalcule qu'au moment de peindre : si le placement passe
@@ -107,17 +140,39 @@ export function monterLesInstruments(toile, camera, options = {}) {
       /* Le trait part du point, monte en biais, puis file a l'horizontale.
          Deux segments, jamais une courbe : une courbe fait organique, or on
          veut un instrument. */
-      const sens = p.cote === 'gauche' ? -1 : 1;
-      const dx = r.width * p.longueur * sens;
-      const dy = -r.height * 0.055;
+      /* ══ LE COUDE BASCULE PLUTOT QUE DE SORTIR ═════════════════════════
+         Le cote est un choix de composition, pas une contrainte : il sert a
+         ce que deux etiquettes ne se marchent pas dessus. Mais sur une toile
+         etroite, un cote impose envoie l'etiquette contre le bord, ou dehors.
+         Sur telephone, deux d'entre elles se collaient a zero pixel du bord
+         gauche, ou elles se lisent mal et ou elles ont l'air tombees.
+
+         On mesure donc la place disponible et on part de l'autre cote quand
+         il n'y en a pas. Une etiquette qui change de cote reste lisible ; une
+         etiquette hors cadre ne dit plus rien du tout. */
+      const longueurTrait = p.longueur > 1 ? p.longueur : r.width * p.longueur;
+      const largeurBoite = p.boite.offsetWidth || 90;
+      let sens = p.cote === 'gauche' ? -1 : 1;
+      if (sens > 0 && x + longueurTrait + largeurBoite > r.width - 4
+                   && x - longueurTrait - largeurBoite > 4) sens = -1;
+      else if (sens < 0 && x - longueurTrait - largeurBoite < 4
+                        && x + longueurTrait + largeurBoite < r.width - 4) sens = 1;
+
+      const dx = longueurTrait * sens;
+      const dy = (p.vers === 'bas' ? 1 : -1) * r.height * 0.055;
       const cx = x + dx * 0.42, cy = y + dy;
       const fx = x + dx;
+      /* L'ancrage de la boite suit le cote REELLEMENT pris, pas celui demande :
+         sinon l'etiquette bascule et son texte reste aligne a l'envers. */
+      const coteVrai = sens < 0 ? 'gauche' : 'droite';
+      if (p.boite.dataset.cote !== coteVrai) p.boite.dataset.cote = coteVrai;
 
       p.trait.setAttribute('d', 'M ' + x.toFixed(1) + ' ' + y.toFixed(1)
         + ' L ' + cx.toFixed(1) + ' ' + cy.toFixed(1)
         + ' L ' + fx.toFixed(1) + ' ' + cy.toFixed(1));
       p.croix.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')');
 
+      if (p.vers === 'bas' && !p.basPose) { p.boite.dataset.vers = 'bas'; p.basPose = true; }
       p.boite.style.transform = 'translate3d(' + fx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px,0)';
       if (p.lireValeur) {
         const val = p.lireValeur();
@@ -167,7 +222,24 @@ export function monterLeCompteur() {
   let dernier = performance.now(), cumul = 0, images = 0, ms = 0, ips = 0;
   (function battre(t) {
     requestAnimationFrame(battre);
-    cumul += t - dernier; images++; dernier = t;
+    const dt = t - dernier;
+    dernier = t;
+    /* ══ UN ONGLET GELE NE DONNE PAS DE CADENCE ═══════════════════════════
+       Le navigateur suspend les images des qu'un onglet passe en arriere-plan.
+       Au retour, la premiere image porte tout le temps ecoule : deux mille
+       millisecondes, parfois trente mille. Comptees dans la moyenne, elles
+       affichaient « 2111,5 ms par image » sur une page qui tourne en seize.
+
+       Ces intervalles ne sont pas des images lentes, ce sont des images qui
+       n'ont pas eu lieu. On les jette. Deux cents millisecondes est un seuil
+       large : aucune machine ne descend sous cinq images par seconde sans que
+       la page soit de toute facon inutilisable.
+
+       J'ai moi-meme conclu deux fois cette semaine a un probleme de cadence a
+       partir de mesures prises dans un onglet gele. Le compteur du site n'a
+       pas le droit de refaire la meme erreur devant un visiteur. */
+    if (dt > 200) return;
+    cumul += dt; images++;
     if (cumul >= 500) { ms = cumul / images; ips = 1000 / ms; cumul = 0; images = 0; }
   })(dernier);
   return { ms: () => ms, ips: () => ips };

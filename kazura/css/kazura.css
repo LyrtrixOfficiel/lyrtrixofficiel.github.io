@@ -2117,7 +2117,13 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   inset: 0;
   pointer-events: none;
   z-index: 3;
-  overflow: hidden;
+  /* PAS DE ROGNAGE. La couche epouse la toile de sa piece, et une toile ne
+     fait pas toujours la largeur de l'ecran : celle de la feuille en fait
+     620 pixels. Une etiquette posee au bout de son trait deborde alors la
+     boite, et « 2048 x 2048 » s'affichait « x 2048 ». Un instrument qui
+     ampute la mesure qu'il annonce est pire qu'un instrument absent.
+     Le module efface deja lui-meme les releves sortis du cadre. */
+  overflow: visible;
 }
 .instruments__traits {
   position: absolute;
@@ -2161,10 +2167,29 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   translate: -100% -100%;
 }
 .instrument[data-cote='droite'] { translate: 0 -100%; }
+/* Quand le coude descend, l'etiquette se pose SOUS lui : sans cette bascule
+   elle remonte par-dessus son propre trait. */
+.instrument[data-vers='bas'] { translate: 0 0; }
+.instrument[data-cote='gauche'][data-vers='bas'] { translate: -100% 0; }
 .instrument b { display: block; font-weight: 500; }
 .instrument span { display: block; color: var(--jade-clair); }
 
-@media (max-width: 700px) { .instrument { font-size: .5rem; } .instruments { display: none; } }
+/* ══ SUR TELEPHONE, UN SEUL RELEVE ═══════════════════════════════════════
+   La couche entiere etait coupee sous 700 pixels. C'etait jeter le procede
+   qui donne au site sa sensation d'instrument, et le jeter precisement la ou
+   Matheo regarde le plus souvent. Trois etiquettes sur un ecran de quatre
+   cents pixels se marchent dessus, c'est vrai ; une seule tient tres bien, et
+   il en faut UNE pour que le visiteur comprenne qu'il regarde une machine.
+
+   On garde donc le premier releve de chaque piece. Les traits sont ranges par
+   paires dans un seul dessin, un trait puis sa croix, d'ou le comptage par
+   deux : sans lui on garderait le trait de la deuxieme etiquette sans son
+   etiquette, c'est-a-dire un fil qui ne mene nulle part. */
+@media (max-width: 700px) {
+  .instrument { font-size: .53rem; letter-spacing: .07em; }
+  .instruments .instrument:nth-of-type(n+2) { display: none; }
+  .instruments__traits > *:nth-child(n+3) { display: none; }
+}
 
 /* ══ LA FEUILLE ══════════════════════════════════════════════════════════
    Une seule section à la place de trois. Elle est haute parce que le

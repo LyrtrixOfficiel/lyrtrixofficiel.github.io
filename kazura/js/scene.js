@@ -132,6 +132,22 @@ export function monterLaScene(toile, options = {}) {
   const matTige = new THREE.ShaderMaterial({
     transparent: true,
     side: THREE.DoubleSide,
+    /* ══ UN CORPS TRANSPARENT N'ECRIT PAS SA PROFONDEUR ═══════════════════
+       C'etait la vraie cause des « metres-rubans ». Le tube est transparent et
+       double face : chaque tige dessine donc sa paroi avant ET sa paroi
+       arriere. Tant qu'elle ecrivait sa profondeur, la premiere paroi tiree
+       barrait toutes celles qui venaient apres, et l'ordre de tirage est
+       l'ordre des triangles, c'est-a-dire la segmentation du tube. D'ou des
+       barreaux clairs parfaitement reguliers en travers de chaque tige, et
+       des tiges HACHEES EN TRONCONS au lieu de courir d'un bord a l'autre.
+
+       J'avais d'abord accuse la nervure du fragment et je l'ai reecrite. Elle
+       n'y etait pour rien : le defaut suit la geometrie, pas la formule.
+       Verifie en basculant le seul reglage sur la meme image, mêmes lianes.
+
+       Les tiges ne s'occultent plus entre elles. C'est exactement ce qu'on
+       veut : du verre se superpose, il ne se decoupe pas. */
+    depthWrite: false,
     uniforms: {
       uPousse:  { value: 0 },
       uTemps:   { value: 0 },
@@ -144,6 +160,8 @@ export function monterLaScene(toile, options = {}) {
     },
     vertexShader: /* glsl */`
       attribute float aDecalage;   // retard de pousse propre a chaque liane
+      attribute vec3  aCentre;     // le point de l'axe, pour effiler les bouts
+      uniform float uPousse;
       varying vec2  vUv;
       varying vec3  vNormalMonde;
       varying vec3  vVersOeil;
@@ -153,7 +171,25 @@ export function monterLaScene(toile, options = {}) {
       void main() {
         vUv = uv;
         vDecalage = aDecalage;
-        vec4 monde = modelMatrix * vec4(position, 1.0);
+
+        /* Le pincement aux deux bouts. Six centiemes de la longueur suffisent :
+           au-dela la tige devient une aiguille, en deca l'ellipse se voit
+           encore. La base se pince un peu plus court que la pointe, parce
+           qu'une tige sort du sol franchement et finit en fil. */
+        float effile = smoothstep(0.0, 0.035, vUv.x) * smoothstep(1.0, 0.90, vUv.x);
+
+        /* ET LE FRONT DE POUSSE AUSSI. Une tige a mi-croissance est coupee au
+           rasoir par le seuil : au loin on ne voit qu'un bourgeon clair, mais
+           de pres c'est de nouveau une paille sectionnee. Comme le seuil se
+           calcule avec les memes deux valeurs qu'en bas, on peut pincer la
+           tige juste avant lui et elle finit en fil au lieu de finir en tube.
+           Une pousse qui s'affine, c'est ce qu'on voit sur une vraie plante. */
+        float seuilV = clamp(uPousse * (1.0 + aDecalage) - aDecalage, 0.0, 1.0);
+        effile *= smoothstep(seuilV, seuilV - 0.045, vUv.x);
+
+        vec3 pincee = mix(aCentre, position, effile);
+
+        vec4 monde = modelMatrix * vec4(pincee, 1.0);
         vNormalMonde = normalize(mat3(modelMatrix) * normal);
         vVersOeil = normalize(cameraPosition - monde.xyz);
         vec4 vue = viewMatrix * monde;
@@ -192,25 +228,34 @@ export function monterLaScene(toile, options = {}) {
            bloom les lavait, et la scene virait au cyan surexpose. Un verre
            sombre qui ne s'allume que sur ses aretes lit comme du verre.
            (Pas d'accent grave ici : on est dans un gabarit de chaine.) */
-        vec3 col = uJadeF * 0.5;
-        col += uJade   * dos  * 0.85;
-        col += uViolet * fres * 0.60;
+        /* ══ UNE TIGE DE NUIT EST PRESQUE NOIRE ════════════════════════
+           Les trois nombres etaient 0,5 / 0,85 / 0,60, et le resultat etait
+           un faisceau de PAILLES LAVANDE plus claires que le fond, qui
+           passaient devant tout et gagnaient chaque regard. Le violet du
+           Fresnel bordait chaque tige sur toute sa longueur, ce qui n'arrive
+           a aucun corps sombre.
+
+           La regle de la maison veut que presque tout soit noir. Le verre ne
+           s'allume qu'a contre-jour, et le violet redevient un accent qu'on
+           remarque une fois sur dix au lieu d'une teinte de fond. */
+        vec3 col = uJadeF * 0.16;
+        col += uJade   * dos  * 1.20;
+        col += uViolet * fres * 0.20;
 
         // Le bourgeon. A 3.2 il brulait en taches blanches geantes.
         float front = smoothstep(seuil - 0.03, seuil, vUv.x);
-        col += vec3(0.55, 1.00, 0.80) * front * 0.55;
+        col += vec3(0.55, 1.00, 0.80) * front * 0.30;
 
         /* ══ LA NERVURE COURT LE LONG DE LA TIGE ═══════════════════════════
-           Elle etait ecrite sin(vUv.y * PI * 5 + vUv.x * 26), c'est-a-dire
-           qu'elle tournait vingt-six fois AUTOUR de la tige sur sa longueur.
-           Le resultat ne ressemblait pas a une plante mais a un metre-ruban :
-           des barreaux clairs reguliers en travers du tube, sur toute la
-           scene. C'est ce que Matheo voyait sans pouvoir le nommer.
+           Cinq cotes autour de la circonference, qui serpentent tres
+           legerement sur la longueur : sans ce serpentement ce sont des rails.
 
-           Sur une vraie tige, les cotes courent dans le SENS de la longueur.
-           On enleve donc la dependance a vUv.x, qui est l'axe long, et on
-           garde cinq cotes autour de la circonference. Un tres leger
-           serpentement reste, sinon les cotes sont des rails. */
+           Cette formule n'a jamais ete la cause des barreaux, contrairement a
+           ce que j'ai cru en la reecrivant : ils venaient de l'ecriture de
+           profondeur, plus haut. Elle reste quand meme meilleure ainsi, mais
+           la lecon est ailleurs : un defaut PARFAITEMENT regulier suit presque
+           toujours la geometrie ou l'ordre de tirage, pas une formule de
+           couleur. J'aurais du regarder la ou le motif etait deja ecrit. */
         float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + sin(vUv.x * 2.3) * 0.55)), 14.0);
         col += uJade * nerv * 0.22;
 
@@ -222,13 +267,31 @@ export function monterLaScene(toile, options = {}) {
         /* La scene est un DECOR : elle passe derriere le texte, jamais devant.
            Une opacite pleine la faisait rivaliser avec le contenu, une opacite
            trop basse la rendait invisible sur le fond photographique. */
-        float alpha = 0.17 + fres * 0.38 + front * 0.26;
+        float alpha = 0.09 + fres * 0.26 + dos * 0.34 + front * 0.30;
         gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
       }
     `
   });
 
   /* ── Le materiau des feuilles ──────────────────────────────────────── */
+  /* ══ UNE FEUILLE PHOTOGRAPHIEE, PAS UNE FEUILLE DESSINEE ═══════════════
+     Elle etait tracee au shader : deux arcs qui se rejoignent en pointe,
+     centre vert vif, bord violet. Vu de pres, cinquante de ces formes le long
+     de tiges donnaient des YEUX DE CHAT lumineux regulierement espaces. Ce
+     n'est pas un reglage a corriger, c'est une impasse : une silhouette
+     analytique n'aura jamais les asymetries, les nervures secondaires et les
+     accidents de bord qui font qu'on reconnait une feuille.
+
+     C'est la lecon relevee sur igloo.inc, chiffree : 578 Ko de geometrie
+     contre 12 400 Ko de textures. Le realisme vient de la MATIERE.
+
+     L'empreinte fait quatorze kilo-octets. Elle est tiree de notre propre
+     modele de kudzu par outil-empreinte.html, donc c'est la meme feuille en
+     gros plan dans sa section et en decor ici. Rien de generique, rien
+     d'achete, et un seul objet a soigner au lieu de deux. */
+  const empreinteVide = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1);
+  empreinteVide.needsUpdate = true;
+
   const matFeuille = new THREE.ShaderMaterial({
     transparent: true,
     side: THREE.DoubleSide,
@@ -238,6 +301,7 @@ export function monterLaScene(toile, options = {}) {
       uTemps:  { value: 0 },
       uJade:   { value: JADE },
       uViolet: { value: VIOLET },
+      uEmpreinte: { value: empreinteVide },
       uBrouillard: { value: new THREE.Color(0x04060A) },
       uDensite: { value: scene.fog.density }
     },
@@ -249,10 +313,20 @@ export function monterLaScene(toile, options = {}) {
       varying float vOuverte;
       varying float vGraine;
       varying float vProfondeur;
+      varying vec3  vNormalMonde;
       uniform float uPousse, uTemps;
 
       void main() {
-        vUv = uv;
+        /* ══ UNE FEUILLE SUR DEUX EST RETOURNEE ═══════════════════════════
+           On n'a qu'une empreinte, donc cinquante silhouettes rigoureusement
+           identiques, toutes penchees du meme cote. L'oeil ne compte pas les
+           feuilles mais il repere une repetition en une seconde, et des qu'il
+           l'a vue il ne voit plus que ca.
+
+           Retourner la coordonnee horizontale coute un soustraction et donne
+           une seconde feuille, symetrique de la premiere. Avec les tailles et
+           les ports deja tires au sort, la serie devient illisible. */
+        vUv = vec2(aGraine < 0.5 ? 1.0 - uv.x : uv.x, uv.y);
         vGraine = aGraine;
         float seuil = clamp(uPousse * (1.0 + aDecalage) - aDecalage, 0.0, 1.0);
 
@@ -266,6 +340,10 @@ export function monterLaScene(toile, options = {}) {
                      cos(uTemps * 0.42 + aGraine * 4.13)) * 0.045 * vOuverte;
 
         vec4 monde = instanceMatrix * vec4(p, 1.0);
+        /* La normale suit l'instance : sans elle toutes les feuilles seraient
+           eclairees comme si elles etaient parallelles, et le contre-jour,
+           qui est ici la seule source de vert, serait le meme partout. */
+        vNormalMonde = normalize(mat3(modelMatrix) * mat3(instanceMatrix) * vec3(0.0, 0.0, 1.0));
         vec4 vue = viewMatrix * modelMatrix * monde;
         vProfondeur = -vue.z;
         gl_Position = projectionMatrix * vue;
@@ -275,34 +353,68 @@ export function monterLaScene(toile, options = {}) {
       precision highp float;
       uniform vec3  uJade, uViolet, uBrouillard;
       uniform float uTemps, uDensite;
+      uniform sampler2D uEmpreinte;
       varying vec2  vUv;
       varying float vOuverte, vGraine, vProfondeur;
+      varying vec3  vNormalMonde;
 
       void main() {
         if (vOuverte < 0.01) discard;
 
-        /* Silhouette de feuille, dessinee dans le carre : deux arcs qui se
-           rejoignent en pointe. Moins cher qu'une texture, et net a toutes
-           les tailles. */
-        vec2 p = vUv * 2.0 - 1.0;
-        float largeur = (1.0 - p.y * p.y) * 0.72;
-        float d = abs(p.x) - largeur;
-        if (d > 0.0) discard;
+        vec4 t = texture2D(uEmpreinte, vUv);
+        /* Le decoupage se fait au SEUIL, pas en fondu. Un bord qui s'efface
+           sur trois pixels laisse un halo ; cinquante halos qui se recouvrent
+           font exactement le brouillard verdatre qu'on cherche a fuir. */
+        if (t.a < 0.42) discard;
 
-        float bord = smoothstep(0.0, -0.42, d);
-        float nervure = smoothstep(0.05, 0.0, abs(p.x)) * 0.6
-                      + smoothstep(0.035, 0.0, abs(abs(p.x) - largeur * 0.5)) * 0.25;
+        /* La meme lampe que les tiges. Une scene qui a deux lumieres a deux
+           mondes, et l'oeil le voit avant de savoir le nommer. */
+        vec3 N = normalize(vNormalMonde);
+        vec3 L = normalize(vec3(-0.35, 0.55, -1.0));
+        float dos  = pow(clamp(dot(-N, L), 0.0, 1.0), 1.5);
+        float face = clamp(dot(N, L), 0.0, 1.0);
 
-        vec3 col = mix(uJade * 0.30, uJade * 1.25, bord);
-        col += uViolet * (1.0 - bord) * 0.85;
-        col += vec3(0.72, 1.0, 0.88) * nervure * 0.55;
+        /* CE QU'ON VOIT D'UNE FEUILLE LA NUIT, C'EST SA TRANSLUCIDITE. Son
+           albedo reste presque noir ; c'est la lumiere qui la TRAVERSE qui la
+           dessine, et c'est pour cela qu'un feuillage nocturne est vert par
+           plaques et non partout. */
+        /* CHAQUE FEUILLE A SA PROPRE EPAISSEUR. Sans cette variation, toutes
+           celles qui regardent du meme cote ont exactement la meme valeur, et
+           cinquante silhouettes du meme vert plat se lisent comme des
+           AUTOCOLLANTS poses sur l'image. Dans un vrai feuillage, deux
+           feuilles voisines n'ont jamais la meme lumiere : l'une est jeune et
+           laisse passer, l'autre est vieille et bouche. */
+        /* On replie la graine sur elle-meme : sa moitie basse sert deja au
+           miroir, et sans ce repli toutes les feuilles retournees seraient les
+           plus fines du lot, ce qui recreerait la regle qu'on vient d'effacer. */
+        float epaisseur = mix(0.42, 1.75, fract(vGraine * 2.0));
+        float tr = dos * epaisseur;
+
+        vec3 col  = t.rgb * 0.075;
+        col += t.rgb * uJade * 1.95 * tr;
+        col += uViolet * face * 0.10;
 
         float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
         col = mix(col, uBrouillard, clamp(b, 0.0, 1.0));
 
-        gl_FragColor = vec4(col, vOuverte * (0.30 + bord * 0.62));
+        gl_FragColor = vec4(col, vOuverte * clamp(0.24 + tr * 0.60, 0.0, 0.94));
       }
     `
+  });
+
+  /* L'empreinte arrive apres coup : la piece doit peindre sa premiere image
+     sans l'attendre. Tant qu'elle n'est pas la, les feuilles se decoupent sur
+     une image vide et ne se voient pas, ce qui est exactement ce qu'on veut
+     pendant les quelques dizaines de millisecondes que dure l'attente. */
+  new THREE.TextureLoader().load('assets/feuille-empreinte.webp', (tex) => {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    /* Pas de repetition : la feuille est un sujet decoupe, pas un motif. Si
+       l'echantillonnage deborde, il ramene un bout du bord oppose et on
+       obtient une languette de limbe collee au petiole. */
+    tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+    tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    matFeuille.uniforms.uEmpreinte.value = tex;
+    empreinteVide.dispose();
   });
 
   /* ── Generation des lianes ─────────────────────────────────────────── */
@@ -367,6 +479,27 @@ export function monterLaScene(toile, options = {}) {
     // Tiges plus fines : a 0,11 de rayon on obtenait des tuyaux, pas des tiges.
     const geo = new THREE.TubeGeometry(courbe, SEGMENTS, alea(0.085, 0.215), RADIAUX, false);
 
+    /* ══ ON EMPORTE L'AXE DE LA TIGE AVEC LA GEOMETRIE ═══════════════════
+       Un TubeGeometry ouvert laisse voir l'INTERIEUR du tube a ses deux
+       bouts : une ellipse claire, franche, qu'on lit immediatement comme une
+       PAILLE coupee. C'etait le defaut le plus voyant de la scene une fois
+       les barreaux partis.
+
+       Le boucher ne resout rien : un cylindre a fond plat reste un cylindre.
+       Une vraie tige s'effile jusqu'a un point. Pour effiler dans le shader,
+       il faut savoir ou est l'axe : on ramene chaque sommet vers son point de
+       courbe, et le tube se pince. On stocke donc ce point par sommet, une
+       fois pour toutes, au lieu de le recalculer soixante fois par seconde. */
+    const pos = geo.attributes.position;
+    const uvs = geo.attributes.uv;
+    const centres = new Float32Array(pos.count * 3);
+    const pc = new THREE.Vector3();
+    for (let v = 0; v < pos.count; v++) {
+      courbe.getPointAt(Math.min(1, Math.max(0, uvs.getX(v))), pc);
+      centres[v * 3] = pc.x; centres[v * 3 + 1] = pc.y; centres[v * 3 + 2] = pc.z;
+    }
+    geo.setAttribute('aCentre', new THREE.BufferAttribute(centres, 3));
+
     const decalage = alea(0.0, 0.75);
     const dec = new Float32Array(geo.attributes.position.count).fill(decalage);
     geo.setAttribute('aDecalage', new THREE.BufferAttribute(dec, 1));
@@ -385,7 +518,20 @@ export function monterLaScene(toile, options = {}) {
   }
 
   /* ── Les feuilles, en instances ────────────────────────────────────── */
-  const geoFeuille = new THREE.PlaneGeometry(1, 1.5);
+  /* ══ LE PETIOLE EST L'ORIGINE ══════════════════════════════════════════
+     Le rectangle etait centre et son grand cote suivait la tige : les
+     feuilles etaient donc COUCHEES LE LONG de la liane, ce que Matheo a
+     resume par « elles sont collees a la liane, pas terrible ». Une feuille
+     ne longe pas sa tige, elle en sort.
+
+     On decale donc la geometrie pour que le coin bas-gauche, la ou l'empreinte
+     a son petiole, tombe sur l'origine. L'instance peut alors etre posee
+     exactement sur la tige, et le limbe part vers le premier quadrant. La
+     proportion suit celle de l'image, 420 sur 309 : un rectangle carre
+     etirerait la feuille sans qu'on sache pourquoi elle a l'air fausse. */
+  const LARG_F = 1.36, HAUT_F = 1.0;
+  const geoFeuille = new THREE.PlaneGeometry(LARG_F, HAUT_F);
+  geoFeuille.translate(LARG_F / 2, HAUT_F / 2, 0);
   const feuilles = new THREE.InstancedMesh(geoFeuille, matFeuille, feuillesPos.length);
   const aLong = new Float32Array(feuillesPos.length);
   const aDec  = new Float32Array(feuillesPos.length);
@@ -395,13 +541,30 @@ export function monterLaScene(toile, options = {}) {
   const haut = new THREE.Vector3(0, 1, 0);
   const ech  = new THREE.Vector3();
 
+  const axeY = new THREE.Vector3(0, 1, 0);
+  const axeX = new THREE.Vector3(1, 0, 0);
+  const dehors = new THREE.Vector3();
+
   feuillesPos.forEach((f, i) => {
-    quat.setFromUnitVectors(haut, f.tangente.clone().normalize());
-    const tourne = new THREE.Quaternion().setFromAxisAngle(
-      new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2);
-    quat.multiply(tourne);
+    const tan = f.tangente.clone().normalize();
+    /* Le repere local : Y suit la tige, donc la feuille monte en meme temps
+       qu'elle s'ecarte, comme une vraie. */
+    quat.setFromUnitVectors(haut, tan);
+    /* L'azimut : de quel cote de la tige cette feuille sort. Tire au sort,
+       sinon toutes les feuilles d'une meme liane partent du meme cote et la
+       tige a l'air peignee. */
+    const azimut = Math.random() * Math.PI * 2;
+    quat.multiply(new THREE.Quaternion().setFromAxisAngle(axeY, azimut));
+    /* Le port : une feuille jeune se dresse, une feuille agee retombe. Un
+       basculement autour de son propre axe long suffit a donner les deux, et
+       c'est cette variete qui empeche de voir la regle. */
+    quat.multiply(new THREE.Quaternion().setFromAxisAngle(axeX, alea(-0.55, 0.30)));
+
     ech.setScalar(f.taille);
-    mat4.compose(f.p, quat, ech);
+    /* Le petiole se pose sur la PEAU de la tige, pas sur son axe : attache au
+       centre, il disparait dans le tube et la feuille semble en jaillir. */
+    dehors.set(1, 0, 0).applyQuaternion(quat).multiplyScalar(0.13);
+    mat4.compose(f.p.clone().add(dehors), quat, ech);
     feuilles.setMatrixAt(i, mat4);
     aLong[i] = f.long;
     aDec[i]  = f.decalage;
@@ -645,6 +808,11 @@ export function monterLaScene(toile, options = {}) {
   peindre();
 
   return {
+    /* Poignees de service : elles servent a essayer un reglage EN DIRECT dans
+       la page plutot qu'a recharger apres chaque hypothese. Une comparaison
+       faite sur une seule image, toutes choses egales par ailleurs, vaut dix
+       rechargements ou tout a change en meme temps. */
+    _matTige: matTige, _matFeuille: matFeuille, _peindre: () => peindre(),
     /* Appelee par le defilement : 0 en haut de la page, 1 en bas. */
     avancer(p) { progression = Math.min(1, Math.max(0, p)); },
     /* La sonde : elle peint par le chemin normal puis relit le tampon.

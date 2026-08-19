@@ -450,6 +450,23 @@ export async function monterLaNuee(toile, options = {}) {
 
   /* ── Cadre du monde ─────────────────────────────────────────────────── */
   let largeurMonde = 3.2, hauteurMonde = 1.0, definition = 1, dessinees = N;
+
+  /* ══ UN OEIL DE PAPIER, POUR LES INSTRUMENTS ═══════════════════════════
+     La nuee n'a pas de camera : elle projette a la main, en divisant la
+     position du monde par le cadre. C'est une projection orthographique, et
+     une orthographique s'ecrit tres bien sous la forme de matrices que la
+     couche d'instruments sait lire.
+
+     On fabrique donc une camera de papier : identite pour le monde, et une
+     projection qui ne fait que diviser par le cadre. Aucune dependance a
+     three, aucune duplication de la formule de projection, et les etiquettes
+     restent accrochees au mot exactement comme les points le sont.
+
+     Colonnes d'abord, comme partout en OpenGL. */
+  const fauxOeil = {
+    matrixWorldInverse: { elements: [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1] },
+    projectionMatrix:   { elements: [1,0,0,0, 0,1,0,0, 0,0,-0.02,0, 0,0,0,1] }
+  };
   function mesurer() {
     const r = toile.getBoundingClientRect();
     if (!r.width || !r.height) return;
@@ -480,6 +497,8 @@ export async function monterLaNuee(toile, options = {}) {
        dessous, personne ne verrait la difference. */
     const change = Math.abs(neuve - largeurMonde) > largeurMonde * 0.01;
     largeurMonde = neuve;
+    fauxOeil.projectionMatrix.elements[0] = 1 / largeurMonde;
+    fauxOeil.projectionMatrix.elements[5] = 1 / hauteurMonde;
     if (change || !cibleFaite) { poserLaCible(); cibleFaite = true; }
   }
   let cibleFaite = false;
@@ -601,7 +620,57 @@ export async function monterLaNuee(toile, options = {}) {
   }
   requestAnimationFrame(battre);
 
+  /* ══ LES INSTRUMENTS DU MOT ════════════════════════════════════════════
+     Trois releves accroches a la nuee. Le troisieme est le meilleur du site :
+     la cohesion est la consigne que le defilement tourne, et elle passe de
+     zero a un sous les yeux du visiteur pendant que les lettres se forment.
+     Un chiffre qui bouge exactement au rythme de ce qu'on regarde explique
+     la piece sans une phrase de legende.
+
+     Les ancres sont donnees en FRACTIONS du cadre, jamais en unites fixes :
+     le cadre suit la forme de la fenetre, et une ancre figee a 1,2 sortirait
+     du mot sur un ecran etroit pour se planter dans le vide sur un large. */
+  let instruments = null;
+  /* Les ancres sont posees SUR le mot, au bord du dessin, jamais dans le vide :
+     une croix qui ne touche rien ne designe rien. Les deux premieres tiennent
+     l'arete haute des lettres et leur etiquette monte dans le noir au-dessus ;
+     la troisieme tient l'arete basse et la sienne descend.
+
+     Les valeurs sont mesurees sur le releve de la nuee : le mot occupe environ
+     cinquante-cinq centiemes du cadre en largeur, vingt-huit en hauteur. */
+  const ANCRES = [
+    { x:  0.40, y:  0.27, cote: 'droite', vers: 'haut', l: 112 },
+    { x: -0.45, y:  0.27, cote: 'gauche', vers: 'haut', l: 112 },
+    { x:  0.13, y: -0.28, cote: 'droite', vers: 'bas',  l: 128 }
+  ];
+  import('./instruments.js' + (options.version || '')).then(({ monterLesInstruments }) => {
+    instruments = monterLesInstruments(toile, fauxOeil, { dans: toile.parentElement });
+    const point = i => ({ x: ANCRES[i].x * largeurMonde, y: ANCRES[i].y * hauteurMonde, z: 0 });
+    const pose = (i, titre, valeur) => instruments.poser({
+      point: point(i), titre, valeur,
+      cote: ANCRES[i].cote, vers: ANCRES[i].vers, longueur: ANCRES[i].l
+    });
+    pose(0, 'KAZURA_NUEE', () => (allege ? (dessinees / 2) | 0 : dessinees).toLocaleString('fr') + ' particules');
+    pose(1, 'SIMULATION',  () => TAILLE + ' × ' + TAILLE + '  ·  flottant 32 bits');
+    pose(2, 'COHESION',    () => cohesion.toFixed(3));
+    /* Le cadre change avec la fenetre : les ancres se recalculent, sinon
+       elles glissent hors du mot au premier changement de forme. */
+    const recaler = () => ANCRES.forEach((a, i) => {
+      const p = instruments.releve(i);
+      if (p) { p.point.x = a.x * largeurMonde; p.point.y = a.y * hauteurMonde; }
+    });
+    addEventListener('resize', recaler, { passive: true });
+    recaler();
+  }).catch(e => console.warn('instruments indisponibles', e));
+
   return {
+    /* La couche d'instruments, exposee pour pouvoir la FORCER a se replacer.
+       Elle se replace d'elle-meme a chaque image, ce qui suffit partout sauf
+       dans un panneau d'essai qui ne compose pas : la, aucune image n'a lieu,
+       les etiquettes restent la ou elles ont ete creees, et on mesure des
+       positions qui n'existent nulle part. Deux fois ce soir j'ai failli
+       corriger une mise en page d'apres ces chiffres-la. */
+    instruments: { placer: () => instruments?.placer(), bilan: () => instruments?.bilan() },
     /* La consigne, entre zero et un. C'est le seul bouton de la piece, et
        c'est le defilement qui le tourne. */
     tenir(v) { cohesionVisee = Math.max(0, Math.min(1, v)); },
@@ -624,6 +693,7 @@ export async function monterLaNuee(toile, options = {}) {
     ecrire(mot) { motCourant = mot; poserLaCible(); },
     detruire() {
       actif = false;
+      instruments?.detruire();
       oeil.disconnect();
       removeEventListener('pointermove', suivre);
       texPos.concat(texVit, [texCible]).forEach(t => gl.deleteTexture(t));
