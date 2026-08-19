@@ -843,6 +843,102 @@ export async function monterLeVoyage(toile, options = {}) {
       if ('metalness' in mt) mt.metalness = 0;
       if ('roughness' in mt) mt.roughness = Math.min(1, (mt.roughness ?? 1) * 1.05 + 0.08);
       mt.envMapIntensity = 0.85;
+
+      /* ══ ON LAISSE LA MOUSSE ENVAHIR LA PIERRE ═══════════════════════════
+         Le portail etait la seule surface du monde a n'avoir qu'une couleur
+         peinte, uniforme, sans grain. Tant qu'il etait le seul objet eclaire
+         du cadre, ca passait ; entoure d'un sol qui a de la matiere et d'un
+         feuillage photographie, il ressortait TERNE, comme une maquette posee
+         dans un decor.
+
+         Le texte du site dit « un portail de pierre ENVAHI ». On le rend vrai
+         plutot que de l'ecrire : la meme mousse que le sol se depose sur ses
+         faces tournees vers le haut, la ou l'eau stagne et ou la lumiere
+         arrive, et pas sur ses parois verticales, ou rien ne tient. C'est
+         cette regle-la, et non la texture, qui fait qu'on y croit.
+
+         onBeforeCompile plutot qu'un materiau a nous : on garde tout
+         l'eclairage physique de three, ses ombres et son environnement, et on
+         n'ajoute que les quelques lignes qui manquent. Reecrire le materiau
+         entier pour poser de la mousse serait payer mille lignes pour dix. */
+      if (paysage?.mousse) {
+        mt.onBeforeCompile = (nuanceur) => {
+          nuanceur.uniforms.uMousse = { value: paysage.mousse };
+          nuanceur.uniforms.uMousseRelief = { value: paysage.mousseRelief };
+
+          /* Les morceaux injectes sont ecrits en GABARITS DE CHAINE, avec de
+             vrais retours a la ligne. Une premiere version les assemblait par
+             concatenation avec des sequences d'echappement : elles n'ont pas
+             survecu a l'outil qui a ecrit le fichier, les chaines se sont
+             ouvertes sur plusieurs lignes, et toute la piece est tombee sur une
+             erreur de syntaxe. Du code destine a un compilateur GLSL se lit
+             mieux ecrit tel qu'il sera compile. */
+          nuanceur.vertexShader = nuanceur.vertexShader
+            .replace('#include <common>', /* glsl */`
+              #include <common>
+              varying vec3 vPosMonde;
+              varying vec3 vNormMonde;
+            `)
+            .replace('#include <begin_vertex>', /* glsl */`
+              #include <begin_vertex>
+              vPosMonde = (modelMatrix * vec4(transformed, 1.0)).xyz;
+              vNormMonde = normalize(mat3(modelMatrix) * objectNormal);
+            `);
+
+          nuanceur.fragmentShader = nuanceur.fragmentShader
+            .replace('#include <common>', /* glsl */`
+              #include <common>
+              uniform sampler2D uMousse;
+              uniform sampler2D uMousseRelief;
+              varying vec3 vPosMonde;
+              varying vec3 vNormMonde;
+              vec3 triMousse(sampler2D c, vec3 p, vec3 n, float e) {
+                vec3 m = pow(abs(n), vec3(4.0));
+                m /= (m.x + m.y + m.z);
+                return texture2D(c, p.yz * e).rgb * m.x
+                     + texture2D(c, p.xz * e).rgb * m.y
+                     + texture2D(c, p.xy * e).rgb * m.z;
+              }
+            `)
+            .replace('#include <map_fragment>', /* glsl */`
+              #include <map_fragment>
+              vec3 nM = normalize(vNormMonde);
+
+              // La mousse tient sur ce qui regarde le ciel. Le seuil est doux :
+              // une limite nette ferait un autocollant.
+              float versHaut = smoothstep(0.02, 0.55, nM.y);
+
+              // Et elle est INEGALE : une plaque continue sur toute la pierre se
+              // lirait comme une couche de peinture verte. Le bruit vient de la
+              // mousse elle-meme, prise a une echelle beaucoup plus large.
+              float plaques = smoothstep(0.24, 0.58, triMousse(uMousse, vPosMonde, nM, 0.055).g);
+
+              // ══ ELLE POUSSE AUSSI DANS LES CREUX ═══════════════════════
+              // Une arche n'a presque aucune face tournee vers le ciel : en ne
+              // gardant que ce critere, la mousse ne se posait nulle part. Or
+              // sur une ruine, elle prend d'abord dans les JOINTS et les
+              // renfoncements, la ou l'eau reste. On n'a pas d'occlusion
+              // calculee, mais la texture de pierre en porte deja la trace :
+              // ses zones sombres SONT ses creux. On s'en sert.
+              float creux = smoothstep(0.40, 0.10, dot(diffuseColor.rgb, vec3(0.333)));
+              float mou = max(versHaut, creux * 0.85) * plaques;
+
+              vec3 tapis = triMousse(uMousse, vPosMonde, nM, 0.34);
+              diffuseColor.rgb = mix(diffuseColor.rgb, tapis * vec3(0.42, 0.68, 0.48), mou * 0.86);
+
+              // Et un grain de pierre partout, tres faible : c'est ce qui retire
+              // a la surface son aspect de plastique moule.
+              float grain = triMousse(uMousseRelief, vPosMonde, nM, 0.62).b;
+              diffuseColor.rgb *= 0.86 + grain * 0.30;
+            `);
+        };
+        /* Un materiau dont on change le programme doit etre recompile, et
+           three ne le devine pas : sans cette cle il reutilise le programme
+           deja mis en cache pour un materiau identique et l'injection n'a
+           aucun effet, silencieusement. */
+        mt.customProgramCacheKey = () => 'portail-mousse';
+      }
+
       mt.needsUpdate = true;
     });
     portail = new THREE.Group();

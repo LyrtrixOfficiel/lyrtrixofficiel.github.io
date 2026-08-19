@@ -599,6 +599,11 @@ export function monterLePaysage(scene, options = {}) {
        depassee si on la laisse plantee a l'origine, et on voit alors sa
        couture par derriere. */
     suivre(camera) { ciel.position.copy(camera.position); },
+    /* La mousse est exposee : le portail s'en sert pour se laisser envahir.
+       Une seule image pour le sol et pour la pierre, c'est ce qui fait que les
+       deux appartiennent au meme lieu ; deux mousses differentes se
+       remarqueraient immediatement, sans qu'on sache dire pourquoi. */
+    mousse: texSol, mousseRelief: texSolRelief,
     _ciel: ciel, _sol: sol, _lac: lac,
     detruire() {
       scene.remove(groupe);
