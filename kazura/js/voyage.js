@@ -415,24 +415,42 @@ export async function monterLeVoyage(toile, options = {}) {
     transparent: false, side: THREE.DoubleSide, depthWrite: true,
     uniforms: {
       uEmpreinte: { value: empreinteVide }, uTemps: { value: 0 },
+      uFront: { value: -40 },
       uJade: { value: JADE }, uViolet: { value: VIOLET },
       uBrouillard: { value: NUIT }, uDensite: { value: scene.fog.density }
     },
     vertexShader: /* glsl */`
       attribute float aGraine;
       attribute float aCase;
+      attribute float aZ;
       varying vec2 vUv;
       varying float vGraine, vProfondeur;
       varying vec3 vNormalMonde;
-      uniform float uTemps;
+      uniform float uTemps, uFront;
       void main() {
         float miroir = aGraine < 0.5 ? -1.0 : 1.0;
         float u = miroir < 0.0 ? 1.0 - uv.x : uv.x;
         vUv = vec2((u + aCase) * 0.5, uv.y);
         vGraine = aGraine;
-        vec3 p = vec3(position.x * miroir, position.y, position.z);
+
+        /* ══ ELLE S'OUVRE APRES QUE LA TIGE EST PASSEE ═══════════════════
+           Une feuille deja deployee sur une tige qui vient de sortir se voit
+           immediatement comme une erreur. Elle attend donc son point d'attache,
+           puis s'ouvre en un tiers de seconde de parcours, avec un leger
+           depassement d'echelle : c'est ce sursaut qui donne l'impression que
+           quelque chose s'est DEPLIE et non affiche. */
+        float ouvert = clamp((uFront - aZ) * 0.045 - aGraine * 0.55, 0.0, 1.0);
+        if (ouvert < 0.01) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
+        float e = ouvert * ouvert * (3.0 - 2.0 * ouvert);
+        float sursaut = 1.0 + 0.16 * sin(ouvert * 3.14159) * (1.0 - ouvert);
+
+        vec3 p = vec3(position.x * miroir, position.y, position.z) * e * sursaut;
+        /* Le vent : une onde qui remonte le couloir, plus une agitation propre
+           a chaque feuille. Une houle seule est trop reguliere, une agitation
+           seule est du bruit ; les deux ensemble font du vent. */
+        float houle = sin(uTemps * 0.55 - aZ * 0.09) * 0.5 + 0.5;
         p.xy += vec2(sin(uTemps * 0.5 + aGraine * 6.28),
-                     cos(uTemps * 0.4 + aGraine * 4.13)) * 0.05;
+                     cos(uTemps * 0.4 + aGraine * 4.13)) * (0.04 + houle * 0.085);
         vec4 m = instanceMatrix * vec4(p, 1.0);
         vNormalMonde = normalize(mat3(modelMatrix) * mat3(instanceMatrix) * vec3(0.0, 0.0, 1.0));
         vec4 vue = viewMatrix * modelMatrix * m;
@@ -502,19 +520,49 @@ export async function monterLeVoyage(toile, options = {}) {
     transparent: false, side: THREE.DoubleSide, depthWrite: true,
     uniforms: {
       uJade: { value: JADE }, uJadeF: { value: JADE_F }, uViolet: { value: VIOLET },
-      uBrouillard: { value: NUIT }, uDensite: { value: scene.fog.density }
+      uBrouillard: { value: NUIT }, uDensite: { value: scene.fog.density },
+      uFront: { value: -40 }
     },
     vertexShader: /* glsl */`
       attribute vec3 aCentre;
+      attribute float aRetard;
+      uniform float uFront;
       varying vec2 vUv;
       varying vec3 vNormalMonde, vVersOeil;
       varying float vProfondeur;
+      varying float vPousse;
       void main() {
         vUv = uv;
+
+        /* ══ LA LIANE POUSSE DEVANT VOUS ══════════════════════════════════
+           Le milieu du parcours etait un couloir immobile : on avancait, mais
+           il ne SE PASSAIT rien, et Matheo l'avait dit avant meme qu'il y ait
+           un paysage. Un decor fini qu'on traverse n'est pas un evenement.
+
+           Or le sujet du site est une plante qui monte de trente centimetres
+           par jour et recouvre ce qu'elle touche. Les tiges poussent donc au
+           moment ou l'on arrive : le monde se construit devant le voyageur au
+           lieu de l'attendre. C'est la meme information que la phrase du
+           deuxieme temps, mais montree.
+
+           Le front avance avec la camera. Chaque liane a son retard propre,
+           sans quoi elles jailliraient toutes ensemble comme un rideau. */
+        float ouvert = clamp((uFront - aCentre.z) * 0.019 - aRetard, 0.0, 1.0);
+        vPousse = ouvert;
+        if (uv.x > ouvert) {
+          /* Ce qui n'a pas encore pousse est renvoye hors du champ plutot que
+             rejete au fragment : une tige non poussee ne coute alors presque
+             rien, et le decoupage est net au sommet pres. */
+          gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+          return;
+        }
+
         /* Les deux bouts se pincent vers l'axe : un tube ouvert montre son
            interieur, et une ellipse claire au bout d'une tige se lit
-           immediatement comme une PAILLE coupee. */
-        float effile = smoothstep(0.0, 0.04, uv.x) * smoothstep(1.0, 0.90, uv.x);
+           immediatement comme une PAILLE coupee. Le front de pousse se pince
+           aussi : une pousse s'affine, elle ne se coupe pas au rasoir. */
+        float effile = smoothstep(0.0, 0.04, uv.x) * smoothstep(1.0, 0.90, uv.x)
+                     * smoothstep(ouvert, ouvert - 0.05, uv.x);
         vec3 pincee = mix(aCentre, position, effile);
         vec4 m = modelMatrix * vec4(pincee, 1.0);
         vNormalMonde = normalize(mat3(modelMatrix) * normal);
@@ -531,6 +579,7 @@ export async function monterLeVoyage(toile, options = {}) {
       varying vec2 vUv;
       varying vec3 vNormalMonde, vVersOeil;
       varying float vProfondeur;
+      varying float vPousse;
       void main() {
         vec3 N = normalize(vNormalMonde), V = normalize(vVersOeil);
         float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
@@ -562,6 +611,11 @@ export async function monterLeVoyage(toile, options = {}) {
         vec3 col = uJadeF * 0.22
                  + uJade * dos * 0.30 * grain
                  + vec3(0.26, 0.40, 0.50) * fres * 0.13;
+        /* Le bourgeon : la pointe qui vient de sortir est plus claire, comme
+           une pousse tendre. C'est lui qui rend la croissance LISIBLE ; sans
+           lui on ne voit pas que la tige avance, on voit juste qu'elle est
+           plus longue qu'avant. */
+        col += vec3(0.42, 0.90, 0.68) * smoothstep(vPousse - 0.045, vPousse, vUv.x) * 0.55;
         float nerv = pow(abs(sin(vUv.y * 3.14159 * 5.0 + sin(vUv.x * 2.3) * 0.55)), 14.0);
         col += uJade * nerv * 0.09 * grain;
         float b = 1.0 - exp(-uDensite * uDensite * vProfondeur * vProfondeur);
@@ -609,6 +663,7 @@ export async function monterLeVoyage(toile, options = {}) {
        flotte, en dessous elle sort d'un trou. On demande donc au terrain sa
        hauteur a l'endroit exact ou la liane prend racine. */
     const solLiane = hauteurSol(ecart, z0) - 0.6;
+    const retardLiane = alea(0, 0.42);
     /* ══ UN ALEA PAR LIANE, JAMAIS PAR POINT ══════════════════════════════
        La derive en profondeur etait ecrite `u * alea(-6, 6)` DANS la boucle :
        chaque point de controle recevait donc sa propre derive, tiree au sort
@@ -644,6 +699,10 @@ export async function monterLeVoyage(toile, options = {}) {
       centres[v * 3] = pc.x; centres[v * 3 + 1] = pc.y; centres[v * 3 + 2] = pc.z;
     }
     geo.setAttribute('aCentre', new THREE.BufferAttribute(centres, 3));
+    /* Le retard propre a cette liane. Sans lui elles jaillissent toutes au
+       meme instant, comme un rideau qu'on leve, et on voit la mecanique. */
+    const ret = new Float32Array(pos.count).fill(retardLiane);
+    geo.setAttribute('aRetard', new THREE.BufferAttribute(ret, 1));
     monde.add(new THREE.Mesh(geo, matTige));
 
     const nf = loin ? (petit ? 3 : 5) : (petit ? 5 : 9);
@@ -690,6 +749,8 @@ export async function monterLeVoyage(toile, options = {}) {
       centres[v * 3] = pc.x; centres[v * 3 + 1] = pc.y; centres[v * 3 + 2] = pc.z;
     }
     geo.setAttribute('aCentre', new THREE.BufferAttribute(centres, 3));
+    const retB = new Float32Array(pos.count).fill(alea(0, 0.5));
+    geo.setAttribute('aRetard', new THREE.BufferAttribute(retB, 1));
     monde.add(new THREE.Mesh(geo, matTige));
     for (let k = 0; k < (petit ? 5 : 10); k++) {
       const u = 0.12 + (k / (petit ? 5 : 10)) * 0.82 + alea(-0.03, 0.03);
@@ -705,6 +766,7 @@ export async function monterLeVoyage(toile, options = {}) {
   const feuilles = new THREE.InstancedMesh(geoF, matFeuillage, feuillesPos.length);
   const aGrn = new Float32Array(feuillesPos.length);
   const aCas = new Float32Array(feuillesPos.length);
+  const aZed = new Float32Array(feuillesPos.length);
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), ech = new THREE.Vector3();
   const versLeHaut = new THREE.Vector3(0, 1, 0);
   const axeY = new THREE.Vector3(0, 1, 0), axeX = new THREE.Vector3(1, 0, 0);
@@ -722,9 +784,11 @@ export async function monterLeVoyage(toile, options = {}) {
     feuilles.setMatrixAt(i, m4);
     aGrn[i] = Math.random();
     aCas[i] = Math.random() < 0.5 ? 0 : 1;
+    aZed[i] = f.p.z;
   });
   geoF.setAttribute('aGraine', new THREE.InstancedBufferAttribute(aGrn, 1));
   geoF.setAttribute('aCase', new THREE.InstancedBufferAttribute(aCas, 1));
+  geoF.setAttribute('aZ', new THREE.InstancedBufferAttribute(aZed, 1));
   feuilles.instanceMatrix.needsUpdate = true;
   feuilles.frustumCulled = false;
   monde.add(feuilles);
@@ -1229,6 +1293,22 @@ export async function monterLeVoyage(toile, options = {}) {
                  .add(feuilleGeante.position);
       }
     }
+    /* Le front de pousse precede la camera de vingt-deux unites : ce qui
+       pousse doit se voir POUSSER, donc arriver dans le champ juste avant
+       qu'on y soit. Colle a la camera, on ne verrait que du deja-pousse. */
+    /* ══ LE FRONT DOIT ETRE LOIN DEVANT ═══════════════════════════════════
+       A vingt-deux unites d'avance et une croissance lente, tout ce qu'on
+       regardait etait encore a pousser : le couloir se VIDAIT au lieu de se
+       construire. Le front court desormais soixante unites devant, et la
+       croissance est deux fois plus rapide.
+
+       Le reglage juste tient en une phrase : ce qui est au bord du champ doit
+       etre en train de sortir, ce qui est a mi-distance doit avoir fini. On ne
+       montre pas le vide, on montre le geste. */
+    const front = camera.position.z + 60;
+    matTige.uniforms.uFront.value = front;
+    matFeuillage.uniforms.uFront.value = front;
+
     paysage.avancer(t);
     paysage.suivre(camera);
     etalon.uniforms.uTemps.value = t;
