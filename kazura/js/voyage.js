@@ -163,7 +163,8 @@ export async function monterLeVoyage(toile, options = {}) {
   remplissage.position.set(-4, 8, 62);
   scene.add(remplissage);
 
-  scene.add(new THREE.HemisphereLight(0x1E6B57, 0x050A08, 0.9));
+  const ambiance = new THREE.HemisphereLight(0x1E6B57, 0x050A08, 0.9);
+  scene.add(ambiance);
 
   /* ══ UN ENVIRONNEMENT, SINON LA PIERRE N'A RIEN A REFLETER ═════════════
      Un materiau physique se definit par ce qu'il renvoie du monde autour de
@@ -462,7 +463,7 @@ export async function monterLeVoyage(toile, options = {}) {
      le decor et les poussieres pendant que la feuille se telecharge, et elle
      se pose dans un monde deja vivant au lieu d'ouvrir sur un ecran noir. */
   const chargeur = new GLTFLoader();
-  let feuilleGeante = null, portail = null;
+  let feuilleGeante = null, portail = null, matiereFeuille = null;
 
   async function poserFeuille() {
     const g = await chargeur.loadAsync('modeles/feuille-kudzu.glb');
@@ -482,6 +483,7 @@ export async function monterLeVoyage(toile, options = {}) {
         mt.emissive = new THREE.Color(0x0C5540);
         mt.emissiveMap = mt.map || null;
         mt.emissiveIntensity = 0.62;
+        matiereFeuille = mt;
       }
     });
     feuilleGeante = new THREE.Group();
@@ -571,6 +573,33 @@ export async function monterLeVoyage(toile, options = {}) {
     camera.position.copy(pOeil);
     camera.lookAt(pVise);
 
+    /* ══ LE NOIR DU PREMIER TEMPS ══════════════════════════════════════════
+       Le recit dit : « le nom se forme en particules, TRES PRES, DANS LE
+       NOIR ». Or la feuille etait eclairee a pleine puissance des la premiere
+       image, et le nom, fait de particules de jade translucides, devenait
+       parfaitement invisible sur un limbe vert vif. Il etait bien peint : il
+       ne se voyait pas, ce qui est pire, parce qu'aucune sonde ne le signale.
+
+       La lumiere monte donc avec le recul. On ouvre dans le noir, le nom se
+       tient seul, puis la lumiere vient et l'on DECOUVRE qu'on etait pose sur
+       une feuille. C'est le meme geste qu'un fondu depuis le noir, sauf qu'ici
+       ce n'est pas l'image qui s'eclaircit, c'est le monde qui s'allume. */
+    const jour = Math.min(1, Math.max(0, (avance - 0.045) / 0.175));
+    const doux = jour * jour * (3 - 2 * jour);
+    /* On ne baisse pas jusqu'a zero : il reste un huitieme de lumiere, juste
+       assez pour deviner une silhouette et comprendre qu'il y a quelque chose
+       la. Le noir complet ne serait pas mysterieux, il serait vide. */
+    const k = 0.12 + 0.88 * doux;
+    lampeFeuille.intensity = 70 * doux;
+    cle.intensity = 2.4 * k;
+    contre.intensity = 1.9 * k;
+    remplissage.intensity = 1.0 * k;
+    ambiance.intensity = 0.9 * k;
+    if (matiereFeuille) {
+      matiereFeuille.emissiveIntensity = 0.62 * doux;
+      matiereFeuille.envMapIntensity = k;
+    }
+
     const t = performance.now() / 1000;
     if (!sobre) {
       matFeuillage.uniforms.uTemps.value = t;
@@ -608,7 +637,7 @@ export async function monterLeVoyage(toile, options = {}) {
   const ancres = [];
   import('./instruments.js').then(({ monterLesInstruments, monterLeCompteur }) => {
     const compteur = monterLeCompteur();
-    instruments = monterLesInstruments(toile, camera, { dans: toile.parentElement });
+    instruments = monterLesInstruments(toile, camera, { dans: options.releves || toile.parentElement });
 
     const pose = (point, titre, valeur, cote, vers, portee) => {
       ancres.push(point.clone());

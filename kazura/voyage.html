@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=a6b7662ed9">
+<link rel="stylesheet" href="css/kazura.css?v=dba8cab457">
 
 <script type="importmap">
 { "imports": {
@@ -30,6 +30,9 @@
 
 .voyage { position: fixed; inset: 0; z-index: 0; }
 .voyage canvas { display: block; width: 100%; height: 100%; }
+/* Au-dessus du voile, sous le texte : les releves annotent le monde, ils ne
+   disputent pas la lecture d'une phrase. */
+.voyage__releves { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 
 /* La toile du nom, posee par-dessus le monde, pour le premier temps
    seulement. La nuee est un effet plat : elle n'a pas a entrer dans la scene
@@ -46,6 +49,36 @@
    vite pour qu'on ait le temps de regarder ; au-dela, on scrolle dans le
    vide entre deux temps. */
 .voyage__course { height: 900svh; }
+
+/* ══ UN VOILE SOUS LE TEXTE ═══════════════════════════════════════════════
+   Le premier temps se joue sur une feuille eclairee a contre-jour, donc
+   CLAIRE, et le texte du site est gris pale : sur telephone, ou la feuille
+   remplit tout, la phrase d'ouverture devenait illisible.
+
+   Un cartouche derriere le texte poserait un rectangle dans le monde, ce
+   qu'on veut a tout prix eviter. Un voile qui monte du bas ne se voit pas :
+   c'est la meme chose qu'un fondu au noir en bas de cadre, et le cinema en
+   met sous ses sous-titres depuis toujours. */
+.voyage__voile {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  /* Deux voiles superposes. Celui du bas sert au telephone, ou le texte est
+     pleine largeur. Celui de gauche sert au grand ecran, ou le texte occupe
+     une colonne et ou assombrir toute la largeur reviendrait a eteindre
+     l'objet qu'on est venu montrer. */
+  background:
+    linear-gradient(to top,
+      rgba(4, 6, 10, .80) 0%, rgba(4, 6, 10, .58) 20%,
+      rgba(4, 6, 10, .22) 46%, transparent 72%),
+    linear-gradient(to right,
+      rgba(4, 6, 10, .70) 0%, rgba(4, 6, 10, .34) 26%, transparent 52%);
+}
+@media (max-width: 700px) {
+  /* Sur telephone la colonne n'existe plus : seul le voile du bas compte. */
+  .voyage__voile { background: linear-gradient(to top,
+      rgba(4, 6, 10, .90) 0%, rgba(4, 6, 10, .74) 22%,
+      rgba(4, 6, 10, .34) 50%, transparent 76%); }
+}
 
 /* ── Les temps ──────────────────────────────────────────────────────────── */
 .acte {
@@ -120,7 +153,14 @@
 
 <div class="voyage" aria-hidden="true">
   <canvas id="toile-voyage"></canvas>
+  <!-- Les etiquettes vivent DANS la boite de la toile mais au-dessus du
+       voile : posees dans `.voyage`, qui est au fond, elles passaient dessous
+       et s'eteignaient a moitie. Une couche d'instruments n'a d'interet que
+       si elle se lit. -->
+  <div class="voyage__releves" id="releves"></div>
 </div>
+
+<div class="voyage__voile" aria-hidden="true"></div>
 
 <div class="voyage__nom" aria-hidden="true">
   <canvas id="toile-nuee" data-mot="KAZURA"></canvas>
@@ -243,7 +283,7 @@ addEventListener('resize', () => poser(avancee()), { passive: true });
 (async () => {
   try {
     const { monterLeVoyage } = await import('./js/voyage.js');
-    voyage = await monterLeVoyage(toile);
+    voyage = await monterLeVoyage(toile, { releves: document.getElementById('releves') });
     (window.kazura ||= {}).voyage = voyage;
     /* Poignee de service : elle permet d'imposer une position et de verifier
        que TOUT suit, meme quand le navigateur n'envoie pas ses evenements de
@@ -260,6 +300,18 @@ addEventListener('resize', () => poser(avancee()), { passive: true });
     if (nuee) {
       (window.kazura ||= {}).nuee = nuee;
       nuee.tenir(1);
+      /* ══ SANS CETTE LIGNE, LE NOM EST INVISIBLE ══════════════════════════
+         La feuille de style du site tient `#toile-nuee` a opacite zero tant
+         qu'on n'a pas dit qu'elle etait vive. C'est voulu : sur l'accueil, le
+         titre en texte reste seul tant que les particules ne sont pas pretes,
+         et personne ne doit voir un rectangle vide a la place du nom.
+
+         La page du voyage reprend la meme feuille de style et avait oublie de
+         lever ce drapeau. Le mot etait donc calcule, tenu, peint, mesurable a
+         la sonde, et parfaitement invisible : le pire etat possible, parce
+         qu'aucun controle ne le signale. Il a fallu relire la regle CSS pour
+         le trouver. */
+      document.getElementById('toile-nuee').dataset.vive = 'oui';
     }
   } catch (e) { console.warn('nuee indisponible', e); }
 
