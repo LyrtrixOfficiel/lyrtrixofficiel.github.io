@@ -1847,6 +1847,42 @@ a.vitrine:hover .vitrine__lire i { transform: translateX(.42em); }
   box-shadow: 0 0 14px rgba(255, 190, 110, .5);
 }
 
+/* ══ LA VIGNETTE DU VOYAGE ═══════════════════════════════════════════════
+   Meme principe que celle du domaine : rien n'est une image, tout est dessine
+   par la feuille de style. La vignette d'une demonstration qui ne contient
+   aucune photographie ne peut pas etre une photographie, sinon elle contredit
+   ce qu'elle annonce avant meme qu'on ait clique. */
+.vitrine__nuit {
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 100% at 50% 58%, #0B2E27 0%, #071018 46%, #04060A 100%);
+}
+.vitrine__anneau {
+  position: absolute; left: 50%; top: 54%;
+  width: 42%; aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  /* PAS DE BORDURE EN POURCENTAGE : `border-width` ne les accepte pas, la
+     declaration entiere est jetee, et l'anneau de pierre redevenait un fil.
+     Une ombre interieure, elle, se donne en em et epaissit comme il faut. */
+  box-shadow:
+    inset 0 0 0 1.15em #2B3138,
+    inset 0 0 0 1.3em rgba(167, 139, 250, .45),
+    inset 0 0 2.2em rgba(16, 185, 129, .45),
+    0 0 2.4em rgba(16, 185, 129, .30);
+  background: radial-gradient(circle, rgba(20, 88, 70, .95) 0%, rgba(9, 40, 34, .8) 58%, transparent 72%);
+  transition: transform .8s cubic-bezier(.22,1,.36,1);
+}
+a.vitrine:hover .vitrine__anneau { transform: translate(-50%, -50%) scale(1.07); }
+/* Deux lianes qui montent de chaque bord, comme dans la scene. */
+.vitrine__brin {
+  position: absolute; bottom: -8%; width: 1.6%; height: 78%;
+  background: linear-gradient(to top, transparent, #10B981 22%, rgba(16,185,129,.35) 78%, transparent);
+  border-radius: 50%;
+  filter: blur(.4px);
+}
+.vitrine__brin--g { left: 22%; transform: rotate(7deg); }
+.vitrine__brin--d { left: 76%; height: 64%; transform: rotate(-9deg); }
+
 /* ── Le texte ───────────────────────────────────────────────────────────── */
 .vitrine__dire { display: grid; gap: .8rem; align-content: center; padding: clamp(.4rem, 1.4vw, 1.4rem) 0; }
 .vitrine__dire b {
