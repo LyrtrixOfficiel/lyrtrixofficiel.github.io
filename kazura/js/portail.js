@@ -146,15 +146,13 @@ export async function monterLePortail(toile, options = {}) {
   mesurer();
   window.addEventListener('resize', mesurer);
 
-  function battre(maintenant) {
-    if (!actif) return;
-    requestAnimationFrame(battre);
-    /* Plancher a zero : `montrer` peut remettre l'horloge apres l'horodatage
-       de l'image en cours, et une duree negative faisait reculer l'entree. */
-    const dt = Math.min(0.05, Math.max(0, (maintenant - dernier) / 1000));
-    dernier = maintenant;
-    if (!visible) return;
+  /* Le travail d'une image, isole de la boucle qui l'appelle. Un seul chemin
+     de peinture, donc la sonde mesure bien ce que la page dessine. */
+  let horloge = 0;
+  function peindre(dt) {
     jauger(dt);
+    horloge += dt;
+    const maintenant = horloge * 1000;
 
     const a = 1 - Math.pow(1 - 0.10, dt * 60);
     vu.x += (vise.x - vu.x) * a;
@@ -170,6 +168,17 @@ export async function monterLePortail(toile, options = {}) {
     groupe.scale.setScalar(0.9 + 0.1 * e);
 
     renderer.render(scene, camera);
+  }
+
+  function battre(maintenant) {
+    if (!actif) return;
+    requestAnimationFrame(battre);
+    /* Plancher a zero : `montrer` peut remettre l'horloge apres l'horodatage
+       de l'image en cours, et une duree negative faisait reculer l'entree. */
+    const dt = Math.min(0.05, Math.max(0, (maintenant - dernier) / 1000));
+    dernier = maintenant;
+    if (!visible) return;
+    peindre(dt);
   }
   requestAnimationFrame(battre);
 
@@ -220,6 +229,13 @@ export async function monterLePortail(toile, options = {}) {
   }
 
   return {
+    /* La sonde : elle peint par le chemin normal puis relit le tampon.
+       Voir js/sonde.js pour pourquoi elle existe. */
+    async sonder(n = 40) {
+      const { sonderToile } = await import('./sonde.js');
+      visible = true;
+      return sonderToile(renderer, toile, peindre, n);
+    },
     instruments,
     montrer(v) {
       if (v && !visible) dernier = performance.now();

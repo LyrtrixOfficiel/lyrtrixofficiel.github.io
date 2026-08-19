@@ -581,6 +581,12 @@ export async function monterLaNuee(toile, options = {}) {
        c'est le defilement qui le tourne. */
     tenir(v) { cohesionVisee = Math.max(0, Math.min(1, v)); },
     montrer(v) { if (v && !visible) dernier = performance.now(); visible = v; },
+    /* La sonde, partagee avec toutes les pieces. Voir js/sonde.js. */
+    async sonder(n = 40) {
+      const { sonderToile } = await import('./sonde.js');
+      visible = true;
+      return sonderToile(gl, toile, () => { pas(1 / 60); peindre(); }, n);
+    },
     /* La poignee de reglage : elle avance la simulation et peint, par le
        CHEMIN NORMAL. Elle sert quand l'onglet n'est pas au premier plan, cas
        ou le navigateur gele les images et ou la nuee reste figee sur son

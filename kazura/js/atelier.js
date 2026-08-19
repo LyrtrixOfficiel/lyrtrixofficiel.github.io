@@ -210,7 +210,15 @@ export function monterLAtelier(toile) {
      l'instant qu'on lui donne. Sans elle, une toile animee dans un onglet
      d'arriere-plan reste noire et on ne peut rien conclure de ce qu'on voit. */
   (window.kazura ||= {}).atelier = {
-    poser(sec = 3) { visible = true; peindre(sec); }
+    poser(sec = 3) { visible = true; peindre(sec); },
+    /* La sonde. L'atelier n'a pas de boucle a pas de temps : on lui donne un
+       instant, il peint cet instant-la. */
+    async sonder(sec = 6) {
+      const { sonderToile } = await import('./sonde.js');
+      visible = true;
+      let t = sec;
+      return sonderToile(gl, toile, () => { peindre(t); t += 1 / 60; }, 6);
+    }
   };
 
   (function boucle() {

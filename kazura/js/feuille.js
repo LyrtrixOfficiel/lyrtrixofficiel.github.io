@@ -241,39 +241,11 @@ export async function monterLaFeuille(toile, options = {}) {
        puisse la regarder quand les images sont gelees. */
     poser(p, n = 30) { avanceVisee = p; for (let i = 0; i < n; i++) peindre(0.05); return this.bilan(); },
     instruments,
-    /* ══ SONDER L'IMAGE SANS LA VOIR ═══════════════════════════════════════
-       Peint une image par le chemin normal, puis RELIT le tampon et en tire
-       des statistiques : part de la toile qui n'est pas vide, luminosite
-       moyenne, teinte dominante.
-
-       Cette poignee existe parce qu'une capture d'ecran n'est pas toujours
-       possible : le panneau du navigateur ne compose pas toujours, et
-       l'extension tombe. Sans elle, je ne peux pas distinguer « la piece est
-       montee » de « la piece est montee et ne dessine rien », ce qui est
-       exactement la difference entre un site qui marche et un ecran noir. */
-    sonder(n = 40) {
-      for (let i = 0; i < n; i++) peindre(0.05);
-      const gl = renderer.getContext();
-      const L = toile.width, H = toile.height;
-      const px = new Uint8Array(L * H * 4);
-      gl.readPixels(0, 0, L, H, gl.RGBA, gl.UNSIGNED_BYTE, px);
-      let vus = 0, r = 0, v = 0, b = 0, lum = 0;
-      const pas = 4 * 37;                 /* un point sur trente-sept suffit */
-      let n2 = 0;
-      for (let i = 0; i < px.length; i += pas) {
-        n2++;
-        if (px[i + 3] > 8) {
-          vus++; r += px[i]; v += px[i + 1]; b += px[i + 2];
-          lum += (px[i] * 0.2126 + px[i + 1] * 0.7152 + px[i + 2] * 0.0722);
-        }
-      }
-      const part = n2 ? vus / n2 : 0;
-      return {
-        toile: [L, H],
-        partOccupee: +(part * 100).toFixed(1) + ' %',
-        couleurMoyenne: vus ? 'rgb(' + Math.round(r / vus) + ',' + Math.round(v / vus) + ',' + Math.round(b / vus) + ')' : 'rien',
-        luminosite: vus ? +(lum / vus).toFixed(1) : 0
-      };
+    /* La sonde, partagee avec toutes les pieces. Voir js/sonde.js. */
+    async sonder(n = 40) {
+      const { sonderToile } = await import('./sonde.js');
+      visible = true;
+      return sonderToile(renderer, toile, peindre, n);
     },
     detruire() {
       actif = false;

@@ -578,9 +578,15 @@ export function monterLaScene(toile, options = {}) {
 
     /* La pousse ne part pas de zero. A zero, aucun fragment n'etait dessine et
        le hero s'ouvrait sur un ecran entierement noir : on annoncait une scene
-       vivante et on montrait du vide. Un huitieme de croissance des la
-       premiere image donne deja une colonne a regarder. */
-    const pousse = 0.13 + lisse * 0.87;
+       vivante et on montrait du vide.
+
+       LE SOCLE PASSE DE 13 A 32 POUR CENT. Mesure a la sonde : a 13 %, la
+       luminosite moyenne du fond de l'accueil etait de 9 sur 255, c'est-a-dire
+       indistinguable du noir. Un huitieme de croissance suffisait sur les
+       dix-huit lianes d'un grand ecran, pas sur les huit d'un telephone, et
+       c'est justement le telephone ou Matheo n'a rien vu. Il reste plus des
+       deux tiers de la croissance pour le defilement. */
+    const pousse = 0.32 + lisse * 0.68;
     matTige.uniforms.uPousse.value = pousse;
     matFeuille.uniforms.uPousse.value = pousse;
     matTige.uniforms.uTemps.value = t;
@@ -613,6 +619,13 @@ export function monterLaScene(toile, options = {}) {
   return {
     /* Appelee par le defilement : 0 en haut de la page, 1 en bas. */
     avancer(p) { progression = Math.min(1, Math.max(0, p)); },
+    /* La sonde : elle peint par le chemin normal puis relit le tampon.
+       Voir js/sonde.js pour pourquoi elle existe. */
+    async sonder(n = 40) {
+      const { sonderToile } = await import('./sonde.js');
+      visible = true;
+      return sonderToile(renderer, toile, () => peindre(), n);
+    },
     /* Coupe le rendu des que la scene n'est plus a l'ecran. */
     montrer(v) { visible = !!v; },
     detruire() {

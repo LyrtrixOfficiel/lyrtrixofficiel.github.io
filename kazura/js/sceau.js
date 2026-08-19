@@ -391,18 +391,13 @@ export function monterLeSceau(toile, options = {}) {
     }
   }
 
-  function battre(maintenant) {
-    if (!actif) return;
-    requestAnimationFrame(battre);
-    /* Le plancher a zero n'est pas une precaution de style. `maintenant` est
-       l'horodatage du DEBUT de l'image courante ; si l'horloge a ete remise
-       depuis, par exemple par un appel a `montrer` parti d'un abonne au
-       defilement, la difference est NEGATIVE. L'entree reculait alors au lieu
-       d'avancer, et le sceau restait de profil tant qu'on defilait. */
-    const dt = Math.min(0.05, Math.max(0, (maintenant - dernier) / 1000));
-    dernier = maintenant;
-    if (!visible) return;
+  /* Le travail d'une image, isole de la boucle. Un seul chemin de peinture,
+     donc la sonde mesure bien ce que la page dessine et non une copie. */
+  let horloge = 0;
+  function peindre(dt) {
     jauger(dt);
+    horloge += dt;
+    const maintenant = horloge * 1000;
 
     const a = 1 - Math.pow(1 - 0.12, dt * 60);
     vu.x += (vise.x - vu.x) * a;
@@ -427,6 +422,19 @@ export function monterLeSceau(toile, options = {}) {
     if (!sobre) poussieres.material.uniforms.uTemps.value = t;
     composer.render();
   }
+
+  function battre(maintenant) {
+    if (!actif) return;
+    requestAnimationFrame(battre);
+    /* Le plancher a zero n'est pas une precaution de style. `maintenant` est
+       l'horodatage du DEBUT de l'image courante ; si l'horloge a ete remise
+       depuis, la difference est NEGATIVE et l'entree reculait au lieu
+       d'avancer, ce qui laissait le sceau de profil tant qu'on defilait. */
+    const dt = Math.min(0.05, Math.max(0, (maintenant - dernier) / 1000));
+    dernier = maintenant;
+    if (!visible) return;
+    peindre(dt);
+  }
   requestAnimationFrame(battre);
 
   return {
@@ -449,6 +457,13 @@ export function monterLeSceau(toile, options = {}) {
       fond.geometry.dispose(); fond.material.map.dispose(); fond.material.dispose();
       composer.dispose?.();
       renderer.dispose();
+    },
+    /* La sonde : elle peint par le chemin normal puis relit le tampon.
+       Voir js/sonde.js pour pourquoi elle existe. */
+    async sonder(n = 40) {
+      const { sonderToile } = await import('./sonde.js');
+      visible = true;
+      return sonderToile(renderer, toile, peindre, n);
     },
     /* Poignees de service. */
     _scene: scene, _matiere: matiere, _camera: camera,
