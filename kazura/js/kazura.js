@@ -1429,7 +1429,14 @@ async function monterLePortailSiPresent() {
   const approche = auDefilement(() => {
     if (lance) return;
     const r = figure.getBoundingClientRect();
-    if (r.top > window.innerHeight * 2.2) return;   // encore loin, on attend
+    /* UNE HAUTEUR DE FENETRE NULLE NE DOIT JAMAIS CACHER DU CONTENU. Certains
+       contextes rendent innerHeight a zero : un panneau de navigateur qui ne
+       compose pas, une impression, un cadre sans dimension. La porte du
+       chargement paresseux se refermait alors pour toujours et la piece
+       n'arrivait jamais. Une valeur de repli vaut mieux qu'une porte bloquee,
+       et le pire qu'elle puisse faire est de charger un peu trop tot. */
+    const hauteur = window.innerHeight || document.documentElement.clientHeight || 800;
+    if (r.top > hauteur * 2.2) return;   // encore loin, on attend
     lance = true;
     abonnes.splice(abonnes.indexOf(approche), 1);   // ce guetteur a fini son travail
     charger();
