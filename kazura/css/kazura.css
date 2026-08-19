@@ -141,6 +141,27 @@ html[data-pret='oui'] #defile:not([data-natif='oui']) {
   mask-image: radial-gradient(120% 90% at 50% 30%, #000 20%, transparent 78%);
 }
 
+/* ══ LU, JAMAIS VU ═══════════════════════════════════════════════════════
+   Un titre qui n'existe que pour les lecteurs d'ecran et les moteurs. La page
+   du voyage s'en servait alors que la classe n'etait DEFINIE NULLE PART : son
+   titre s'affichait donc en toutes lettres, blanc, trente-sept pixels, en haut
+   de l'ecran, par-dessus le monde.
+
+   Une classe absente ne provoque aucune erreur, ne change rien au balisage, et
+   ne se voit que si l'on regarde le haut du document au bon moment. C'est mon
+   outil de portrait qui l'a attrapee, pas mes captures d'ecran.
+
+   On ne cache pas avec display:none ni visibility:hidden : les deux retirent
+   aussi l'element de la lecture vocale, ce qui rendrait le titre inutile. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ── La toile 3D ──────────────────────────────────────────────────────── */
 #toile3d {
   position: fixed;
