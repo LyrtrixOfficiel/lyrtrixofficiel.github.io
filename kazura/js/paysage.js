@@ -337,7 +337,17 @@ export function monterLePaysage(scene, options = {}) {
   /* Trois massifs. Le plus lointain porte le sommet : plus haut que tout le
      reste, isole, et c'est ce RAPPORT qui fait qu'on le regarde, pas sa forme. */
   faireUnMassif({ z: 560, largeur: 2100, profondeur: 620, hauteurMax: 78,
-                  teinte: '#16293C', cotes: petit ? 96 : 190,
+                  /* ══ LE COTE DU MAILLAGE EST CELUI DU SUJET ═════════════
+                     A cent quatre-vingt-dix subdivisions sur deux mille cent
+                     unites, une maille fait onze unites. Le cone en fait trois
+                     cent quatre-vingts de rayon : trente-quatre mailles pour
+                     tout son flanc, et l'interpolation lineaire entre elles se
+                     voit en FACETTES PLATES sur la pente la plus reguliere du
+                     paysage, qui est justement celle qu'on regarde.
+
+                     La finesse ne se choisit pas pour le plan, elle se choisit
+                     pour l'objet le plus lisse qu'il porte. */
+                  teinte: '#16293C', cotes: petit ? 130 : 320,
                   /* ══ IL EST DECALE, PAS CENTRE ═════════════════════════
                      A quarante unites de l'axe et six cents de distance, il
                      tombait a quatre degres du centre : c'est-a-dire

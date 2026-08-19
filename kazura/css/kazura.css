@@ -2200,26 +2200,34 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   height: 100%;
   overflow: visible;
 }
+/* ══ ELLES ETAIENT REGLEES POUR UN FOND NOIR ══════════════════════════════
+   Un trait a cinquante-deux centiemes d'opacite se lit tres bien sur du noir.
+   Depuis que le voyage a un ciel, un horizon et un sol, le meme trait passe sur
+   des valeurs trois fois plus claires et disparait. Un instrument qui ne se lit
+   plus ne dit plus rien, et il vaudrait mieux le retirer que le laisser pale. */
 .instrument__trait, .instrument__croix {
   fill: none;
-  stroke: rgba(226, 244, 237, .52);
-  stroke-width: 1;
+  stroke: rgba(232, 248, 241, .78);
+  stroke-width: 1.15;
   vector-effect: non-scaling-stroke;
   transition: opacity .5s var(--doux);
 }
-.instrument__croix { stroke: rgba(226, 244, 237, .82); }
+.instrument__croix { stroke: rgba(240, 252, 246, .95); stroke-width: 1.4; }
 
 .instrument {
   position: absolute;
   top: 0; left: 0;
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: .63rem;
   line-height: 1.45;
   letter-spacing: .09em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: rgba(226, 244, 237, .92);
-  text-shadow: 0 .04em .7em rgba(4, 6, 10, .9);
+  color: rgba(240, 252, 246, 1);
+  /* Deux ombres : une serree qui detache la lettre de ce qui est juste
+     derriere, une large qui creuse un halo sombre autour du bloc. Une seule ne
+     suffit pas des que le fond porte du detail. */
+  text-shadow: 0 0 .28em rgba(4, 6, 10, .95), 0 .04em 1.1em rgba(4, 6, 10, .92);
   transition: opacity .5s var(--doux);
   /* Le point d'ancrage suit le cote d'ou part le trait : l'etiquette se pose
      TOUJOURS au bout du trait, jamais a cheval dessus. */
