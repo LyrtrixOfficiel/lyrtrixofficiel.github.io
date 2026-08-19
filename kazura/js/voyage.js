@@ -36,6 +36,7 @@ import { ShaderPass }      from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass }      from 'three/addons/postprocessing/OutputPass.js';
 import { BLASON } from './blason.js';
 import { monterLePaysage, hauteurSol, NIVEAU_EAU } from './paysage.js';
+import { monterLeSousBois } from './sousbois.js';
 
 const JADE   = new THREE.Color('#10B981');
 const JADE_F = new THREE.Color('#04352A');
@@ -201,18 +202,31 @@ const ETALON = {
    Les valeurs sont posees a la main. Un rail de camera est une decision de
    mise en scene, pas un probleme d'optimisation. */
 const REPERES = [
-  { t: 0.00, oeil: [ 1.10, 2.45,  5.60], vise: [ 2.10, 2.25,  9.30] },
-  { t: 0.13, oeil: [ 0.70, 2.60,  7.20], vise: [ 2.60, 2.55, 13.60] },
-  { t: 0.26, oeil: [ 0.20, 2.85, 10.50], vise: [ 3.10, 2.90, 20.00] },
-  { t: 0.40, oeil: [-0.30, 3.05, 16.00], vise: [ 1.60, 2.90, 30.00] },
-  { t: 0.54, oeil: [ 0.20, 3.00, 25.00], vise: [ 0.40, 2.85, 42.00] },
+  /* ══ ON N'OUVRE PLUS SUR UNE FEUILLE ══════════════════════════════════
+     Le voyage commencait colle a une feuille de kudzu, dans le noir. Matheo :
+     « l'endroit sur lequel on apparait n'est pas specialement beau, genre
+     juste apparaitre sur une feuille, ce n'est pas terrible ». Il a raison, et
+     la raison est simple : un gros plan sur un objet n'est pas un LIEU. On ne
+     sait pas ou l'on est, donc on ne peut pas avoir envie d'y aller.
+
+     On ouvre desormais au ras du sous-bois, l'herbe au premier plan, le regard
+     qui remonte la vallee vers le portail et la montagne. C'est un plan
+     d'etablissement, la premiere image de n'importe quel film : elle dit ou
+     l'on est avant de dire ce qui s'y passe.
+
+     La feuille n'est pas perdue pour autant : elle devient l'objet qu'on FROLE
+     au deuxieme temps, et c'est un bien meilleur emploi. On la voit mieux en
+     la depassant qu'en etant colle dessus. */
+  { t: 0.00, oeil: [-1.80, 0.55, -9.00], vise: [ 0.60, 2.20, 10.00] },
+  { t: 0.13, oeil: [-1.20, 1.30, -3.50], vise: [ 1.40, 2.60, 14.00] },
+  { t: 0.26, oeil: [ 0.00, 2.20,  3.00], vise: [ 3.20, 3.20, 16.00] },
+  { t: 0.40, oeil: [ 0.60, 2.80, 12.00], vise: [ 1.40, 2.90, 26.00] },
+  { t: 0.54, oeil: [ 0.20, 3.00, 24.00], vise: [ 0.40, 2.85, 42.00] },
   { t: 0.68, oeil: [ 0.10, 2.90, 38.00], vise: [ 0.00, 2.80, 55.00] },
   { t: 0.80, oeil: [ 0.00, 2.80, 50.00], vise: [ 0.00, 2.70, 66.00] },
   { t: 0.90, oeil: [ 0.00, 3.30, 61.00], vise: [ 0.00, 3.30, 78.00] },
   /* Le dernier temps leve les yeux : le sceau passe au tiers bas et le
-     PAYSAGE s'ouvre derriere lui, lac, monts et ciel. C'est la seule image du
-     voyage ou l'on voit jusqu'a l'horizon, et c'est pour cela qu'elle arrive
-     en dernier. */
+     PAYSAGE s'ouvre derriere lui, lac, monts et ciel. */
   { t: 1.00, oeil: [ 0.70, 6.40, 68.50], vise: [ 0.00, 6.10, 92.00] }
 ];
 
@@ -712,7 +726,7 @@ export async function monterLeVoyage(toile, options = {}) {
       feuillesPos.push({
         p: courbe.getPointAt(uc),
         tangente: courbe.getTangentAt(uc),
-        taille: loin ? alea(1.8, 3.4) : alea(0.55, 1.45)
+        taille: loin ? alea(1.4, 2.4) : alea(0.45, 1.15)
       });
     }
   }
@@ -882,7 +896,7 @@ export async function monterLeVoyage(toile, options = {}) {
     /* Sa place de depart : juste devant l'oeil, de biais. De face elle serait
        un logo, de trois quarts c'est un objet. Elle ne restera pas la : c'est
        elle qui ouvre le voyage en s'eloignant. */
-    feuilleGeante.position.set(2.10, 2.25, 9.30);
+    feuilleGeante.position.set(5.60, 4.40, 15.00);
     feuilleGeante.rotation.set(-0.22, 0.55, 0.12);
     monde.add(feuilleGeante);
 
@@ -1202,12 +1216,12 @@ export async function monterLeVoyage(toile, options = {}) {
        tient seul, puis la lumiere vient et l'on DECOUVRE qu'on etait pose sur
        une feuille. C'est le meme geste qu'un fondu depuis le noir, sauf qu'ici
        ce n'est pas l'image qui s'eclaircit, c'est le monde qui s'allume. */
-    const jour = Math.min(1, Math.max(0, (avance - 0.045) / 0.175));
+    const jour = Math.min(1, Math.max(0, (avance - 0.05) / 0.22));
     const doux = jour * jour * (3 - 2 * jour);
     /* On ne baisse pas jusqu'a zero : il reste un huitieme de lumiere, juste
        assez pour deviner une silhouette et comprendre qu'il y a quelque chose
        la. Le noir complet ne serait pas mysterieux, il serait vide. */
-    const k = 0.12 + 0.88 * doux;
+    const k = 0.40 + 0.60 * doux;
     lampeFeuille.intensity = 70 * doux;
     rasante.intensity = 60 * (1 - doux) * (1 - Math.min(1, avance / 0.30));
     cle.intensity = 2.4 * k;
@@ -1234,12 +1248,19 @@ export async function monterLeVoyage(toile, options = {}) {
          mouvement a en plus une cause : le vent. Un mouvement dont on comprend
          la cause ne se remarque pas comme un mouvement de camera. */
       if (feuilleGeante) {
-        const d = Math.min(1, avance / 0.42);
+        /* Elle derive lentement et reste PRES du trajet : on la depasse a
+           quelques unites, ce qui la montre bien mieux qu'un gros plan fixe.
+           Un objet qu'on croise a de la vitesse ; un objet qu'on contemple
+           n'en a pas. */
+        const d = Math.min(1, avance / 0.60);
         const e = d * d * (3 - 2 * d);
+        /* Elle est posee A DROITE de l'axe du regard : au centre, elle passe
+           en travers du nom en particules et les deux s'annulent. Le premier
+           temps a un seul sujet, et c'est le nom. */
         feuilleGeante.position.set(
-          2.10 + e * 5.40 + Math.sin(t * 0.31) * 0.22,
-          2.25 + e * 3.10 + Math.sin(t * 0.44) * 0.16,
-          9.30 + e * 17.5
+          5.60 + e * 1.60 + Math.sin(t * 0.31) * 0.22,
+          4.40 + e * 1.30 + Math.sin(t * 0.44) * 0.16,
+          15.00 + e * 8.00
         );
         feuilleGeante.rotation.y = 0.55 + e * 1.15 + Math.sin(t * 0.13) * 0.10;
         feuilleGeante.rotation.z = 0.12 + e * 0.55 + Math.sin(t * 0.19) * 0.07;
@@ -1308,6 +1329,7 @@ export async function monterLeVoyage(toile, options = {}) {
     const front = camera.position.z + 60;
     matTige.uniforms.uFront.value = front;
     matFeuillage.uniforms.uFront.value = front;
+    sousBois?.avancer(t, front);
 
     paysage.avancer(t);
     paysage.suivre(camera);
@@ -1480,6 +1502,16 @@ export async function monterLeVoyage(toile, options = {}) {
     formesSceau = n;
   }
 
+  /* Le sous-bois se monte apres le paysage : il a besoin de sa mousse et de
+     sa fonction de hauteur pour se poser au bon endroit. */
+  let sousBois = null;
+  try {
+    sousBois = monterLeSousBois(scene, {
+      petit, hauteurSol, niveauEau: NIVEAU_EAU,
+      mousse: paysage.mousse, brume: '#08161C', densiteBrume: scene.fog.density
+    });
+  } catch (e) { console.warn('sous-bois indisponible', e); }
+
   poserFeuille().catch(e => console.warn('feuille indisponible', e));
   poserPortail().catch(e => console.warn('portail indisponible', e));
   try { poserLeSceau(); } catch (e) { console.warn('sceau indisponible', e); }
@@ -1508,6 +1540,7 @@ export async function monterLeVoyage(toile, options = {}) {
       removeEventListener('resize', mesurer);
       removeEventListener('pointermove', suivreMain);
       scene.traverse(o => { o.geometry?.dispose?.(); });
+      sousBois?.detruire();
       paysage.detruire();
       matTige.dispose(); matFeuillage.dispose(); matP.dispose();
       composer.dispose?.();
@@ -1526,6 +1559,7 @@ export async function monterLeVoyage(toile, options = {}) {
         oeil: [+camera.position.x.toFixed(2), +camera.position.y.toFixed(2), +camera.position.z.toFixed(2)],
         triangles: Math.round(tri),
         feuille: !!feuilleGeante, portail: !!portail,
+        sousBois: sousBois?.bilan?.() || null,
         toile: [toile.width, toile.height],
         appels: rendu.info.render.calls
       };
