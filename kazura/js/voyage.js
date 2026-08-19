@@ -535,14 +535,19 @@ export async function monterLeVoyage(toile, options = {}) {
     uniforms: {
       uJade: { value: JADE }, uJadeF: { value: JADE_F }, uViolet: { value: VIOLET },
       uBrouillard: { value: NUIT }, uDensite: { value: scene.fog.density },
-      uFront: { value: -40 }
+      uFront: { value: -40 },
+      uEcorce: { value: null }, uEcorceRelief: { value: null }
     },
     vertexShader: /* glsl */`
       attribute vec3 aCentre;
       attribute float aRetard;
       uniform float uFront;
       varying vec2 vUv;
-      varying vec3 vNormalMonde, vVersOeil;
+      /* vMonde etait ecrit dans main() sans etre declare ici : le nuanceur ne
+         compilait plus du tout, les tiges disparaissaient entierement, et la
+         seule trace etait un GL_INVALID_OPERATION qu'il fallait aller
+         chercher. Une variable transmise se declare DES DEUX COTES. */
+      varying vec3 vNormalMonde, vVersOeil, vMonde;
       varying float vProfondeur;
       varying float vPousse;
       void main() {
@@ -579,6 +584,7 @@ export async function monterLeVoyage(toile, options = {}) {
                      * smoothstep(ouvert, ouvert - 0.05, uv.x);
         vec3 pincee = mix(aCentre, position, effile);
         vec4 m = modelMatrix * vec4(pincee, 1.0);
+        vMonde = m.xyz;
         vNormalMonde = normalize(mat3(modelMatrix) * normal);
         vVersOeil = normalize(cameraPosition - m.xyz);
         vec4 vue = viewMatrix * m;
@@ -591,11 +597,42 @@ export async function monterLeVoyage(toile, options = {}) {
       uniform vec3 uJade, uJadeF, uViolet, uBrouillard;
       uniform float uDensite;
       varying vec2 vUv;
-      varying vec3 vNormalMonde, vVersOeil;
+      varying vec3 vNormalMonde, vVersOeil, vMonde;
       varying float vProfondeur;
       varying float vPousse;
+      uniform sampler2D uEcorce, uEcorceRelief;
+
+      /* Le meme melange triplanaire que le sol et le portail. Il est repete
+         plutot que partage parce que GLSL n'a pas d'inclusion : trois
+         nuanceurs, trois copies de six lignes. Les factoriser en javascript
+         couterait plus de complexite qu'il n'en ferait gagner. */
+      vec3 triEcorce(sampler2D c, vec3 p, vec3 n, float e) {
+        vec3 m = pow(abs(n), vec3(4.0)); m /= (m.x + m.y + m.z);
+        return texture2D(c, p.yz * e).rgb * m.x
+             + texture2D(c, p.xz * e).rgb * m.y
+             + texture2D(c, p.xy * e).rgb * m.z;
+      }
+
       void main() {
         vec3 N = normalize(vNormalMonde), V = normalize(vVersOeil);
+
+        /* ══ L'ECORCE ══════════════════════════════════════════════════════
+           Les tiges etaient les DERNIERES surfaces nues du monde : un tube
+           lisse, une couleur, une nervure calculee. Le sol et la pierre
+           avaient deja leur matiere, elles non, et ca se voyait d'autant plus
+           qu'elles passent au premier plan.
+
+           La meme image que le sol, prise a une echelle beaucoup plus fine et
+           lue en RELIEF plutot qu'en couleur : ce qu'on veut d'une tige n'est
+           pas sa teinte, c'est son grain et ses fibres. La normale perturbee
+           fait accrocher la lumiere rasante sur des milliers d'asperites
+           qu'aucune geometrie raisonnable ne porterait. */
+        vec3 grainEcorce = triEcorce(uEcorceRelief, vMonde, N, 1.35) * 2.0 - 1.0;
+        N = normalize(N + vec3(grainEcorce.x, grainEcorce.y, 0.0) * 0.55);
+        float fibre = triEcorce(uEcorce, vMonde, N, 0.85).g;
+        /* Fresnel et contre-jour se calculent APRES la perturbation : c'est
+           la normale detaillee qui doit les nourrir, sinon le relief est
+           calcule pour rien et la tige reste lisse. */
         float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
         vec3 L = normalize(vec3(0.45, 0.35, -1.0));
         float dos = pow(clamp(dot(-N, L), 0.0, 1.0), 2.2);
@@ -622,8 +659,11 @@ export async function monterLeVoyage(toile, options = {}) {
            chaque tube faisait un reseau de neons mauves. Le ciel, lui, pose un
            reflet froid et discret, et le violet ne revient que dans les hautes
            lumieres, par l'etalonnage, ou il a sa place. */
-        vec3 col = uJadeF * 0.22
-                 + uJade * dos * 0.30 * grain
+        /* La fibre module tout : le corps, le contre-jour et l'arete. Une
+           tige n'est pas plus claire par endroits, elle est plus DENSE. */
+        float f = 0.55 + fibre * 0.95;
+        vec3 col = uJadeF * 0.22 * f
+                 + uJade * dos * 0.30 * grain * f
                  + vec3(0.26, 0.40, 0.50) * fres * 0.13;
         /* Le bourgeon : la pointe qui vient de sortir est plus claire, comme
            une pousse tendre. C'est lui qui rend la croissance LISIBLE ; sans
@@ -1515,6 +1555,14 @@ export async function monterLeVoyage(toile, options = {}) {
       mousse: paysage.mousse, brume: '#08161C', densiteBrume: scene.fog.density
     });
   } catch (e) { console.warn('sous-bois indisponible', e); }
+
+  /* Les tiges reprennent la matiere du sol. Une seule image pour le terrain,
+     la pierre, le portail et l'ecorce : c'est cette unite-la qui fait qu'on
+     croit a un seul lieu, bien plus que la justesse de chaque surface. */
+  if (paysage.mousse) {
+    matTige.uniforms.uEcorce.value = paysage.mousse;
+    matTige.uniforms.uEcorceRelief.value = paysage.mousseRelief;
+  }
 
   poserFeuille().catch(e => console.warn('feuille indisponible', e));
   poserPortail().catch(e => console.warn('portail indisponible', e));
