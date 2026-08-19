@@ -278,6 +278,11 @@ export async function monterLeVoyage(toile, options = {}) {
   scene.fog = new THREE.FogExp2(BRUME, 0.0058);
 
   const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 1600);
+  /* Declare ICI, et non plus bas avec le reste du mouvement : `mesurer` est
+     appelee au montage, donc AVANT tout ce qui suit. Une variable en `let`
+     lue avant sa ligne de declaration n'est pas indefinie, elle jette, et la
+     piece entiere tombait sur une zone morte temporelle. */
+  let reculEcran = 1;
   const railOeil = courbeDe('oeil');
   const railVise = courbeDe('vise');
 
@@ -1009,6 +1014,19 @@ export async function monterLeVoyage(toile, options = {}) {
     const L = Math.max(2, Math.round(r.width)), H = Math.max(2, Math.round(r.height));
     camera.aspect = L / H;
     camera.updateProjectionMatrix();
+
+    /* ══ UN CADRE VERTICAL VOIT BEAUCOUP MOINS LARGE ══════════════════════
+       Le champ d'une camera se donne en VERTICAL ; l'horizontal en decoule par
+       la proportion de l'ecran. Sur un grand ecran a 1,78, on voit tres large ;
+       sur un telephone a 0,46, le meme reglage ne montre qu'un quart de cette
+       largeur. Tous les plans se retrouvent serres, et le dernier passait
+       carrement sous le texte.
+
+       On ne touche pas au champ, qui changerait la perspective et donc le
+       dessin : on RECULE, ce qu'un chef operateur fait exactement dans ce cas.
+       Le rail reste le meme, sa lecture s'adapte a l'ecran. */
+    const recul = Math.min(1.5, Math.max(1, 1 + (1.35 - camera.aspect) * 0.55));
+    reculEcran = recul;
     /* ══ ON PLAFONNE LA DEFINITION QUAND IL Y A DU POST-TRAITEMENT ═══════
        A deux fois la definition de l'ecran, le tampon fait 3415 sur 1222, et
        CHAQUE passe le retraverse : la profondeur de champ, les rais, le halo,
@@ -1076,6 +1094,18 @@ export async function monterLeVoyage(toile, options = {}) {
        couloir, ce qui est aussi ce qu'on veut. */
     railOeil.getPoint(u, pOeil);
     railVise.getPoint(u, pVise);
+    /* Le recul se fait sur l'axe du regard : la composition ne bouge pas, elle
+       respire. Un decalage lateral, lui, changerait le cadrage. */
+    if (reculEcran > 1.001) {
+      pOeil.sub(pVise).multiplyScalar(reculEcran).add(pVise);
+      /* ══ ET ON VISE UN PEU PLUS BAS ═══════════════════════════════════
+         Sur un ecran vertical, le texte occupe le tiers du bas : un sujet
+         cadre au centre se retrouve DERRIERE lui. En abaissant le point vise,
+         le sujet remonte dans l'image et les deux cessent de se disputer la
+         meme place. C'est le meme geste qu'un cadreur qui laisse de l'air
+         sous son sujet pour un bandeau. */
+      pVise.y -= (reculEcran - 1) * 4.2;
+    }
     const a2 = 1 - Math.pow(1 - 0.06, dt * 60);
     mainVue.x += (main.x - mainVue.x) * a2;
     mainVue.y += (main.y - mainVue.y) * a2;
