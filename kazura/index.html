@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400..500&family=Newsreader:opsz,wght@6..72,300..700&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/kazura.css?v=aba5daee84">
+<link rel="stylesheet" href="css/kazura.css?v=006792c3a2">
 
 <script type="importmap">
 { "imports": {
@@ -141,35 +141,35 @@
       </div>
     </header>
 
-    <section class="chapitre chapitre--gauche">
-      <div class="chapitre__voile" style="--vx:32%" aria-hidden="true"></div>
-      <div class="chapitre__texte">
-        <span class="etiquette" data-vient="bloc">葛 · Un</span>
-        <p class="grand" data-vient="lettres">Dites le site dont vous rêvez.</p>
+    <!-- ══ La feuille ═══════════════════════════════════════════════════════
+         Ici se tenaient trois chapitres, un écran plein chacun, pour une seule
+         phrase. La caméra n'allait nulle part et le fond ne changeait pas :
+         « on descend, mais il ne se passe rien de fou ».
+
+         À la place, une seule section, plus courte que les trois réunies, où
+         une vraie feuille de kudzu sculptée puis texturée tourne au défilement
+         pendant que les trois phrases se relaient. Le nom du studio veut dire
+         kudzu : cet objet-là n'a pas besoin d'être expliqué. -->
+    <section class="feuille" id="feuille" aria-label="Ce qu’on fait">
+      <div class="feuille__scene">
+        <canvas id="toile-feuille" aria-hidden="true"></canvas>
       </div>
+      <div class="feuille__mots">
+        <p class="grand" data-phrase="0">Dites le site dont vous rêvez.</p>
+        <p class="grand" data-phrase="1">On ne vous répondra pas que c’est impossible.</p>
+        <p class="grand" data-phrase="2">Et ce sera moins cher que le devis d’à côté.</p>
+      </div>
+      <p class="feuille__note">
+        <span class="etiquette">葛 · Pueraria montana</span>
+        Tout ce que vous voyez tourner est un objet réel, sculpté puis
+        photographié en matière. Les chiffres qui l’entourent sont mesurés sur
+        votre machine, pas décoratifs. C’est le genre de chose qu’on met dans
+        un site quand vous en voulez une&nbsp;; un site plus sage se fait
+        aussi, et aussi bien.
+      </p>
     </section>
 
-    <section class="chapitre chapitre--droite">
-      <div class="chapitre__voile" style="--vx:68%" aria-hidden="true"></div>
-      <div class="chapitre__texte">
-        <span class="etiquette" data-vient="bloc">葛 · Deux</span>
-        <p class="grand" data-vient="lettres">On ne vous répondra pas que c’est impossible.</p>
-      </div>
-    </section>
-
-    <section class="chapitre chapitre--gauche">
-      <div class="chapitre__voile" style="--vx:38%" aria-hidden="true"></div>
-      <div class="chapitre__texte">
-        <span class="etiquette" data-vient="bloc">葛 · Trois</span>
-        <p class="grand" data-vient="lettres">Et ce sera moins cher que le devis d’à côté.</p>
-        <p class="chapo" data-vient="bloc" style="margin-top:2rem">
-          Ce que vous regardez pousse en direct sous votre défilement, et
-          redescendre le fait repousser. C’est le genre de chose qu’on met
-          dans un site quand vous en voulez une. Un site plus sage se fait
-          aussi, et aussi bien.
-        </p>
-      </div>
-    </section>
+    
 
   </div>
 
@@ -388,6 +388,6 @@
 
 </div>
 
-<script type="module" src="js/kazura.js?v=aba5daee84"></script>
+<script type="module" src="js/kazura.js?v=006792c3a2"></script>
 </body>
 </html>

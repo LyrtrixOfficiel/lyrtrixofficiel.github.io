@@ -2165,3 +2165,81 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
 .instrument span { display: block; color: var(--jade-clair); }
 
 @media (max-width: 700px) { .instrument { font-size: .5rem; } .instruments { display: none; } }
+
+/* ══ LA FEUILLE ══════════════════════════════════════════════════════════
+   Une seule section à la place de trois. Elle est haute parce que le
+   défilement y fait tourner un objet : c'est une réglette, pas du vide.
+   Deux écrans et demi, contre trois pleins écrans pour trois phrases avant.
+
+   La scène est ÉPINGLÉE au milieu : l'objet reste sous les yeux pendant que
+   les phrases se relaient. Une pièce qui sort du cadre pendant qu'on lit son
+   commentaire n'a servi à rien. */
+.feuille {
+  position: relative;
+  height: 260svh;
+  padding-block: 0;
+}
+.feuille__scene {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  z-index: 0;
+}
+#toile-feuille {
+  width: min(96vw, 1100px);
+  height: min(78svh, 760px);
+  max-width: none;
+  display: block;
+  opacity: 0;
+  transition: opacity 1s var(--doux);
+}
+#toile-feuille[data-prete='oui'] { opacity: 1; }
+
+/* Les trois phrases se relaient par-dessus. Elles sont empilées au même
+   endroit et c'est le code qui décide laquelle se lit : trois positions
+   différentes obligeraient l'œil à chercher à chaque fois. */
+.feuille__mots {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  margin-top: -100svh;
+  display: grid;
+  place-items: center;
+  padding: 0 var(--marge);
+  pointer-events: none;
+  z-index: 2;
+}
+.feuille__mots .grand {
+  grid-area: 1 / 1;
+  max-width: 22ch;
+  text-align: center;
+  opacity: 0;
+  /* Aucune translation verticale : une animation déclenchée par le
+     défilement ne déplace jamais sa cible en hauteur, sinon elle fait le
+     yoyo dès qu'on remonte d'un cran. La règle est déjà payée une fois. */
+  transition: opacity .7s var(--doux), filter .7s var(--doux);
+  filter: blur(6px);
+  text-shadow: 0 .05em 1.1em rgba(4, 6, 10, .92), 0 0 2.6em rgba(4, 6, 10, .7);
+}
+.feuille__mots .grand[data-lue='oui'] { opacity: 1; filter: blur(0); }
+
+.feuille__note {
+  position: absolute;
+  left: var(--marge);
+  bottom: clamp(2rem, 6vh, 4rem);
+  max-width: 42ch;
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--gris);
+  z-index: 2;
+}
+.feuille__note .etiquette { display: block; margin-bottom: .5rem; }
+
+@media (max-width: 760px) {
+  .feuille { height: 220svh; }
+  #toile-feuille { width: 100vw; height: min(56svh, 480px); }
+  .feuille__mots .grand { max-width: 15ch; font-size: clamp(1.9rem, 8.4vw, 2.7rem); }
+  .feuille__note { left: var(--marge); right: var(--marge); max-width: none; font-size: .74rem; }
+}

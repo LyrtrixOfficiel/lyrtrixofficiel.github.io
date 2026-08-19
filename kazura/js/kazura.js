@@ -996,6 +996,50 @@ async function monterLaNueeSiPresente() {
   }
 }
 
+/* ══ 14 ter bis. La feuille ═════════════════════════════════════════════ */
+/* Une vraie feuille de kudzu, qui tourne au defilement pendant que trois
+   phrases se relaient autour d'elle. Elle a remplace trois sections qui
+   prenaient un ecran plein chacune pour une phrase.
+
+   ELLE SE CHARGE APRES LE RESTE. 2,4 Mo, dont 1,8 de matiere : le visiteur
+   doit avoir lu le nom du studio bien avant que la feuille n'arrive. */
+async function monterLaFeuilleSiPresente() {
+  const toile = $('#toile-feuille');
+  if (!toile) return;
+  const section = toile.closest('.feuille');
+
+  try {
+    const { monterLaFeuille } = await import('./feuille.js' + VERSION);
+    const f = await monterLaFeuille(toile, { version: VERSION, nom: 'PUERARIA_MONTANA', poidsKo: 2431 });
+    if (!f) { toile.hidden = true; return; }
+    (window.kazura ||= {}).feuille = f;
+    toile.dataset.prete = 'oui';
+
+    const phrases = $$('.feuille__mots .grand', section);
+
+    auDefilement(() => {
+      const r = section.getBoundingClientRect();
+      const course = Math.max(1, r.height - window.innerHeight);
+      const p = borne(-r.top / course, 0, 1);
+      f.avancer(p);
+      f.montrer(r.bottom > 0 && r.top < window.innerHeight);
+
+      /* Trois phrases sur la course, avec un PLATEAU au milieu de chacune.
+         Sans plateau, la position de repos la plus frequente est un texte a
+         demi efface : la lecon de la vitrine de Destef, payee une fois. */
+      const n = phrases.length;
+      phrases.forEach((el, i) => {
+        const centre = (i + 0.5) / n;
+        const dist = Math.abs(p - centre);
+        el.dataset.lue = dist < (0.5 / n) * 0.86 ? 'oui' : 'non';
+      });
+    });
+  } catch (e) {
+    console.warn('feuille indisponible', e);
+    toile.hidden = true;
+  }
+}
+
 /* ══ 14 quater. Le mot en WebGL, desormais le repli de la nuee ══════════ */
 async function monterLeMotSiPresent() {
   const toile = $('#toile-mot');
@@ -1666,6 +1710,7 @@ function demarrer() {
   monterLeSon();
   monterLeChoixDuMouvement();
   monterLaNueeSiPresente();
+  monterLaFeuilleSiPresente();
 
   const annee = $('[data-annee]');
   if (annee) annee.textContent = new Date().getFullYear();
