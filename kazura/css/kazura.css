@@ -2169,14 +2169,15 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
 /* ══ LA FEUILLE ══════════════════════════════════════════════════════════
    Une seule section à la place de trois. Elle est haute parce que le
    défilement y fait tourner un objet : c'est une réglette, pas du vide.
-   Deux écrans et demi, contre trois pleins écrans pour trois phrases avant.
 
-   La scène est ÉPINGLÉE au milieu : l'objet reste sous les yeux pendant que
-   les phrases se relaient. Une pièce qui sort du cadre pendant qu'on lit son
-   commentaire n'a servi à rien. */
+   L'OBJET ET LE TEXTE NE SE SUPERPOSENT PAS. C'est la troisième fois que je
+   me fais prendre : le bonsaï mangeait le mot KAZURA, la bouteille du domaine
+   mangeait son titre, et j'ai recommencé ici. Un objet dense au centre et une
+   phrase au centre se disputent le même endroit, et c'est toujours la phrase
+   qui perd. La feuille tient donc la moitié droite, les phrases la gauche. */
 .feuille {
   position: relative;
-  height: 260svh;
+  height: 250svh;
   padding-block: 0;
 }
 .feuille__scene {
@@ -2185,11 +2186,13 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   height: 100svh;
   display: grid;
   place-items: center;
+  justify-content: end;
+  padding-right: clamp(0rem, 3vw, 4rem);
   z-index: 0;
 }
 #toile-feuille {
-  width: min(96vw, 1100px);
-  height: min(78svh, 760px);
+  width: min(52vw, 620px);
+  height: min(82svh, 800px);
   max-width: none;
   display: block;
   opacity: 0;
@@ -2197,31 +2200,32 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
 }
 #toile-feuille[data-prete='oui'] { opacity: 1; }
 
-/* Les trois phrases se relaient par-dessus. Elles sont empilées au même
-   endroit et c'est le code qui décide laquelle se lit : trois positions
-   différentes obligeraient l'œil à chercher à chaque fois. */
+/* Les trois phrases se relaient à gauche, empilées au même endroit : trois
+   positions différentes obligeraient l'œil à chercher à chaque fois. */
 .feuille__mots {
   position: sticky;
   top: 0;
   height: 100svh;
   margin-top: -100svh;
   display: grid;
-  place-items: center;
-  padding: 0 var(--marge);
+  align-content: center;
+  justify-items: start;
+  padding-left: var(--marge);
+  padding-right: 52vw;
   pointer-events: none;
   z-index: 2;
 }
 .feuille__mots .grand {
   grid-area: 1 / 1;
-  max-width: 22ch;
-  text-align: center;
+  max-width: 13ch;
+  text-align: left;
   opacity: 0;
   /* Aucune translation verticale : une animation déclenchée par le
      défilement ne déplace jamais sa cible en hauteur, sinon elle fait le
      yoyo dès qu'on remonte d'un cran. La règle est déjà payée une fois. */
   transition: opacity .7s var(--doux), filter .7s var(--doux);
-  filter: blur(6px);
-  text-shadow: 0 .05em 1.1em rgba(4, 6, 10, .92), 0 0 2.6em rgba(4, 6, 10, .7);
+  filter: blur(7px);
+  text-shadow: 0 .05em 1.1em rgba(4, 6, 10, .92);
 }
 .feuille__mots .grand[data-lue='oui'] { opacity: 1; filter: blur(0); }
 
@@ -2229,17 +2233,26 @@ html[data-mouvement='sobre'] .vrille__feuille { transition: none; }
   position: absolute;
   left: var(--marge);
   bottom: clamp(2rem, 6vh, 4rem);
-  max-width: 42ch;
-  font-size: .82rem;
-  line-height: 1.6;
+  max-width: 38ch;
+  font-size: .8rem;
+  line-height: 1.65;
   color: var(--gris);
   z-index: 2;
 }
 .feuille__note .etiquette { display: block; margin-bottom: .5rem; }
 
-@media (max-width: 760px) {
-  .feuille { height: 220svh; }
-  #toile-feuille { width: 100vw; height: min(56svh, 480px); }
-  .feuille__mots .grand { max-width: 15ch; font-size: clamp(1.9rem, 8.4vw, 2.7rem); }
-  .feuille__note { left: var(--marge); right: var(--marge); max-width: none; font-size: .74rem; }
+/* Sur téléphone la colonne n'existe plus : la feuille prend le haut, les
+   phrases le bas. Deux colonnes sur 390 pixels ne donnent que deux vides. */
+@media (max-width: 860px) {
+  .feuille { height: 215svh; }
+  .feuille__scene { justify-content: center; padding-right: 0; align-content: start; padding-top: 9svh; }
+  #toile-feuille { width: 100vw; height: min(52svh, 460px); }
+  .feuille__mots {
+    padding: 0 var(--marge);
+    padding-top: 62svh;
+    align-content: start;
+    justify-items: center;
+  }
+  .feuille__mots .grand { max-width: 16ch; text-align: center; font-size: clamp(1.9rem, 8.2vw, 2.6rem); }
+  .feuille__note { left: var(--marge); right: var(--marge); max-width: none; font-size: .72rem; bottom: 2.2rem; }
 }

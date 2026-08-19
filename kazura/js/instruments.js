@@ -152,6 +152,9 @@ export function monterLesInstruments(toile, camera, options = {}) {
 
   return {
     poser, placer,
+    /* Acces a un releve pour deplacer son point vise. Utile quand l'objet
+       change d'echelle ou d'orientation : l'etiquette doit alors suivre. */
+    releve: i => releves[i],
     detruire() { actif = false; hote.remove(); },
     bilan: () => ({ releves: releves.length, visibles: releves.filter(p => p.boite.style.opacity === '1').length })
   };
