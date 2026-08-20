@@ -202,7 +202,6 @@ in vec2 aIndex;
 uniform sampler2D uPos;
 uniform sampler2D uVit;
 uniform vec2  uCadre;
-uniform vec2  uEtendue;
 uniform float uTaille;
 uniform float uCohesion;
 out float vVitesse;
@@ -240,8 +239,20 @@ void main() {
      On ne peut pas retirer le domaine, il est ce qui empeche la nuee de se
      vider. On rend sa couture invisible : les particules s'eteignent en
      approchant du bord, et se rallument de l'autre cote. La teleportation a
-     toujours lieu, elle n'a plus de temoin. */
-  vec2 bord = abs(p.xy) / uEtendue;
+     toujours lieu, elle n'a plus de temoin.
+
+     ══ ET LE BORD QUI COUPE EST CELUI DE LA TOILE, PAS CELUI DU DOMAINE ══════
+     Premiere version, l'extinction visait la couture : elle est a 1,62 fois le
+     cadre en hauteur, or la TOILE s'arrete a 1,0. Les particules etaient donc
+     tranchees net par le bord de la toile bien avant d'avoir commence a
+     s'eteindre, et le rectangle etait toujours la, un peu plus petit. J'avais
+     corrige le bon defaut au mauvais endroit.
+
+     La regle : une chose qui se coupe a un bord doit s'eteindre sur CE bord-la,
+     et le premier a couper est toujours le plus proche. Ici c'est la toile. Le
+     mot, lui, ne va pas au-dela de six dixiemes du cadre : il ne peut pas etre
+     mordu par un fondu qui commence a deux tiers. */
+  vec2 bord = abs(p.xy) / uCadre;
   vBord = max(bord.x, bord.y);
 
   /* ══ MOT TENU, LA PROFONDEUR NE TEINTE PLUS RIEN ═══════════════════════
@@ -317,7 +328,7 @@ void main() {
      du domaine. Les deux se posent ici, sur l'alpha, parce que les deux sont
      des questions de PRESENCE et non de forme. */
   a *= vFondu;
-  a *= 1.0 - smoothstep(0.58, 0.96, vBord);
+  a *= 1.0 - smoothstep(0.66, 1.0, vBord);
   if (a < 0.004) discard;
 
   /* Le jade pour ce qui est calme, le violet pour ce qui file. La couleur
@@ -405,7 +416,7 @@ export async function monterLaNuee(toile, options = {}) {
 
   const u = (p, noms) => Object.fromEntries(noms.map(n => [n, gl.getUniformLocation(p, n)]));
   const uSim = u(progSim, ['uPos', 'uVit', 'uCible', 'uCohesion', 'uDt', 'uTemps', 'uSouris', 'uEtendue']);
-  const uPts = u(progPts, ['uPos', 'uVit', 'uCadre', 'uEtendue', 'uTaille', 'uCohesion']);
+  const uPts = u(progPts, ['uPos', 'uVit', 'uCadre', 'uTaille', 'uCohesion']);
 
   /* ── Les surfaces ───────────────────────────────────────────────────── */
   function texture(donnees) {
@@ -806,11 +817,6 @@ export async function monterLaNuee(toile, options = {}) {
     gl.uniform1i(uPts.uPos, 0);
     gl.uniform1i(uPts.uVit, 1);
     gl.uniform2f(uPts.uCadre, largeurMonde, hauteurMonde);
-    /* La MEME etendue que la simulation, forcement : c'est la couture de ce
-       domaine-la qu'on eteint. Deux valeurs qui devraient etre egales et qui
-       sont ecrites a deux endroits finissent toujours par diverger, donc on
-       les prend a la source commune. */
-    gl.uniform2f(uPts.uEtendue, ETENDUE[0] * largeurMonde, ETENDUE[1] * hauteurMonde);
     gl.uniform1f(uPts.uTaille, (petit ? 1.25 : 1.5) * definition);
     gl.uniform1f(uPts.uCohesion, cohesion);
     gl.drawArrays(gl.POINTS, 0, allege ? (dessinees / 2) | 0 : dessinees);
@@ -893,8 +899,15 @@ export async function monterLaNuee(toile, options = {}) {
   (options.instruments === false ? Promise.reject(new Error('eteints')) : import('./instruments.js' + (options.version || ''))).then(({ monterLesInstruments }) => {
     instruments = monterLesInstruments(toile, fauxOeil, { dans: toile.parentElement });
     const point = i => ({ x: ANCRES[i].x * largeurMonde, y: ANCRES[i].y * hauteurMonde, z: 0 });
+    /* ══ ELLES S'EFFACENT AVEC LE MOT ══════════════════════════════════════
+       Une etiquette accrochee a une chose qui se dissout doit se dissoudre
+       avec elle, sinon elle reste a designer du vide. Elle suit donc la
+       cohesion, comme les particules, et part un peu AVANT elles : une
+       legende qui survit a son sujet est plus genante qu'une legende qui
+       manque. */
+    const avecLeMot = () => (cohesion - 0.34) / 0.42;
     const pose = (i, titre, valeur) => instruments.poser({
-      point: point(i), titre, valeur,
+      point: point(i), titre, valeur, montre: avecLeMot,
       cote: ANCRES[i].cote, vers: ANCRES[i].vers, longueur: ANCRES[i].l
     });
     pose(0, 'KAZURA_NUEE', () => (allege ? (dessinees / 2) | 0 : dessinees).toLocaleString('fr') + ' particules');

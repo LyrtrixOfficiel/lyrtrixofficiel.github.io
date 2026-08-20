@@ -99,6 +99,27 @@ export function monterLePaysage(scene, options = {}) {
   scene.add(groupe);
   const aJeter = [];
 
+  /* ══ LE PAYSAGE PEUT CHANGER DE COULEUR D'AIR ══════════════════════════════
+     Une seule poignee, `teinter`, et elle suffit a faire basculer tout le lieu
+     du bleu de nuit au violet. C'est possible parce que la teinte d'horizon est
+     partagee : le ciel, le sol, l'eau et les monts pointent tous vers la MEME
+     couleur. La modifier en place les change tous au meme instant, sans qu'un
+     seul d'entre eux ait a savoir que quelque chose se passe.
+
+     On garde donc l'original de cote. Une couleur qu'on anime sans en avoir
+     conserve la valeur de depart derive, parce que chaque image repart de la
+     precedente. */
+  const HORIZON_ORIG = HORIZON.clone();
+  const HORIZON_APRES = new THREE.Color('#33215E');
+  const BRUME_MONT = new THREE.Color('#08161C');
+  const BRUME_MONT_APRES = new THREE.Color('#170D2C');
+  const brumesMont = [];
+  function brumeDuMont() {
+    const c = BRUME_MONT.clone();
+    brumesMont.push(c);
+    return c;
+  }
+
   /* ══ LE CIEL ════════════════════════════════════════════════════════════
      Une sphere vue de l'interieur. Le degrade ne se lit pas sur la hauteur de
      l'ecran mais sur la DIRECTION du regard : c'est ce qui fait que le ciel
@@ -300,7 +321,7 @@ export function monterLePaysage(scene, options = {}) {
       uniforms: {
         uTeinte:  { value: new THREE.Color(teinte) },
         uHorizon: { value: HORIZON },
-        uBrume:   { value: new THREE.Color('#08161C') },
+        uBrume:   { value: brumeDuMont() },
         uNeige:   { value: mont ? 1 : 0.35 },
         uCime:    { value: cime }
       },
@@ -651,6 +672,13 @@ export function monterLePaysage(scene, options = {}) {
        Une seule image pour le sol et pour la pierre, c'est ce qui fait que les
        deux appartiennent au meme lieu ; deux mousses differentes se
        remarqueraient immediatement, sans qu'on sache dire pourquoi. */
+    /* De zero a un : la couleur de l'air du monde entier. Le voyage s'en sert
+       pour que franchir le portail se VOIE, au lieu de se deviner. */
+    teinter(k) {
+      const v = Math.max(0, Math.min(1, k));
+      HORIZON.copy(HORIZON_ORIG).lerp(HORIZON_APRES, v);
+      for (const c of brumesMont) c.copy(BRUME_MONT).lerp(BRUME_MONT_APRES, v);
+    },
     mousse: texSol, mousseRelief: texSolRelief,
     _ciel: ciel, _sol: sol, _lac: lac,
     detruire() {

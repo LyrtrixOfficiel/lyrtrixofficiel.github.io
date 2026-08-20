@@ -52,7 +52,12 @@ export function monterLesInstruments(toile, camera, options = {}) {
      `vers` dit de quel cote le coude part. Une etiquette se pose toujours au
      bout du coude : pour la mettre SOUS un objet, il faut que le coude descende,
      sinon elle revient se coller sur l'objet qu'elle designe. */
-  function poser({ point, titre, valeur, cote = 'droite', longueur = 0.14, vers = 'haut', portee = 0 }) {
+  /* `montre` : une fonction qui rend une valeur entre zero et un, rappelee a
+     chaque image. Elle sert aux releves qui annotent une chose PASSAGERE : le
+     nom en particules, qui se dissout, ou le flux du portail, qui n'existe
+     qu'a son approche. Sans elle, il faudrait creer et detruire les etiquettes
+     au fil du recit, donc gerer un cycle de vie pour un fondu. */
+  function poser({ point, titre, valeur, cote = 'droite', longueur = 0.14, vers = 'haut', portee = 0, montre = null }) {
     const boite = document.createElement('div');
     boite.className = 'instrument';
     boite.dataset.cote = cote;
@@ -77,7 +82,7 @@ export function monterLesInstruments(toile, camera, options = {}) {
     traits.appendChild(croix);
     hote.appendChild(boite);
 
-    releves.push({ point: point.clone ? point.clone() : { ...point }, boite, valeur: v, lireValeur: valeur, croix, trait, cote, longueur, vers, portee });
+    releves.push({ point: point.clone ? point.clone() : { ...point }, boite, valeur: v, lireValeur: valeur, croix, trait, cote, longueur, vers, portee, montre });
     return releves[releves.length - 1];
   }
 
@@ -121,6 +126,14 @@ export function monterLesInstruments(toile, camera, options = {}) {
     traits.setAttribute('viewBox', '0 0 ' + r.width.toFixed(0) + ' ' + r.height.toFixed(0));
 
     for (const p of releves) {
+      /* Un releve qui annote une chose passagere s'efface avec elle. On sort
+         avant la projection : ce qui ne se voit pas ne se calcule pas. */
+      const vu = p.montre ? Math.max(0, Math.min(1, p.montre())) : 1;
+      if (vu < 0.02) {
+        p.boite.style.opacity = '0'; p.trait.style.opacity = '0'; p.croix.style.opacity = '0';
+        continue;
+      }
+
       /* On projette le point du monde sur l'ecran. C'est la seule ligne de
          mathematique de tout le module, et c'est elle qui fait que l'etiquette
          reste accrochee a l'objet quand la camera tourne. */
@@ -166,7 +179,7 @@ export function monterLesInstruments(toile, camera, options = {}) {
       const gMin = Math.max(0, -r.left);
       const gMax = Math.min(r.width, largeurEcran - r.left);
       const dedans = x > gMin - 40 && x < gMax + 40 && y > -40 && y < r.height + 40;
-      const op = dedans ? '1' : '0';
+      const op = dedans ? vu.toFixed(3) : '0';
       p.boite.style.opacity = op; p.trait.style.opacity = op; p.croix.style.opacity = op;
       if (!dedans) continue;
 

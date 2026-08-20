@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=11c3dd11e1">
+<link rel="stylesheet" href="css/kazura.css?v=daec812dc7">
 
 <script type="importmap">
 { "imports": {
@@ -422,9 +422,19 @@ addEventListener('resize', () => poser(avancee()), { passive: true });
 
   try {
     const { monterLaNuee } = await import('./js/nuee.js');
-    /* La nuee n'apporte pas ses propres etiquettes : la page en a deja quatre,
-       accrochees au monde. Sept a l'ecran ne se lisent plus. */
-    nuee = await monterLaNuee(document.getElementById('toile-nuee'), { instruments: false });
+    /* ══ LE NOM PORTE SES PROPRES RELEVES ══════════════════════════════════
+       Ils etaient eteints, au motif que sept etiquettes a l'ecran ne se lisent
+       plus. L'argument etait bon au comptage et faux au moment : celles du
+       monde ont une PORTEE, donc au premier temps il n'y a que les deux de la
+       feuille, et celles du nom s'effacent avec lui. Jamais plus de cinq a la
+       fois, et jamais les memes.
+
+       Matheo les a redemandees pour le titre : « toutes ces petites
+       indications, tu devrais en faire sur le titre, qui disparaissent
+       apres ». La troisieme est la meilleure de tout le site, parce que le
+       chiffre qu'elle affiche est exactement ce que le visiteur est en train
+       de faire tourner avec sa molette. */
+    nuee = await monterLaNuee(document.getElementById('toile-nuee'));
     if (nuee) {
       (window.kazura ||= {}).nuee = nuee;
       nuee.tenir(1);

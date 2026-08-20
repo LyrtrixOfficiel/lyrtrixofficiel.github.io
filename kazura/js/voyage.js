@@ -399,6 +399,17 @@ export async function monterLeVoyage(toile, options = {}) {
      perdant leur contraste avec la distance. C'est exactement la perspective
      atmospherique, et c'est elle qui fabrique l'echelle. */
   const BRUME = new THREE.Color('#08161C');
+  /* ══ ET UNE AUTRE, DE L'AUTRE COTE ═════════════════════════════════════
+     Matheo : « il devrait se passer quelque chose de special quand on passe
+     dedans, qui change quelque chose ». Un portail qu'on traverse sans que
+     rien ne change n'est pas un portail, c'est une arche.
+
+     Ce qui change est la LUMIERE DE L'AIR. Avant, la vallee s'estompe vers un
+     bleu de nuit ; apres, vers un violet. Rien n'est deplace, rien n'est
+     rallume : c'est la meme vallee, vue depuis un endroit ou l'air n'a plus la
+     meme couleur. C'est le changement le moins couteux qui existe et le plus
+     total, parce qu'il touche TOUT ce qui est loin d'un coup. */
+  const BRUME_APRES = new THREE.Color('#1A1038');
   scene.fog = new THREE.FogExp2(BRUME, 0.0058);
 
   const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 1600);
@@ -743,7 +754,11 @@ export async function monterLeVoyage(toile, options = {}) {
         /* Fresnel et contre-jour se calculent APRES la perturbation : c'est
            la normale detaillee qui doit les nourrir, sinon le relief est
            calcule pour rien et la tige reste lisse. */
-        float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
+        /* L'exposant fait la LARGEUR du lisere. A 3, l'arete deborde sur le
+           flanc du tube et la tige se lit comme un cylindre verni ; a 4,5 elle
+           reste une arete. C'est ce reglage-la, et pas la couleur, qui separe
+           une plante d'un tuyau. */
+        float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 4.5);
         vec3 L = normalize(vec3(0.45, 0.35, -1.0));
         float dos = pow(clamp(dot(-N, L), 0.0, 1.0), 2.2);
         /* ══ UNE TIGE N'EST PAS EGALE SUR SA LONGUEUR ══════════════════════
@@ -781,9 +796,15 @@ export async function monterLeVoyage(toile, options = {}) {
            il y en a une centaine dans le cadre. Le vert reste la couleur des
            corps, le violet devient celle des contours : deux roles, une seule
            image, et le violet est partout sans jamais salir un aplat. */
+        /* Et il est MODULE PAR LA FIBRE, comme tout le reste. Un lisere
+           d'intensite egale d'un bout a l'autre est ce qui fait le neon :
+           un contour parfaitement regulier n'existe pas dans une plante.
+           Matheo, sur la version precedente : « elles se sont elargies, on
+           dirait plus des lianes ». Elles n'avaient pas grossi d'un
+           millimetre, c'est leur arete qui avait double. */
         vec3 col = uJadeF * 0.22 * f
                  + uJade * dos * 0.30 * grain * f
-                 + vec3(0.52, 0.34, 0.92) * fres * 0.24;
+                 + vec3(0.52, 0.34, 0.92) * fres * 0.155 * (0.45 + grain * 0.75);
         /* Le bourgeon : la pointe qui vient de sortir est plus claire, comme
            une pousse tendre. C'est lui qui rend la croissance LISIBLE ; sans
            lui on ne voit pas que la tige avance, on voit juste qu'elle est
@@ -815,7 +836,12 @@ export async function monterLeVoyage(toile, options = {}) {
      premier plan et un fond, donc un trou au milieu, et c'est exactement la
      que le regard va quand il cherche la distance. Matheo : « il n'y a pas
      grand-chose avant le portail ». */
-  const NB_LIANES = petit ? 18 : 48;
+  /* Soixante, sur CINQ rangs dont deux au premier plan. La version d'avant en
+     mettait un tiers pres, un tiers au milieu, un tiers au fond : le couloir
+     s'est vide de devant sans que le compte total ne baisse, et Matheo l'a vu
+     tout de suite, « il y en a un peu moins ». Ce qui compte n'est pas combien
+     il y en a, c'est combien il y en a PRES. */
+  const NB_LIANES = petit ? 20 : 60;
   const SEG = petit ? 70 : 130;
   const RAD = petit ? 6 : 9;
 
@@ -825,8 +851,8 @@ export async function monterLeVoyage(toile, options = {}) {
        sortent du champ de la mise au point, le flou les dissout, et il reste
        une masse vegetale sans detail. C'est exactement ce qu'on veut d'un
        arriere-plan : de la presence, pas de l'information. */
-    const bande = i % 3;          /* 0 pres, 1 milieu, 2 fond */
-    const loin = bande === 2;
+    const bande = i % 5;          /* 0-1 pres, 2-3 milieu, 4 fond */
+    const loin = bande === 4;
     /* La moitie des lianes est semee entre zero et cinquante, la ou le
        couloir etait vide entre la feuille et le portail : sans elles, on
        traverse quinze unites sans rien voir passer, et le voyage s'arrete
@@ -844,10 +870,19 @@ export async function monterLeVoyage(toile, options = {}) {
        n'en est pas une. Le rail passe par l'axe, on lui laisse donc un tube
        libre de six unites et demie, ce qui suffit pour qu'une liane proche
        reste au bord du cadre au lieu de le traverser. */
-    const ecart = (bande === 0 ? alea(6.5, 11.5)
-                 : bande === 1 ? alea(12.0, 17.5)
-                               : alea(19.0, 32.0)) * cote;
-    const montee = bande === 0 ? alea(7, 17) : bande === 1 ? alea(10, 21) : alea(16, 30);
+    const ecart = (bande < 2 ? alea(6.4, 11.0)
+                 : bande < 4 ? alea(11.5, 17.5)
+                             : alea(19.0, 32.0)) * cote;
+    const montee = bande < 2 ? alea(7, 17) : bande < 4 ? alea(10, 21) : alea(16, 30);
+    /* ══ ET ELLES SONT PLUS FINES ══════════════════════════════════════════
+       Le rayon montait a vingt-six centimetres au premier plan. Sur une tige
+       qui monte de quinze metres, cela fait un rapport de un a soixante :
+       c'est un mat, pas une liane. Le kudzu vrai est autour de un a deux cents.
+       On descend a quinze centimetres au plus pres, et le rang du fond garde
+       les tiges epaisses, ou elles ne servent qu'a faire de la masse. */
+    const rayon = bande < 2 ? alea(0.055, 0.145)
+                : bande < 4 ? alea(0.085, 0.185)
+                            : alea(0.130, 0.280);
     /* ══ ELLES PARTENT DU SOL, PAS DE NULLE PART ═══════════════════════════
        Elles demarraient toutes a moins trois, une hauteur inventee, dans un
        monde qui n'avait pas de sol. Maintenant qu'il y en a un, une tige qui
@@ -881,7 +916,8 @@ export async function monterLeVoyage(toile, options = {}) {
       ));
     }
     const courbe = new THREE.CatmullRomCurve3(points);
-    const geo = new THREE.TubeGeometry(courbe, loin ? Math.round(SEG * 0.5) : SEG, loin ? alea(0.16, 0.36) : alea(0.09, 0.26), loin ? 6 : RAD, false);
+    const geo = new THREE.TubeGeometry(courbe, loin ? Math.round(SEG * 0.5) : SEG,
+                                       rayon, bande < 2 ? RAD : (loin ? 6 : 7), false);
 
     const pos = geo.attributes.position, uvs = geo.attributes.uv;
     const centres = new Float32Array(pos.count * 3);
@@ -897,7 +933,10 @@ export async function monterLeVoyage(toile, options = {}) {
     geo.setAttribute('aRetard', new THREE.BufferAttribute(ret, 1));
     monde.add(new THREE.Mesh(geo, matTige));
 
-    const nf = loin ? (petit ? 3 : 5) : (petit ? 5 : 9);
+    /* Plus de feuilles au premier plan. Une tige nue n'est pas une liane, et
+       c'est la moitie de ce qui manquait : le feuillage est ce qui dit de
+       quelle PLANTE il s'agit. */
+    const nf = petit ? (loin ? 3 : 5) : (bande < 2 ? 13 : bande < 4 ? 9 : 5);
     for (let k = 0; k < nf; k++) {
       /* ══ PAS DE FEUILLE AU RAS DU SOL ═════════════════════════════════
          Elles partaient a un dixieme de la tige, donc pratiquement par terre.
@@ -1081,7 +1120,10 @@ export async function monterLeVoyage(toile, options = {}) {
 
   const matP = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { uTemps: { value: 0 }, uEchelle: { value: 400 }, uJade: { value: JADE } },
+    /* Sa couleur lui appartient : les autres materiaux partagent l'instance de
+       JADE, et la faire virer au violet pour les poussieres teindrait le monde
+       entier. Une couleur qu'on anime doit etre a soi. */
+    uniforms: { uTemps: { value: 0 }, uEchelle: { value: 400 }, uJade: { value: JADE.clone() } },
     vertexShader: /* glsl */`
       attribute float aGraine;
       uniform float uTemps, uEchelle;
@@ -1764,7 +1806,9 @@ export async function monterLeVoyage(toile, options = {}) {
     const versSujet = fluxPortail
       ? camera.position.distanceTo(fluxPortail.position)
       : camera.position.distanceTo(pVise);
-    const melange = Math.min(1, pres * 1.25);
+    /* Le flux entre dans la zone de nettete plus tot qu'avant : c'est l'autre
+       moitie du remede aux pastilles de flou. */
+    const melange = Math.min(1, pres * 1.6);
     flou.uniforms.focus.value = Math.max(0.6,
       camera.position.distanceTo(pVise) * (1 - melange) + versSujet * melange);
     /* L'ouverture se referme quand on est loin : de pres, un fond dissous
@@ -1786,8 +1830,28 @@ export async function monterLeVoyage(toile, options = {}) {
     if (fluxPortail) {
       const uf = fluxPortail.material.uniforms;
       uf.uTemps.value = t0;
-      uf.uForce.value = 0.34 + 2.35 * pres;
+      /* ══ ET IL EST DISCRET DE LOIN ══════════════════════════════════════
+         Le fond valait 0,34 quel que soit l'eloignement. A quarante unites, le
+         vortex n'est plus qu'une tache de quelques pixels, tres brillante, et
+         tres loin du plan de mise au point : le noyau carre du flou la rendait
+         en petits pastilles. Matheo : « a une distance un peu loin, il y a des
+         endroits, le flou ; une fois qu'on s'approche, ca va ». Une source
+         lointaine doit etre FAIBLE, sinon elle devient un artefact. */
+      uf.uForce.value = 0.12 + 2.55 * pres;
     }
+
+    /* ══ DE L'AUTRE COTE ═══════════════════════════════════════════════════
+       Un seul nombre, zero avant l'anneau et un apres, et il change trois
+       choses a la fois : la couleur de l'air, celle des poussieres, et la part
+       de violet que l'etalonnage pose dans les ombres. Le franchissement
+       devient un evenement au lieu d'un passage. */
+    const apres = Math.min(1, Math.max(0, (camera.position.z - 52.5) / 7.0));
+    scene.fog.color.copy(BRUME).lerp(BRUME_APRES, apres);
+    matP.uniforms.uJade.value.copy(JADE).lerp(VIOLET, apres * 0.85);
+    /* Et la couleur de l'air du paysage entier : ciel, sol, eau et monts d'un
+       seul geste, parce qu'ils partagent tous la meme teinte d'horizon. C'est
+       ce qui rend le changement TOTAL au lieu de local. */
+    paysage.teinter?.(apres);
 
     /* ── Les rais partent de la lueur, quand elle est devant nous ────────── */
     /* Ils visaient toujours la lueur d'horizon, a quatre-vingt-dix-neuf. Tant
@@ -1842,7 +1906,7 @@ export async function monterLeVoyage(toile, options = {}) {
        deux fois plus a l'approche de l'anneau : la lumiere du flux se repand
        dans l'air et teinte tout ce qui l'entoure, ce qui est ce que fait une
        vraie source, et ce que ne fait jamais un filtre pose sur l'image. */
-    etalon.uniforms.uOmbre.value.copy(OMBRE_NUIT).multiplyScalar(1 + 1.25 * pres);
+    etalon.uniforms.uOmbre.value.copy(OMBRE_NUIT).multiplyScalar(1 + 1.25 * pres + 0.55 * apres);
 
     if (instruments && feuilleGeante) {
       for (let i = 0; i < 2; i++) {
@@ -1908,10 +1972,28 @@ export async function monterLeVoyage(toile, options = {}) {
     const compteur = monterLeCompteur();
     instruments = monterLesInstruments(toile, camera, { dans: options.releves || toile.parentElement });
 
-    const pose = (point, titre, valeur, cote, vers, portee) => {
+    const pose = (point, titre, valeur, cote, vers, portee, montre) => {
       ancres.push(point.clone());
-      instruments.poser({ point: point.clone(), titre, valeur, cote, vers, longueur: 120, portee });
+      instruments.poser({ point: point.clone(), titre, valeur, cote, vers, longueur: 120, portee, montre });
     };
+
+    /* ══ LES ANCRES SE POSENT SUR L'OBJET, PAS SUR SA BOITE ════════════════
+       Celles du portail et du sceau etaient prises au coin de la boite
+       englobante. Pour un objet CIRCULAIRE, ce coin est du vide : les deux
+       etiquettes designaient un point situe en diagonale au-dessus de l'anneau
+       et du blason. Tant que la camera passait haut, ca ne se remarquait pas ;
+       depuis qu'elle plonge, Matheo l'a vu tout de suite, « celle du portail
+       s'est decalee, celle du logo aussi ».
+
+       On les pose maintenant sur la COURONNE, par un angle et un rayon. Le
+       centre de l'anneau se deduit de la meme facon que sa position : hauteur
+       du terrain, plus sa demi-hauteur, moins l'enfoncement. Une croix qui ne
+       touche rien ne designe rien. */
+    const yAnneau = hauteurSol(0, 55) + 3.89;
+    const surAnneau = (deg, rayon) => new THREE.Vector3(
+      Math.cos(deg * Math.PI / 180) * rayon,
+      yAnneau + Math.sin(deg * Math.PI / 180) * rayon,
+      55);
 
     pose(new THREE.Vector3(3.4, 3.6, 9.0), 'PUERARIA_MONTANA',
       () => triFeuille ? triFeuille.toLocaleString('fr') + ' triangles' : 'chargement…',
@@ -1919,13 +2001,24 @@ export async function monterLeVoyage(toile, options = {}) {
     pose(new THREE.Vector3(0.8, 0.7, 9.0), 'MATIERE',
       () => defFeuille ? defFeuille + '  ·  ' + poidsFeuille.toLocaleString('fr') + ' Ko' : 'chargement…',
       'gauche', 'bas', 26);
-    pose(new THREE.Vector3(4.4, hauteurSol(0, 55) + 8.2, 55), 'PORTAIL',
+    pose(surAnneau(118, 3.65), 'PORTAIL',
       () => triPortail ? triPortail.toLocaleString('fr') + ' triangles  ·  ' + poidsPortail.toLocaleString('fr') + ' Ko' : 'chargement…',
-      'droite', 'haut', 46);
-    pose(new THREE.Vector3(-4.6, hauteurSol(0, 55) + 2.4, 55), 'CADENCE',
+      'gauche', 'haut', 46);
+    /* Le flux ne s'annote que quand il brule. Son etiquette suit sa force,
+       donc elle arrive avec lui et s'en va avec lui : on n'a pas a la creer
+       ni a la detruire, et elle ne peut pas designer un anneau eteint. */
+    pose(surAnneau(28, 1.85), 'FLUX',
+      () => fluxPortail
+        ? 'vortex  ·  ' + (fluxPortail.material.uniforms.uForce.value).toFixed(2) + ' d’intensite'
+        : 'chargement…',
+      'droite', 'haut', 30,
+      () => fluxPortail ? Math.min(1, Math.max(0, (fluxPortail.material.uniforms.uForce.value - 0.5) * 1.6)) : 0);
+    pose(surAnneau(-52, 3.65), 'CADENCE',
       () => compteur.ms() ? compteur.ms().toFixed(1) + ' ms par image' : 'mesure…',
-      'gauche', 'bas', 46);
-    pose(new THREE.Vector3(3.4, 6.6, 82), 'SCEAU_KAZURA',
+      'droite', 'bas', 46);
+    /* Le sceau fait six unites de large, donc trois de rayon. L'ancre etait a
+       quatre virgule seize du centre : dehors. */
+    pose(new THREE.Vector3(1.85, 6.15, 82), 'SCEAU_KAZURA',
       () => formesSceau ? formesSceau + ' formes  ·  verre, indice 1,66' : 'chargement…',
       'droite', 'haut', 34);
   }).catch(e => console.warn('instruments indisponibles', e));
