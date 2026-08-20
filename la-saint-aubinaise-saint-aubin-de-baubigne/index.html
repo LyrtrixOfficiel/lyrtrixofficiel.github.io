@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/gabarit/brasserie.css">
+<script type="importmap">
+{"imports":{"three":"/gabarit/three/build/three.module.min.js","three/addons/":"/gabarit/three/examples/jsm/"}}
+</script>
 </head>
 
 <body style="--fond:#faf9f8;--encre:#27231c;--vif:#a78744;--nuit:#6d582c;--clair:#ebe8e0;--pale:#a49d8e;--virage:16deg;--display:'Archivo', 'Helvetica Neue', sans-serif;--corps:'Newsreader', Georgia, serif;--mono:'JetBrains Mono',ui-monospace,monospace">
@@ -33,6 +36,7 @@
   <span class="marque"><img src="enseigne.jpg" alt="">La Saint Aubinaise</span>
   <nav>
     <a class="lien" href="#chiffre">Votre audience</a>
+    <a class="lien" href="#objet">Votre bouteille</a>
     <a class="lien" href="#quartier-pan">Vous trouver</a>
     
     <a class="bouton" href="tel:0781286845">Appeler</a>
@@ -89,6 +93,15 @@
     <p class="chapeau" data-vient="monte" style="--d:120ms">Et pas une page à leur envoyer.
     Celle-ci est montée à partir de ce que vous publiez : votre enseigne, vos mots,
     et les couleurs lues dans votre logo.</p>
+  </div>
+</section>
+
+<section class="nuit objet-pan" id="objet">
+  <div class="serre">
+    <span class="sur" data-vient="fond">Ce que vous faites</span>
+    <h2 class="grand" style="margin-top:12px;max-width:16ch" data-vient="monte">Votre bouteille,<br>reconstruite depuis votre photo.</h2>
+    <div class="objet-scene" data-objet="objet.glb" aria-label="Modele en trois dimensions"></div>
+    <p class="objet-invite"><i></i>Attrapez la bouteille pour la tourner</p>
   </div>
 </section>
 

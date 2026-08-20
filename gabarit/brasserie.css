@@ -346,3 +346,34 @@ html[data-curseur='oui'] body, html[data-curseur='oui'] a, html[data-curseur='ou
   }
   html:not([data-anime='oui']) [data-vient] { opacity: 1 !important; translate: none !important; }
 }
+
+
+/* =========================================================================
+   L'OBJET
+   Leur bouteille, reconstruite depuis leur propre photo. Elle vit dans l'acte
+   sombre : un objet en verre ne se lit pas sur du blanc, il se lit sur du noir,
+   et c'est exactement ce que fait le site de Stephane avec ses pieces de bois.
+   ========================================================================= */
+.objet-pan { position: relative; }
+.objet-scene {
+  width: 100%; height: min(74svh, 620px);
+  cursor: grab; touch-action: pan-y;
+}
+.objet-scene:active { cursor: grabbing; }
+.objet-scene canvas { width: 100% !important; height: 100% !important; display: block; }
+.objet-scene[data-rate='oui'] { display: none; }
+.objet-invite {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  margin-top: 10px; font-family: var(--mono); font-size: .74rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: color-mix(in srgb, #fff 66%, transparent);
+}
+.objet-invite i {
+  width: 13px; height: 13px; border-radius: 50%; display: inline-block;
+  border: 1px solid currentColor; border-right-color: transparent;
+  animation: tourner 2.4s linear infinite;
+}
+@keyframes tourner { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-anime='oui']) .objet-invite i { animation: none; }
+}

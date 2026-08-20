@@ -162,6 +162,31 @@ async function monterLeQuartierSiPresent() {
   });
 }
 
+/* ══ 8. L'objet ════════════════════════════════════════════════════════
+   Il n'est charge QUE si la page en porte un : trois quarts de megaoctet de
+   moteur graphique et un megaoctet de modele n'ont rien a faire sur les vingt
+   pages qui n'ont pas d'objet a montrer. L'import est donc dynamique. */
+async function monterLObjetSiPresent() {
+  const hote = document.querySelector('[data-objet]');
+  if (!hote) return;
+  /* On DIT pourquoi ca a echoue. La version precedente avalait l'erreur et
+     retirait la section : la page perdait son objet sans que rien ne l'explique,
+     et il a fallu importer le module a la main dans la console pour voir que le
+     specificateur « three » n'etait pas resolu. */
+  let mod;
+  try { mod = await import('./objet.js'); }
+  catch (e) { console.warn('objet 3D indisponible :', e.message); hote.closest('section')?.remove(); return; }
+  const { monterLObjet } = mod;
+  if (!monterLObjet) { hote.closest('section')?.remove(); return; }
+  const s = getComputedStyle(document.body);
+  const vue = monterLObjet(hote, hote.dataset.objet, { accent: s.getPropertyValue('--vif').trim() }, { sobre: !anime });
+  if (!vue) return;
+  auDefilement(() => {
+    const r = hote.getBoundingClientRect();
+    vue.avance(1.2 - r.top / innerHeight);
+  });
+}
+
 /* ══ La boucle ═════════════════════════════════════════════════════════ */
 function pas() {
   const y = scrollY || document.documentElement.scrollTop;
@@ -176,6 +201,7 @@ function demarrer() {
   monterLeCompteur();
   monterLaDerive();
   monterLeQuartierSiPresent();
+  monterLObjetSiPresent();
   const battre = () => { pas(); requestAnimationFrame(battre); };
   battre();
   document.documentElement.dataset.pret = 'oui';
