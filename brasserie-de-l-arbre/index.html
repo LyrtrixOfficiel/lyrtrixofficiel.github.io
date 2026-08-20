@@ -12,62 +12,87 @@
 <link rel="stylesheet" href="/gabarit/brasserie.css">
 </head>
 
-<body style="--fond:#faf9f8;--encre:#15181c;--vif:#2f3742;--nuit:#0b0d10;--clair:#e8eaee;--pale:#98a3b3;--display:'Anybody', 'Helvetica Neue', sans-serif;--corps:'Fraunces', Georgia, serif;--mono:'JetBrains Mono',ui-monospace,monospace">
+<body style="--fond:#faf9f8;--encre:#15181c;--vif:#2f3742;--nuit:#0b0d10;--clair:#e8eaee;--pale:#98a3b3;--virage:-170deg;--display:'Anybody', 'Helvetica Neue', sans-serif;--corps:'Fraunces', Georgia, serif;--mono:'JetBrains Mono',ui-monospace,monospace">
 
-<div class="seuil" aria-hidden="true">
-  <img src="enseigne.jpg" alt="">
-  <div class="barre"><i></i></div>
+<!-- La carte de deviation du verre. Sans elle, le verre reste un verre depoli
+     tout a fait correct : c'est un enrichissement, pas une condition. -->
+<svg class="filtres" aria-hidden="true" style="position:absolute;width:0;height:0"><defs>
+  <filter id="refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feImage href="/gabarit/refraction.png" preserveAspectRatio="none" result="c"/>
+    <feDisplacementMap in="SourceGraphic" in2="c" scale="24" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+<div class="encre" aria-hidden="true">
+  <video autoplay muted loop playsinline preload="metadata" poster="/gabarit/encre.webp">
+    <source src="/gabarit/encre.mp4" type="video/mp4">
+  </video>
 </div>
 
-<div id="defile">
-
-<header class="entree">
-  <div class="serre haut">
-    <span class="sur">Brasserie artisanale</span>
-    <span class="sur"></span>
-  </div>
-  <div class="serre">
-    <div class="enseigne-bloc">
-      <img class="enseigne" src="enseigne.jpg" alt="Enseigne de Brasserie de l’arbre" fetchpriority="high">
-      <div class="titre-bloc">
-        <h1 class="geant">
-        <span class="ligne" style="--corps:18.15">Brasserie</span>
-        <span class="ligne" style="--corps:16.33">de l’arbre</span>
-        </h1>
-        
-      </div>
-    </div>
-
-    <div class="service">
-      <div class="bloc">
-        <span class="sur">Maintenant</span>
-        <span class="valeur etat" id="etat"><span class="point"></span><span class="mot-etat">Nous appeler</span></span>
-      </div>
-      
-      <div class="bloc"><span class="sur">Téléphone</span><span class="valeur">07 62 55 71 22</span></div>
-      <div class="actions" style="margin-left:auto">
-        <a class="bouton" data-aimant href="tel:0762557122">Appeler la brasserie</a>
-        <a class="bouton nu" data-aimant href="https://www.openstreetmap.org/directions?to=48.5549483%2C-0.4237919" target="_blank" rel="noopener">Y aller</a>
-      </div>
-    </div>
-  </div>
+<header class="barre verre">
+  <span class="marque"><img src="enseigne.jpg" alt="">Brasserie de l’arbre</span>
+  <nav>
+    <a class="lien" href="#chiffre">Votre audience</a>
+    <a class="lien" href="#quartier-pan">Vous trouver</a>
+    
+    <a class="bouton" href="tel:0762557122">Appeler</a>
+  </nav>
 </header>
 
-<section class="pan">
+<main>
+
+<section class="entree">
+  <div class="serre">
+    <div class="panneau verre">
+      <div class="enseigne-bloc">
+        <img class="enseigne" src="enseigne.jpg" alt="Enseigne de Brasserie de l’arbre" fetchpriority="high">
+        <div class="titre-bloc">
+          <span class="sur">Brasserie artisanale</span>
+          <h1 class="geant" style="margin-top:10px">
+          <span class="ligne" style="--corps:18.15">Brasserie</span>
+        <span class="ligne" style="--corps:16.33">de l’arbre</span>
+          </h1>
+        </div>
+      </div>
+
+      <div class="hublots">
+        <figure class="hublot"><img src="/gabarit/photos/3.jpg" alt="" loading="lazy"></figure>
+        <figure class="hublot milieu"><img src="enseigne.jpg" alt=""></figure>
+        <figure class="hublot"><img src="/gabarit/photos/6.jpg" alt="" loading="lazy"></figure>
+      </div>
+
+      
+
+      <div class="service">
+        <div class="bloc">
+          <span class="sur">Maintenant</span>
+          <span class="valeur etat" id="etat"><span class="point"></span><span class="mot-etat">Nous appeler</span></span>
+        </div>
+        
+        <div class="bloc"><span class="sur">Téléphone</span><span class="valeur">07 62 55 71 22</span></div>
+        <div class="actions" style="margin-left:auto">
+          <a class="bouton" href="tel:0762557122">Appeler la brasserie</a>
+          <a class="bouton clair" href="https://www.openstreetmap.org/directions?to=48.5549483%2C-0.4237919" target="_blank" rel="noopener">Y aller</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="nuit" id="chiffre">
   <div class="serre chiffre">
     <span class="sur" data-vient="fond">Sur votre page Facebook</span>
     <span class="n" data-compte="373" data-vient="fond">373</span>
     <p class="quoi" data-vient="monte">personnes vous suivent déjà.</p>
-    <p class="puis" data-vient="monte" style="--d:120ms">Et pas une page à leur envoyer.
-    Celle-ci a été montée en quelques minutes, à partir de ce que vous publiez déjà.</p>
+    <p class="chapeau" data-vient="monte" style="--d:120ms">Et pas une page à leur envoyer.
+    Celle-ci est montée à partir de ce que vous publiez : votre enseigne, vos mots,
+    et les couleurs lues dans votre logo.</p>
   </div>
 </section>
 
-
-
-<section class="pan quartier">
+<section class="pan quartier" id="quartier-pan">
   <div class="serre">
-    <div class="toile"><canvas id="quartier" data-releve="/gabarit/quartiers/brasserie-de-l-arbre.json" aria-label="Plan du quartier"></canvas></div>
+    <div class="toile verre"><canvas id="quartier" data-releve="/gabarit/quartiers/brasserie-de-l-arbre.json" aria-label="Plan du quartier"></canvas></div>
     <div class="legende">
       <h2 class="grand" data-vient="monte">Votre rue,<br>au mètre près.</h2>
       <p class="note mention" data-vient="fond">Relevé dans OpenStreetMap et dessiné à l'échelle : emprises au sol
@@ -79,29 +104,38 @@
 
 
 <section class="pan">
-  <div class="serre fin">
-    <span class="sur" data-vient="fond">Cette page</span>
-    <h2 class="grand" data-vient="monte">C'est une première version.</h2>
-    <p class="chapeau" style="text-align:center;max-width:54ch" data-vient="monte" >
-      Le nom, l'adresse et le téléphone viennent de votre fiche publique.
-      <b>L'enseigne et la phrase sont les vôtres</b>, reprises de votre page Facebook, et
-      <b>les couleurs de ce site sont lues dans votre logo</b>. Rien n'a été inventé.
-    </p>
-    <div class="actions" style="justify-content:center" data-vient="monte">
-      <a class="bouton" data-aimant href="tel:0762557122">07 62 55 71 22</a>
+  <div class="serre">
+    <div class="fin verre">
+      <span class="sur" data-vient="fond">Cette page</span>
+      <h2 class="grand" data-vient="monte">C'est une première version.</h2>
+      <p class="chapeau" style="text-align:center;max-width:52ch" data-vient="monte">
+        Le nom, l'adresse et le téléphone viennent de votre fiche publique.
+        <b>L'enseigne et la phrase sont les vôtres</b>, reprises de votre page, et
+        <b>les couleurs de ce site sont lues dans votre logo</b>. Rien n'a été inventé.
+      </p>
+      <div class="actions" style="justify-content:center" data-vient="monte">
+        <a class="bouton" href="tel:0762557122">07 62 55 71 22</a>
+      </div>
     </div>
   </div>
 </section>
+
+</main>
 
 <footer class="pied">
   <div class="serre">
     <p class="mention"><b>Brasserie de l’arbre</b></p>
     <p class="mention">Maquette de démonstration réalisée sans accord préalable, à partir de données publiques
-    OpenStreetMap (licence ODbL) et de l'aperçu public de votre page Facebook. Aucune donnée n'est collectée ici.
+    OpenStreetMap (licence ODbL) et de l'aperçu public de votre page Facebook. Les deux photographies rondes
+    illustrent le métier et ne sont pas les vôtres. Aucune donnée n'est collectée ici.
     Un appel suffit à la faire retirer.</p>
   </div>
 </footer>
 
+<div class="avis verre" hidden>
+  <p>Votre appareil demande à limiter les animations. Cette page en a quelques-unes.</p>
+  <button type="button" data-activer>Les activer</button>
+  <button type="button" class="nu" data-refuser>Non merci</button>
 </div>
 
 <script type="module" src="/gabarit/brasserie.js"></script>
@@ -118,19 +152,19 @@
   var hhmm = function (x) { var h = (x / 60) | 0, n = x % 60; return n ? h + ' h ' + (n < 10 ? '0' : '') + n : h + ' h'; };
   if (ouvert) {
     e.classList.add('ouvert');
-    t.textContent = (ouvert[1] - m <= 45 ? 'Ferme dans ' + (ouvert[1] - m) + ' min' : 'Ouvert jusqu\u2019\u00e0 ' + hhmm(ouvert[1]));
+    t.textContent = (ouvert[1] - m <= 45 ? 'Ferme dans ' + (ouvert[1] - m) + ' min' : 'Ouvert jusqu’à ' + hhmm(ouvert[1]));
   } else {
     var noms = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
     for (var k = 0; k < 8; k++) {
       var jj = (j + k) % 7, c = sem[jj] || [];
       for (var q = 0; q < c.length; q++) {
         if (k === 0 && c[q][0] <= m) continue;
-        t.textContent = k === 0 ? 'Ouvre \u00e0 ' + hhmm(c[q][0])
-          : (k === 1 ? 'Ouvre demain \u00e0 ' + hhmm(c[q][0]) : 'Ouvre ' + noms[jj].toLowerCase() + ' \u00e0 ' + hhmm(c[q][0]));
+        t.textContent = k === 0 ? 'Ouvre à ' + hhmm(c[q][0])
+          : (k === 1 ? 'Ouvre demain à ' + hhmm(c[q][0]) : 'Ouvre ' + noms[jj].toLowerCase() + ' à ' + hhmm(c[q][0]));
         k = 9; break;
       }
     }
-    if (!t.textContent || t.textContent === 'Horaires ci-dessous') t.textContent = 'Ferm\u00e9 aujourd\u2019hui';
+    if (!t.textContent || t.textContent === 'Horaires plus bas') t.textContent = 'Fermé aujourd’hui';
   }
   document.querySelectorAll('.jour').forEach(function (el) {
     if (el.dataset.jours && el.dataset.jours.indexOf(["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"][j]) === 0) el.dataset.aujourdhui = 'oui';

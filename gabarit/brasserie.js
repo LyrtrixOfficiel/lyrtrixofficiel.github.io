@@ -1,21 +1,19 @@
 /**
  * Le moteur des pages de brasserie.
  *
- * Repris du moteur des vitrines, avec une correction qui compte : LE MOUVEMENT
- * ET LE CURSEUR SONT DEUX CHOSES DIFFERENTES.
+ * TROIS CHOSES QUI ETAIENT SUR LE MEME INTERRUPTEUR, ET QUI N'AURAIENT JAMAIS
+ * DU L'ETRE. Mesure faite sur le lot precedent, dans un navigateur ou la
+ * preference « moins d'animations » est active : `curseur: false`, defilement
+ * amorti coupe, apparitions coupees, piece maitresse tombee de trois ecrans a
+ * un demi. La page devenait un document, et c'est tres probablement ce que
+ * Matheo a vu quand il a dit qu'il n'y avait rien.
  *
- * Mesure faite sur le lot precedent, dans un navigateur ou la preference
- * « moins d'animations » est active : `curseur: false`, defilement amorti
- * coupe, apparitions coupees, piece maitresse tombee de trois ecrans a un
- * demi. Tout etait gouverne par le meme interrupteur, et la page devenait un
- * document. C'est tres probablement ce que Matheo a vu, et il a eu raison de
- * dire qu'il n'y avait rien.
+ *   le MOUVEMENT   se coupe : c'est ce que la preference demande ;
+ *   le CURSEUR     reste : il ne bouge que parce que la main bouge ;
+ *   le CONTENU     ne se coupe jamais.
  *
- * On distingue donc :
- *   - le MOUVEMENT (defilement amorti, parallaxe, apparitions, construction du
- *     quartier), qui se coupe : c'est ce que la preference demande ;
- *   - le CURSEUR, qui ne bouge que parce que la main bouge, et qui reste ;
- *   - le CONTENU, qui ne se coupe jamais.
+ * Et comme sur le site de Stephane, on le DIT : une banniere propose de rendre
+ * les animations pour cette page. Le visiteur decide.
  */
 import { monterLeQuartier } from './quartier.js';
 
@@ -23,80 +21,51 @@ const $ = (s, p = document) => p.querySelector(s);
 const $$ = (s, p = document) => Array.from(p.querySelectorAll(s));
 const borne = (v, a, b) => Math.min(b, Math.max(a, v));
 
-const sobre = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const tactile = matchMedia('(hover: none)').matches;
+const demande = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* `anime` peut redevenir vrai si le visiteur clique « les activer ». */
+let anime = !demande;
 
-const glisse = { actif: false, y: 0, cible: 0, max: 0, vitesse: 0, boite: null };
 const abonnes = [];
-const auDefilement = (fn) => { abonnes.push(fn); fn(0, 0, 0); return fn; };
+const auDefilement = (fn) => { abonnes.push(fn); fn(0, 0); return fn; };
 
-/* ══ 1. Le seuil ═══════════════════════════════════════════════════════
-   Il ne s'affiche que si le mouvement est permis : un rideau qui ne se leve
-   pas est un mur. Et il ne retient jamais la page plus d'une seconde et demie,
-   meme si une image manque. */
-function monterLeSeuil() {
-  const s = $('.seuil');
-  if (!s) return;
-  if (sobre) { s.remove(); return; }
-  const partir = () => { s.dataset.parti = 'oui'; setTimeout(() => s.remove(), 800); };
-  setTimeout(partir, 1600);
-  addEventListener('pointerdown', partir, { once: true });
+/* ══ 1. La banniere ════════════════════════════════════════════════════ */
+function monterLAvis() {
+  const a = $('.avis');
+  if (!a) return;
+  if (!demande) { a.remove(); return; }
+  a.hidden = false;
+  $('[data-activer]', a)?.addEventListener('click', () => {
+    anime = true;
+    document.documentElement.dataset.anime = 'oui';
+    a.remove();
+    /* Le fond etait fige sur son image : on lui rend sa video. */
+    $('.encre video')?.play?.().catch(() => {});
+    monterLeCompteur(true);
+  });
+  $('[data-refuser]', a)?.addEventListener('click', () => a.remove());
 }
 
-/* ══ 2. Le defilement amorti ═══════════════════════════════════════════ */
-function monterLeDefilement() {
-  const boite = $('#defile');
-  if (!boite) return;
-  glisse.boite = boite;
-  glisse.actif = !tactile && !sobre;
-  if (!glisse.actif) { boite.dataset.natif = 'oui'; return; }
-
-  const mesurer = () => {
-    const h = boite.getBoundingClientRect().height;
-    document.body.style.height = h + 'px';
-    glisse.max = Math.max(0, h - innerHeight);
-  };
-  mesurer();
-  new ResizeObserver(mesurer).observe(boite);
-  addEventListener('resize', mesurer);
-}
-
-let dernierY = 0, dernierTemps = 0;
-
-function pas(force) {
-  const brut = force !== undefined ? force : (scrollY || document.documentElement.scrollTop);
-  const maintenant = performance.now();
-  let dt = dernierTemps ? (maintenant - dernierTemps) / 1000 : 1 / 60;
-  dernierTemps = maintenant;
-  dt = Math.min(dt, 1 / 20);
-
-  if (glisse.actif) {
-    glisse.cible = brut;
-    /* L'amortissement depend du TEMPS, pas du nombre d'images : sinon il
-       rattrape deux fois plus vite a 120 Hz qu'a 60, et une image sautee se
-       voit comme une marche. */
-    const k = 1 - Math.pow(1 - 0.14, dt * 60);
-    glisse.y += (glisse.cible - glisse.y) * k;
-    if (Math.abs(glisse.cible - glisse.y) < 0.06) glisse.y = glisse.cible;
-    glisse.boite.style.transform = `translate3d(0,${-(Math.round(glisse.y * 2) / 2)}px,0)`;
-  } else {
-    glisse.y = brut;
-    glisse.max = Math.max(0, document.body.scrollHeight - innerHeight);
-  }
-
-  glisse.vitesse = glisse.y - dernierY;
-  dernierY = glisse.y;
-  const p = glisse.max > 0 ? borne(glisse.y / glisse.max, 0, 1) : 0;
-  for (const fn of abonnes) fn(glisse.y, p, glisse.vitesse);
+/* ══ 2. La barre ═══════════════════════════════════════════════════════
+   Elle se retire quand on descend et revient quand on remonte : c'est la
+   convention, et elle rend l'ecran aux pages qui ont quelque chose a montrer. */
+function monterLaBarre() {
+  const b = $('.barre');
+  if (!b) return;
+  let dernier = 0;
+  auDefilement((y) => {
+    b.dataset.cachee = (y > 260 && y > dernier) ? 'oui' : 'non';
+    dernier = y;
+  });
 }
 
 /* ══ 3. Apparitions ════════════════════════════════════════════════════
    Calculees dans la boucle, pas dans un IntersectionObserver : l'observateur
-   ne repond pas dans un document non compose, et toute la page resterait a
-   opacite zero dans un navigateur pilote. */
+   ne repond pas dans un document non compose, et la page resterait vide dans
+   un navigateur pilote. */
 function monterLesApparitions() {
-  if (sobre) return;
   let restants = $$('[data-vient]');
+  if (!anime) { for (const el of restants) el.dataset.vu = 'oui'; return; }
   auDefilement(() => {
     if (!restants.length) return;
     const h = innerHeight;
@@ -109,18 +78,13 @@ function monterLesApparitions() {
   });
 }
 
-/* ══ 4. Le curseur ═════════════════════════════════════════════════════
-   IL RESTE EN MODE SOBRE. Il ne se deplace que parce que la main se deplace :
-   il ne produit aucun mouvement que le visiteur n'a pas commande. Ce qu'on
-   enleve en sobre, c'est le retard : il colle au pointeur au lieu de le
-   suivre en douceur. */
+/* ══ 4. Le curseur ═════════════════════════════════════════════════════ */
 function monterLeCurseur() {
   if (tactile) return;
   const c = document.createElement('div');
   c.className = 'curseur';
   document.body.appendChild(c);
   document.documentElement.dataset.curseur = 'oui';
-
   let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
   addEventListener('pointermove', (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
   for (const el of $$('a, button')) {
@@ -128,7 +92,7 @@ function monterLeCurseur() {
     el.addEventListener('pointerleave', () => { c.dataset.pris = 'non'; });
   }
   const tour = () => {
-    const k = sobre ? 1 : 0.2;
+    const k = anime ? 0.2 : 1;
     cx += (x - cx) * k; cy += (y - cy) * k;
     c.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0)`;
     requestAnimationFrame(tour);
@@ -136,45 +100,44 @@ function monterLeCurseur() {
   tour();
 }
 
-/* ══ 5. Les aimants ════════════════════════════════════════════════════ */
-function monterLesAimants() {
-  if (tactile || sobre) return;
-  for (const b of $$('[data-aimant]')) {
-    b.addEventListener('pointermove', (e) => {
-      const r = b.getBoundingClientRect();
-      b.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * 0.26).toFixed(1)}px,`
-        + `${((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1)}px)`;
-    });
-    b.addEventListener('pointerleave', () => { b.style.transform = ''; });
-  }
-}
-
-/* ══ 6. Le compteur ════════════════════════════════════════════════════
-   Leur nombre d'abonnes monte de zero jusqu'a sa valeur quand il entre dans
-   l'ecran. En sobre il est ecrit d'emblee : un chiffre qui defile est du
-   mouvement, et c'est justement ce qu'on nous demande de couper. */
-function monterLeCompteur() {
+/* ══ 5. Le compteur ════════════════════════════════════════════════════ */
+let compteurLance = false;
+function monterLeCompteur(force) {
   const el = $('[data-compte]');
   if (!el) return;
   const cible = Number(el.dataset.compte);
   if (!Number.isFinite(cible)) return;
   const ecrire = (v) => { el.textContent = Math.round(v).toLocaleString('fr-FR'); };
-  if (sobre) { ecrire(cible); return; }
-  ecrire(0);
-  let lance = false;
-  auDefilement(() => {
-    if (lance) return;
-    const r = el.getBoundingClientRect();
-    if (r.top > innerHeight * 0.85) return;
-    lance = true;
+  if (!anime && !force) { ecrire(cible); return; }
+  if (compteurLance) return;
+
+  const partir = () => {
+    if (compteurLance) return;
+    compteurLance = true;
     const debut = performance.now();
     const tour = () => {
-      const t = borne((performance.now() - debut) / 1400, 0, 1);
+      const t = borne((performance.now() - debut) / 1500, 0, 1);
       ecrire(cible * (1 - Math.pow(1 - t, 3)));
       if (t < 1) requestAnimationFrame(tour);
     };
     tour();
+  };
+
+  if (force) { partir(); return; }
+  ecrire(0);
+  auDefilement(() => {
+    if (compteurLance) return;
+    if (el.getBoundingClientRect().top < innerHeight * 0.85) partir();
   });
+}
+
+/* ══ 6. La parallaxe de l'encre ════════════════════════════════════════
+   Le fond derive un peu plus lentement que la page. C'est ce decalage, et
+   rien d'autre, qui fait sentir que le contenu FLOTTE sur l'encre. */
+function monterLaDerive() {
+  const e = $('.encre');
+  if (!e || !anime) return;
+  auDefilement((y) => { e.style.transform = `translate3d(0,${(y * 0.14).toFixed(1)}px,0) scale(1.12)`; });
 }
 
 /* ══ 7. Le quartier ════════════════════════════════════════════════════ */
@@ -182,10 +145,9 @@ async function monterLeQuartierSiPresent() {
   const toile = $('#quartier');
   if (!toile) return;
   const rep = await fetch(toile.dataset.releve).catch(() => null);
-  if (!rep?.ok) { toile.closest('.quartier')?.remove(); return; }
+  if (!rep?.ok) { toile.closest('section')?.remove(); return; }
   const q = await rep.json().catch(() => null);
   if (!q) return;
-
   const s = getComputedStyle(document.body);
   const lire = (n) => s.getPropertyValue(n).trim();
   const vue = monterLeQuartier(toile, q, {
@@ -193,26 +155,27 @@ async function monterLeQuartierSiPresent() {
     murSien: lire('--mur-sien'), toit: lire('--toit'), eau: lire('--eau'),
   });
   if (!vue) return;
-
-  /* Il se construit pendant qu'on le traverse. En sobre il est deja bati : le
-     dessin complet est le CONTENU, sa construction n'etait que l'animation. */
-  if (sobre) { vue.avance(1); return; }
+  if (!anime) { vue.avance(1); return; }
   auDefilement(() => {
     const r = toile.getBoundingClientRect();
     vue.avance(borne(1.25 - r.top / innerHeight, 0, 1));
   });
 }
 
-/* ══ Demarrage ═════════════════════════════════════════════════════════ */
+/* ══ La boucle ═════════════════════════════════════════════════════════ */
+function pas() {
+  const y = scrollY || document.documentElement.scrollTop;
+  for (const fn of abonnes) fn(y, 0);
+}
+
 function demarrer() {
-  monterLeSeuil();
-  monterLeDefilement();
+  monterLAvis();
+  monterLaBarre();
   monterLesApparitions();
   monterLeCurseur();
-  monterLesAimants();
   monterLeCompteur();
+  monterLaDerive();
   monterLeQuartierSiPresent();
-
   const battre = () => { pas(); requestAnimationFrame(battre); };
   battre();
   document.documentElement.dataset.pret = 'oui';
@@ -221,4 +184,4 @@ function demarrer() {
 if (document.readyState === 'loading') addEventListener('DOMContentLoaded', demarrer);
 else demarrer();
 
-window.brasserie = { pas, glisse, sobre, tactile };
+window.brasserie = { pas, get anime() { return anime; }, tactile, demande };
