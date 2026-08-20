@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Casse cou — Brasserie artisanale à Charron</title>
-<meta name="description" content="Casse cou, brasserie artisanale à Charron. Adresse, horaires et téléphone.">
+<title>Brasserie Bacquet — Brasserie artisanale à Pierres</title>
+<meta name="description" content="Brasserie Bacquet, brasserie artisanale à Pierres. Adresse, horaires et téléphone.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/gabarit/brasserie.css">
 </head>
 
-<body style="--fond:#fafaf7;--encre:#2b2717;--vif:#a78911;--nuit:#8b720e;--clair:#f0ecdb;--pale:#ada585;--display:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;--corps:'Instrument Sans', system-ui, sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace">
+<body data-sombre="oui" style="--fond:#101214;--encre:#f2f4f6;--vif:#2f3742;--nuit:#0b0d10;--clair:#252a31;--pale:#98a3b3;--display:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;--corps:'Instrument Sans', system-ui, sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace">
 
 <div class="seuil" aria-hidden="true">
   <img src="enseigne.jpg" alt="">
@@ -24,16 +24,16 @@
 <header class="entree">
   <div class="serre haut">
     <span class="sur">Brasserie artisanale</span>
-    <span class="sur">Charron</span>
+    <span class="sur">Pierres</span>
   </div>
   <div class="serre">
     <div class="enseigne-bloc">
-      <img class="enseigne" src="enseigne.jpg" alt="Enseigne de Casse cou" fetchpriority="high">
+      <img class="enseigne" src="enseigne.jpg" alt="Enseigne de Brasserie Bacquet" fetchpriority="high">
       <div class="titre-bloc">
         <h1 class="geant">
-        <span class="ligne" style="--corps:18.15">Casse cou</span>
+        <span class="ligne" style="--corps:9.61">Brasserie Bacquet</span>
         </h1>
-        
+        <p class="chapeau">Microbrasserie indépendante. 3 rue de l'Europe à Pierres 28130. Fabrication de bières délicates depuis 2019. Des bières de garde pur...</p>
       </div>
     </div>
 
@@ -42,11 +42,11 @@
         <span class="sur">Maintenant</span>
         <span class="valeur etat" id="etat"><span class="point"></span><span class="mot-etat">Horaires ci-dessous</span></span>
       </div>
-      <div class="bloc"><span class="sur">Adresse</span><span class="valeur">2B ZA du Peu Relevé, 17230, Charron</span></div>
-      <div class="bloc"><span class="sur">Téléphone</span><span class="valeur">06 27 94 78 20</span></div>
+      <div class="bloc"><span class="sur">Adresse</span><span class="valeur">Rue de l'Europe, 28130, Pierres</span></div>
+      <div class="bloc"><span class="sur">Téléphone</span><span class="valeur">02 37 20 92 94</span></div>
       <div class="actions" style="margin-left:auto">
-        <a class="bouton" data-aimant href="tel:0627947820">Appeler la brasserie</a>
-        <a class="bouton nu" data-aimant href="https://www.openstreetmap.org/directions?to=46.2999102%2C-1.0880925" target="_blank" rel="noopener">Y aller</a>
+        <a class="bouton" data-aimant href="tel:0237209294">Appeler la brasserie</a>
+        <a class="bouton nu" data-aimant href="https://www.openstreetmap.org/directions?to=48.5822745%2C1.5660689" target="_blank" rel="noopener">Y aller</a>
       </div>
     </div>
   </div>
@@ -55,18 +55,24 @@
 <section class="pan">
   <div class="serre chiffre">
     <span class="sur" data-vient="fond">Sur votre page Facebook</span>
-    <span class="n" data-compte="990" data-vient="fond">990</span>
+    <span class="n" data-compte="1770" data-vient="fond">1 770</span>
     <p class="quoi" data-vient="monte">personnes vous suivent déjà.</p>
     <p class="puis" data-vient="monte" style="--d:120ms">Et pas une page à leur envoyer.
     Celle-ci a été montée en quelques minutes, à partir de ce que vous publiez déjà.</p>
   </div>
 </section>
 
-
+<section class="pan">
+  <div class="serre citation">
+    <span class="sur" data-vient="fond">Vos mots</span>
+    <blockquote data-vient="monte">Microbrasserie indépendante. 3 rue de l'Europe à Pierres 28130. Fabrication de bières délicates depuis 2019. Des bières de garde pur...</blockquote>
+    <p class="source" data-vient="fond" style="--d:150ms">Écrit par vous, sur votre page. Nous n'avons rien réécrit.</p>
+  </div>
+</section>
 
 <section class="pan quartier">
   <div class="serre">
-    <div class="toile"><canvas id="quartier" data-releve="/gabarit/quartiers/casse-cou-charron.json" aria-label="Plan du quartier"></canvas></div>
+    <div class="toile"><canvas id="quartier" data-releve="/gabarit/quartiers/brasserie-bacquet-pierres.json" aria-label="Plan du quartier"></canvas></div>
     <div class="legende">
       <h2 class="grand" data-vient="monte">Votre rue,<br>au mètre près.</h2>
       <p class="note mention" data-vient="fond">Relevé dans OpenStreetMap et dessiné à l'échelle : emprises au sol
@@ -84,9 +90,7 @@
       le visiteur voit tout de suite si vous êtes ouvert. Sur le site, c'est vous qui les changez.</p>
     </div>
     <div class="semaine" data-vient="monte" style="--d:120ms">
-      <div class="jour" data-jours="Vendredi"><b>Vendredi</b><span>10 h - 20 h</span></div>
-      <div class="jour" data-jours="Samedi"><b>Samedi</b><span>10 h - 13 h</span></div>
-      <div class="jour" data-jours="Lundi"><b>Lundi</b><span>14 h - 18 h</span></div>
+      <div class="jour" data-jours="Du lundi au samedi"><b>Du lundi au samedi</b><span>10 h - 12 h et 15 h - 19 h</span></div>
     </div>
   </div>
 </section>
@@ -101,14 +105,14 @@
       <b>les couleurs de ce site sont lues dans votre logo</b>. Rien n'a été inventé.
     </p>
     <div class="actions" style="justify-content:center" data-vient="monte">
-      <a class="bouton" data-aimant href="tel:0627947820">06 27 94 78 20</a>
+      <a class="bouton" data-aimant href="tel:0237209294">02 37 20 92 94</a>
     </div>
   </div>
 </section>
 
 <footer class="pied">
   <div class="serre">
-    <p class="mention"><b>Casse cou</b> — 2B ZA du Peu Relevé, 17230, Charron</p>
+    <p class="mention"><b>Brasserie Bacquet</b> — Rue de l'Europe, 28130, Pierres</p>
     <p class="mention">Maquette de démonstration réalisée sans accord préalable, à partir de données publiques
     OpenStreetMap (licence ODbL) et de l'aperçu public de votre page Facebook. Aucune donnée n'est collectée ici.
     Un appel suffit à la faire retirer.</p>
@@ -122,7 +126,7 @@
 /* L'etat d'ouverture se calcule CHEZ LE VISITEUR : une page construite mardi
    et ouverte samedi mentirait. */
 (function () {
-  var sem = [[],[[840,1080]],[],[],[],[[600,1200]],[[600,780]]];
+  var sem = [[],[[600,720],[900,1140]],[[600,720],[900,1140]],[[600,720],[900,1140]],[[600,720],[900,1140]],[[600,720],[900,1140]],[[600,720],[900,1140]]];
   if (!sem.length) return;
   var d = new Date(), j = (d.getDay() + 6) % 7, m = d.getHours() * 60 + d.getMinutes();
   var e = document.getElementById('etat'), t = e.querySelector('.mot-etat');

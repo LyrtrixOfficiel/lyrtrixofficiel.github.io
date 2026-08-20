@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Casse cou — Brasserie artisanale à Charron</title>
-<meta name="description" content="Casse cou, brasserie artisanale à Charron. Adresse, horaires et téléphone.">
+<title>Brasserie du Choucas — Brasserie artisanale</title>
+<meta name="description" content="Brasserie du Choucas, brasserie artisanale. Adresse, horaires et téléphone.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/gabarit/brasserie.css">
 </head>
 
-<body style="--fond:#fafaf7;--encre:#2b2717;--vif:#a78911;--nuit:#8b720e;--clair:#f0ecdb;--pale:#ada585;--display:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;--corps:'Instrument Sans', system-ui, sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace">
+<body style="--fond:#f7fafa;--encre:#17282b;--vif:#1395ae;--nuit:#0f758a;--clair:#dbedf0;--pale:#85a7ad;--display:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;--corps:'Instrument Sans', system-ui, sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace">
 
 <div class="seuil" aria-hidden="true">
   <img src="enseigne.jpg" alt="">
@@ -24,14 +24,15 @@
 <header class="entree">
   <div class="serre haut">
     <span class="sur">Brasserie artisanale</span>
-    <span class="sur">Charron</span>
+    <span class="sur"></span>
   </div>
   <div class="serre">
     <div class="enseigne-bloc">
-      <img class="enseigne" src="enseigne.jpg" alt="Enseigne de Casse cou" fetchpriority="high">
+      <img class="enseigne" src="enseigne.jpg" alt="Enseigne de Brasserie du Choucas" fetchpriority="high">
       <div class="titre-bloc">
         <h1 class="geant">
-        <span class="ligne" style="--corps:18.15">Casse cou</span>
+        <span class="ligne" style="--corps:18.15">Brasserie</span>
+        <span class="ligne" style="--corps:16.33">du Choucas</span>
         </h1>
         
       </div>
@@ -40,13 +41,13 @@
     <div class="service">
       <div class="bloc">
         <span class="sur">Maintenant</span>
-        <span class="valeur etat" id="etat"><span class="point"></span><span class="mot-etat">Horaires ci-dessous</span></span>
+        <span class="valeur etat" id="etat"><span class="point"></span><span class="mot-etat">Nous appeler</span></span>
       </div>
-      <div class="bloc"><span class="sur">Adresse</span><span class="valeur">2B ZA du Peu Relevé, 17230, Charron</span></div>
-      <div class="bloc"><span class="sur">Téléphone</span><span class="valeur">06 27 94 78 20</span></div>
+      
+      <div class="bloc"><span class="sur">Téléphone</span><span class="valeur">06 78 76 76 16</span></div>
       <div class="actions" style="margin-left:auto">
-        <a class="bouton" data-aimant href="tel:0627947820">Appeler la brasserie</a>
-        <a class="bouton nu" data-aimant href="https://www.openstreetmap.org/directions?to=46.2999102%2C-1.0880925" target="_blank" rel="noopener">Y aller</a>
+        <a class="bouton" data-aimant href="tel:0678767616">Appeler la brasserie</a>
+        <a class="bouton nu" data-aimant href="https://www.openstreetmap.org/directions?to=42.500368%2C2.0139956" target="_blank" rel="noopener">Y aller</a>
       </div>
     </div>
   </div>
@@ -55,7 +56,7 @@
 <section class="pan">
   <div class="serre chiffre">
     <span class="sur" data-vient="fond">Sur votre page Facebook</span>
-    <span class="n" data-compte="990" data-vient="fond">990</span>
+    <span class="n" data-compte="956" data-vient="fond">956</span>
     <p class="quoi" data-vient="monte">personnes vous suivent déjà.</p>
     <p class="puis" data-vient="monte" style="--d:120ms">Et pas une page à leur envoyer.
     Celle-ci a été montée en quelques minutes, à partir de ce que vous publiez déjà.</p>
@@ -66,7 +67,7 @@
 
 <section class="pan quartier">
   <div class="serre">
-    <div class="toile"><canvas id="quartier" data-releve="/gabarit/quartiers/casse-cou-charron.json" aria-label="Plan du quartier"></canvas></div>
+    <div class="toile"><canvas id="quartier" data-releve="/gabarit/quartiers/brasserie-du-choucas.json" aria-label="Plan du quartier"></canvas></div>
     <div class="legende">
       <h2 class="grand" data-vient="monte">Votre rue,<br>au mètre près.</h2>
       <p class="note mention" data-vient="fond">Relevé dans OpenStreetMap et dessiné à l'échelle : emprises au sol
@@ -75,40 +76,26 @@
   </div>
 </section>
 
-<section class="pan">
-  <div class="serre" style="display:grid;gap:clamp(24px,4vw,50px);grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">
-    <div data-vient="monte">
-      <span class="sur">Vos horaires</span>
-      <h2 class="grand" style="margin-top:16px">Déjà justes</h2>
-      <p class="chapeau" style="margin-top:18px">Ils viennent de votre fiche publique. En haut de la page,
-      le visiteur voit tout de suite si vous êtes ouvert. Sur le site, c'est vous qui les changez.</p>
-    </div>
-    <div class="semaine" data-vient="monte" style="--d:120ms">
-      <div class="jour" data-jours="Vendredi"><b>Vendredi</b><span>10 h - 20 h</span></div>
-      <div class="jour" data-jours="Samedi"><b>Samedi</b><span>10 h - 13 h</span></div>
-      <div class="jour" data-jours="Lundi"><b>Lundi</b><span>14 h - 18 h</span></div>
-    </div>
-  </div>
-</section>
+
 
 <section class="pan">
   <div class="serre fin">
     <span class="sur" data-vient="fond">Cette page</span>
     <h2 class="grand" data-vient="monte">C'est une première version.</h2>
     <p class="chapeau" style="text-align:center;max-width:54ch" data-vient="monte" >
-      Le nom, l'adresse, les horaires et le téléphone viennent de votre fiche publique.
+      Le nom, l'adresse et le téléphone viennent de votre fiche publique.
       <b>L'enseigne et la phrase sont les vôtres</b>, reprises de votre page Facebook, et
       <b>les couleurs de ce site sont lues dans votre logo</b>. Rien n'a été inventé.
     </p>
     <div class="actions" style="justify-content:center" data-vient="monte">
-      <a class="bouton" data-aimant href="tel:0627947820">06 27 94 78 20</a>
+      <a class="bouton" data-aimant href="tel:0678767616">06 78 76 76 16</a>
     </div>
   </div>
 </section>
 
 <footer class="pied">
   <div class="serre">
-    <p class="mention"><b>Casse cou</b> — 2B ZA du Peu Relevé, 17230, Charron</p>
+    <p class="mention"><b>Brasserie du Choucas</b></p>
     <p class="mention">Maquette de démonstration réalisée sans accord préalable, à partir de données publiques
     OpenStreetMap (licence ODbL) et de l'aperçu public de votre page Facebook. Aucune donnée n'est collectée ici.
     Un appel suffit à la faire retirer.</p>
@@ -122,7 +109,7 @@
 /* L'etat d'ouverture se calcule CHEZ LE VISITEUR : une page construite mardi
    et ouverte samedi mentirait. */
 (function () {
-  var sem = [[],[[840,1080]],[],[],[],[[600,1200]],[[600,780]]];
+  var sem = [];
   if (!sem.length) return;
   var d = new Date(), j = (d.getDay() + 6) % 7, m = d.getHours() * 60 + d.getMinutes();
   var e = document.getElementById('etat'), t = e.querySelector('.mot-etat');
