@@ -1,123 +1,190 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-moment="plein">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#fdf2e4">
-<!-- DÉMONSTRATION : page de présentation, à retirer si le site part en ligne. -->
-<meta name="robots" content="noindex, nofollow">
-<title>Cabinet d'ostéopathie Silver Chapellon — Praticien à Varennes-sur-Allier</title>
-<meta name="description" content="Cabinet d'ostéopathie Silver Chapellon, praticien à varennes-sur-allier. 33 Rue Claude Labonde, 03150 Varennes-sur-Allier. Téléphone 06 34 67 19 31.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cabinet d'ostéopathie Silver Chapellon — Praticien en médecine douce à Varennes-Sur-Allier</title>
+<meta name="description" content="Cabinet d'ostéopathie Silver Chapellon, praticien en médecine douce à Varennes-Sur-Allier. Adresse, horaires et téléphone.">
+<meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/gabarit/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/gabarit/vitrine.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Cabinet d'ostéopathie Silver Chapellon","telephone":"0634671931","address":{"@type":"PostalAddress","postalCode":"03150","addressLocality":"Varennes-Sur-Allier","addressCountry":"FR"},"geo":{"@type":"GeoCoordinates","latitude":46.3121649,"longitude":3.4019657}}</script>
 </head>
-<body style="--fond:#fdf2e4;--encre:#3d2213;--doux:#7c5a44;--pale:#a98d78;--vif:#e2711d;--clair:#fbd9b4;--nuit:#a8480c">
 
-<svg class="filtres" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
-  <filter id="refraction" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
-    <feImage href="/gabarit/refraction.png" preserveAspectRatio="none" result="c"/>
-    <feDisplacementMap in="SourceGraphic" in2="c" scale="40" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-</defs></svg>
+<body data-registre="jour" style="--fond:#faf7f9;--encre:#312128;--vif:#a54672;--sur-vif:#ffffff;--display:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;--corps:'Instrument Sans', system-ui, sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace">
 
-<div class="jauge" aria-hidden="true"></div>
+<div id="defile">
 
+<!-- ═══ l'entree ═══ -->
 <header class="entree">
-  <div class="film" aria-hidden="true">
-    <video autoplay muted loop playsinline preload="metadata" poster="/gabarit/soin.webp">
-      <source src="/gabarit/soin.mp4" type="video/mp4">
-    </video>
+  <div class="serre haut">
+    <span class="sur">Praticien en médecine douce</span>
+    <span class="sur">Varennes-Sur-Allier</span>
   </div>
-  <div class="voile" aria-hidden="true"></div>
-  <div class="serre bloc">
-    <div class="panneau verre">
-      <p class="sur-titre">Praticien à Varennes-sur-Allier</p>
-      <h1>Cabinet d'ostéopathie Silver Chapellon</h1>
-      <p class="chapeau">Ce que vous faites, expliqué une fois pour toutes.</p>
-      <div class="actions">
-        <a href="tel:+33634671931" class="bouton">06 34 67 19 31</a>
-        <a href="https://www.openstreetmap.org/?mlat=46.3121649&mlon=3.4019657#map=17/46.3121649/3.4019657" target="_blank" rel="noopener" class="bouton clair">Voir le plan</a>
+
+  <div class="serre titre-bloc">
+    <h1 class="geant" data-vient="lettres">
+      <span class="ligne" style="--corps:7.22">Cabinet d'ostéopathie</span>
+      <span class="ligne" style="--corps:9.48">Silver Chapellon</span>
+    </h1>
+
+    <div class="service">
+      <div class="bloc">
+        <span class="sur">Maintenant</span>
+        <span class="valeur etat" id="etat"><span class="point"></span><span class="mot-etat">Horaires ci-dessous</span></span>
+      </div>
+      <div class="bloc">
+        <span class="sur">Adresse</span>
+        <span class="valeur">03150, Varennes-Sur-Allier</span>
+      </div>
+      <div class="bloc">
+        <span class="sur">Téléphone</span>
+        <span class="valeur">06 34 67 19 31</span>
+      </div>
+      <div class="actions" style="margin-left:auto">
+        <a class="bouton" data-aimant href="tel:0634671931">Appeler</a>
+        <a class="bouton nu" data-aimant href="https://www.openstreetmap.org/directions?to=46.3121649%2C3.4019657" target="_blank" rel="noopener">Itinéraire</a>
       </div>
     </div>
-    <p class="lieu verre">33 Rue Claude Labonde, 03150 Varennes-sur-Allier</p>
   </div>
 </header>
 
-<main>
-<section class="pan">
-  <div class="serre">
-    <p class="eclat rev">On appelle en posant toujours les mêmes questions : combien de temps, combien ça coûte, comment ça se passe. Une adresse à vous répond avant l'appel, et vous n'expliquez plus que ce qui compte.</p>
-  </div>
-</section>
-
-<section class="pan">
-  <div class="serre">
-    <p class="sur-titre rev">Ce que contiendra le site</p>
-    <h2 class="rev">Les rubriques,<br><em>et ce qu'on y met</em>.</h2>
-    <div class="grille">
-      <article class="carte verre rev" data-i="0">
-        <span class="numero">01</span>
-        <h3>Vos prestations</h3>
-        <p>Chacune avec sa durée et son tarif. Les gens appellent déjà décidés.</p>
-      </article>
-      <article class="carte verre rev" data-i="1">
-        <span class="numero">02</span>
-        <h3>Le déroulé</h3>
-        <p>Ce qui se passe pendant un rendez-vous, pour lever ce qui retient.</p>
-      </article>
-      <article class="carte verre rev" data-i="2">
-        <span class="numero">03</span>
-        <h3>Prendre rendez-vous</h3>
-        <p>Un bouton qui appelle, et vos horaires affichés.</p>
-      </article>
+<section class="bandeau" data-bandeau="0.32" aria-label="Autour de Varennes-Sur-Allier">
+    <div class="piste">
+      <span class="lieu">Paray-Sous-Briailles<span class="km">3 km</span></span>
+      <span class="lieu">Langy<span class="km">7 km</span></span>
+      <span class="lieu">Saint Gérand De Vaux<span class="km">9 km</span></span>
+      <span class="lieu">Saint-Gérand-Le-Puy<span class="km">10 km</span></span>
+      <span class="lieu">Saint-Félix<span class="km">10 km</span></span>
+      <span class="lieu">Saint-Germain-Des-Fossés<span class="km">11 km</span></span>
+      <span class="lieu">Cindré<span class="km">13 km</span></span>
+      <span class="lieu">Paray-Sous-Briailles<span class="km">3 km</span></span>
+      <span class="lieu">Langy<span class="km">7 km</span></span>
+      <span class="lieu">Saint Gérand De Vaux<span class="km">9 km</span></span>
+      <span class="lieu">Saint-Gérand-Le-Puy<span class="km">10 km</span></span>
+      <span class="lieu">Saint-Félix<span class="km">10 km</span></span>
+      <span class="lieu">Saint-Germain-Des-Fossés<span class="km">11 km</span></span>
+      <span class="lieu">Cindré<span class="km">13 km</span></span>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="pan serree">
-  <div class="serre deux">
-    <div class="rev">
-      <p class="sur-titre">Vos horaires</p>
-      <h2>Déjà justes.</h2>
-      <p class="chapeau" style="margin-top:18px">Ils viennent de votre fiche publique. Sur le site, c'est vous qui les changez, et le changement est visible tout de suite.</p>
-    </div>
-    <div class="horaires verre rev" data-i="1">
-      <div class="creneau"><b>Du lundi au vendredi</b><span>10 h - 19 h</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="pan appel">
-  <div class="serre">
-    <div class="carte-appel verre rev">
-      <p class="sur-titre">Cette page</p>
-      <h2>C'est une maquette.</h2>
-      <p>Elle a été montée à partir de votre fiche publique : le nom, l'adresse, les horaires et le téléphone sont les vôtres, le reste est une structure. Les photos, les textes et les couleurs seraient les vôtres aussi.</p>
-      <div class="actions">
-        <a href="tel:+33634671931" class="bouton">06 34 67 19 31</a>
+<!-- ═══ le quartier ═══ -->
+<section class="quartier" data-epingle data-quartier>
+  <div class="colle" data-epingle-contenu>
+    <canvas id="quartier" data-releve="/gabarit/quartiers/cabinet-d-osteopathie-silver-chapellon-varennes-sur-allier.json" aria-label="Plan du quartier de Cabinet d'ostéopathie Silver Chapellon"></canvas>
+    <div class="legende">
+      <div class="messages">
+        <p class="titre fenetre" data-fenetre="0,0.34">Voici votre rue,<br>au mètre près.</p>
+        <p class="titre fenetre" data-fenetre="0.34,0.68">Votre bâtiment,<br>à sa place exacte.</p>
+        <p class="titre fenetre" data-fenetre="0.68,1.01">Personne d'autre<br>n'a ce dessin.</p>
       </div>
+      <p class="note mention">Relevé dans OpenStreetMap et dessiné à l'échelle : emprises au sol réelles,
+      voirie réelle. Ce n'est pas une photographie et ça n'en a pas l'air. Les hauteurs viennent
+      d'OSM quand elles y sont, et valent deux niveaux sinon.</p>
     </div>
   </div>
 </section>
-</main>
+
+<!-- ═══ les horaires ═══ -->
+<section class="pan">
+  <div class="serre" style="display:grid;gap:clamp(26px,4vw,52px);grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+    <div data-vient="monte">
+      <span class="sur">Vos horaires</span>
+      <h2 class="grand" style="margin-top:18px">Déjà justes</h2>
+      <p class="chapeau" style="margin-top:20px">Ils viennent de votre fiche publique. En haut de la page,
+      le visiteur voit tout de suite si vous êtes ouvert, et jusqu'à quelle heure. Sur le site,
+      c'est vous qui les changez.</p>
+    </div>
+    <div class="semaine" data-vient="monte" style="--d:120ms">
+      <div class="jour" data-jours="Du lundi au vendredi"><b>Du lundi au vendredi</b><span>10 h - 19 h</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ les images ═══ -->
+<section class="pan">
+  <div class="serre">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px;margin-bottom:clamp(22px,3vw,38px)">
+      <h2 class="grand" style="flex:1 1 280px" data-vient="monte">En images</h2>
+      <p class="mention" style="max-width:38ch" data-vient="fond">Ces photographies illustrent le métier, elles ne sont
+      pas les vôtres : nous n'avons aucune image de chez vous. Sur le site, ce sont vos murs,
+      vos mains et vos produits qui prennent leur place.</p>
+    </div>
+    <div class="mosaique">
+      <figure class="cliche" data-vient="fond" style="--d:0ms"><img src="/gabarit/photos/healthcare-alternative/5.jpg" alt="" loading="lazy"></figure>
+      <figure class="cliche" data-vient="fond" style="--d:90ms"><img src="/gabarit/photos/healthcare-alternative/6.jpg" alt="" loading="lazy"></figure>
+      <figure class="cliche" data-vient="fond" style="--d:180ms"><img src="/gabarit/photos/healthcare-alternative/1.jpg" alt="" loading="lazy"></figure>
+      <figure class="cliche" data-vient="fond" style="--d:270ms"><img src="/gabarit/photos/healthcare-alternative/2.jpg" alt="" loading="lazy"></figure>
+      <figure class="cliche" data-vient="fond" style="--d:360ms"><img src="/gabarit/photos/healthcare-alternative/3.jpg" alt="" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ la fin ═══ -->
+<section class="pan">
+  <div class="serre fin">
+    <span class="sur" data-vient="fond">Cette page</span>
+    <h2 class="geant" data-vient="lettres">
+      <span class="ligne" style="--corps:8.4">Première version</span>
+    </h2>
+    <p class="chapeau" style="text-align:center;max-width:56ch" data-vient="monte">
+      Elle est montée à partir de votre fiche publique : le nom, l'activité, la commune,
+      l'adresse, les horaires et le téléphone sont les vôtres.
+      <b>Aucun texte n'a été inventé.</b> Les mots, les rubriques, les couleurs et les photographies
+      seraient les vôtres aussi.
+    </p>
+    <div class="actions" style="justify-content:center" data-vient="monte" style="--d:160ms">
+      <a class="bouton" data-aimant href="tel:0634671931">06 34 67 19 31</a>
+    </div>
+  </div>
+</section>
 
 <footer class="pied">
   <div class="serre">
-    <p><b>Cabinet d'ostéopathie Silver Chapellon</b> · 33 Rue Claude Labonde, 03150 Varennes-sur-Allier · 06 34 67 19 31</p>
-    <p class="mention">Maquette de présentation réalisée par Matheo Schmitt. Les informations affichées proviennent d'OpenStreetMap, base de données ouverte sous licence ODbL. Cette page n'est pas le site officiel de l'établissement.</p>
+    <p class="mention"><b>Cabinet d'ostéopathie Silver Chapellon</b> — 03150, Varennes-Sur-Allier</p>
+    <p class="mention">Maquette de démonstration réalisée sans l'accord préalable de l'établissement,
+    à partir de données publiques OpenStreetMap (licence ODbL). Photographies Pexels, libres de droits.
+    Aucune donnée n'est collectée sur cette page. Pour la faire retirer, un appel suffit.</p>
   </div>
 </footer>
 
+</div><!-- /#defile -->
+
+<script type="module" src="/gabarit/vitrine.js"></script>
 <script>
-(() => {
-  if (CSS.supports('animation-timeline', 'view()')) return;
-  const io = new IntersectionObserver((es) => {
-    for (const e of es) if (e.isIntersecting) { e.target.classList.add('vu'); io.unobserve(e.target); }
-  }, { threshold: .1, rootMargin: '0px 0px -70px' });
-  document.querySelectorAll('.rev').forEach((el) => io.observe(el));
+/* L'etat d'ouverture se calcule CHEZ LE VISITEUR, jamais a la construction :
+   une page construite mardi et ouverte samedi mentirait. */
+(function () {
+  var sem = [[],[[600,1140]],[[600,1140]],[[600,1140]],[[600,1140]],[[600,1140]],[]];
+  if (!sem.length) return;
+  var d = new Date(), j = (d.getDay() + 6) % 7, m = d.getHours() * 60 + d.getMinutes();
+  var e = document.getElementById('etat'), t = e.querySelector('.mot-etat');
+  var jour = sem[j] || [];
+  var ouvert = null;
+  for (var i = 0; i < jour.length; i++) if (m >= jour[i][0] && m < jour[i][1]) ouvert = jour[i];
+  var hhmm = function (x) { var h = (x / 60) | 0, n = x % 60; return n ? h + ' h ' + (n < 10 ? '0' : '') + n : h + ' h'; };
+  if (ouvert) {
+    e.classList.add('ouvert');
+    t.textContent = (ouvert[1] - m <= 45 ? 'Ferme dans ' + (ouvert[1] - m) + ' min' : 'Ouvert jusqu\u2019\u00e0 ' + hhmm(ouvert[1]));
+  } else {
+    for (var k = 0; k < 8; k++) {
+      var jj = (j + k) % 7, c = sem[jj] || [];
+      for (var q = 0; q < c.length; q++) {
+        if (k === 0 && c[q][0] <= m) continue;
+        t.textContent = k === 0 ? 'Ouvre \u00e0 ' + hhmm(c[q][0])
+          : (k === 1 ? 'Ouvre demain \u00e0 ' + hhmm(c[q][0])
+            : 'Ouvre ' + ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"][jj].toLowerCase() + ' \u00e0 ' + hhmm(c[q][0]));
+        k = 9; break;
+      }
+    }
+    if (!t.textContent || t.textContent === 'Horaires ci-dessous') t.textContent = 'Ferm\u00e9 aujourd\u2019hui';
+  }
+  var noms = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+  document.querySelectorAll('.jour').forEach(function (el) {
+    if (el.dataset.jours && el.dataset.jours.indexOf(noms[j]) === 0) el.dataset.aujourdhui = 'oui';
+  });
 })();
 </script>
-</body>
-</html>
+</body></html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Devis 2026-002 · Julie Marguier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 15mm 15mm 12mm; }
+
+  :root {
+    --encre:  #17130f;
+    --gris:   #6e665e;
+    --pale:   #9a9188;
+    --trait:  #e6e0d8;
+    --ambre:  #a9682a;
+    --creme:  #fbf8f4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font: 300 10pt/1.6 "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--encre); background: #fff;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    -webkit-font-smoothing: antialiased;
+  }
+  .feuille { max-width: 180mm; margin: 0 auto; }
+
+  /* --- en-tete ---------------------------------------------------------- */
+  .haut { display: flex; justify-content: space-between; align-items: flex-start; gap: 14mm; }
+  .marque {
+    font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+    font-size: 30pt; line-height: 1; letter-spacing: -.01em; color: var(--encre);
+  }
+  .metier {
+    font-size: 7pt; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--ambre); margin-top: 2.5mm;
+  }
+  .titre-doc {
+    font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+    font-size: 34pt; line-height: 1; color: var(--ambre);
+  }
+  .ref { text-align: right; font-size: 8.5pt; color: var(--gris); margin-top: 3mm; line-height: 1.75; }
+  .ref b { color: var(--encre); font-weight: 500; }
+
+  .filet { height: 1px; background: var(--encre); margin: 7mm 0 0; }
+  .filet.fin { background: var(--trait); }
+
+  /* --- parties ---------------------------------------------------------- */
+  .parties { display: flex; gap: 14mm; padding: 6mm 0 0; }
+  .parties > div { flex: 1; }
+  .etiq {
+    font-size: 6.5pt; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--pale); margin-bottom: 2.5mm;
+  }
+  .qui { font-size: 9pt; line-height: 1.7; color: var(--gris); }
+  .qui b { display: block; font-weight: 500; font-size: 10.5pt; color: var(--encre); margin-bottom: .5mm; }
+
+  /* --- prestations ------------------------------------------------------ */
+  .lignes { width: 100%; border-collapse: collapse; margin-top: 9mm; }
+  .lignes th {
+    font-size: 6.5pt; letter-spacing: .28em; text-transform: uppercase; text-align: left;
+    color: var(--pale); font-weight: 400; padding-bottom: 3mm;
+    border-bottom: 1px solid var(--encre);
+  }
+  /* Sans largeur ni gouttiere, les trois colonnes de chiffres se collent et on
+     lit « 1 500,00 € 500,00 € » au lieu de trois valeurs distinctes. */
+  .lignes th.n, .lignes td.n { text-align: right; white-space: nowrap; padding-left: 9mm; }
+  .lignes col.q { width: 16mm; }
+  .lignes col.p { width: 26mm; }
+  .lignes td { padding: 5mm 0 5.5mm; border-bottom: 1px solid var(--trait); vertical-align: top; }
+  .nom-ligne {
+    font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+    font-size: 15pt; line-height: 1.2; color: var(--encre);
+  }
+  .inclus { margin: 3.5mm 0 0; list-style: none; font-size: 8.5pt; line-height: 1.75; color: var(--gris); }
+  .inclus li { padding-left: 5mm; position: relative; }
+  .inclus li::before {
+    content: ""; position: absolute; left: 0; top: 2.1mm;
+    width: 2mm; height: 2mm; border: 1px solid var(--ambre); border-radius: 50%;
+  }
+  .prix-ligne { font-size: 10.5pt; font-weight: 400; }
+
+  /* --- total ------------------------------------------------------------ */
+  .compte { display: flex; justify-content: flex-end; margin-top: 6mm; }
+  .compte-bloc { width: 82mm; }
+  .compte-bloc .l { display: flex; justify-content: space-between; padding: 1.6mm 0; font-size: 9.5pt; color: var(--gris); }
+  .compte-bloc .du {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-top: 1px solid var(--encre); margin-top: 2mm; padding-top: 3.5mm;
+  }
+  .compte-bloc .du span:first-child { font-size: 8pt; letter-spacing: .22em; text-transform: uppercase; color: var(--pale); }
+  .compte-bloc .du span:last-child {
+    font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+    font-size: 22pt; color: var(--ambre); line-height: 1;
+  }
+  .tva { text-align: right; font-size: 7.5pt; color: var(--pale); margin-top: 3mm; }
+
+  /* --- abonnement -------------------------------------------------------- */
+  .abo { margin-top: 9mm; background: var(--creme); border-radius: 2mm; padding: 6mm 7mm; }
+  .abo .prix {
+    font-family: "Instrument Serif", Georgia, serif; font-style: italic;
+    font-size: 16pt; color: var(--encre); line-height: 1.3; margin-bottom: 3mm;
+  }
+  .abo .prix em { color: var(--ambre); font-style: italic; }
+  .abo p { font-size: 8.5pt; line-height: 1.7; color: var(--gris); margin-bottom: 2mm; }
+  .abo p:last-child { margin-bottom: 0; }
+  .abo b { color: var(--encre); font-weight: 500; }
+
+  /* --- conditions -------------------------------------------------------- */
+  .conditions { margin-top: 9mm; }
+  .cond { display: flex; gap: 6mm; padding: 2.6mm 0; border-top: 1px solid var(--trait); }
+  .cond:first-of-type { border-top: 1px solid var(--encre); padding-top: 4mm; }
+  .cond dt {
+    flex: 0 0 38mm; font-size: 8pt; font-weight: 500; color: var(--encre); line-height: 1.6;
+  }
+  .cond dd { flex: 1; font-size: 8.5pt; line-height: 1.7; color: var(--gris); }
+  .cond dd b { color: var(--encre); font-weight: 500; }
+
+  /* --- signatures -------------------------------------------------------- */
+  .signer { display: flex; gap: 10mm; margin-top: 10mm; page-break-inside: avoid; }
+  .signer > div { flex: 1; }
+  .qui { font-weight: 600; font-size: 10pt; margin-top: 1.5mm; }
+  .sous { font-size: 8pt; color: var(--pale); margin-bottom: 1mm; }
+  .case { height: 20mm; border-bottom: 1px solid var(--trait); }
+  .legende { font-size: 7.5pt; color: var(--pale); margin-top: 2mm; line-height: 1.6; }
+
+  .pied {
+    margin-top: 9mm; padding-top: 3.5mm; border-top: 1px solid var(--trait);
+    font-size: 7pt; color: var(--pale); text-align: center; letter-spacing: .04em;
+  }
+</style>
+</head>
+<body>
+<div class="feuille">
+
+  <!-- Pas de nom de marque ici : en entreprise individuelle, le nom de la
+       personne EST celui de l'entreprise, et il figure deja dans le bloc
+       prestataire juste en dessous. Le repeter en tete n'ajoute rien. -->
+  <div class="haut">
+    <div>
+      <div class="titre-doc">Devis</div>
+      <div class="metier">Sites internet pour praticiens</div>
+    </div>
+    <div>
+      <div class="ref">
+        n° <b>2026-002</b><br>
+        12 août 2026<br>
+        valable jusqu'au <b>11 septembre 2026</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="filet"></div>
+
+  <div class="parties">
+    <div>
+      <div class="etiq">Prestataire</div>
+      <div class="qui">
+        <b>Matheo Schmitt</b>
+        Entrepreneur individuel<br>
+        
+        68980 Beblenheim<br>
+        SIREN 100 165 455<br>
+        06 30 11 00 38
+      </div>
+    </div>
+    <div>
+      <div class="etiq">Client</div>
+      <div class="qui">
+        <b>Julie Marguier</b>
+        Praticienne shiatsu, entrepreneur individuel<br>
+        
+        68220 Knœringue<br>
+        06 17 11 14 05
+      </div>
+    </div>
+    <div>
+      <div class="etiq">Objet</div>
+      <div class="qui">Création d'un site internet à votre nom, et son entretien.</div>
+    </div>
+  </div>
+
+  <table class="lignes">
+    <colgroup><col><col class="q"><col class="p"><col class="p"></colgroup>
+    <thead>
+      <tr><th>Prestation</th><th class="n">Qté</th><th class="n">Prix</th><th class="n">Total</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="nom-ligne">Création d'un site internet complet</div>
+          <ul class="inclus"><li>Conception et réalisation du site, pages illimitées selon vos accompagnements</li><li>Visuels choisis pour votre pratique, aucune image générique</li><li>Rédaction et mise en forme de vos textes, à partir de vos mots</li><li>Création de votre logo si vous n'en avez pas</li><li>Référencement : votre site remonte sur les recherches de votre métier dans votre secteur</li><li>Création et configuration de votre fiche Google, reliée au site : horaires, adresse, prestations, photographies</li><li>Espace personnel : vous modifiez vos textes et vos tarifs vous-même, à tout moment</li><li>Reprise du site autant de fois que nécessaire jusqu'à ce qu'il vous convienne</li><li>Mentions légales, page de contact, affichage sur téléphone et ordinateur</li></ul>
+        </td>
+        <td class="n prix-ligne">1</td>
+        <td class="n prix-ligne">500,00 €</td>
+        <td class="n prix-ligne">500,00 €</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="compte">
+    <div class="compte-bloc">
+      <div class="l"><span>Total</span><span>500,00 €</span></div>
+      <div class="du"><span>Net à payer</span><span>500,00 €</span></div>
+      <div class="tva">TVA non applicable, article 293 B du code général des impôts.</div>
+    </div>
+  </div>
+
+  <div class="abo">
+    <div class="prix"><em>20,00 € par mois</em>, sans engagement,
+      ou <em>240,00 € par an</em>, réglés en une fois.</div>
+    <p>Le premier mois court à partir de la mise en ligne.</p>
+    <p><b>Compris.</b> hébergement du site ; renouvellement annuel du nom de domaine, à sa date d'anniversaire ; sauvegardes et mises à jour techniques ; toutes vos modifications de contenu, sans compter : changer un tarif, réécrire un paragraphe, remplacer une photographie, corriger vos horaires, ajouter une prestation ; et surtout, vous n'avez pas à me les demander : votre espace personnel vous permet de tout modifier vous-même, à toute heure.</p>
+    <p><b>Non compris.</b> refonte graphique du site ; nouvelles fonctionnalités : prise de rendez-vous en ligne, boutique, espace membres ; changement complet de structure ou création d'un nouveau site.
+      Ces travaux font l'objet d'un devis séparé.</p>
+  </div>
+
+  <div class="conditions">
+    <div class="cond"><dt>Règlement</dt><dd>Acompte de <b>200,00 €</b> à la commande,
+            puis 3 mensualités de <b>100,00 €</b>,
+            sans frais, la première un mois après la commande.
+            Le site est mis en ligne <b>dès qu'il est prêt et que vous l'avez validé</b>, sans
+            attendre la dernière échéance. En contrepartie, vous vous engagez sur les
+            3 mensualités : si les paiements s'interrompent, le site est
+            suspendu jusqu'à régularisation.<br>
+            Paiement par virement, à réception de facture.</dd></div>
+    
+    <div class="cond"><dt>Délai</dt><dd>Une semaine, à compter du premier règlement et de la réception de vos
+      éléments (textes, photographies, tarifs).</dd></div>
+    <div class="cond"><dt>Modifications</dt><dd>Illimitées jusqu'à votre validation du site. Après la mise en ligne, les modifications de contenu sont comprises dans l'abonnement.</dd></div>
+    <div class="cond"><dt>Nom de domaine</dt><dd>Déposé à votre nom. Son renouvellement annuel est compris dans
+      l'abonnement, à sa date d'anniversaire, tant que celui-ci est actif.</dd></div>
+    <div class="cond"><dt>À qui appartient quoi</dt><dd>Vos textes, vos photographies et votre logo vous appartiennent
+      entièrement, sans limite d'usage ni de durée. Le nom de domaine est déposé à votre nom.
+      Vous disposez sur votre site d'un <b>droit d'usage permanent</b>, y compris si vous mettez
+      fin à l'abonnement. Les outils qui ont servi à le construire restent la propriété du
+      prestataire, qui les emploie pour d'autres clients.</dd></div>
+    <div class="cond"><dt>Si vous arrêtez</dt><dd>Vous conservez votre site. Les fichiers et le nom de domaine vous
+      sont remis, et vous êtes libre de les confier à qui vous voulez. Aucune donnée n'est retenue.</dd></div>
+    <div class="cond"><dt>Retard de paiement</dt><dd>Pénalités au taux de trois fois le taux d'intérêt légal en vigueur,
+      exigibles sans rappel, et indemnité forfaitaire pour frais de recouvrement de 40 €
+      (articles L441-10 et D441-5 du code de commerce).</dd></div>
+    <div class="cond"><dt>Précisions</dt><dd>Ce devis remplace le devis 2026-001 du 11 août 2026.</dd></div>
+  </div>
+
+  
+  <div class="signer">
+    <div>
+      <div class="etiq">Le prestataire</div>
+      <div class="qui">Matheo Schmitt</div>
+      <div class="sous">Entrepreneur individuel · SIREN 100 165 455</div>
+      <div class="case"></div>
+      <div class="legende">Fait à Beblenheim, le 12 août 2026</div>
+    </div>
+    <div>
+      <div class="etiq">Le client</div>
+      <div class="qui">Julie Marguier</div>
+      <div class="sous">Praticienne shiatsu, entrepreneur individuel</div>
+      <div class="case"></div>
+      <div class="legende">Date, signature, et mention « Bon pour accord »</div>
+    </div>
+  </div>
+
+  <div class="pied">
+    Matheo Schmitt · Entrepreneur individuel · SIREN 100 165 455
+    
+    · 68980 Beblenheim
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+/* ==========================================================================
+   VITRINE
+   --------------------------------------------------------------------------
+   Le gabarit des maquettes de demonstration, refait apres un verdict sans
+   appel : « c'est des sites web classiques, tu n'as rien fait d'interessant ».
+   Il l'etait. La version precedente etendait le gabarit du parc, qui est un
+   bon gabarit de PARC : sobre, rapide, reproductible cinq mille fois. Ce
+   n'est pas ce qu'on montre a quelqu'un pour lui donner envie.
+
+   CE QUI CHANGE VRAIMENT, ET DANS QUEL ORDRE D'IMPORTANCE
+
+   1. LE HAUT DE PAGE N'EST PLUS UNE PHOTO. C'est le vrai quartier du
+      prospect, releve dans OpenStreetMap et dessine en axonometrie, qui se
+      construit autour de SON batiment pendant qu'on descend. Une photo de
+      metier est interchangeable ; son pate de maisons ne l'est pas.
+   2. SON NOM EST LE DESSIN. Cale a la colonne par l'axe de chasse de la
+      fonte, il remplit sa ligne au pixel, qu'il fasse six lettres ou
+      trente-quatre. Personne ne fait ca sur un site de commercant.
+   3. DEUX REGISTRES, jour et nuit, choisis par le metier. Un tatoueur et une
+      boulangerie ne vivent pas a la meme heure.
+
+   REGLE QUI TIENT TOUT : l'accent est la seule couleur saturee de la page.
+   Tout le reste est une echelle de gris teintee. Une page ou tout crie ne
+   met rien en valeur.
+   ========================================================================== */
+
+/* --- l'echelle ------------------------------------------------------------ */
+
+:root {
+  --marge: clamp(1.1rem, 4.4vw, 4.6rem);
+  --large: 1380px;
+  --rythme: clamp(4.5rem, 11vh, 9rem);
+
+  --lent:   cubic-bezier(.22, 1, .36, 1);
+  --sortie: cubic-bezier(.16, 1, .3, 1);
+
+  /* Pose par le script d'apres l'heure qu'il est chez le visiteur. */
+  --jour: .5;
+}
+
+/* --- le registre de jour --------------------------------------------------
+   Les valeurs exactes de --fond, --encre et --vif sont posees en ligne sur le
+   `body` par le generateur : elles viennent du metier ET du nom du prospect,
+   donc aucune page du lot n'a les memes. Ici on ne fixe que ce qui se deduit. */
+
+body {
+  /* 62 % rendait 4,2 a 4,4 pour 1 selon la palette : juste sous le seuil, donc
+     juste faux, et sur TOUS les textes secondaires a la fois. Le seuil ne se
+     negocie pas par element, il se regle a la source. 76 % passe partout, sur
+     les cinquante palettes du lot, et reste nettement plus clair que l'encre. */
+  --doux:  color-mix(in srgb, var(--encre) 76%, var(--fond));
+  --pale:  color-mix(in srgb, var(--encre) 26%, var(--fond));
+  --trait: color-mix(in srgb, var(--encre) 13%, var(--fond));
+  --voile: color-mix(in srgb, var(--fond) 72%, transparent);
+
+  /* Le plan : les volumes sont des gris teintes du fond, jamais l'accent.
+     L'accent est reserve a LEUR batiment, sinon le regard n'a plus d'ancre. */
+  --trait-plan: color-mix(in srgb, var(--encre) 34%, var(--fond));
+  --mur:        color-mix(in srgb, var(--encre) 11%, var(--fond));
+  --mur-sien:   color-mix(in srgb, var(--vif) 46%, var(--fond));
+  --toit:       color-mix(in srgb, var(--encre) 20%, var(--fond));
+  --eau:        color-mix(in srgb, var(--vif) 22%, var(--fond));
+}
+
+/* --- le registre de nuit --------------------------------------------------
+   Ce n'est pas le jour avec les couleurs inversees : la nuit, le contraste
+   utile est plus bas, les traits plus fins et l'accent doit etre plus clair
+   pour rester lisible. */
+body[data-registre='nuit'] {
+  --doux:  color-mix(in srgb, var(--encre) 72%, var(--fond));
+  --pale:  color-mix(in srgb, var(--encre) 24%, var(--fond));
+  --trait: color-mix(in srgb, var(--encre) 16%, var(--fond));
+  --voile: color-mix(in srgb, var(--fond) 66%, transparent);
+  /* Le dessin de nuit demande PLUS de matiere, pas moins. A neuf pour cent
+     d'encre sur un fond presque noir, les volumes disparaissaient : on voyait
+     un rectangle vide avec un batiment violet au milieu. Le contraste utile
+     baisse la nuit pour le TEXTE, il monte pour un trait. */
+  --trait-plan: color-mix(in srgb, var(--encre) 42%, var(--fond));
+  --mur:        color-mix(in srgb, var(--encre) 17%, var(--fond));
+  --mur-sien:   color-mix(in srgb, var(--vif) 40%, var(--fond));
+  --toit:       color-mix(in srgb, var(--encre) 28%, var(--fond));
+  --eau:        color-mix(in srgb, var(--vif) 26%, var(--fond));
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--fond); }
+body {
+  background: var(--fond); color: var(--encre);
+  font-family: var(--corps); font-size: clamp(1rem, .55vw + .86rem, 1.14rem);
+  line-height: 1.55; letter-spacing: -.006em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+html[data-pret='oui'] body { cursor: none; }
+html[data-pret='oui'] a, html[data-pret='oui'] button { cursor: none; }
+@media (hover: none) { html[data-pret='oui'] body, html[data-pret='oui'] a { cursor: auto; } }
+
+img, canvas { display: block; max-width: 100%; }
+a { color: inherit; }
+
+/* Le grain. Il ne decore pas : il casse les degrades en aplats de bruit, ce
+   qui empeche les bandes sur un fond tres etale et donne a l'ecran une matiere
+   au lieu d'un vide. */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 900; pointer-events: none;
+  opacity: .19; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+}
+
+.serre { width: min(100% - var(--marge) * 2, var(--large)); margin-inline: auto; }
+.pan { padding-block: var(--rythme); }
+
+/* --- typographie ---------------------------------------------------------- */
+
+h1, h2, h3, .geant, .sur {
+  font-family: var(--display); font-weight: 700;
+  line-height: .92; letter-spacing: -.035em; text-wrap: balance;
+}
+
+/* LE GEANT. Sa taille vient du GENERATEUR, en `vw`, calculee sur le nombre de
+   signes : voir `corpsPour` dans scripts/maquette-vitrine.mjs et les trois
+   impasses de moteur qui y sont racontees. Aucun script n'y touche, donc rien
+   ne saute au chargement des fontes.
+   Les bornes du `clamp` ne sont pas decoratives : sans plancher, un nom de
+   quarante signes deviendrait illisible sur telephone ; sans plafond, un nom de
+   quatre lettres mangerait l'ecran entier. */
+.geant { display: block; width: 100%; }
+/* Une interligne de 0,84 fait mordre les descendantes sur la ligne suivante :
+   la queue du Q de « DISCOTHEQUE » passait sous le filet de la ligne de
+   service. On rend la place par le bas, sans changer l'interligne, qui est ce
+   qui fait tenir le bloc. */
+.geant .ligne:last-child { padding-bottom: .1em; }
+.geant .ligne {
+  display: block;
+  font-size: clamp(2.4rem, calc(var(--corps, 10) * 1vw), 11.5rem);
+  line-height: .84; letter-spacing: -.045em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Les sur-titres sont le PLUS PETIT texte de la page : capitales de 0,74 rem,
+   approche tres ouverte, en monospace. C'est celui qui demande le plus de
+   contraste, et il portait `--doux`, mesure entre 4,2 et 4,4 pour 1 sur les
+   quarante-deux pages : juste sous le seuil, donc juste faux. Meme teinte,
+   assombrie jusqu'au premier point qui passe, et pas au-dela. */
+.sur {
+  font-family: var(--mono, ui-monospace, monospace); font-weight: 500;
+  font-size: .74rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--doux); line-height: 1.4;
+}
+
+.chapeau { font-size: clamp(1.06rem, 1.1vw + .85rem, 1.42rem); color: var(--doux); max-width: 46ch; }
+/* MEME PIEGE QUE SUR LE PARC OSM, REFAIT A NEUF. `--pale` est une couleur de
+   TRAIT : 1,7 pour 1 sur le fond, quand il en faut 4,5. Et c'est le PETIT texte
+   qu'elle portait, celui des mentions, donc celui qui en a le plus besoin.
+   Une variable nommee « pale » n'est pas une invitation a s'en servir pour du
+   texte : elle dit exactement le contraire. */
+.mention { font-size: .78rem; color: var(--doux); line-height: 1.6; }
+
+/* --- apparitions ---------------------------------------------------------- */
+
+[data-vient] { --d: 0ms; }
+[data-vient='monte'] { opacity: 0; translate: 0 34px; transition: opacity .9s var(--sortie) var(--d), translate .9s var(--sortie) var(--d); }
+[data-vient='monte'][data-vu='oui'] { opacity: 1; translate: 0 0; }
+[data-vient='fond'] { opacity: 0; transition: opacity 1.1s var(--lent) var(--d); }
+[data-vient='fond'][data-vu='oui'] { opacity: 1; }
+
+/* La montee par lettre. Le retard vient de l'index pose par le script, borne a
+   trente-deux lettres : au-dela la derniere arriverait apres qu'on a fini de
+   lire, ce qui se lit comme un bogue et non comme une cascade. */
+[data-vient='lettres'] .mot { display: inline-block; overflow: hidden; vertical-align: top; }
+[data-vient='lettres'] .lettre {
+  display: inline-block;
+  translate: 0 1.05em;
+  transition: translate .95s var(--sortie);
+  transition-delay: calc(min(var(--i), 32) * 26ms + var(--d));
+}
+[data-vient='lettres'][data-vu='oui'] .lettre { translate: 0 0; }
+
+/* --- l'entree ------------------------------------------------------------- */
+
+/* Elle faisait 100svh avec le nom colle en bas : les deux tiers du premier
+   ecran etaient vides, ce qui ne se lit pas comme de l'air mais comme une page
+   qui n'a pas fini de charger. Le quartier arrive tout de suite apres, c'est
+   lui qui doit prendre la place. */
+.entree { position: relative; min-height: 78svh; display: flex; flex-direction: column; justify-content: flex-end; padding-block: 22vh var(--rythme); }
+
+/* PIEGE PAYE : `width: 100%` posee ici ecrasait la largeur de `.serre`, et
+   les deux etiquettes sortaient de la page a gauche et a droite. On place par
+   les cotes, on ne redonne pas de largeur. */
+.entree .haut {
+  position: absolute; inset: var(--marge) 0 auto 0;
+  display: flex; justify-content: space-between; gap: 20px;
+}
+
+/* `minmax(0, 1fr)` et non la colonne implicite : une colonne `auto` se
+   dimensionne sur le contenu MAXIMAL, donc sur le titre geant lui-meme. La
+   colonne grandissait avec le titre, le titre se calait sur la colonne, et le
+   calage ne calait rien : mesure a 1231 px de titre dans un contenant de
+   1152. Une piste bornee a zero casse la boucle. */
+.titre-bloc { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(18px, 2.4vw, 30px); }
+
+/* Les titres de section ne sont PAS des geants : ils ne se calent pas a la
+   colonne, ils gardent leur echelle. Un titre courant qui remplit la page
+   autant que le nom de l'enseigne detruit la hierarchie. */
+.grand {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(2.1rem, 5.6vw, 4.4rem);
+  line-height: .95; letter-spacing: -.038em;
+}
+
+/* La ligne de service : ouverture, commune, telephone. Un seul trait la separe
+   du geant, et c'est le seul trait plein de la page. */
+.service {
+  display: flex; flex-wrap: wrap; align-items: center; gap: clamp(14px, 2.4vw, 34px);
+  padding-top: clamp(16px, 2vw, 26px); border-top: 1px solid var(--trait);
+}
+.service .bloc { display: grid; gap: 3px; }
+.service .valeur { font-family: var(--display); font-size: clamp(1rem, 1.4vw, 1.3rem); font-weight: 600; letter-spacing: -.02em; }
+
+.etat { display: inline-flex; align-items: center; gap: 9px; }
+.etat .point { width: 7px; height: 7px; border-radius: 50%; background: var(--pale); flex: none; }
+.etat.ouvert .point { background: var(--vif); box-shadow: 0 0 0 0 color-mix(in srgb, var(--vif) 60%, transparent); animation: souffle 2.8s var(--lent) infinite; }
+@keyframes souffle { 60% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--vif) 0%, transparent); } }
+
+/* --- boutons -------------------------------------------------------------- */
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.bouton {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 26px; border-radius: 999px; overflow: hidden;
+  font-family: var(--display); font-weight: 600; font-size: .95rem; letter-spacing: -.015em;
+  text-decoration: none; background: var(--vif); color: var(--sur-vif);
+  transition: transform .45s var(--sortie);
+}
+.bouton::after {
+  content: ''; position: absolute; inset: 0; translate: -120% 0;
+  background: linear-gradient(100deg, transparent 34%, color-mix(in srgb, var(--sur-vif) 42%, transparent) 50%, transparent 66%);
+  transition: translate .8s var(--lent);
+}
+.bouton:hover::after { translate: 120% 0; }
+.bouton.nu { background: transparent; color: var(--encre); box-shadow: inset 0 0 0 1px var(--pale); }
+
+/* --- le curseur ----------------------------------------------------------- */
+
+.curseur {
+  position: fixed; top: 0; left: 0; z-index: 950; pointer-events: none;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%;
+  border: 1px solid var(--pale);
+  transition: width .35s var(--sortie), height .35s var(--sortie), margin .35s var(--sortie), background-color .35s var(--sortie), border-color .35s var(--sortie);
+}
+.curseur::after { content: ''; position: absolute; inset: 50%; width: 3px; height: 3px; margin: -1.5px; border-radius: 50%; background: var(--encre); }
+.curseur[data-pris='oui'] { width: 62px; height: 62px; margin: -31px 0 0 -31px; background: color-mix(in srgb, var(--vif) 16%, transparent); border-color: var(--vif); }
+
+/* --- le quartier ---------------------------------------------------------- */
+
+.quartier { position: relative; height: 320vh; }
+.quartier .colle { height: 100svh; display: grid; grid-template-rows: 1fr auto; overflow: hidden; }
+.quartier .colle[data-colle='oui'] { position: sticky; top: 0; }
+#quartier { width: 100%; height: 100%; }
+
+.quartier .legende {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 18px;
+  padding: 0 var(--marge) clamp(20px, 4vh, 44px);
+}
+.quartier .legende .titre { font-family: var(--display); font-size: clamp(1.6rem, 4.2vw, 3.4rem); line-height: .95; letter-spacing: -.035em; max-width: 16ch; }
+/* La note etait en `--pale`, qui est une couleur de TRAIT : 2,6 pour 1 sur le
+   fond clair, donc sous le seuil, et c'est le texte qui explique la piece
+   maitresse de la page. */
+.quartier .legende .note { max-width: 40ch; color: var(--doux); }
+
+/* Les messages qui se relaient pendant la traversee. */
+.fenetre { transition: opacity .5s var(--lent), translate .5s var(--lent); }
+.fenetre[data-actif='non'] { opacity: 0; translate: 0 10px; pointer-events: none; }
+.quartier .messages { display: grid; }
+.quartier .messages .fenetre { grid-area: 1 / 1; }
+
+[data-absent='oui'] .quartier-si-releve { display: none; }
+
+/* --- le bandeau ----------------------------------------------------------- */
+
+.bandeau { overflow: hidden; padding-block: clamp(16px, 2.4vw, 26px); border-block: 1px solid var(--trait); }
+.bandeau .piste { display: flex; width: max-content; will-change: transform; }
+.bandeau .lieu {
+  display: inline-flex; align-items: baseline; gap: 9px; padding-inline: clamp(18px, 2.6vw, 36px);
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(1.15rem, 2.4vw, 2.1rem); letter-spacing: -.035em; white-space: nowrap;
+}
+.bandeau .km { font-family: var(--mono, monospace); font-size: .5em; font-weight: 500; letter-spacing: .04em; color: var(--vif); }
+.bandeau .lieu::after { content: '/'; margin-left: clamp(18px, 2.6vw, 36px); color: var(--pale); font-weight: 400; }
+
+/* --- les horaires --------------------------------------------------------- */
+
+.semaine { display: grid; gap: 1px; background: var(--trait); border: 1px solid var(--trait); border-radius: 2px; overflow: hidden; }
+.jour { display: flex; justify-content: space-between; gap: 16px; padding: clamp(13px, 1.5vw, 19px) clamp(15px, 2vw, 24px); background: var(--fond); }
+.jour[data-aujourdhui='oui'] { background: color-mix(in srgb, var(--vif) 8%, var(--fond)); }
+.jour b { font-weight: 600; font-family: var(--display); letter-spacing: -.02em; }
+.jour span { color: var(--doux); font-variant-numeric: tabular-nums; }
+
+/* --- la mosaique ---------------------------------------------------------- */
+
+.mosaique { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(8px, 1vw, 14px); }
+.cliche { position: relative; overflow: hidden; background: var(--trait); }
+.cliche img { width: 100%; height: 100%; object-fit: cover; transition: scale 1.6s var(--lent); }
+.cliche:hover img { scale: 1.045; }
+/* Une mosaique dont toutes les cases font la meme taille est un tableau. Les
+   spans sont choisis pour que la premiere image tienne la moitie de la largeur
+   et que le reste s'organise autour d'elle. */
+/* Pas de proportion imposee sur la premiere : elle occupe deux rangees, et sa
+   hauteur doit venir de ces deux rangees. Avec un 4/3 force, elle s'arretait
+   au-dessus du bas de la colonne de droite et laissait un trou de deux cents
+   pixels dans la mosaique. */
+.cliche:nth-child(1) { grid-column: span 7; grid-row: span 2; min-height: 100%; }
+.cliche:nth-child(2) { grid-column: span 5; aspect-ratio: 16/11; }
+.cliche:nth-child(3) { grid-column: span 5; aspect-ratio: 16/11; }
+.cliche:nth-child(4) { grid-column: span 4; aspect-ratio: 4/3; }
+.cliche:nth-child(5) { grid-column: span 8; aspect-ratio: 21/9; }
+
+/* --- la carte de fin ------------------------------------------------------ */
+
+.fin { text-align: center; display: grid; justify-items: center; gap: clamp(18px, 2.6vw, 30px); }
+.fin .geant { text-align: center; }
+
+.pied { padding-block: clamp(30px, 5vh, 54px); border-top: 1px solid var(--trait); display: grid; gap: 12px; }
+
+/* --- telephone ------------------------------------------------------------ */
+
+@media (max-width: 880px) {
+  .quartier { height: 260vh; }
+  .mosaique { grid-template-columns: repeat(6, 1fr); }
+  .cliche:nth-child(1) { grid-column: span 6; grid-row: auto; }
+  .cliche:nth-child(2), .cliche:nth-child(3) { grid-column: span 3; }
+  .cliche:nth-child(4) { grid-column: span 2; }
+  .cliche:nth-child(5) { grid-column: span 4; }
+  .entree { min-height: auto; padding-block: 22vh var(--rythme); }
+}
+
+/* --- sobriete -------------------------------------------------------------
+   Une animation liee au defilement ne se coupe PAS avec `animation-duration` :
+   sa duree vient de la plage parcourue, pas d'une horloge. Il faut couper
+   l'animation elle-meme, et rendre visible ce que l'apparition cachait. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  [data-vient] { opacity: 1 !important; translate: none !important; }
+  [data-vient='lettres'] .lettre { translate: none !important; }
+  .curseur { display: none; }
+  .quartier { height: auto; }
+  .quartier .colle { height: auto; }
+  #quartier { height: 62svh; }
+}
+
+/* Les deux lignes d'un geant coupe. Chacune porte sa propre taille, posee par
+   le script : elles doivent donc etre des blocs, et ne pas heriter d'une
+   hauteur de ligne calculee sur la taille du parent. */
+
