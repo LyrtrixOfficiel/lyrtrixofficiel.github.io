@@ -358,36 +358,109 @@ const REPERES = [
      c'est ce qui fait qu'on lit un VOL et non une marche. La vitesse d'un rail
      ne se regle pas, elle se compose : elle est l'ecart entre deux reperes
      divise par l'ecart entre leurs temps. */
-  { t: 0.700, oeil: survol(  1,  96, 10), vise: [  6, -2.0, 128] },
-  { t: 0.780, oeil: survol(  4, 116,  6), vise: [ 12,  1.0, 152] },
-  { t: 0.860, oeil: survol(  8, 132,  5), vise: [ 22, 10.0, 176] },
-  { t: 0.930, oeil: survol( 12, 143,  6), vise: [ 40, 18.0, 208] },
-  /* ══ L'ARRIVEE SE FAIT SUR L'EAU, PAS CONTRE LA PAROI ════════════════════
-     Le premier trace montait jusqu'au flanc et s'y collait. Il a fallu le voir
-     pour comprendre l'erreur : de vingt unites, une montagne de deux cent
-     cinquante n'est plus une montagne, c'est un mur, et sa silhouette, qui
-     etait tout ce qu'elle avait de beau, disparait avec la distance. Hokusai
-     ne s'approche jamais du Fuji.
+  /* ══ ON PASSE A COTE DU SCEAU, PAS DEDANS ═══════════════════════════════
+     Matheo : « on passe a l'interieur du logo, vraiment dedans, dans la
+     texture, et du coup ce n'est pas terrible ». Le blason est pose a l'axe,
+     il fait six unites de large et son centre est a quatre virgule deux de
+     haut : le rail lui passait pile au travers, a un demi-metre de son centre.
+     Personne ne l'avait vu parce que le sceau etait la FIN du voyage, et qu'on
+     ne franchit pas la fin.
 
-     On s'arrete donc sur l'eau, a quatre cents unites du sommet. Le regard est
-     pose vingt degres sous lui : la cime se cale sous le bord haut du cadre,
-     la ligne d'eau reste dans le bas, et le mont tient toute la hauteur entre
-     les deux. C'est le seul angle qui garde les deux. */
+     La camera s'ecarte donc de cinq unites avant de l'atteindre. On le voit
+     grandir de face, puis glisser sur le bord du cadre quand on le double :
+     c'est le meme geste que pour la feuille, et c'est celui qui fait sentir
+     qu'on TRAVERSE un lieu au lieu de le regarder. */
+  { t: 0.655, oeil: [ 4.80, 5.50, 79.5], vise: [  8,  2.0, 106] },
+  { t: 0.700, oeil: survol(  6,  96, 10), vise: [ 10, -2.0, 128] },
+  { t: 0.780, oeil: survol(  8, 116,  6), vise: [ 13,  1.0, 152] },
+  { t: 0.860, oeil: survol( 10, 132,  5), vise: [ 22, 10.0, 176] },
+  { t: 0.930, oeil: survol( 13, 143,  6), vise: [ 40, 18.0, 208] },
   { t: 1.000, oeil: survol( 16, 152,  4), vise: [ 61, 22.0, 242] }
 ];
 
-function courbeDe(cle) {
+/* ══════════════════════════════════════════════════════════════════════════
+   LES VOIES
+   --------------------------------------------------------------------------
+   Le voyage cesse d'etre une ligne. Au bout du tronc, sur le lac, la camera
+   s'arrete et plusieurs chemins s'ouvrent : chacun est une PAGE du site, sauf
+   qu'on n'y va pas en changeant de document, on y va en tournant.
+
+   POURQUOI UN ARBRE ET PAS UN MENU. Un menu coupe. Le visiteur qui clique sur
+   « nos demonstrations » sort du monde et se retrouve ailleurs, et tout ce que
+   la traversee avait construit tombe. Une voie, elle, PART d'ou l'on est : la
+   camera vire, le monde reste, et on n'a jamais quitte l'endroit.
+
+   POURQUOI LE CHOIX EST UN CLIC ET PAS UN DEFILEMENT. Le defilement est un axe,
+   il dit avancer ou reculer. Il ne sait pas dire a gauche. Le carrefour est
+   donc le seul endroit du site ou la molette ne suffit plus, et c'est
+   exactement pour cela qu'il fait evenement.
+
+   Chaque voie repart du DERNIER repere du tronc : aucune coupure, aucun saut,
+   la camera continue simplement dans une autre direction. */
+const FIN_TRONC = { oeil: null, vise: null };   /* rempli plus bas, apres survol */
+
+function voiesDuMonde() {
+  const depart = REPERES[REPERES.length - 1];
+  FIN_TRONC.oeil = depart.oeil;
+  FIN_TRONC.vise = depart.vise;
+  return {
+    /* ══ LE NAVIRE ═══════════════════════════════════════════════════════
+       L'idee est de Matheo : « un bateau ou on se met dedans, et apres on le
+       voit naviguer et on avance avec ». Elle est meilleure que tout ce que
+       j'avais propose, pour une raison qu'il n'a pas dite : sur un bateau, ce
+       n'est plus le visiteur qui avance, c'est le MONDE qui defile. La camera
+       ne bouge plus par rapport au pont, elle tangue avec lui. C'est le seul
+       moment du site ou l'on est immobile et ou tout bouge quand meme, et
+       c'est ce contraste qui le rend memorable.
+
+       La voie raconte la METHODE : comment on travaille ensemble. Une
+       traversee en etapes, ce qui est exactement la forme du sujet. */
+    navire: {
+      titre: 'Le navire',
+      sous: 'Comment on travaille',
+      fleche: '↘',
+      /* Le rail ne sert qu'a rejoindre le pont. Apres, c'est le navire qui
+         porte la camera, et il n'a pas besoin de rail : il a un cap. */
+      /* On se detourne du mont, on descend a l'eau ou le navire attend, on
+         embarque, et c'est le navire qui remet le cap dessus. L'aller-retour
+         est volontaire : il fait sentir qu'on a CHOISI de passer par la mer. */
+      reperes: [
+        { t: 0.00, oeil: depart.oeil,        vise: depart.vise },
+        { t: 0.12, oeil: [  0,  9.0, 149],   vise: [-42,  2.0, 138] },
+        { t: 0.24, oeil: [-40,  3.0, 133],   vise: [-56, -2.0, 126] },
+        { t: 0.40, oeil: [-50, -1.9, 127],   vise: [-58, -2.6, 124] },
+        { t: 1.00, oeil: [-50, -1.9, 127],   vise: [-58, -2.6, 124] }
+      ]
+    },
+    /* ══ PARLER ══════════════════════════════════════════════════════════
+       La voie la plus courte, et celle qui doit exister avant toutes les
+       autres : un visiteur presse doit pouvoir arriver au formulaire sans
+       traverser quoi que ce soit. Elle repart vers la rive, au ras de l'eau. */
+    parler: {
+      titre: 'Parler',
+      sous: 'Votre maquette, gratuite',
+      fleche: '↗',
+      reperes: [
+        { t: 0.00, oeil: depart.oeil,        vise: depart.vise },
+        { t: 0.45, oeil: [ 34,  6.0, 176],   vise: [ 62, 14.0, 214] },
+        { t: 1.00, oeil: [ 58,  9.0, 202],   vise: [ 86, 26.0, 246] }
+      ]
+    }
+  };
+}
+
+function courbeDe(cle, liste = REPERES) {
   return new THREE.CatmullRomCurve3(
-    REPERES.map(r => new THREE.Vector3(...r[cle])), false, 'catmullrom', 0.35);
+    liste.map(r => new THREE.Vector3(...r[cle])), false, 'catmullrom', 0.35);
 }
 
 /* Le rail n'est pas parcouru a vitesse constante : les reperes ne sont pas
    equidistants dans le temps. On transforme donc le temps du recit en
    abscisse sur la courbe, en interpolant entre deux reperes. */
-function abscisse(t) {
-  const n = REPERES.length - 1;
+function abscisse(t, liste = REPERES) {
+  const n = liste.length - 1;
   for (let i = 0; i < n; i++) {
-    const a = REPERES[i].t, b = REPERES[i + 1].t;
+    const a = liste[i].t, b = liste[i + 1].t;
     if (t <= b || i === n - 1) {
       const k = Math.min(1, Math.max(0, (t - a) / (b - a)));
       return (i + k) / n;
@@ -467,6 +540,16 @@ export async function monterLeVoyage(toile, options = {}) {
      lue avant sa ligne de declaration n'est pas indefinie, elle jette, et la
      piece entiere tombait sur une zone morte temporelle. */
   let reculEcran = 1;
+  /* ══ LES RAILS DES VOIES ══════════════════════════════════════════════
+     Un par branche, construit exactement comme celui du tronc et partant de
+     son dernier repere. Rien ne distingue une voie du tronc sinon qu'on n'y
+     entre que si on la choisit. */
+  const VOIES = voiesDuMonde();
+  for (const v of Object.values(VOIES)) {
+    v.railOeil = courbeDe('oeil', v.reperes);
+    v.railVise = courbeDe('vise', v.reperes);
+  }
+
   const railOeil = courbeDe('oeil');
   const railVise = courbeDe('vise');
 
@@ -1218,6 +1301,10 @@ export async function monterLeVoyage(toile, options = {}) {
      se pose dans un monde deja vivant au lieu d'ouvrir sur un ecran noir. */
   const chargeur = new GLTFLoader();
   let feuilleGeante = null, portail = null, matiereFeuille = null, fluxPortail = null;
+  /* De quel cote regarde la proue dans le fichier. Se mesure a l'image, jamais
+     de tete : un modele exporte peut avoir n'importe quelle orientation. */
+  const CAP_NAVIRE_BIAIS = 0;
+  let triNavire = 0, poidsNavire = 0;
   /* L'orientation de repos de la feuille, mesuree au chargement. La derive
      s'y AJOUTE au lieu de l'ecraser : sans elle, trois angles d'Euler ecrits
      a chaque image effaceraient la pose choisie des la premiere. */
@@ -1660,6 +1747,14 @@ export async function monterLeVoyage(toile, options = {}) {
 
   /* ── L'avancee ──────────────────────────────────────────────────────── */
   let avance = 0, avanceVisee = 0, visible = true, actif = true;
+  /* La voie courante, et l'avancee DANS cette voie. Les deux sont
+     independantes de l'avancee du tronc : on ne revient pas en arriere sur le
+     tronc pour repartir sur une branche, on reste au carrefour. */
+  let voie = null, avanceVoie = 0, avanceVoieVisee = 0;
+  let navire = null, ancrePont = null, ancreCap = null, courseNavire = null;
+  let chargementNavire = null;
+  const posPont = new THREE.Vector3(), visePont = new THREE.Vector3();
+  const pNav = new THREE.Vector3(), tNav = new THREE.Vector3();
   let dernier = performance.now();
   const pOeil = new THREE.Vector3(), pVise = new THREE.Vector3();
   const avant = new THREE.Vector3(), lateral = new THREE.Vector3();
@@ -1671,9 +1766,28 @@ export async function monterLeVoyage(toile, options = {}) {
        amorti donne une camera qui a du poids, et c'est tout ce qui separe
        une demonstration technique d'un plan de cinema. */
     const a = 1 - Math.pow(1 - 0.085, dt * 60);
-    avance += (avanceVisee - avance) * a;
 
-    const u = abscisse(avance);
+    /* ══ QUEL RAIL ? ══════════════════════════════════════════════════════
+       Une seule question, posee une fois par image, et tout le reste de la
+       fonction ne sait meme pas qu'il existe des branches : le flou, les
+       lampes, l'etalonnage et les etiquettes travaillent sur un oeil et un
+       point vise, sans se demander d'ou ils viennent. C'est ce qui permet
+       d'ajouter une voie sans toucher a rien d'autre. */
+    if (voie && VOIES[voie]) {
+      const V = VOIES[voie];
+      avanceVoie += (avanceVoieVisee - avanceVoie) * a;
+      const uv = abscisse(avanceVoie, V.reperes);
+      V.railOeil.getPoint(uv, pOeil);
+      V.railVise.getPoint(uv, pVise);
+      /* Sur la voie du navire, le rail ne sert qu'a rejoindre le pont ; passe
+         un certain point, c'est le bateau qui porte la camera. */
+      if (voie === 'navire') mener(pOeil, pVise);
+    } else {
+      avance += (avanceVisee - avance) * a;
+      const u = abscisse(avance);
+      railOeil.getPoint(u, pOeil);
+      railVise.getPoint(u, pVise);
+    }
     /* ══ getPoint ET NON getPointAt ═══════════════════════════════════════
        getPointAt parcourt la courbe a VITESSE CONSTANTE, en abscisse
        curviligne. Or nos reperes sont tres inegalement espaces : deux unites
@@ -1684,8 +1798,6 @@ export async function monterLeVoyage(toile, options = {}) {
        getPoint suit le PARAMETRE : un repere par intervalle, exactement la ou
        on l'a place. La camera va donc lentement pres du sujet et vite dans le
        couloir, ce qui est aussi ce qu'on veut. */
-    railOeil.getPoint(u, pOeil);
-    railVise.getPoint(u, pVise);
 
     /* ══ LA PROXIMITE DU PORTAIL, PRISE SUR LE RAIL ════════════════════════
        Elle commande le flux, la mise au point, l'etalonnage et le recul
@@ -2139,6 +2251,23 @@ export async function monterLeVoyage(toile, options = {}) {
          seule chose qu'on lui demande. */
       roughness: 0.46,
       clearcoat: 0.35,
+      /* ══ LES REFLETS SONT VIOLETS ══════════════════════════════════════
+         Matheo : « peut-etre lui faire un peu plus de reflets violets ». Le
+         blason etait vert sombre et ne renvoyait qu'une lumiere neutre : dans
+         un monde qui vient de basculer au violet en franchissant l'anneau, il
+         restait le seul objet reste en arriere.
+
+         On ne le repeint pas, on change ce qu'il RENVOIE. Le duvet est la
+         reponse exacte : c'est le terme qui allume une surface aux angles
+         rasants, donc sur les aretes des trois folioles et nulle part
+         ailleurs. Le corps reste vert, le contour devient violet, et les deux
+         couleurs de la maison se partagent le meme objet comme elles se
+         partagent le flux du portail. */
+      sheen: 1.0,
+      sheenColor: new THREE.Color(0x9B6BFF),
+      sheenRoughness: 0.38,
+      specularColor: new THREE.Color(0xB79BFF),
+      specularIntensity: 0.9,
       /* ══ UN VERNIS TROP LISSE EST UN MIROIR ══════════════════════════
          A 0,06 de rugosite, la lampe violette se reflechissait en un point
          minuscule et extremement lumineux. Le halo l'a repris, le flou l'a
@@ -2186,6 +2315,167 @@ export async function monterLeVoyage(toile, options = {}) {
     formesSceau = n;
   }
 
+  /* ══════════════════════════════════════════════════════════════════════
+     LE NAVIRE
+     ----------------------------------------------------------------------
+     L'idee est de Matheo. Ce qu'elle a de juste, et qu'aucune autre voie
+     n'aura : sur un bateau, ce n'est plus le visiteur qui avance, c'est le
+     MONDE qui defile. La camera ne bouge plus par rapport au pont, elle tangue
+     avec lui. C'est le seul moment du site ou l'on est immobile et ou tout
+     bouge quand meme.
+
+     TECHNIQUEMENT, C'EST CE QUI DEMANDE LE MOINS. Pas de rail pour la camera
+     pendant la traversee : elle est ACCROCHEE au navire, par un objet vide
+     pose sur le pont. Le navire suit son cap, tangue, roule, et la camera
+     herite de tout cela sans qu'une seule ligne ne s'en occupe. Un rail qui
+     imiterait le roulis d'un bateau serait dix fois plus long a ecrire et
+     faux a chaque changement de cap.
+
+     Il ne se charge QUE si l'on prend cette voie. Un mega-octet et demi de
+     navire ne doit pas peser sur le visiteur qui va au formulaire. */
+  /* ══ LE CAP EST CELUI DE LA MONTAGNE ══════════════════════════════════════
+     Premier trace, le navire traversait le lac d'ouest en est : on voyait de
+     l'eau noire pendant deux ecrans. Le mont est le seul objet du monde qui
+     merite d'etre regarde pendant qu'on avance, et il est droit devant si l'on
+     met le cap au nord-est. Le navire sort donc de l'ombre de la rive et
+     remonte vers lui : la moitie gauche du cadre cesse d'etre vide, et la
+     traversee a une DESTINATION, ce qui est la moitie d'un voyage. */
+  const CAP_NAVIRE = [[-45, 132], [-20, 152], [8, 172], [34, 190], [58, 205]];
+  /* Ou se tient le visiteur sur le pont, et ou il regarde. En unites du monde,
+     mesurees sur le modele une fois pose : le groupe exterieur n'a pas
+     d'echelle, donc ce sont des metres. */
+  /* ══ CES TROIS NOMBRES SE MESURENT, ILS NE SE DEVINENT PAS ═══════════════
+     Ma premiere version posait le visiteur a deux metres quarante au-dessus du
+     CENTRE du modele. Or le centre d'un voilier est au milieu de ses mats : le
+     pont, lui, est cinq metres plus bas. On se retrouvait suspendu dans le
+     greement, a regarder de l'eau vide.
+
+     Le pont a donc ete releve en tirant des rayons verticaux a travers le
+     modele : il repond a moins 5,15 sur presque toute la longueur, et les
+     seuls x qui repondent plus haut sont les mats et le chateau. On ajoute la
+     taille d'un homme et on obtient l'oeil. La proue est en x positif, releve
+     de la meme facon : c'est le seul bout ou la coque s'affine. */
+  /* Releve a la grille : le pont franc va de x = -8 a x = +4, a la cote -5,5,
+     et les mats tombent sur l'axe, en x = -2 et x = +6. On se tient donc a
+     BABORD de l'axe, entre les deux mats, ou le pont est libre et ou le
+     greement encadre la vue au lieu de la boucher. */
+  const PONT = { x: -7.0, y: -3.80, z: -1.30 };  /* pont a -5,50, plus 1,70 */
+  /* ══ ON NE REGARDE PAS TOUT A FAIT DROIT DEVANT ═══════════════════════════
+     Cap sur la proue, la moitie gauche du cadre etait de l'eau noire : le mont
+     tombait a trente-trois degres sur babord, donc au bord du champ, et sa
+     face non eclairee s'y confondait avec le ciel. Vingt degres de lacet vers
+     babord suffisent a le ramener au tiers gauche, et on garde le pont et le
+     greement sur la droite. C'est le cadrage de quelqu'un accoude au
+     bastingage qui regarde ou l'on va, pas celui d'une camera boulonnee a
+     l'etrave. */
+  const CAP  = { x: 30.0, y: -2.60, z: 10.0 };
+  const ASSIETTE = 1.9;                         /* le pont a deux metres au-dessus de l'eau */
+  const LONGUEUR_NAVIRE = 26;
+
+  async function poserLeNavire() {
+    const g = await chargeur.loadAsync('modeles/navire.glb');
+    const o = g.scene;
+    const b = new THREE.Box3().setFromObject(o);
+    const t = b.getSize(new THREE.Vector3()), c = b.getCenter(new THREE.Vector3());
+    o.position.sub(c);
+    /* Le plus grand cote du modele est sa LONGUEUR : un navire est plus long
+       que haut, et c'est vrai de tous les navires. On s'en sert pour le mettre
+       a l'echelle sans rien mesurer a la main. */
+    o.scale.setScalar(LONGUEUR_NAVIRE / Math.max(t.x, t.y, t.z));
+    o.traverse(m => {
+      if (!m.isMesh || !m.material) return;
+      const mt = m.material;
+      if ('metalness' in mt) mt.metalness = 0;
+      if ('roughness' in mt) mt.roughness = Math.min(1, (mt.roughness ?? 1) * 0.9 + 0.16);
+      mt.envMapIntensity = 0.7;
+    });
+
+    navire = new THREE.Group();
+    navire.add(o);
+    /* Deux objets vides, un pour l'oeil et un pour le regard. Les accrocher au
+       navire plutot que de recalculer leur position a chaque image, c'est
+       laisser three faire la composition des transformations : le roulis, le
+       tangage, le cap et la houle s'y appliquent tous seuls et dans le bon
+       ordre. */
+    ancrePont = new THREE.Object3D(); ancrePont.position.set(PONT.x, PONT.y, PONT.z);
+    ancreCap  = new THREE.Object3D(); ancreCap.position.set(CAP.x, CAP.y, CAP.z);
+    navire.add(ancrePont); navire.add(ancreCap);
+
+    /* ══ LE FANAL ══════════════════════════════════════════════════════════
+       Le pont etait juste, et illisible. Les trois lampes du monde sont
+       reglees pour un couloir de vegetation a soixante unites ; a cent
+       soixante-dix, sur l'eau, il ne reste rien qu'une silhouette. On pourrait
+       remonter l'exposition : ca eclaircirait aussi le lac, le ciel et la
+       montagne, et on perdrait la nuit.
+
+       Un navire de nuit porte un feu. On pose donc la lumiere DANS la scene
+       plutot que sur l'image : elle eclaire les planches, elle accroche le
+       greement, elle laisse le lac noir, et elle dit que quelqu'un vit a bord.
+       Une lampe qui a une raison d'exister ne se lit jamais comme un
+       eclairage.
+
+       Elle est chaude, seule couleur chaude de tout le site. Un point ambre
+       dans un monde jade et violet ne casse pas la direction artistique : il
+       lui donne son contraire, et c'est ce qui la fait voir. */
+    const fanal = new THREE.PointLight(0xFFD2A0, 46, 30, 2);
+    fanal.position.set(1.6, -2.6, -1.1);
+    navire.add(fanal);
+    const globe = new THREE.Mesh(
+      new THREE.SphereGeometry(0.30, 14, 10),
+      new THREE.MeshBasicMaterial({ color: 0xFFE9CC, fog: false })
+    );
+    globe.position.copy(fanal.position);
+    navire.add(globe);
+    /* Un second feu a la proue, beaucoup plus faible : il ne sert qu'a ce que
+       l'avant du navire ne tombe pas dans le noir a mesure qu'il s'eloigne du
+       premier. */
+    const fanalProue = new THREE.PointLight(0xFFC98C, 16, 22, 2);
+    fanalProue.position.set(10.5, -3.4, 0);
+    navire.add(fanalProue);
+    navire.position.set(CAP_NAVIRE[0][0], ASSIETTE, CAP_NAVIRE[0][1]);
+    monde.add(navire);
+
+    courseNavire = new THREE.CatmullRomCurve3(
+      CAP_NAVIRE.map(([x, z]) => new THREE.Vector3(x, NIVEAU_EAU, z)), false, 'catmullrom', 0.4);
+
+    triNavire = compter(o);
+    poidsNavire = poidsDe('modeles/navire.glb');
+  }
+
+  /* ══ LA CAMERA MONTE A BORD ═══════════════════════════════════════════════
+     Deux regimes et un fondu entre les deux. Avant, on vole vers le navire par
+     le rail. Apres, on est dessus. Le fondu dure un sixieme de la voie, ce qui
+     suffit a ne pas voir la bascule et ne suffit pas a la trouver longue.
+
+     Le navire, lui, n'appareille qu'une fois le visiteur monte : un bateau qui
+     part avant qu'on soit dedans, c'est un bateau qu'on regarde partir. */
+  function mener(oeil, vise) {
+    if (!navire || !courseNavire) return;
+
+    const appareille = Math.min(1, Math.max(0, (avanceVoie - 0.30) / 0.70));
+    const douce = appareille * appareille * (3 - 2 * appareille);
+    courseNavire.getPoint(douce, pNav);
+    courseNavire.getTangent(douce, tNav);
+
+    const th = performance.now() / 1000;
+    /* La houle. Trois periodes sans rapport simple, sinon le bateau bat la
+       mesure et on entend le calcul. */
+    navire.position.set(pNav.x, ASSIETTE + Math.sin(th * 0.83) * 0.38, pNav.z);
+    /* Le cap suit la tangente de la course : le navire se tourne dans le sens
+       ou il va, ce qu'aucun bateau ne fait autrement. */
+    navire.rotation.y = Math.atan2(-tNav.z, tNav.x) + CAP_NAVIRE_BIAIS;
+    navire.rotation.z = Math.sin(th * 0.61) * 0.055;
+    navire.rotation.x = Math.sin(th * 0.47) * 0.032;
+    navire.updateMatrixWorld(true);
+
+    const part = Math.min(1, Math.max(0, (avanceVoie - 0.22) / 0.16));
+    if (part <= 0) return;
+    ancrePont.getWorldPosition(posPont);
+    ancreCap.getWorldPosition(visePont);
+    oeil.lerp(posPont, part);
+    vise.lerp(visePont, part);
+  }
+
   /* Le sous-bois se monte apres le paysage : il a besoin de sa mousse et de
      sa fonction de hauteur pour se poser au bon endroit. */
   let sousBois = null;
@@ -2211,6 +2501,33 @@ export async function monterLeVoyage(toile, options = {}) {
   return {
     /* Le seul bouton : zero au depart, un a l'arrivee. */
     avancer(t) { avanceVisee = Math.min(1, Math.max(0, t)); },
+
+    /* ══ LES VOIES, VUES DU DEHORS ══════════════════════════════════════════
+       Trois verbes, et la page n'a pas besoin d'en savoir plus : la liste des
+       chemins, celui qu'on prend, et ou l'on en est dessus. Toute la
+       geometrie, le chargement du navire et le passage d'un rail a l'autre
+       restent ici. */
+    voies() {
+      return Object.entries(VOIES).map(([cle, v]) => ({
+        cle, titre: v.titre, sous: v.sous, fleche: v.fleche
+      }));
+    },
+    voie() { return voie; },
+    choisir(nom) {
+      if (nom && !VOIES[nom]) return false;
+      voie = nom || null;
+      avanceVoie = avanceVoieVisee = 0;
+      /* Le navire ne se telecharge qu'ici : un mega-octet et demi ne doit pas
+         peser sur le visiteur qui prend une autre voie, ni sur celui qui
+         s'arrete au carrefour. */
+      if (voie === 'navire' && !navire && !chargementNavire) {
+        chargementNavire = poserLeNavire().catch(e => console.warn('navire indisponible', e));
+      }
+      return true;
+    },
+    avancerVoie(t) { avanceVoieVisee = Math.min(1, Math.max(0, t)); },
+    /* Poignee de service : reglage du navire sans recharger la page. */
+    _navire: () => navire,
     montrer(v) { if (v && !visible) dernier = performance.now(); visible = v; },
     /* Poser d'autorite, pour les controles : la piece peint par son chemin
        normal, mais sans attendre l'amortissement. */

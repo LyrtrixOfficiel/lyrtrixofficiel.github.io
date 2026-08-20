@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=68da8d267a">
+<link rel="stylesheet" href="css/kazura.css?v=2a36702c6a">
 
 <script type="importmap">
 { "imports": {
@@ -53,6 +53,100 @@
    couloir en prend huit et demi pour soixante-dix-sept. Six fois plus vite,
    et c'est ce qui fait qu'on le lit comme un vol. */
 .voyage__course { height: 1450svh; }
+
+/* ══ LE CARREFOUR ══════════════════════════════════════════════════════════
+   Au bout du tronc, la molette ne suffit plus : elle sait dire avancer, elle
+   ne sait pas dire a gauche. C'est le seul endroit du site ou il faut cliquer,
+   et c'est exactement pour cela qu'il fait evenement.
+
+   Les chemins sont poses cote a cote dans l'ordre ou ils partent dans le
+   monde : celui qui descend a droite est a droite. Un menu dont l'ordre ne
+   veut rien dire est une liste ; un menu dont l'ordre EST la geographie est
+   une carte. */
+.carrefour {
+  position: fixed; z-index: 4;
+  left: 50%; transform: translateX(-50%);
+  bottom: clamp(3rem, 12vh, 8rem);
+  display: flex; gap: clamp(.9rem, 2.4vw, 2.6rem);
+  align-items: flex-end;
+  opacity: 0; pointer-events: none;
+  transition: opacity .7s var(--doux);
+}
+.carrefour[data-vu='oui'] { opacity: 1; pointer-events: auto; }
+.carrefour__mot {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: calc(100% + clamp(1.4rem, 4vh, 3rem));
+  white-space: nowrap;
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--jade-clair);
+}
+.voie {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: .7rem .2rem 0; margin: 0;
+  color: inherit; text-align: center;
+  display: block;
+  /* Chaque chemin monte de sous une ligne, comme les mots des titres : le
+     carrefour s'ECRIT au lieu d'apparaitre. */
+  opacity: 0; transform: translateY(1.1rem);
+  transition: opacity .6s var(--doux), transform .6s var(--doux);
+  transition-delay: calc(var(--i) * 90ms);
+}
+.carrefour[data-vu='oui'] .voie { opacity: 1; transform: none; }
+.voie__fleche {
+  display: block; font-size: 1.5rem; line-height: 1;
+  color: var(--jade-clair); opacity: .55;
+  transition: transform .4s var(--doux), opacity .4s var(--doux);
+}
+.voie__titre {
+  display: block; margin-top: .55rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.9rem); line-height: 1.1;
+  letter-spacing: -.01em;
+  text-shadow: 0 .06em 1.2em rgba(4, 6, 10, .95);
+}
+.voie__sous {
+  display: block; margin-top: .3rem;
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--gris);
+}
+/* Le trait sous le chemin se tire au survol : rien ne bouge de place, seul
+   le soulignement pousse. Un bouton qui se deplace au survol se derobe. */
+.voie::after {
+  content: ''; display: block; height: 1px; margin: .8rem auto 0;
+  width: 0; background: var(--jade-clair);
+  transition: width .45s var(--doux);
+}
+.voie:hover::after, .voie:focus-visible::after { width: 100%; }
+.voie:hover .voie__fleche, .voie:focus-visible .voie__fleche { opacity: 1; transform: scale(1.16); }
+
+@media (max-width: 760px) {
+  .carrefour { flex-direction: column; align-items: center; gap: 1.5rem;
+               bottom: clamp(2rem, 8vh, 5rem); }
+  .voie::after { margin-top: .5rem; }
+}
+
+/* ══ LE GOUVERNAIL ═════════════════════════════════════════════════════════
+   Une fois engage sur une voie, on doit pouvoir en changer sans remonter tout
+   le fleuve. Discret, en haut a gauche, et il ne se deploie qu'au survol :
+   c'est un gouvernail, pas un tableau de bord. */
+.gouvernail {
+  position: fixed; z-index: 5; top: clamp(1rem, 3vh, 2rem); left: clamp(1rem, 3vw, 2.4rem);
+  display: none; flex-direction: column; gap: .1rem;
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .16em;
+  text-transform: uppercase;
+}
+html[data-voie]:not([data-voie='']) .gouvernail { display: flex; }
+.gouvernail button {
+  appearance: none; background: none; border: 0; cursor: pointer; padding: .34rem 0;
+  color: var(--gris); text-align: left; font: inherit; letter-spacing: inherit;
+  opacity: 0; transform: translateX(-.4rem); pointer-events: none;
+  transition: opacity .35s var(--doux), transform .35s var(--doux), color .2s;
+}
+.gouvernail:hover button, .gouvernail:focus-within button { opacity: 1; transform: none; pointer-events: auto; }
+.gouvernail button:hover, .gouvernail button:focus-visible { color: var(--jade-clair); }
+.gouvernail button[data-ici='oui'] { color: var(--jade-clair); opacity: 1; transform: none; pointer-events: auto; }
+.gouvernail__barre {
+  width: 1.4rem; height: 1px; background: var(--jade-clair); opacity: .6; margin-bottom: .5rem;
+}
 
 /* ══ UN VOILE SOUS LE TEXTE ═══════════════════════════════════════════════
    Le premier temps se joue sur une feuille eclairee a contre-jour, donc
@@ -271,13 +365,58 @@
        taillé à chaque image comme le reste de ce monde.</p>
   </section>
 
-  <section class="acte acte--centre" data-de="0.930" data-a="1.000">
-    <h2>Parlons de votre site.</h2>
+  <!-- ══ LES VOIES ═════════════════════════════════════════════════════════
+       Chaque voie est une page du site, sauf qu'on n'y va pas en changeant de
+       document : la camera tourne et continue. Le texte, lui, reste du texte
+       dans le document, lisible par un moteur et par un lecteur d'ecran, comme
+       celui du tronc. -->
+
+  <section class="acte acte--bg" data-voie="navire" data-de="0.34" data-a="0.50">
+    <span class="acte__num">01 · Vous parlez</span>
+    <h2>On commence par vous écouter.</h2>
+    <p>Ce que vous faites, pour qui, et ce qui vous distingue de celui d’à côté.
+       C’est la seule chose qu’on ne peut pas deviner, et c’est celle dont tout
+       le reste découle.</p>
+  </section>
+
+  <section class="acte acte--hd" data-voie="navire" data-de="0.54" data-a="0.70">
+    <span class="acte__num">02 · On construit</span>
+    <h2>Vous voyez le site avant de décider.</h2>
+    <p>Une maquette complète, à votre nom, avec vos textes et vos photos.
+       Gratuite. Vous la regardez tranquillement, chez vous, autant de fois que
+       vous voulez.</p>
+  </section>
+
+  <section class="acte acte--bd" data-voie="navire" data-de="0.74" data-a="0.90">
+    <span class="acte__num">03 · Vous tranchez</span>
+    <h2>Oui, ou non, et c’est tout.</h2>
+    <p>Si c’est non, vous n’avez rien payé et rien signé. Si c’est oui, on met
+       en ligne, on s’occupe du nom de domaine et de l’hébergement, et le site
+       reste à jour.</p>
+  </section>
+
+  <section class="acte acte--centre" data-voie="navire" data-de="0.94" data-a="1.00">
+    <h2>On parle du vôtre ?</h2>
     <p style="margin-bottom:1.6rem">On répond dans la journée, et on ne rappelle pas
        quinze fois.</p>
     <a class="bouton bouton--plein" href="contact.html">Parler de mon site <span aria-hidden="true">→</span></a>
   </section>
+
+  <section class="acte acte--centre" data-voie="parler" data-de="0.55" data-a="1.00">
+    <h2>Parlons de votre site.</h2>
+    <p style="margin-bottom:1.6rem">Dites-nous ce que vous faites. On vous montre une
+       maquette, gratuite, et vous décidez après.</p>
+    <a class="bouton bouton--plein" href="contact.html">Parler de mon site <span aria-hidden="true">→</span></a>
+  </section>
 </main>
+
+<nav class="carrefour" id="carrefour" aria-label="Choisir un chemin">
+  <span class="carrefour__mot">Choisissez votre route</span>
+</nav>
+
+<nav class="gouvernail" id="gouvernail" aria-label="Changer de chemin">
+  <span class="gouvernail__barre" aria-hidden="true"></span>
+</nav>
 
 <div class="voyage__course" aria-hidden="true"></div>
 <span class="voyage__descendez" id="descendez" aria-hidden="true">Descendez</span>
@@ -293,10 +432,97 @@ const toile = document.getElementById('toile-voyage');
 const jauge = document.getElementById('jauge');
 const descendez = document.getElementById('descendez');
 const actes = [...document.querySelectorAll('.acte')].map(e => ({
-  e, de: +e.dataset.de, a: +e.dataset.a
+  e, de: +e.dataset.de, a: +e.dataset.a, voie: e.dataset.voie || null
 }));
+const carrefour = document.getElementById('carrefour');
+const gouvernail = document.getElementById('gouvernail');
+const course = document.querySelector('.voyage__course');
 
 let voyage = null, nuee = null;
+
+/* ══ LA COURSE SE DEPLIE QUAND ON CHOISIT ═══════════════════════════════════
+   Tant qu'aucune voie n'est prise, la page fait quatorze ecrans et demi et
+   s'arrete au carrefour. Prendre une voie en AJOUTE huit et demi, sous les
+   pieds du visiteur, sans deplacer d'un pixel ce qui est deja au-dessus de
+   lui : il continue simplement a descendre et il est parti.
+
+   C'est le point qui decide si l'idee tient. Un choix qui recharge une page,
+   qui remonte en haut ou qui coupe le mouvement casse tout ce que la traversee
+   avait construit. Ici il ne se passe rien de visible : la barre de defilement
+   s'allonge, c'est tout. */
+const ECRANS_TRONC = 1450, ECRANS_VOIE = 850;
+let voie = null;
+
+function deplierLaCourse() {
+  course.style.height = (ECRANS_TRONC + (voie ? ECRANS_VOIE : 0)) + 'svh';
+}
+
+function mesurer() {
+  const total = document.documentElement.scrollHeight - innerHeight;
+  if (total <= 0) return { t: 0, tv: 0, finTronc: 0 };
+  const part = voie ? ECRANS_TRONC / (ECRANS_TRONC + ECRANS_VOIE) : 1;
+  const finTronc = total * part;
+  return {
+    t: Math.min(1, Math.max(0, scrollY / finTronc)),
+    tv: voie ? Math.min(1, Math.max(0, (scrollY - finTronc) / Math.max(1, total - finTronc))) : 0,
+    finTronc
+  };
+}
+
+/* Le carrefour se peuple depuis le monde : c'est lui qui sait quels chemins
+   existent, la page ne fait que les afficher. Une liste ecrite ici en double
+   finirait par mentir le jour ou une voie change de nom. */
+function peuplerLesVoies() {
+  const voies = voyage.voies();
+  voies.forEach((v, i) => {
+    const b = document.createElement('button');
+    b.className = 'voie';
+    b.type = 'button';
+    b.style.setProperty('--i', String(i));
+    b.innerHTML = '<span class="voie__fleche" aria-hidden="true">' + v.fleche + '</span>'
+                + '<span class="voie__titre"></span><span class="voie__sous"></span>';
+    b.querySelector('.voie__titre').textContent = v.titre;
+    b.querySelector('.voie__sous').textContent = v.sous;
+    b.addEventListener('click', () => prendre(v.cle));
+    carrefour.appendChild(b);
+
+    const g = document.createElement('button');
+    g.type = 'button';
+    g.textContent = v.titre;
+    g.dataset.cle = v.cle;
+    g.addEventListener('click', () => prendre(v.cle, true));
+    gouvernail.appendChild(g);
+  });
+  const retour = document.createElement('button');
+  retour.type = 'button';
+  retour.textContent = '← le carrefour';
+  retour.addEventListener('click', () => prendre(null, true));
+  gouvernail.appendChild(retour);
+}
+
+function prendre(nom, sauter) {
+  if (!voyage || !voyage.choisir(nom)) return;
+  const avant = mesurer();
+  voie = nom;
+  deplierLaCourse();
+  document.documentElement.dataset.voie = nom || '';
+  for (const b of gouvernail.querySelectorAll('button[data-cle]')) {
+    b.dataset.ici = b.dataset.cle === nom ? 'oui' : 'non';
+  }
+  /* L'adresse porte la voie : un lien vers « le navire » doit rouvrir le
+     navire, et le bouton retour du navigateur doit ramener au carrefour. Sans
+     cela, tout ce qui n'est pas le tronc devient impossible a partager, ce qui
+     reviendrait a avoir un site d'une seule page. */
+  history.replaceState(null, '', nom ? '?voie=' + nom : location.pathname);
+  /* On ne saute que si on a demande a sauter : depuis le carrefour, la page
+     grandit sous les pieds et le mouvement continue tout seul. */
+  if (sauter) {
+    const m = mesurer();
+    scrollTo({ top: nom ? m.finTronc + 2 : Math.max(0, m.finTronc - innerHeight * 0.5), behavior: 'instant' });
+  } else if (!nom) {
+    scrollTo({ top: Math.max(0, avant.finTronc - 2), behavior: 'instant' });
+  }
+}
 
 /* ══ ON DECOUPE LES TITRES EN MOTS ════════════════════════════════════════
    Le balisage reste une phrase : c'est lui que lisent les moteurs et les
@@ -320,29 +546,37 @@ for (const t of document.querySelectorAll('.acte h2')) {
   });
 }
 
-function avancee() {
-  const course = document.documentElement.scrollHeight - innerHeight;
-  return course > 0 ? Math.min(1, Math.max(0, scrollY / course)) : 0;
-}
+function avancee() { return mesurer().t; }
 
-let dernierEcrit = -1;
+let dernierEcrit = -1, dernierEcritVoie = -1;
 
-function poser(t) {
+function poser(t, tv) {
   voyage?.avancer(t);
+  if (voie) voyage?.avancerVoie(tv);
 
-  /* On ne touche le document que si la valeur a bouge : inutile de reecrire
-     une largeur de jauge soixante fois par seconde pour la meme valeur. Ce
-     qui suit plus bas, en revanche, avance avec le TEMPS et doit tourner a
-     chaque image, meme immobile. */
-  if (Math.abs(t - dernierEcrit) >= 0.0002) {
-    dernierEcrit = t;
-    jauge.style.width = (t * 100).toFixed(2) + '%';
+  /* On ne touche le document que si une des deux valeurs a bouge : inutile de
+     reecrire une largeur de jauge soixante fois par seconde pour la meme
+     valeur. Ce qui suit plus bas, en revanche, avance avec le TEMPS et doit
+     tourner a chaque image, meme immobile. */
+  if (Math.abs(t - dernierEcrit) >= 0.0002 || Math.abs(tv - dernierEcritVoie) >= 0.0002) {
+    dernierEcrit = t; dernierEcritVoie = tv;
+    /* La jauge mesure le trajet ENTIER, tronc plus branche : sur une page qui
+       s'allonge quand on choisit, une jauge qui repart de zero au carrefour
+       dirait qu'on recommence, alors qu'on continue. */
+    const total = voie ? (t * ECRANS_TRONC + tv * ECRANS_VOIE) / (ECRANS_TRONC + ECRANS_VOIE) : t;
+    jauge.style.width = (total * 100).toFixed(2) + '%';
     descendez.style.opacity = t > 0.03 ? '0' : '1';
 
     for (const a of actes) {
-      const vu = t >= a.de && t <= a.a;
+      const p = a.voie ? tv : t;
+      const vu = (a.voie ? a.voie === voie : !voie) && p >= a.de && p <= a.a;
       if ((a.e.dataset.vu === 'oui') !== vu) a.e.dataset.vu = vu ? 'oui' : 'non';
     }
+
+    /* Le carrefour n'apparait qu'au bout du tronc, et seulement tant qu'on n'a
+       rien choisi. */
+    const ouvert = !voie && t > 0.955;
+    if ((carrefour.dataset.vu === 'oui') !== ouvert) carrefour.dataset.vu = ouvert ? 'oui' : 'non';
   }
 
   /* ══ LE NOM SE DEFAIT PENDANT QUE LE MONDE SE FORME ════════════════════
@@ -419,10 +653,11 @@ function poser(t) {
    ecritures dans le document. */
 (function battre() {
   requestAnimationFrame(battre);
-  poser(avancee());
+  const m = mesurer();
+  poser(m.t, m.tv);
 })();
 
-addEventListener('resize', () => poser(avancee()), { passive: true });
+addEventListener('resize', () => { const m = mesurer(); poser(m.t, m.tv); }, { passive: true });
 
 (async () => {
   try {
@@ -433,7 +668,15 @@ addEventListener('resize', () => poser(avancee()), { passive: true });
        que TOUT suit, meme quand le navigateur n'envoie pas ses evenements de
        defilement. Sans elle, un controle ne peut pas distinguer une page
        cassee d'un onglet gele, et j'ai deja pris l'un pour l'autre. */
-    window.kazura.voyagePage = { poser, avancee };
+    window.kazura.voyagePage = { poser, avancee, mesurer, prendre, voie: () => voie };
+    peuplerLesVoies();
+    deplierLaCourse();
+    /* Une adresse qui porte une voie y emmene directement, sans rejouer les
+       quatorze ecrans du tronc : c'est ce que Matheo appelait « pouvoir aller
+       directement a cet endroit ». Le tronc reste la, au-dessus, pour qui
+       remonte. */
+    const demandee = new URLSearchParams(location.search).get('voie');
+    if (demandee) prendre(demandee, true);
   } catch (e) { console.warn('voyage indisponible', e); }
 
   try {
@@ -469,7 +712,8 @@ addEventListener('resize', () => poser(avancee()), { passive: true });
     }
   } catch (e) { console.warn('nuee indisponible', e); }
 
-  poser(avancee());
+  const m = mesurer();
+  poser(m.t, m.tv);
 })();
 </script>
 

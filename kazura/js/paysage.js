@@ -59,7 +59,7 @@ function relief(x, y) {
    commence la ou il finit ; les monts sont assez loin pour qu'on ne les
    atteigne jamais, ce qui est la definition d'un horizon. */
 export const NIVEAU_EAU = -5.4;
-const LAC_Z = 205, LAC_RAYON = 108;
+const LAC_Z = 205, LAC_RAYON = 150;
 
 /* ══ LES MASSIFS SONT UNE DONNEE, PAS TROIS APPELS ════════════════════════
    Ils etaient decrits a l'interieur du montage, donc invisibles de l'exterieur.
