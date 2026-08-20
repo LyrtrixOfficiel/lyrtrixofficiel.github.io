@@ -564,7 +564,11 @@ function dessinerLEtiquette(nom, cuvee, annee) {
   g.letterSpacing = '6px';
   g.fillStyle = '#5A5040';
   g.fillText('MIS EN BOUTEILLE AU DOMAINE', L / 2, 790);
-  g.fillText('BEBLENHEIM · HAUT-RHIN · 12,5 % VOL', L / 2, 828);
+  /* Un domaine INVENTE ne porte pas une adresse reelle. L'etiquette citait le
+     village de Matheo, et la page donnait meme un numero dans une vraie rue :
+     une demonstration qui se fait passer pour une maison qui existe est un
+     probleme, pas un detail de redaction. */
+  g.fillText('VIGNOBLE D’ALSACE · 12,5 % VOL', L / 2, 828);
 
   g.letterSpacing = '0px';
   return c;

@@ -351,7 +351,7 @@ export async function monterLeVoyage(toile, options = {}) {
      elle eclaire ce qui est pres d'elle et rien d'autre, exactement comme
      une lampe dans une piece. Trente unites plus loin, dans le couloir, elle
      n'existe plus, et la pierre garde le reglage qui lui convient. */
-  const lampeFeuille = new THREE.PointLight(0x6EE7B7, 70, 26, 2);
+  const lampeFeuille = new THREE.PointLight(0x6EE7B7, 42, 22, 2);
   lampeFeuille.position.set(3.0, 2.4, 6.5);
   scene.add(lampeFeuille);
 
@@ -761,7 +761,14 @@ export async function monterLeVoyage(toile, options = {}) {
 
     const nf = loin ? (petit ? 3 : 5) : (petit ? 5 : 9);
     for (let k = 0; k < nf; k++) {
-      const u = 0.1 + (k / nf) * 0.85 + alea(-0.03, 0.03);
+      /* ══ PAS DE FEUILLE AU RAS DU SOL ═════════════════════════════════
+         Elles partaient a un dixieme de la tige, donc pratiquement par terre.
+         Vues depuis une camera a hauteur d'homme, ces feuilles-la se
+         presentent PAR LE DESSUS : on ne voit que leur face, etalee, et un
+         champ de faces etalees fait des assiettes.
+         En haut de tige, on les voit de trois quarts et elles redeviennent
+         des feuilles. */
+      const u = 0.30 + (k / nf) * 0.66 + alea(-0.03, 0.03);
       const uc = Math.min(0.999, Math.max(0.001, u));
       feuillesPos.push({
         p: courbe.getPointAt(uc),
@@ -807,7 +814,7 @@ export async function monterLeVoyage(toile, options = {}) {
     geo.setAttribute('aRetard', new THREE.BufferAttribute(retB, 1));
     monde.add(new THREE.Mesh(geo, matTige));
     for (let k = 0; k < (petit ? 5 : 10); k++) {
-      const u = 0.12 + (k / (petit ? 5 : 10)) * 0.82 + alea(-0.03, 0.03);
+      const u = 0.30 + (k / (petit ? 5 : 10)) * 0.64 + alea(-0.03, 0.03);
       const uc = Math.min(0.999, Math.max(0.001, u));
       feuillesPos.push({ p: courbe.getPointAt(uc), tangente: courbe.getTangentAt(uc), taille: alea(0.5, 1.1) });
     }
@@ -826,14 +833,68 @@ export async function monterLeVoyage(toile, options = {}) {
   const axeY = new THREE.Vector3(0, 1, 0), axeX = new THREE.Vector3(1, 0, 0);
   const dehors = new THREE.Vector3();
 
+  /* ══ UNE FEUILLE REGARDE LE CIEL ═══════════════════════════════════════
+     Elle etait orientee a partir de la TANGENTE de la liane, puis tournee au
+     hasard tout autour. Deux consequences que Matheo a vues : la ou la tige
+     redescend, la tangente pointe vers le bas et la feuille se retrouve
+     COMPLETEMENT A L'ENVERS ; et la rotation libre en mettait autant sous la
+     tige que dessus, ce qui n'arrive jamais.
+
+     La regle vraie n'a rien a voir avec la tige : une feuille tourne son limbe
+     vers la LUMIERE. Elle sort du rameau par son petiole, elle s'ecarte a
+     l'horizontale, et sa face regarde le haut. On construit donc le repere a
+     partir de cette regle-la, et la tige ne donne plus que le point d'attache
+     et l'azimut de sortie.
+
+     La geometrie du limbe s'etend en X et Y, sa normale est +Z : il faut donc
+     que Z pointe vers le ciel et que X s'ecarte de la tige. */
+  const versLeCiel = new THREE.Vector3(0, 1, 0);
+  const dehorsF = new THREE.Vector3();
+  const axeZ2 = new THREE.Vector3();
+  const axeY2 = new THREE.Vector3();
+  const roulis = new THREE.Quaternion();
+  const base = new THREE.Matrix4();
+
   feuillesPos.forEach((f, i) => {
-    q.setFromUnitVectors(versLeHaut, f.tangente.clone().normalize());
-    q.multiply(new THREE.Quaternion().setFromAxisAngle(axeY, Math.random() * Math.PI * 2));
-    q.multiply(new THREE.Quaternion().setFromAxisAngle(axeX, alea(-0.55, 0.30)));
+    /* L'azimut de sortie : de quel cote de la tige part cette feuille. Tire
+       autour de l'axe VERTICAL, pas autour de la tige, pour qu'il reste
+       horizontal meme quand la liane serpente. */
+    const az = Math.random() * Math.PI * 2;
+    dehorsF.set(Math.cos(az), 0, Math.sin(az));
+    /* Elle se releve un peu : une feuille horizontale parfaite fait plateau. */
+    dehorsF.y = alea(0.10, 0.42);
+    dehorsF.normalize();
+
+    /* La normale part du ciel et se redresse pour rester perpendiculaire a la
+       direction de sortie : sans cette correction le repere n'est pas
+       orthogonal et le limbe se retrouve cisaille. */
+    axeZ2.copy(versLeCiel).addScaledVector(dehorsF, -versLeCiel.dot(dehorsF)).normalize();
+    axeY2.crossVectors(axeZ2, dehorsF).normalize();
+    base.makeBasis(dehorsF, axeY2, axeZ2);
+    q.setFromRotationMatrix(base);
+
+    /* ══ INCLINEE, MAIS JAMAIS RETOURNEE ══════════════════════════════════
+       En corrigeant les feuilles a l'envers, je les ai toutes mises A PLAT :
+       leur limbe parfaitement horizontal, ce qui fait un champ d'ASSIETTES
+       posees dans l'herbe. Aucune feuille n'est horizontale ; elle est
+       inclinee, et c'est justement la variete des inclinaisons qui fait qu'un
+       feuillage a du volume.
+
+       Le point important est la borne. Un roulis de cinquante degres penche
+       franchement le limbe et laisse la normale a plus de zero six vers le
+       haut : la feuille reste tournee vers la lumiere, ce qui etait tout le
+       probleme. Ce n'est pas le hasard qu'il fallait retirer, c'est son
+       amplitude qu'il fallait borner. */
+    roulis.setFromAxisAngle(dehorsF, alea(-0.92, 0.92));
+    q.premultiply(roulis);
+    /* Et un tangage le long de la feuille : la pointe retombe ou se releve. */
+    roulis.setFromAxisAngle(axeY2, alea(-0.38, 0.26));
+    q.premultiply(roulis);
+
     ech.setScalar(f.taille);
     /* Le petiole se pose sur la PEAU de la tige, jamais sur son axe : attache
        au centre, il disparait dans le tube et la feuille semble en jaillir. */
-    dehors.set(1, 0, 0).applyQuaternion(q).multiplyScalar(0.11);
+    dehors.copy(dehorsF).multiplyScalar(0.11);
     m4.compose(f.p.clone().add(dehors), q, ech);
     feuilles.setMatrixAt(i, m4);
     aGrn[i] = Math.random();
@@ -1066,7 +1127,18 @@ export async function monterLeVoyage(toile, options = {}) {
     });
     portail = new THREE.Group();
     portail.add(o);
-    portail.position.set(0, 3.2, 55);
+    /* ══ IL DOIT TOUCHER LE SOL ═══════════════════════════════════════════
+       Sa hauteur etait ecrite en dur : 3,2. Ce nombre etait juste quand il n'y
+       avait pas de sol, et faux depuis qu'il y en a un. Matheo l'a vu tout de
+       suite : le portail FLOTTAIT, ce qui ruine d'un coup toute la credibilite
+       d'un decor, parce que c'est la premiere chose que l'oeil verifie.
+
+       On ne devine plus : on demande au terrain sa hauteur a cet endroit, et
+       on pose le socle dessus. Un rien d'enfoncement, parce qu'une pierre de
+       cette masse s'assoit dans la terre au lieu d'y etre deposee. Et si le
+       modele change de taille un jour, il restera pose. */
+    const demiHauteur = t.y * (9.5 / Math.max(t.x, t.y, t.z)) * 0.5;
+    portail.position.set(0, hauteurSol(0, 55) + demiHauteur - 0.55, 55);
     monde.add(portail);
 
     triPortail = compter(o);
@@ -1261,8 +1333,32 @@ export async function monterLeVoyage(toile, options = {}) {
     /* On ne baisse pas jusqu'a zero : il reste un huitieme de lumiere, juste
        assez pour deviner une silhouette et comprendre qu'il y a quelque chose
        la. Le noir complet ne serait pas mysterieux, il serait vide. */
-    const k = 0.40 + 0.60 * doux;
-    lampeFeuille.intensity = 70 * doux;
+    /* ══ LE MONDE S'ECLAIRE APRES QUE LE NOM S'EST FORME ═══════════════════
+       Le plancher etait a quarante centiemes, pour qu'on voie le paysage des
+       la premiere image. Mais la montagne enneigee est l'endroit le plus CLAIR
+       de la scene, et le nom en particules est pose juste devant : ses
+       contre-formes laissaient voir du blanc, donc les lettres cessaient de se
+       detacher. Ce n'etait pas un defaut des particules, c'etait un defaut de
+       fond.
+
+       Vingt-deux centiemes : la vallee reste lisible, la neige cesse de
+       traverser les lettres, et la montee de lumiere pendant que le nom se
+       defait devient un temps a elle seule. */
+    const k = 0.22 + 0.78 * doux;
+    /* ══ LA LAMPE SUIT SON SUJET ══════════════════════════════════════════
+       Elle etait plantee a un endroit fixe, choisi quand la feuille y etait.
+       Depuis que la feuille DERIVE, elle en est sortie : le limbe ne recevait
+       plus que le contre-jour violet et ressortait lavande, alors que c'est
+       l'objet le plus vert du site. Une lampe de proximite n'a de sens que si
+       elle reste pres de ce qu'elle eclaire. */
+    if (feuilleGeante) {
+      lampeFeuille.position.set(
+        feuilleGeante.position.x + 2.6,
+        feuilleGeante.position.y + 1.4,
+        feuilleGeante.position.z - 4.2
+      );
+    }
+    lampeFeuille.intensity = 42 * doux;
     rasante.intensity = 60 * (1 - doux) * (1 - Math.min(1, avance / 0.30));
     cle.intensity = 2.4 * k;
     contre.intensity = 1.9 * k;
@@ -1425,10 +1521,10 @@ export async function monterLeVoyage(toile, options = {}) {
     pose(new THREE.Vector3(0.8, 0.7, 9.0), 'MATIERE',
       () => defFeuille ? defFeuille + '  ·  ' + poidsFeuille.toLocaleString('fr') + ' Ko' : 'chargement…',
       'gauche', 'bas', 26);
-    pose(new THREE.Vector3(4.4, 5.4, 55), 'PORTAIL',
+    pose(new THREE.Vector3(4.4, hauteurSol(0, 55) + 8.2, 55), 'PORTAIL',
       () => triPortail ? triPortail.toLocaleString('fr') + ' triangles  ·  ' + poidsPortail.toLocaleString('fr') + ' Ko' : 'chargement…',
       'droite', 'haut', 46);
-    pose(new THREE.Vector3(-4.6, 0.2, 55), 'CADENCE',
+    pose(new THREE.Vector3(-4.6, hauteurSol(0, 55) + 2.4, 55), 'CADENCE',
       () => compteur.ms() ? compteur.ms().toFixed(1) + ' ms par image' : 'mesure…',
       'gauche', 'bas', 46);
     pose(new THREE.Vector3(3.4, 6.6, 82), 'SCEAU_KAZURA',

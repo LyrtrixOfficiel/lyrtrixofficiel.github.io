@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=29a652d990">
+<link rel="stylesheet" href="css/kazura.css?v=b05341e0f3">
 
 <script type="importmap">
 { "imports": {
@@ -224,8 +224,13 @@
   <h1 class="sr-only">Kazura, studio de création de sites internet</h1>
 
   <section class="acte acte--premier" data-de="0.00" data-a="0.14">
-    <p>Studio de création de sites internet.<br>Trois dimensions temps réel, animation,
-       direction artistique. Beblenheim, Alsace.</p>
+    <!-- ══ UNE PHRASE D'OUVERTURE DIT UNE SEULE CHOSE ══════════════════════
+         Elle en disait trois : le metier, la liste des techniques, et le
+         village. Matheo a tranche les deux dernieres. La liste de techniques
+         est une fiche de poste, pas une promesse ; et le village retrecit
+         l'image au lieu de la situer. Ce qui reste est ce qui se verifie
+         pendant les neuf ecrans qui suivent. -->
+    <p>Des sites qu'on traverse, pas qu'on feuillette.</p>
   </section>
 
   <section class="acte acte--bg" data-de="0.26" data-a="0.45">
@@ -323,7 +328,25 @@ function poser(t) {
      C'est le seul endroit du site ou deux pieces se passent le relais, et
      elles le font par la meme valeur, sans se connaitre. */
   if (nuee) {
-    const cohesion = 1 - Math.min(1, Math.max(0, (t - 0.075) / 0.075));
+    /* ══ LA DISPERSION A SA PROPRE DUREE ═══════════════════════════════════
+       Elle etait pilotee directement par la position de defilement : un coup
+       de molette un peu vif faisait passer la consigne de un a zero en une
+       image, et le mot se DESINTEGRAIT d'un coup. Matheo : « dans la facon ou
+       ca part, la transition est nulle, peu importe la rapidite de la souris,
+       quelque chose de tres propre ».
+
+       On borne donc la VITESSE de la consigne, pas seulement sa valeur. Quelle
+       que soit la brutalite du geste, la nuee met au moins une seconde et demie
+       a se defaire, et autant a se reformer. Le defilement dit OU l'on va ;
+       il n'a pas a dicter en combien de temps. */
+    const vise = 1 - Math.min(1, Math.max(0, (t - 0.075) / 0.075));
+    const maintenant = performance.now();
+    const dt = Math.min(0.1, (maintenant - (poser.horloge || maintenant)) / 1000);
+    poser.horloge = maintenant;
+    const pas = 0.62 * dt;                       // au plus 0,62 par seconde
+    const ecart = vise - (poser.cohesion ?? vise);
+    poser.cohesion = (poser.cohesion ?? vise) + Math.max(-pas, Math.min(pas, ecart));
+    const cohesion = poser.cohesion;
     nuee.tenir(cohesion);
     const boite = document.querySelector('.voyage__nom');
     boite.style.opacity = String(Math.max(0, 1 - Math.max(0, (t - 0.105) / 0.055)));

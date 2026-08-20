@@ -199,12 +199,38 @@ void main() {
      c'est que ce qui est au fond soit un peu plus petit et un peu plus loin
      du centre, pas une camera. */
   float k = 1.0 / (1.0 + p.z * 0.30);
-  vec2 e = p.xy * k;
+
+  /* ══ LA PERSPECTIVE S'EFFACE QUAND LE MOT EST TENU ═════════════════════
+     C'est ICI qu'etaient les lettres deformees, et le symptome le disait :
+     Matheo a remarque que « le z et le u, ca va » et que toutes les autres
+     etaient mal formees. Le Z et le U sont les deux lettres du MILIEU.
+
+     La position a l'ecran etait multipliee par le facteur de perspective, qui
+     depend de la profondeur propre a chaque particule. Deux particules visant
+     le meme point de la lettre mais tirees a des profondeurs differentes
+     atterrissaient donc a des endroits differents, ECARTES DU CENTRE en
+     proportion de leur distance a l'axe. Au centre, zero ecart : le mot y
+     etait net. Aux extremites, un dixieme d'unite de monde, soit plusieurs
+     fois l'epaisseur d'une contre-forme : le K, le R et les A se bouchaient.
+
+     La profondeur garde tout son sens quand la nuee est libre : c'est elle
+     qui donne du volume au nuage. Elle n'en a aucun quand le mot est tenu,
+     puisqu'un mot est plat. On la fait donc disparaitre avec la cohesion, et
+     la lettre retrouve exactement le dessin de la police.
+
+     La TAILLE du point, elle, continue de suivre la profondeur : ce qui est
+     au fond reste plus petit, et cela ne deplace rien. */
+  float kPos = mix(k, 1.0, uCohesion);
+  vec2 e = p.xy * kPos;
   gl_Position = vec4(e.x / uCadre.x, e.y / uCadre.y, 0.0, 1.0);
 
   /* Les particules grossissent en se dispersant. Une nuee libre faite de
      points aussi fins qu'un mot serre disparait a l'oeil. */
-  gl_PointSize = uTaille * k * mix(1.75, 1.0, uCohesion);
+  /* Le point grossit quand la nuee se disperse, pour que le nuage garde de la
+     matiere, et MAIGRIT quand le mot est tenu : un gros point deborde la
+     lettre et lui mange ses contres. A pleine cohesion on descend sous un
+     pixel et demi, ce qui donne une arete nette. */
+  gl_PointSize = uTaille * k * mix(1.90, 1.12, uCohesion);
 }`;
 
 const FRAGMENT_POINTS = `#version 300 es
@@ -354,14 +380,44 @@ export async function monterLaNuee(toile, options = {}) {
     const encre = [];
     releve = { corps: Math.round(corps), largeurTexte: Math.round(g.measureText(mot).width), canevas: [L, Hc],
                mondeX: +largeurMonde.toFixed(3), mondeY: +hauteurMonde.toFixed(3) };
-    /* Un point sur deux suffit : a 1800 de large, la lettre en contient
-       largement plus que la nuee n'a de particules. */
-    for (let y = 0; y < Hc; y += 2) {
-      for (let x = 0; x < L; x += 2) {
+    /* ══ ON RELEVE L'ENCRE PIXEL PAR PIXEL ═══════════════════════════════
+       On la relevait un point sur deux, ce qui suffit en nombre : la lettre en
+       contient plus que la nuee n'a de particules. Mais un pas de deux cree une
+       GRILLE, et les particules s'y alignent : le mot sortait en damier.
+
+       Le remede d'origine etait un tremblement de deux pixels pour combler la
+       grille. Il comblait aussi les contre-formes, qui n'en font que six. On
+       supprime donc la grille a la source plutot que de la masquer : un point
+       par pixel, un tremblement bien sous le pixel, et les deux problemes
+       tombent ensemble. Le releve coute une passe sur huit cent mille pixels,
+       une fois par changement de taille de fenetre. */
+    for (let y = 0; y < Hc; y++) {
+      for (let x = 0; x < L; x++) {
         if (px[(y * L + x) * 4] > 128) encre.push(x, y);
       }
     }
     if (!encre.length) return null;
+
+    /* ══ ON BAT L'ENCRE AVANT DE LA DISTRIBUER ═══════════════════════════
+       Le parcours regulier ci-dessous garantit une couverture uniforme, et
+       c'est pour cela qu'il existe. Mais il parcourt l'encre DANS L'ORDRE OU
+       ON L'A RELEVEE, c'est-a-dire ligne par ligne : avec un pas de 1,49
+       point, chaque ligne recoit un sous-ensemble regulier, et ces regularites
+       se dephasent d'une ligne a l'autre. Le mot ressortait tisse d'un moire
+       fin, tres visible sur un aplat.
+
+       En battant la liste une fois, deux indices voisins ne designent plus des
+       pixels voisins : la regularite du parcours reste, sa trace spatiale
+       disparait. Melange a graine fixe, pour que le mot soit identique d'une
+       visite a l'autre. */
+    let bat = 987654321;
+    const dé = () => { bat = (bat * 1103515245 + 12345) >>> 0; return bat / 4294967296; };
+    for (let i = encre.length / 2 - 1; i > 0; i--) {
+      const j = (dé() * (i + 1)) | 0;
+      const ax = encre[i * 2], ay = encre[i * 2 + 1];
+      encre[i * 2] = encre[j * 2]; encre[i * 2 + 1] = encre[j * 2 + 1];
+      encre[j * 2] = ax; encre[j * 2 + 1] = ay;
+    }
 
     const data = new Float32Array(N * 4);
     const nEncre = encre.length / 2;
@@ -385,8 +441,20 @@ export async function monterLaNuee(toile, options = {}) {
          rendait ces vides parfaitement reguliers. Le mot sortait raye
          d'horizontales. On joue donc sur DEUX pixels, centres sur le point
          releve, et la grille disparait. */
-      data[i * 4]     = ((x + Math.random() * 2 - 0.5) / L - 0.5) * largeurMonde;
-      data[i * 4 + 1] = (0.5 - (y + Math.random() * 2 - 0.5) / Hc) * hauteurMonde;
+      /* ══ LE TREMBLEMENT DOIT RESTER SOUS LE PIXEL ═══════════════════════
+         Il etait de deux pixels, pour corriger un moirage d'echantillonnage.
+         Le remede a fait pire que le mal : deux pixels d'etalement sur des
+         contres de lettre qui en font six, et les trous du A, du R et du K se
+         bouchent. Matheo l'a dit exactement : « on n'arrive pas a distinguer
+         les espaces ou ils devraient etre pour que les lettres soient bien
+         formees ».
+
+         A six dixiemes de pixel, le moirage reste casse parce que le tirage
+         est different pour chaque particule, et l'arete de la lettre redevient
+         une arete. Ce qui compte pour casser une trame n'est pas l'amplitude
+         du bruit, c'est qu'il soit decorrele. */
+      data[i * 4]     = ((x + Math.random() * 0.6 - 0.3) / L - 0.5) * largeurMonde;
+      data[i * 4 + 1] = (0.5 - (y + Math.random() * 0.6 - 0.3) / Hc) * hauteurMonde;
       data[i * 4 + 2] = (Math.random() - 0.5) * 0.55;
       data[i * 4 + 3] = 1;
     }

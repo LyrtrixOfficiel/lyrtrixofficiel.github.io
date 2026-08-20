@@ -222,18 +222,52 @@ export function monterLePaysage(scene, options = {}) {
       h = Math.pow(Math.max(0, h), 2.0) * hauteurMax * massif;
 
       if (mont) {
+        /* ══ LE PROFIL DU FUJI, D'APRES LA PHOTOGRAPHIE ═══════════════════
+           Matheo : « on ne voit pas vraiment que c'est le Mont Fuji, on voit
+           une silhouette, mais sans plus ». Il avait raison, et un cone n'est
+           pas une montagne reconnaissable. Ce qui fait qu'on identifie le
+           Fuji entre mille tient a QUATRE choses, dans cet ordre :
+
+             1. la BASE, tres large : trois fois et demie sa hauteur, et elle
+                s'evase encore en touchant la plaine ;
+             2. les FLANCS CONCAVES : la pente est raide au sommet et s'adoucit
+                continument jusqu'au pied. Un cone a flancs droits fait terril,
+                un cone convexe fait colline ;
+             3. le SOMMET PLAT et legerement irregulier. Ce n'est pas une
+                pointe : c'est un cratere, donc un plateau tronque avec une
+                encoche sur un bord ;
+             4. la NEIGE en tiers superieur, avec des doigts qui descendent
+                dans les ravines.
+
+           Le premier essai n'avait que le point deux. */
         const dx = (x - mont.x) / mont.large;
-        const dz = (zz - (mont.z || 0)) / (mont.large * 0.82);
+        const dz = (zz - (mont.z || 0)) / (mont.large * 0.86);
         const r = Math.sqrt(dx * dx + dz * dz);
         if (r < 1) {
-          /* Le profil. L'exposant sous un fait un flanc CONCAVE, qui s'evase
-             vers le pied : c'est ce galbe-la qu'on reconnait, pas la pointe. */
-          let c = Math.pow(1 - r, 1.34) * mont.haut;
-          /* Les aretes qui descendent du sommet. Sans elles le cone est lisse
-             comme un chapeau chinois, et rien ne dit son echelle. */
           const ang = Math.atan2(dz, dx);
-          c *= 1 + 0.085 * Math.sin(ang * 9) * Math.pow(r, 0.7)
-                 + 0.045 * Math.sin(ang * 21 + 1.4) * Math.pow(r, 0.6);
+
+          /* Le galbe. L'exposant 1,75 donne la concavite juste : mesure sur la
+             photographie, la pente passe d'environ trente-cinq degres pres du
+             sommet a moins de dix au pied. */
+          let c = Math.pow(1 - r, 1.75) * mont.haut;
+
+          /* Les ravines. Elles descendent du sommet en s'elargissant, et ce
+             sont elles qui donnent l'echelle : sans elles la surface est lisse
+             comme un chapeau et pourrait faire trois metres de haut. */
+          c *= 1 + 0.070 * Math.sin(ang * 11) * Math.pow(r, 0.8)
+                 + 0.038 * Math.sin(ang * 23 + 1.4) * Math.pow(r, 0.65)
+                 + 0.022 * Math.sin(ang * 41 + 3.1) * Math.pow(r, 0.5);
+
+          /* Le sommet tronque. Au-dela d'un plafond, on ecrase : le cratere
+             fait un plateau, pas une aiguille. L'encoche sur un bord evite que
+             ce plateau soit un disque parfait, ce qu'aucun volcan n'a. */
+          const plafond = mont.haut * (0.955 + 0.022 * Math.sin(ang * 3 + 0.7));
+          if (c > plafond) c = plafond - (c - plafond) * 0.10;
+
+          /* Et le pied qui s'evase : la jupe de cendres qui rejoint la plaine
+             en s'aplatissant, visible sur toute photographie du Fuji. */
+          c += Math.pow(Math.max(0, 1 - r * 0.78), 5.0) * mont.haut * 0.10;
+
           h = Math.max(h, c);
         }
       }
@@ -309,8 +343,18 @@ export function monterLePaysage(scene, options = {}) {
              neige ne tient pas sur une paroi verticale : on la pondere donc
              par la platitude, et la limite devient une dentelle qui suit les
              pentes, ce qui est exactement ce qu'on voit. */
-          float altitude = smoothstep(uCime * 0.40, uCime * 0.86, vY);
-          float plat = smoothstep(0.30, 0.78, N.y);
+          /* ══ LA NEIGE DESCEND PAR LES RAVINES ═══════════════════════════
+             Une limite posee sur la seule altitude fait un TRAIT HORIZONTAL en
+             travers du massif. Sur le Fuji, la neige tient plus bas dans les
+             creux, ou elle est a l'ombre et ou elle s'accumule, et remonte sur
+             les aretes ventees : la limite est une dentelle, jamais une ligne.
+
+             On fait donc varier le seuil avec l'orientation de la pente, ce
+             qui donne exactement ces doigts-la sans rien calculer de plus. */
+          float creux = 1.0 - smoothstep(0.55, 0.95, N.y);
+          float seuilBas = uCime * (0.46 - creux * 0.14);
+          float altitude = smoothstep(seuilBas, uCime * 0.80, vY);
+          float plat = smoothstep(0.18, 0.62, N.y);
           float neige = uNeige * altitude * plat;
           col = mix(col, uHorizon * 2.4 + vec3(0.125, 0.155, 0.175), neige);
 
@@ -336,7 +380,7 @@ export function monterLePaysage(scene, options = {}) {
 
   /* Trois massifs. Le plus lointain porte le sommet : plus haut que tout le
      reste, isole, et c'est ce RAPPORT qui fait qu'on le regarde, pas sa forme. */
-  faireUnMassif({ z: 560, largeur: 2100, profondeur: 620, hauteurMax: 78,
+  faireUnMassif({ z: 470, largeur: 2400, profondeur: 700, hauteurMax: 74,
                   /* ══ LE COTE DU MAILLAGE EST CELUI DU SUJET ═════════════
                      A cent quatre-vingt-dix subdivisions sur deux mille cent
                      unites, une maille fait onze unites. Le cone en fait trois
@@ -357,7 +401,11 @@ export function monterLePaysage(scene, options = {}) {
 
                      A droite, parce que le texte occupe la gauche : les deux
                      ne se disputent alors jamais le meme endroit du cadre. */
-                  mont: { x: 205, z: 40, large: 380, haut: 212 } });
+                  /* Plus grand et plus pres : dans la photographie de reference il
+                     occupe plus de la moitie de la hauteur du cadre et deborde
+                     en largeur. Une montagne qu'on regarde de loin comme un
+                     detail n'est pas un sujet. */
+                  mont: { x: 190, z: 30, large: 500, haut: 258 } });
   faireUnMassif({ z: 372, largeur: 1500, profondeur: 380, hauteurMax: 50,
                   teinte: '#101E2E', cotes: petit ? 70 : 140, mont: null });
   faireUnMassif({ z: 268, largeur: 1150, profondeur: 260, hauteurMax: 28,

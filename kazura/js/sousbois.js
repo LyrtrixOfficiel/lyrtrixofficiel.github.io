@@ -234,7 +234,7 @@ export function monterLeSousBois(scene, options = {}) {
       v.fromBufferAttribute(p, i);
       const d = 0.72 + 0.5 * Math.abs(Math.sin(v.x * 3.1 + v.y * 2.3 + v.z * 1.7));
       v.multiplyScalar(d);
-      v.y *= 0.80;
+      v.y *= 0.94;
       p.setXYZ(i, v.x, v.y, v.z);
     }
     geoPierre.computeVertexNormals();
@@ -284,8 +284,8 @@ export function monterLeSousBois(scene, options = {}) {
            pile dans cette plage prend la teinte entiere. Une pierre de nuit est
            beaucoup plus sombre que ce que l'on croit, et legerement verte de la
            mousse qui la couvre. */
-        vec3 pierre = vec3(0.030, 0.036, 0.034) * (0.45 + v * 1.15);
-        vec3 mousse = uJade * 0.26 * (0.40 + v);
+        vec3 pierre = vec3(0.022, 0.026, 0.026) * (0.45 + v * 1.15);
+        vec3 mousse = uJade * 0.17 * (0.40 + v);
         vec3 col = mix(pierre, mousse, dessus * 0.66);
         float ciel = clamp(N.y * 0.5 + 0.5, 0.0, 1.0);
         col *= 0.40 + ciel * 0.90;
@@ -304,7 +304,7 @@ export function monterLeSousBois(scene, options = {}) {
     for (let i = 0; i < NB_PIERRES; i++) {
       const p = unePlace(2.2, 34, -12, 120);
       if (!p) continue;
-      const t = entre(0.35, 1.9);
+      const t = entre(0.30, 1.35);
       e.set(entre(-0.3, 0.3), entre(0, 6.283), entre(-0.3, 0.3));
       q.setFromEuler(e);
       s.set(t * entre(0.85, 1.25), t * entre(0.72, 1.05), t * entre(0.85, 1.25));
