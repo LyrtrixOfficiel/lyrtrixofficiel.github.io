@@ -35,7 +35,7 @@ import { BokehPass }       from 'three/addons/postprocessing/BokehPass.js';
 import { ShaderPass }      from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass }      from 'three/addons/postprocessing/OutputPass.js';
 import { BLASON } from './blason.js';
-import { monterLePaysage, hauteurSol, NIVEAU_EAU } from './paysage.js';
+import { monterLePaysage, hauteurSol, hauteurRelief, NIVEAU_EAU } from './paysage.js';
 import { monterLeSousBois } from './sousbois.js';
 
 const JADE   = new THREE.Color('#10B981');
@@ -289,6 +289,21 @@ const ETALON = {
 
    Les valeurs sont posees a la main. Un rail de camera est une decision de
    mise en scene, pas un probleme d'optimisation. */
+/* ══ AU-DELA DU SCEAU, ON NE POSE PLUS LES ALTITUDES A LA MAIN ═══════════
+   Le voyage s'arretait au sceau, a soixante-dix unites. Il va maintenant
+   jusqu'au pied du mont, a deux cent soixante : il traverse le lac au ras de
+   l'eau, escalade la rive d'en face et arrive devant la montagne.
+
+   Sur ce trajet, le sol passe de moins cinq a plus cinquante. Trois altitudes
+   ecrites a vue seraient fausses au premier reglage du profil du mont, et
+   fausses SILENCIEUSEMENT : la camera passerait sous la surface, on verrait le
+   monde par en dessous, et rien ne le signalerait.
+
+   On demande donc au relief. `survol` rend un point situe a une garde donnee
+   au-dessus de ce qui passe la, quelle que soit sa nature : eau, rive ou
+   flanc. C'est la meme ligne qui survole les trois. */
+const survol = (x, z, garde) => [x, hauteurRelief(x, z) + garde, z];
+
 const REPERES = [
   /* ══ ON N'OUVRE PLUS SUR UNE FEUILLE ══════════════════════════════════
      Le voyage commencait colle a une feuille de kudzu, dans le noir. Matheo :
@@ -305,11 +320,15 @@ const REPERES = [
      La feuille n'est pas perdue pour autant : elle devient l'objet qu'on FROLE
      au deuxieme temps, et c'est un bien meilleur emploi. On la voit mieux en
      la depassant qu'en etant colle dessus. */
-  { t: 0.00, oeil: [-1.80, 0.55, -9.00], vise: [ 0.60, 2.20, 10.00] },
-  { t: 0.13, oeil: [-1.20, 1.30, -3.50], vise: [ 1.40, 2.60, 14.00] },
-  { t: 0.26, oeil: [ 0.00, 2.20,  3.00], vise: [ 3.20, 3.20, 16.00] },
-  { t: 0.40, oeil: [ 0.60, 2.80, 12.00], vise: [ 1.40, 2.90, 26.00] },
-  { t: 0.54, oeil: [ 0.20, 3.00, 24.00], vise: [ 0.40, 2.85, 42.00] },
+  /* Les temps du couloir occupent maintenant les six premiers dixiemes du
+     recit et non plus sa totalite : leurs reperes sont les memes, multiplies
+     par 0,62. Le rythme du sous-bois et du portail ne change pas d'un
+     cheveu ; il reste juste de la place derriere. */
+  { t: 0.000, oeil: [-1.80, 0.55, -9.00], vise: [ 0.60, 2.20, 10.00] },
+  { t: 0.081, oeil: [-1.20, 1.30, -3.50], vise: [ 1.40, 2.60, 14.00] },
+  { t: 0.161, oeil: [ 0.00, 2.20,  3.00], vise: [ 3.20, 3.20, 16.00] },
+  { t: 0.248, oeil: [ 0.60, 2.80, 12.00], vise: [ 1.40, 2.90, 26.00] },
+  { t: 0.335, oeil: [ 0.20, 3.00, 24.00], vise: [ 0.40, 2.85, 42.00] },
   /* ══ ON DESCEND AVANT DE PASSER LE PORTAIL ═══════════════════════════════
      Matheo : « quand on passe dans le portail, la camera est beaucoup trop
      haute ; il faudrait qu'avant d'arriver elle descende un peu, ca fera un
@@ -323,21 +342,38 @@ const REPERES = [
      un metre soixante-dix au-dessus du seuil de pierre. L'arche monte alors a
      cinq unites au-dessus de l'oeil et les piliers defilent de chaque cote :
      c'est cette hauteur-la, et elle seule, qui fait qu'un portail se ressent
-     comme un portail.
+     comme un portail. */
+  { t: 0.397, oeil: [ 0.10, 2.95, 34.00], vise: [ 0.00, 2.20, 51.00] },
+  { t: 0.459, oeil: [ 0.00, 1.30, 43.00], vise: [ 0.00, 0.60, 59.00] },
+  { t: 0.508, oeil: [ 0.00,-0.25, 50.50], vise: [ 0.00, 0.55, 66.00] },
+  { t: 0.546, oeil: [ 0.00,-0.30, 57.50], vise: [ 0.00, 0.90, 72.00] },
+  { t: 0.583, oeil: [ 0.00, 1.00, 63.50], vise: [ 0.00, 3.20, 79.00] },
+  /* Le sceau : on leve les yeux, il passe au tiers bas et le paysage s'ouvre
+     derriere lui, lac, monts et ciel. Ce n'est plus la fin, c'est le seuil. */
+  { t: 0.620, oeil: [ 0.60, 5.40, 69.00], vise: [ 0.00, 6.20, 92.00] },
 
-     Et le mouvement se gagne en prime, ce que Matheo avait vu aussi. Le rail
-     montait puis restait plat sur quarante unites. Il monte maintenant jusqu'a
-     l'apogee d'ou l'on decouvre l'arche entiere, PLONGE vers son ouverture, la
-     traverse au ras, et remonte de l'autre cote pour ouvrir sur le lac. Trois
-     gestes au lieu d'un, sans une seule image de plus a calculer. */
-  { t: 0.64, oeil: [ 0.10, 2.95, 34.00], vise: [ 0.00, 2.20, 51.00] },
-  { t: 0.74, oeil: [ 0.00, 1.30, 43.00], vise: [ 0.00, 0.60, 59.00] },
-  { t: 0.82, oeil: [ 0.00,-0.25, 50.50], vise: [ 0.00, 0.55, 66.00] },
-  { t: 0.88, oeil: [ 0.00,-0.30, 57.50], vise: [ 0.00, 0.90, 72.00] },
-  { t: 0.94, oeil: [ 0.00, 1.00, 63.50], vise: [ 0.00, 3.20, 79.00] },
-  /* Le dernier temps leve les yeux : le sceau passe au tiers bas et le
-     PAYSAGE s'ouvre derriere lui, lac, monts et ciel. */
-  { t: 1.00, oeil: [ 0.60, 5.40, 69.00], vise: [ 0.00, 6.20, 92.00] }
+  /* ══ LE VOL ════════════════════════════════════════════════════════════
+     Cinq ecrans pour cent quatre-vingt-dix unites, contre huit et demi pour
+     les soixante-dix-sept premieres : on va six fois plus vite. C'est voulu et
+     c'est ce qui fait qu'on lit un VOL et non une marche. La vitesse d'un rail
+     ne se regle pas, elle se compose : elle est l'ecart entre deux reperes
+     divise par l'ecart entre leurs temps. */
+  { t: 0.700, oeil: survol(  1,  96, 10), vise: [  6, -2.0, 128] },
+  { t: 0.780, oeil: survol(  4, 116,  6), vise: [ 12,  1.0, 152] },
+  { t: 0.860, oeil: survol(  8, 132,  5), vise: [ 22, 10.0, 176] },
+  { t: 0.930, oeil: survol( 12, 143,  6), vise: [ 40, 18.0, 208] },
+  /* ══ L'ARRIVEE SE FAIT SUR L'EAU, PAS CONTRE LA PAROI ════════════════════
+     Le premier trace montait jusqu'au flanc et s'y collait. Il a fallu le voir
+     pour comprendre l'erreur : de vingt unites, une montagne de deux cent
+     cinquante n'est plus une montagne, c'est un mur, et sa silhouette, qui
+     etait tout ce qu'elle avait de beau, disparait avec la distance. Hokusai
+     ne s'approche jamais du Fuji.
+
+     On s'arrete donc sur l'eau, a quatre cents unites du sommet. Le regard est
+     pose vingt degres sous lui : la cime se cale sous le bord haut du cadre,
+     la ligne d'eau reste dans le bas, et le mont tient toute la hauteur entre
+     les deux. C'est le seul angle qui garde les deux. */
+  { t: 1.000, oeil: survol( 16, 152,  4), vise: [ 61, 22.0, 242] }
 ];
 
 function courbeDe(cle) {
@@ -412,7 +448,20 @@ export async function monterLeVoyage(toile, options = {}) {
   const BRUME_APRES = new THREE.Color('#1A1038');
   scene.fog = new THREE.FogExp2(BRUME, 0.0058);
 
-  const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 1600);
+  /* Le plan lointain suit le decor : le sommet est maintenant a douze cents
+     unites et le bord arriere du massif a dix-neuf cents. A 1600, on coupait
+     la montagne en deux. Le plan PROCHE remonte en meme temps, de cinq
+     centiemes a quinze : le rapport entre les deux est ce qui fixe la
+     precision de la profondeur.
+
+     ══ ET LE PLAN PROCHE EST REDESCENDU AUSSITOT ═════════════════════════════
+     A quinze centiemes, la pierre du portail et ses lianes sculptees, qu'on
+     frole a quelques centimetres en passant sous l'arche, se faisaient TRANCHER
+     par le plan de coupe : on voyait l'interieur des tubes, en eclats blancs.
+     Un plan proche ne se regle pas sur la moyenne de la scene, il se regle sur
+     l'objet le plus proche que la camera touche, et ici la camera traverse une
+     porte. Cinq centiemes, et la profondeur s'arrange du rapport. */
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 2500);
   /* Declare ICI, et non plus bas avec le reste du mouvement : `mesurer` est
      appelee au montage, donc AVANT tout ce qui suit. Une variable en `let`
      lue avant sa ligne de declaration n'est pas indefinie, elle jette, et la
@@ -1109,9 +1158,13 @@ export async function monterLeVoyage(toile, options = {}) {
   const NB_P = petit ? 700 : 2600;
   const posP = new Float32Array(NB_P * 3), grnP = new Float32Array(NB_P);
   for (let i = 0; i < NB_P; i++) {
-    posP[i * 3]     = alea(-16, 16);
-    posP[i * 3 + 1] = alea(-4, 16);
-    posP[i * 3 + 2] = alea(-6, 96);
+    /* Elles couvrent maintenant tout le trajet, jusqu'au lac : le vol se
+       terminait dans un cadre vide, sans un seul objet proche pour donner
+       l'echelle. Trois poussieres devant la montagne suffisent a dire qu'elle
+       est loin ; sans elles, elle pourrait etre une image collee au fond. */
+    posP[i * 3]     = alea(-42, 42);
+    posP[i * 3 + 1] = alea(-6, 22);
+    posP[i * 3 + 2] = alea(-6, 172);
     grnP[i] = Math.random();
   }
   const geoP = new THREE.BufferGeometry();
@@ -2019,7 +2072,7 @@ export async function monterLeVoyage(toile, options = {}) {
     /* Le sceau fait six unites de large, donc trois de rayon. L'ancre etait a
        quatre virgule seize du centre : dehors. */
     pose(new THREE.Vector3(1.85, 6.15, 82), 'SCEAU_KAZURA',
-      () => formesSceau ? formesSceau + ' formes  ·  verre, indice 1,66' : 'chargement…',
+      () => formesSceau ? formesSceau + ' formes  ·  relief extrudé du tracé' : 'chargement…',
       'droite', 'haut', 34);
   }).catch(e => console.warn('instruments indisponibles', e));
 

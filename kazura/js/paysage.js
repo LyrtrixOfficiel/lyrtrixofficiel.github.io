@@ -61,6 +61,149 @@ function relief(x, y) {
 export const NIVEAU_EAU = -5.4;
 const LAC_Z = 205, LAC_RAYON = 108;
 
+/* ══ LES MASSIFS SONT UNE DONNEE, PAS TROIS APPELS ════════════════════════
+   Ils etaient decrits a l'interieur du montage, donc invisibles de l'exterieur.
+   Le rail du voyage doit maintenant savoir a quelle altitude passer AU-DESSUS
+   d'eux : une camera qui survole une montagne demande sa hauteur a la montagne.
+
+   `cotes` porte ses deux valeurs, telephone et grand ecran, parce que c'est la
+   seule chose ici qui depende de la machine. */
+/* ══ ET ILS SONT TROIS FOIS PLUS LOIN QU'AVANT ════════════════════════════
+   Le decor lointain avait ete bati pour un couloir de soixante-dix unites : a
+   cette distance-la, un mont de deux cent cinquante pose a cinq cents fait
+   parfaitement illusion. Des que le voyage a continue au-dela du sceau, la
+   supercherie a saute d'un coup : la rive d'en face etait a cent vingt unites,
+   soit CINQUANTE apres le sceau, et la montagne devenait un mur avant qu'on
+   ait fini de traverser le lac.
+
+   Un decor de fond n'est pas faux parce qu'il est plat, il est faux des qu'on
+   peut s'en approcher. On multiplie donc tout le lointain par 2,4 : distances,
+   largeurs, hauteurs. Vu depuis le couloir, RIEN NE CHANGE, parce qu'un objet
+   deux fois et demie plus grand deux fois et demie plus loin occupe exactement
+   le meme angle. Vu depuis le lac, tout change : il y a maintenant deux cents
+   unites d'eau devant la rive au lieu de cinquante.
+
+   `echelle` sert aussi a diviser les frequences du bruit : sans elle, un
+   massif deux fois et demie plus grand recevrait deux fois et demie plus de
+   cretes, donc une autre montagne. Ce qu'on veut est la MEME, plus loin. */
+export const MASSIFS = [
+  { z: 1128, largeur: 5760, profondeur: 1680, hauteurMax: 178, echelle: 2.4,
+    teinte: '#16293C', cotes: [130, 320],
+    mont: { x: 456, z: 72, large: 1200, haut: 590 } },
+  { z: 893, largeur: 3600, profondeur: 912, hauteurMax: 120, echelle: 2.4,
+    teinte: '#101E2E', cotes: [70, 140], mont: null },
+  { z: 643, largeur: 2760, profondeur: 624, hauteurMax: 67, echelle: 2.4,
+    teinte: '#0A1622', cotes: [56, 110], mont: null }
+];
+
+/* ══ LA HAUTEUR D'UN MASSIF, HORS DE TOUT MAILLAGE ════════════════════════
+   Le calcul vivait dans la boucle qui deforme le plan. Il en sort, sans rien
+   changer a ce qu'il rend : c'est LUI qui deforme le plan, et c'est lui qu'on
+   interroge. Deux verites identiques par construction, ce qui vaut infiniment
+   mieux que deux verites qu'on tient a jour en parallele.
+
+   `x` et `z` sont donnes dans le repere du MONDE ; le plan, lui, est pose a
+   `opt.z`, et toutes ses formules sont ecrites dans son repere a lui. */
+export function hauteurMassif(x, z, opt) {
+  const zz = z - opt.z;
+  if (Math.abs(zz) > opt.profondeur * 0.5 + 0.01 || Math.abs(x) > opt.largeur * 0.5 + 0.01) return -Infinity;
+  const mont = opt.mont;
+  /* Toutes les frequences se divisent par l'echelle : c'est ce qui fait qu'un
+     massif agrandi garde le meme dessin au lieu d'en recevoir un plus fin. */
+  const e = opt.echelle || 1;
+
+  /* Le bruit a aretes : on replie la valeur autour de son milieu, ce qui
+     transforme des collines molles en cretes. Trois frequences sans rapport
+     simple, pour que la somme ne se repete jamais. */
+  let h = (1 - Math.abs(relief(x * (0.0031 / e) + 7.1, zz * (0.0031 / e) - 2.3) * 2 - 1)) * 0.56
+        + (1 - Math.abs(relief(x * (0.0089 / e) - 9.1, zz * (0.0089 / e) + 2.2) * 2 - 1)) * 0.30
+        + (1 - Math.abs(relief(x * (0.0242 / e) + 4.4, zz * (0.0242 / e) - 6.5) * 2 - 1)) * 0.14;
+  const massif = 0.30 + 0.70 * relief(x * (0.00088 / e) - 3.3, zz * (0.0016 / e) + 1.9);
+  h = Math.pow(Math.max(0, h), 2.0) * opt.hauteurMax * massif;
+
+  if (mont) {
+    /* ══ LE PROFIL DU FUJI, D'APRES LA PHOTOGRAPHIE ═══════════════════════
+       Matheo : « on ne voit pas vraiment que c'est le Mont Fuji, on voit une
+       silhouette, mais sans plus ». Un cone n'est pas une montagne
+       reconnaissable. Ce qui fait qu'on identifie le Fuji entre mille tient a
+       QUATRE choses, dans cet ordre :
+
+         1. la BASE, tres large : trois fois et demie sa hauteur, et elle
+            s'evase encore en touchant la plaine ;
+         2. les FLANCS CONCAVES : la pente est raide au sommet et s'adoucit
+            continument jusqu'au pied. Un cone a flancs droits fait terril, un
+            cone convexe fait colline ;
+         3. le SOMMET PLAT et legerement irregulier. Ce n'est pas une pointe :
+            c'est un cratere, donc un plateau tronque avec une encoche ;
+         4. la NEIGE en tiers superieur, avec des doigts qui descendent dans
+            les ravines.
+
+       Le premier essai n'avait que le point deux. */
+    const dx = (x - mont.x) / mont.large;
+    const dz = (zz - (mont.z || 0)) / (mont.large * 0.86);
+    const r = Math.sqrt(dx * dx + dz * dz);
+    if (r < 1) {
+      const ang = Math.atan2(dz, dx);
+
+      /* Le galbe. L'exposant 1,75 donne la concavite juste : mesure sur la
+         photographie, la pente passe d'environ trente-cinq degres pres du
+         sommet a moins de dix au pied. */
+      let c = Math.pow(1 - r, 1.75) * mont.haut;
+
+      /* Les ravines. Elles descendent du sommet en s'elargissant, et ce sont
+         elles qui donnent l'echelle : sans elles la surface est lisse comme un
+         chapeau et pourrait faire trois metres de haut. */
+      c *= 1 + 0.070 * Math.sin(ang * 11) * Math.pow(r, 0.8)
+             + 0.038 * Math.sin(ang * 23 + 1.4) * Math.pow(r, 0.65)
+             + 0.022 * Math.sin(ang * 41 + 3.1) * Math.pow(r, 0.5);
+
+      /* Le sommet tronque. Au-dela d'un plafond, on ecrase : le cratere fait
+         un plateau, pas une aiguille. L'encoche sur un bord evite que ce
+         plateau soit un disque parfait, ce qu'aucun volcan n'a. */
+      const plafond = mont.haut * (0.955 + 0.022 * Math.sin(ang * 3 + 0.7));
+      if (c > plafond) c = plafond - (c - plafond) * 0.10;
+
+      /* Et le pied qui s'evase : la jupe de cendres qui rejoint la plaine en
+         s'aplatissant, visible sur toute photographie du Fuji. */
+      c += Math.pow(Math.max(0, 1 - r * 0.78), 5.0) * mont.haut * 0.10;
+
+      h = Math.max(h, c);
+    }
+  }
+
+  /* Les bords fondent vers le bas : sans cela le massif se termine par une
+     falaise verticale a chaque extremite du plan.
+
+     ══ Y COMPRIS EN PROFONDEUR ══════════════════════════════════════════════
+     Seule la largeur etait traitee. Le bord PROCHE, lui, tombait a pic : une
+     falaise droite de trente unites en travers du lac, a laquelle personne
+     n'avait jamais rien trouve parce qu'on ne l'a jamais vue que de tres loin,
+     ou elle passe pour une rive. Des que la camera va la-bas, elle devient ce
+     qu'elle est : la tranche d'un plan.
+
+     Le fondu est plus large ici qu'en largeur, un septieme de la profondeur :
+     le massif SORT de l'eau au lieu d'y etre pose, ce qui est aussi la seule
+     facon dont une montagne rencontre un lac. */
+  const bordX = Math.min(1, (opt.largeur * 0.5 - Math.abs(x)) / (opt.largeur * 0.10));
+  const bordZ = Math.min(1, (opt.profondeur * 0.5 - Math.abs(zz)) / (opt.profondeur * 0.14));
+  h *= Math.max(0, Math.min(1, bordX)) * Math.max(0, Math.min(1, bordZ));
+  return h - 14;
+}
+
+/* ══ CE QU'IL Y A SOUS UN POINT DU MONDE ══════════════════════════════════
+   Le terrain, les trois massifs, et l'eau. Le rail s'en sert pour se tenir a
+   une garde constante au-dessus de ce qui passe dessous, quelle que soit la
+   nature de ce qui passe dessous : la meme ligne de code survole la vallee,
+   le lac et le flanc du mont. */
+export function hauteurRelief(x, z) {
+  let h = Math.max(hauteurSol(x, z), NIVEAU_EAU);
+  for (const m of MASSIFS) {
+    const hm = hauteurMassif(x, z, m);
+    if (hm > h) h = hm;
+  }
+  return h;
+}
+
 export function hauteurSol(x, z) {
   /* La cuvette du lac : une gaussienne large, creusee sous le niveau de
      l'eau. Une berge qui descend en pente douce vaut mieux qu'un bord net :
@@ -220,7 +363,8 @@ export function monterLePaysage(scene, options = {}) {
      concaves. La concavite est la signature d'un grand volcan ; un cone a
      flancs droits fait terril. */
   function faireUnMassif(opt) {
-    const { z, largeur, profondeur, hauteurMax, teinte, mont, cotes } = opt;
+    const { z, largeur, profondeur, teinte, mont } = opt;
+    const cotes = petit ? opt.cotes[0] : opt.cotes[1];
     const NX = petit ? Math.round(cotes * 0.55) : cotes;
     const NZ = Math.max(12, Math.round(NX * 0.35));
 
@@ -228,80 +372,21 @@ export function monterLePaysage(scene, options = {}) {
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position;
 
+    /* ══ LA SURFACE QU'ON DESSINE EST CELLE QU'ON INTERROGE ════════════════
+       Le profil du relief est sorti d'ici : il vit maintenant dans
+       `hauteurMassif`, que le rail du voyage appelle aussi pour savoir a
+       quelle altitude survoler. Ce n'est pas une simple mise au propre. Tant
+       que le calcul etait ecrit deux fois, une camera qui rase un flanc
+       aurait fini par le traverser au premier reglage du profil, et personne
+       n'aurait su pourquoi.
+
+       Le maillage est LOCAL, la fonction parle le repere du monde : on ajoute
+       la position du plan avant de l'interroger. */
     let cime = 0;
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const zz = pos.getZ(i);
-
-      /* Le bruit a aretes : on replie la valeur autour de son milieu, ce qui
-         transforme des collines molles en cretes. Trois frequences sans
-         rapport simple, pour que la somme ne se repete jamais. */
-      let h = (1 - Math.abs(relief(x * 0.0031 + 7.1, zz * 0.0031 - 2.3) * 2 - 1)) * 0.56
-            + (1 - Math.abs(relief(x * 0.0089 - 9.1, zz * 0.0089 + 2.2) * 2 - 1)) * 0.30
-            + (1 - Math.abs(relief(x * 0.0242 + 4.4, zz * 0.0242 - 6.5) * 2 - 1)) * 0.14;
-      const massif = 0.30 + 0.70 * relief(x * 0.00088 - 3.3, zz * 0.0016 + 1.9);
-      h = Math.pow(Math.max(0, h), 2.0) * hauteurMax * massif;
-
-      if (mont) {
-        /* ══ LE PROFIL DU FUJI, D'APRES LA PHOTOGRAPHIE ═══════════════════
-           Matheo : « on ne voit pas vraiment que c'est le Mont Fuji, on voit
-           une silhouette, mais sans plus ». Il avait raison, et un cone n'est
-           pas une montagne reconnaissable. Ce qui fait qu'on identifie le
-           Fuji entre mille tient a QUATRE choses, dans cet ordre :
-
-             1. la BASE, tres large : trois fois et demie sa hauteur, et elle
-                s'evase encore en touchant la plaine ;
-             2. les FLANCS CONCAVES : la pente est raide au sommet et s'adoucit
-                continument jusqu'au pied. Un cone a flancs droits fait terril,
-                un cone convexe fait colline ;
-             3. le SOMMET PLAT et legerement irregulier. Ce n'est pas une
-                pointe : c'est un cratere, donc un plateau tronque avec une
-                encoche sur un bord ;
-             4. la NEIGE en tiers superieur, avec des doigts qui descendent
-                dans les ravines.
-
-           Le premier essai n'avait que le point deux. */
-        const dx = (x - mont.x) / mont.large;
-        const dz = (zz - (mont.z || 0)) / (mont.large * 0.86);
-        const r = Math.sqrt(dx * dx + dz * dz);
-        if (r < 1) {
-          const ang = Math.atan2(dz, dx);
-
-          /* Le galbe. L'exposant 1,75 donne la concavite juste : mesure sur la
-             photographie, la pente passe d'environ trente-cinq degres pres du
-             sommet a moins de dix au pied. */
-          let c = Math.pow(1 - r, 1.75) * mont.haut;
-
-          /* Les ravines. Elles descendent du sommet en s'elargissant, et ce
-             sont elles qui donnent l'echelle : sans elles la surface est lisse
-             comme un chapeau et pourrait faire trois metres de haut. */
-          c *= 1 + 0.070 * Math.sin(ang * 11) * Math.pow(r, 0.8)
-                 + 0.038 * Math.sin(ang * 23 + 1.4) * Math.pow(r, 0.65)
-                 + 0.022 * Math.sin(ang * 41 + 3.1) * Math.pow(r, 0.5);
-
-          /* Le sommet tronque. Au-dela d'un plafond, on ecrase : le cratere
-             fait un plateau, pas une aiguille. L'encoche sur un bord evite que
-             ce plateau soit un disque parfait, ce qu'aucun volcan n'a. */
-          const plafond = mont.haut * (0.955 + 0.022 * Math.sin(ang * 3 + 0.7));
-          if (c > plafond) c = plafond - (c - plafond) * 0.10;
-
-          /* Et le pied qui s'evase : la jupe de cendres qui rejoint la plaine
-             en s'aplatissant, visible sur toute photographie du Fuji. */
-          c += Math.pow(Math.max(0, 1 - r * 0.78), 5.0) * mont.haut * 0.10;
-
-          h = Math.max(h, c);
-        }
-      }
-
-      /* Les bords fondent vers le bas : sans cela le massif se termine par une
-         falaise verticale a chaque extremite du plan. */
-      const bordX = Math.min(1, (largeur * 0.5 - Math.abs(x)) / (largeur * 0.10));
-      h *= Math.max(0, Math.min(1, bordX));
-
-      pos.setY(i, h - 14);
-      /* Mesuree APRES le decalage : sinon les seuils de neige portent sur une
-         echelle differente de celle des sommets, de quatorze unites. */
-      if (h - 14 > cime) cime = h - 14;
+      const h = hauteurMassif(pos.getX(i), pos.getZ(i) + z, opt);
+      pos.setY(i, h);
+      if (h > cime) cime = h;
     }
     geo.computeVertexNormals();
 
@@ -323,13 +408,16 @@ export function monterLePaysage(scene, options = {}) {
         uHorizon: { value: HORIZON },
         uBrume:   { value: brumeDuMont() },
         uNeige:   { value: mont ? 1 : 0.35 },
-        uCime:    { value: cime }
+        uCime:    { value: cime },
+        uMatiere: { value: null },
+        uRelief:  { value: null }
       },
       vertexShader: /* glsl */`
-        varying vec3 vN; varying float vY; varying float vLoin;
+        varying vec3 vN; varying float vY; varying float vLoin; varying vec3 vMonde;
         void main() {
           vN = normalize(mat3(modelMatrix) * normal);
           vY = position.y;
+          vMonde = (modelMatrix * vec4(position, 1.0)).xyz;
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
           vLoin = -mvPosition.z;
           gl_Position = projectionMatrix * mvPosition;
@@ -339,9 +427,59 @@ export function monterLePaysage(scene, options = {}) {
         precision highp float;
         uniform vec3 uTeinte, uHorizon, uBrume;
         uniform float uNeige, uCime;
-        varying vec3 vN; varying float vY; varying float vLoin;
+        uniform sampler2D uMatiere, uRelief;
+        varying vec3 vN; varying float vY; varying float vLoin; varying vec3 vMonde;
+
+        /* La meme projection triplanaire que le sol, la pierre et l'ecorce. */
+        vec3 tri(sampler2D c, vec3 p, vec3 n, float e) {
+          vec3 m = pow(abs(n), vec3(4.0));
+          m /= (m.x + m.y + m.z);
+          return texture2D(c, p.yz * e).rgb * m.x
+               + texture2D(c, p.xz * e).rgb * m.y
+               + texture2D(c, p.xy * e).rgb * m.z;
+        }
+
         void main() {
           vec3 N = normalize(vN);
+
+          /* ══ LA MONTAGNE AVAIT UNE SILHOUETTE ET AUCUNE MATIERE ══════════
+             Tant qu'on la regardait a six cents unites, sa couleur unie
+             passait pour de la perspective atmospherique. Des que le voyage a
+             continue jusqu'a son pied, elle est devenue ce qu'elle etait : un
+             APLAT bleu en forme de montagne, une decoupe de papier.
+
+             C'est la meme lecon que pour le sol, la pierre du portail et
+             l'ecorce des tiges, payee une quatrieme fois : ce qui se
+             photographie se telecharge. On lui donne donc la MEME image que
+             tout le reste du monde, lue a deux echelles, l'une pour casser la
+             pente et l'autre pour le grain.
+
+             Et surtout, on s'en sert pour BOUGER LA NORMALE. Une texture
+             seulement multipliee dans la couleur reste un motif peint ; une
+             normale perturbee change la facon dont la lumiere accroche, donc
+             la surface prend du relief la ou il n'y a pas un triangle de plus.
+
+             ══ DEUX IMAGES, ET PAS N'IMPORTE LAQUELLE POUR N'IMPORTE QUOI ═══
+             Ma premiere version lisait le canal vert de la carte de relief
+             pour en tirer le grain. Elle ne changeait RIEN a l'image, et la
+             mesure a dit pourquoi en une ligne : sur ce fichier, la moyenne du
+             vert vaut 127,3 et son ecart-type 4,3. C'est une CARTE DE
+             NORMALES, pas une carte de hauteurs ; ses canaux tournent autour
+             du gris par construction, donc un aplat parfait.
+
+             La lecon est generale : une image de matiere n'est pas un stock de
+             gris interchangeable. La photographie porte la couleur, la carte
+             de normales porte la pente, et les intervertir ne produit pas un
+             mauvais resultat, il n'en produit AUCUN. Une correction qui ne
+             change rien a l'image est le symptome a prendre au serieux. */
+          float grand = 0.0065, fin = 0.034;
+          vec3 large = tri(uMatiere, vMonde, N, grand);
+          vec3 serre = tri(uMatiere, vMonde, N, fin);
+          float r1 = dot(large, vec3(0.30, 0.59, 0.11));
+          float r2 = dot(serre, vec3(0.30, 0.59, 0.11));
+
+          vec3 pente = tri(uRelief, vMonde, N, fin) * 2.0 - 1.0;
+          N = normalize(N + vec3(pente.x, 0.0, pente.y) * 0.55);
           /* La meme lumiere basse et de face que le sol : c'est elle qui
              dessine les cretes et laisse les versants nord dans le noir. */
           vec3 L = normalize(vec3(0.20, 0.16, 1.0));
@@ -355,8 +493,12 @@ export function monterLePaysage(scene, options = {}) {
              En montagne, la nuit, ce qui se voit est ce qui recoit le ciel :
              les cretes et les faces tournees vers le haut. On remonte donc
              franchement l'ambiante et le versant eclaire. */
-          vec3 col = uTeinte * (0.85 + k * 1.45);
-          col += uHorizon * pow(k, 2.4) * 0.95;
+          /* Le grain module le corps de la roche. On ne le pose pas sur la
+             neige : une neige texturee comme de la pierre n'est plus de la
+             neige. */
+          float grain = 0.52 + r1 * 0.78 + r2 * 0.42;
+          vec3 col = uTeinte * (0.85 + k * 1.45) * grain;
+          col += uHorizon * pow(k, 2.4) * 0.95 * (0.80 + r2 * 0.40);
 
           /* ══ LA NEIGE TIENT A L'ALTITUDE ET A LA PENTE ═══════════════════
              Une ligne de neige posee sur la seule altitude fait un TRAIT
@@ -376,13 +518,19 @@ export function monterLePaysage(scene, options = {}) {
           float seuilBas = uCime * (0.46 - creux * 0.14);
           float altitude = smoothstep(seuilBas, uCime * 0.80, vY);
           float plat = smoothstep(0.18, 0.62, N.y);
+          /* Et la limite de neige se DENTELLE avec la meme matiere : sans
+             cela, elle suit une courbe de niveau parfaite, ce qui se voit tout
+             de suite comme un trait calcule. */
           float neige = uNeige * altitude * plat;
+          neige *= smoothstep(0.02, 0.34, altitude + (r1 - 0.5) * 0.55);
           col = mix(col, uHorizon * 2.4 + vec3(0.125, 0.155, 0.175), neige);
 
           /* La brume de l'eloignement, plafonnee a quatre-vingt-douze pour
              cent : ce qui reste de contraste est ce qui fait qu'on voit
              encore une montagne, et pas un aplat. */
-          float d = vLoin * 0.0016;
+          /* La loi de brume se divise par l'echelle, sinon un decor 2,4 fois
+             plus loin s'efface 2,4 fois plus, et la montagne disparait. */
+          float d = vLoin * 0.00067;
           float brume = 1.0 - exp(-d * d);
           col = mix(col, uBrume, clamp(brume, 0.0, 0.80));
 
@@ -401,36 +549,10 @@ export function monterLePaysage(scene, options = {}) {
 
   /* Trois massifs. Le plus lointain porte le sommet : plus haut que tout le
      reste, isole, et c'est ce RAPPORT qui fait qu'on le regarde, pas sa forme. */
-  faireUnMassif({ z: 470, largeur: 2400, profondeur: 700, hauteurMax: 74,
-                  /* ══ LE COTE DU MAILLAGE EST CELUI DU SUJET ═════════════
-                     A cent quatre-vingt-dix subdivisions sur deux mille cent
-                     unites, une maille fait onze unites. Le cone en fait trois
-                     cent quatre-vingts de rayon : trente-quatre mailles pour
-                     tout son flanc, et l'interpolation lineaire entre elles se
-                     voit en FACETTES PLATES sur la pente la plus reguliere du
-                     paysage, qui est justement celle qu'on regarde.
-
-                     La finesse ne se choisit pas pour le plan, elle se choisit
-                     pour l'objet le plus lisse qu'il porte. */
-                  teinte: '#16293C', cotes: petit ? 130 : 320,
-                  /* ══ IL EST DECALE, PAS CENTRE ═════════════════════════
-                     A quarante unites de l'axe et six cents de distance, il
-                     tombait a quatre degres du centre : c'est-a-dire
-                     exactement derriere le portail, qui le cachait pendant
-                     tout le temps ou on le regarde. Une montagne qu'on ne
-                     voit qu'entre deux objets n'existe pas.
-
-                     A droite, parce que le texte occupe la gauche : les deux
-                     ne se disputent alors jamais le meme endroit du cadre. */
-                  /* Plus grand et plus pres : dans la photographie de reference il
-                     occupe plus de la moitie de la hauteur du cadre et deborde
-                     en largeur. Une montagne qu'on regarde de loin comme un
-                     detail n'est pas un sujet. */
-                  mont: { x: 190, z: 30, large: 500, haut: 258 } });
-  faireUnMassif({ z: 372, largeur: 1500, profondeur: 380, hauteurMax: 50,
-                  teinte: '#101E2E', cotes: petit ? 70 : 140, mont: null });
-  faireUnMassif({ z: 268, largeur: 1150, profondeur: 260, hauteurMax: 28,
-                  teinte: '#0A1622', cotes: petit ? 56 : 110, mont: null });
+  /* Trois massifs, decrits en tete de fichier. Le plus lointain porte le
+     sommet : plus haut que tout le reste, isole, et c'est ce RAPPORT qui fait
+     qu'on le regarde, pas sa forme. */
+  const monts = MASSIFS.map(faireUnMassif);
 
   /* ══ LE SOL ═════════════════════════════════════════════════════════════
      Un vrai relief, pas une image : le terrain se deforme sous la camera, les
@@ -571,6 +693,15 @@ export function monterLePaysage(scene, options = {}) {
   });
   matSol.uniforms.uMatiere.value = texSol;
   matSol.uniforms.uRelief.value = texSolRelief;
+  /* Les massifs sont montes avant que les images ne soient demandees, parce
+     qu'ils n'en avaient pas besoin. Ils en ont besoin maintenant : on la leur
+     pose ici, toujours dans le meme tour de montage, donc avant la premiere
+     image. Une seule image pour le sol, la pierre, l'ecorce et la montagne :
+     c'est cette unite-la qui fait qu'on croit a un seul lieu. */
+  for (const m of monts) {
+    m.material.uniforms.uMatiere.value = texSol;
+    m.material.uniforms.uRelief.value = texSolRelief;
+  }
 
   const sol = new THREE.Mesh(geoSol, matSol);
   sol.frustumCulled = false;

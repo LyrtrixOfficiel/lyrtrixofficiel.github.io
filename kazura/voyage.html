@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=daec812dc7">
+<link rel="stylesheet" href="css/kazura.css?v=68da8d267a">
 
 <script type="importmap">
 { "imports": {
@@ -45,10 +45,14 @@
 }
 .voyage__nom canvas { display: block; width: 100%; height: 100%; }
 
-/* La hauteur de defilement. Neuf ecrans : en dessous, le rail defile trop
-   vite pour qu'on ait le temps de regarder ; au-dela, on scrolle dans le
-   vide entre deux temps. */
-.voyage__course { height: 900svh; }
+/* La hauteur de defilement. Neuf ecrans pour le couloir, cinq et demi pour le
+   vol : en dessous, le rail defile trop vite pour qu'on ait le temps de
+   regarder ; au-dela, on scrolle dans le vide entre deux temps.
+
+   Le vol en avale cinq et demi pour cent quatre-vingt-dix unites la ou le
+   couloir en prend huit et demi pour soixante-dix-sept. Six fois plus vite,
+   et c'est ce qui fait qu'on le lit comme un vol. */
+.voyage__course { height: 1450svh; }
 
 /* ══ UN VOILE SOUS LE TEXTE ═══════════════════════════════════════════════
    Le premier temps se joue sur une feuille eclairee a contre-jour, donc
@@ -223,7 +227,7 @@
        moteurs : la nuee ne peint que des pixels, elle n'ecrit rien. -->
   <h1 class="sr-only">Kazura, studio de création de sites internet</h1>
 
-  <section class="acte acte--premier" data-de="0.00" data-a="0.14">
+  <section class="acte acte--premier" data-de="0.000" data-a="0.087">
     <!-- ══ UNE PHRASE D'OUVERTURE DIT UNE SEULE CHOSE ══════════════════════
          Elle en disait trois : le metier, la liste des techniques, et le
          village. Matheo a tranche les deux dernieres. La liste de techniques
@@ -233,14 +237,14 @@
     <p>Des sites qu'on traverse, pas qu'on feuillette.</p>
   </section>
 
-  <section class="acte acte--bg" data-de="0.26" data-a="0.45">
+  <section class="acte acte--bg" data-de="0.161" data-a="0.279">
     <span class="acte__num">01 · Pueraria montana</span>
     <h2>Le kudzu recouvre ce qu’il touche.</h2>
     <p>Il monte de trente centimètres par jour et ne lâche plus. On lui a pris son
        nom parce qu’un site doit faire pareil : prendre la place, et la garder.</p>
   </section>
 
-  <section class="acte acte--hd" data-de="0.49" data-a="0.63">
+  <section class="acte acte--hd" data-de="0.304" data-a="0.391">
     <span class="acte__num">02 · Ce que vous regardez</span>
     <h2>Rien de tout ceci n’est une vidéo.</h2>
     <p>Chaque tige, chaque feuille et chaque poussière est calculée sur votre
@@ -248,14 +252,26 @@
        pouvez la traverser.</p>
   </section>
 
-  <section class="acte acte--bd" data-de="0.66" data-a="0.795">
+  <section class="acte acte--bd" data-de="0.409" data-a="0.493">
     <span class="acte__num">03 · La maquette</span>
     <h2>On vous montre le site avant que vous décidiez.</h2>
     <p>Une maquette complète, à votre nom, avec vos textes et vos photos.
        Gratuite. Vous la regardez tranquillement, et vous dites oui ou non.</p>
   </section>
 
-  <section class="acte acte--centre" data-de="0.90" data-a="1.00">
+  <!-- ══ LE SCEAU N'EST PLUS LA FIN, C'EST UN SEUIL ═══════════════════════
+       Le voyage s'arretait ici et l'appel a l'action y etait pose. Depuis que
+       la camera continue jusqu'au mont, un bouton au milieu du parcours
+       arreterait le mouvement au moment ou il prend son elan. Le sceau garde
+       donc un temps, court, et l'appel part a l'arrivee. -->
+  <section class="acte acte--bg" data-de="0.556" data-a="0.612">
+    <span class="acte__num">04 · Le sceau</span>
+    <h2>Trois folioles, et rien d’autre.</h2>
+    <p>Le kudzu en porte trois. C’est tout le blason de la maison, et il est
+       taillé à chaque image comme le reste de ce monde.</p>
+  </section>
+
+  <section class="acte acte--centre" data-de="0.930" data-a="1.000">
     <h2>Parlons de votre site.</h2>
     <p style="margin-bottom:1.6rem">On répond dans la journée, et on ne rappelle pas
        quinze fois.</p>
