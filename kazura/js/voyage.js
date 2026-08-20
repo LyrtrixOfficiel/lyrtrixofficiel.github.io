@@ -1690,7 +1690,20 @@ export async function monterLeVoyage(toile, options = {}) {
   /* ── Dimensions ─────────────────────────────────────────────────────── */
   function mesurer() {
     const r = toile.getBoundingClientRect();
-    const L = Math.max(2, Math.round(r.width)), H = Math.max(2, Math.round(r.height));
+    /* ══ DEUX PIXELS N'EST PAS UN REPLI, C'EST UN PIEGE ═══════════════════════
+       Le plancher etait a deux : quand la toile n'a pas encore de taille, on
+       peignait un monde entier dans un carre de deux pixels. Aucune erreur,
+       aucune trace, et une image qui, agrandie, ressemble a un flou artistique.
+       J'y ai cru dix minutes en croyant regarder un pont de navire : je
+       regardais quatre pixels etires.
+
+       Le repli est desormais une taille PLAUSIBLE. Si la toile n'a pas encore
+       ete posee, on peint comme pour un ecran ordinaire, et l'observateur de
+       taille corrige des que la vraie mesure arrive. Un repli doit produire
+       quelque chose de regardable, sinon il masque la panne au lieu d'y
+       survivre. */
+    const L = r.width > 8 ? Math.round(r.width) : 1280;
+    const H = r.height > 8 ? Math.round(r.height) : 800;
     camera.aspect = L / H;
     camera.updateProjectionMatrix();
 
@@ -1980,7 +1993,15 @@ export async function monterLeVoyage(toile, options = {}) {
        isole le sujet ; de loin, le meme reglage brouillerait tout le decor
        qu'on vient de traverser. */
     flou.uniforms.aperture.value = (0.00030 * (1 - avance * 0.62) + 0.00004)
-                                 * (1 - 0.88 * melange);
+                                 * (1 - 0.88 * melange)
+    /* ══ SUR LE PONT, ON FERME ═══════════════════════════════════════════════
+       Le reglage vient d'un couloir de vegetation ou le sujet est a dix unites
+       et le fond a soixante : un fond dissous y isole le sujet. En mer, le
+       sujet est l'horizon et le bastingage est a deux metres : la meme
+       ouverture transforme la moitie gauche du cadre en bouillie de bois. Une
+       ouverture se choisit par la PROFONDEUR de la scene, et celle-ci en a
+       trois cents. */
+                                 * (voie === 'navire' ? 0.30 : 1);
 
     /* ══ LE FLUX DU PORTAIL ════════════════════════════════════════════════
        Il s'allume en veilleuse des qu'on le voit au fond du couloir, et il
@@ -2355,21 +2376,44 @@ export async function monterLeVoyage(toile, options = {}) {
      seuls x qui repondent plus haut sont les mats et le chateau. On ajoute la
      taille d'un homme et on obtient l'oeil. La proue est en x positif, releve
      de la meme facon : c'est le seul bout ou la coque s'affine. */
-  /* Releve a la grille : le pont franc va de x = -8 a x = +4, a la cote -5,5,
-     et les mats tombent sur l'axe, en x = -2 et x = +6. On se tient donc a
-     BABORD de l'axe, entre les deux mats, ou le pont est libre et ou le
-     greement encadre la vue au lieu de la boucher. */
-  const PONT = { x: -7.0, y: -3.80, z: -1.30 };  /* pont a -5,50, plus 1,70 */
-  /* ══ ON NE REGARDE PAS TOUT A FAIT DROIT DEVANT ═══════════════════════════
-     Cap sur la proue, la moitie gauche du cadre etait de l'eau noire : le mont
-     tombait a trente-trois degres sur babord, donc au bord du champ, et sa
-     face non eclairee s'y confondait avec le ciel. Vingt degres de lacet vers
-     babord suffisent a le ramener au tiers gauche, et on garde le pont et le
-     greement sur la droite. C'est le cadrage de quelqu'un accoude au
-     bastingage qui regarde ou l'on va, pas celui d'une camera boulonnee a
-     l'etrave. */
-  const CAP  = { x: 30.0, y: -2.60, z: 10.0 };
-  const ASSIETTE = 1.9;                         /* le pont a deux metres au-dessus de l'eau */
+  /* ══ RELEVE SUR LE MODELE, PAS SUR L'IDEE QU'ON S'EN FAIT ═══════════════
+     Le navire a change : c'est une jonque a proue de dragon, voiles rouges,
+     chateau arriere en pagode. Ses cotes n'ont rien a voir avec celles du
+     precedent, et TOUTES les valeurs qui suivent ont donc du etre reprises.
+
+     C'est la lecon a retenir de cette voie : trois nombres poses sur un modele
+     ne survivent pas au remplacement du modele. Ils se relevent, et ils se
+     relevent avec `essai-modele.html`, qui montre l'objet seul sur une grille,
+     sans rail ni fanal ni post-traitement. J'ai perdu trois allers-retours a
+     essayer de le regarder DANS la scene : la camera y repart sur son rail a
+     chaque image et le fanal de puissance quarante-six brule tout.
+
+     Le pont franc est a -6,2, les voiles passent au-dessus, la proue est du
+     cote des x positifs. On se tient a tribord, entre les deux mats, sous la
+     grand-voile. */
+  /* ══ ON NE SE TIENT PAS SUR LE PONT, ON SUIT LE NAVIRE ═══════════════════
+     Quatre places essayees sur le pont, quatre echecs, et toujours le meme :
+     cette jonque est DENSE. Voiles, vergues, haubans, cabines, canons ; a
+     hauteur d'homme, il y a toujours quelque chose a deux metres de l'objectif,
+     et l'image devient un morceau de bois flou.
+
+     Le probleme n'etait pas la place, c'etait le principe. Matheo l'avait dit
+     dans l'ordre exact : « on se met dedans, et APRES on le voit naviguer, et
+     on avance avec ». Voir le navire naviguer demande d'etre un peu en dehors.
+
+     La camera se tient donc juste en arriere et au-dessus de la dunette. Elle
+     reste ACCROCHEE au navire, donc elle roule, tangue et vire avec lui : on
+     est bien a bord, au sens qui compte. Et on a le batiment entier devant
+     soi, les voiles rouges, la tete de dragon, et la mer au-dela. */
+  /* La distance se calibre, elle ne se tatonne pas : la taille apparente d'un
+     objet varie comme l'inverse de la distance. Deux mesures suffisent. A
+     vingt-trois unites le navire occupait les trois quarts du cadre et on ne
+     voyait plus que ses voiles ; a soixante et onze, un cinquieme, et il se
+     perdait dans le noir. Quarante donne les deux cinquiemes, ce qui laisse la
+     mer et la montagne autour de lui. */
+  const PONT = { x: -33.0, y: 13.0, z: -14.0 };
+  const CAP  = { x:   4.0, y: -1.0, z:   2.0 };
+  const ASSIETTE = 2.4;                          /* franc-bord 1,6 ; tirant d'eau 1,1 */
   const LONGUEUR_NAVIRE = 26;
 
   async function poserLeNavire() {
@@ -2417,8 +2461,8 @@ export async function monterLeVoyage(toile, options = {}) {
        Elle est chaude, seule couleur chaude de tout le site. Un point ambre
        dans un monde jade et violet ne casse pas la direction artistique : il
        lui donne son contraire, et c'est ce qui la fait voir. */
-    const fanal = new THREE.PointLight(0xFFD2A0, 46, 30, 2);
-    fanal.position.set(1.6, -2.6, -1.1);
+    const fanal = new THREE.PointLight(0xFFD2A0, 120, 46, 2);
+    fanal.position.set(1.6, -1.0, -1.1);
     navire.add(fanal);
     const globe = new THREE.Mesh(
       new THREE.SphereGeometry(0.30, 14, 10),
@@ -2429,8 +2473,8 @@ export async function monterLeVoyage(toile, options = {}) {
     /* Un second feu a la proue, beaucoup plus faible : il ne sert qu'a ce que
        l'avant du navire ne tombe pas dans le noir a mesure qu'il s'eloigne du
        premier. */
-    const fanalProue = new THREE.PointLight(0xFFC98C, 16, 22, 2);
-    fanalProue.position.set(10.5, -3.4, 0);
+    const fanalProue = new THREE.PointLight(0xFFC98C, 60, 34, 2);
+    fanalProue.position.set(9.5, -0.6, 0);
     navire.add(fanalProue);
     navire.position.set(CAP_NAVIRE[0][0], ASSIETTE, CAP_NAVIRE[0][1]);
     monde.add(navire);
@@ -2472,6 +2516,25 @@ export async function monterLeVoyage(toile, options = {}) {
     if (part <= 0) return;
     ancrePont.getWorldPosition(posPont);
     ancreCap.getWorldPosition(visePont);
+    /* ══ LE POINT VISE EST AUSSI LE PLAN DE MISE AU POINT ═══════════════════
+       Et c'est ce que j'avais oublie. L'ancre de cap est a trente unites
+       devant le pont, ce qui suffit pour donner une DIRECTION ; mais la
+       profondeur de champ fait le point sur ce meme point, donc elle piquait a
+       trente metres et noyait tout le reste. Sur le pont, tout le reste est
+       l'horizon : l'image entiere sortait floue, uniformement, sans qu'on
+       puisse dire de quoi.
+
+       On pousse donc le point le long de la MEME direction jusqu'a la distance
+       ou l'oeil fait reellement le point en mer, c'est-a-dire loin. La
+       direction ne bouge pas d'un degre, la nettete change du tout au tout.
+
+       ══ ET DEPUIS QU'ON SUIT LE NAVIRE, LE SUJET EST LE NAVIRE ══════════════
+       Cette poussee valait quand on etait SUR le pont : le sujet etait alors
+       l'horizon, et le bastingage n'avait aucune raison d'etre net. Vue de
+       derriere, c'est l'inverse : le navire est le sujet, et le pousser au
+       loin le rendait flou dans son propre plan. Le point vise est deja sur
+       lui, on n'y touche plus. La regle est la meme dans les deux cas et elle
+       ne se lit pas dans le code : on fait le point sur ce qu'on regarde. */
     oeil.lerp(posPont, part);
     vise.lerp(visePont, part);
   }
@@ -2537,6 +2600,11 @@ export async function monterLeVoyage(toile, options = {}) {
       return this.bilan();
     },
     _camera: camera, _scene: scene, _peindre: () => peindre(1 / 60),
+    /* Peindre SANS toucher a la camera : indispensable pour inspecter un objet
+       en tournant autour a la main. `_peindre` la replace sur le rail a chaque
+       appel, donc tout reglage de camera fait dehors est efface avant d'avoir
+       servi. J'ai perdu deux allers-retours a ne pas le voir. */
+    _rendre: () => composer.render(),
     async sonder(n = 30) {
       const { sonderToile } = await import('./sonde.js');
       visible = true;
