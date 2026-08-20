@@ -118,6 +118,94 @@ const RAIS = {
    vers le jade. C'est la maniere dont on tient une palette au cinema, et
    c'est ce qui donne a deux plans tres differents l'air d'appartenir au meme
    film. */
+/* ══ LE FLUX DU PORTAIL ════════════════════════════════════════════════════
+   Matheo : « quand on rentre dans le portail, comme si on etait dans un flux
+   d'energie ». Le portail etait une arche de pierre avec une lueur derriere :
+   on le franchissait sans rien sentir, parce qu'il ne se passait rien DANS
+   l'ouverture.
+
+   Ce qui suit est un disque, pose dans le plan de l'anneau, et il ne coute
+   qu'une passe de fragment sur la surface du trou.
+
+   POURQUOI UN VORTEX ET PAS UN NUAGE QUI TOURNE. Un motif qu'on fait tourner
+   d'un bloc se lit comme une texture animee, et l'oeil s'en detourne en deux
+   secondes. Un vortex tourne d'autant plus vite qu'on approche du centre : ce
+   cisaillement etire les veines en spirales qui se resserrent, et c'est lui,
+   et rien d'autre, qui donne la sensation d'ASPIRATION. La loi tient en un
+   terme : on ajoute a l'angle une quantite en un sur le rayon.
+
+   Le repere tourne, le bruit non. C'est ce qui evite le defaut classique de
+   ces effets, ou l'on voit un dessin fixe passer derriere une fenetre qui
+   tourne : ici la matiere elle-meme est enroulee. */
+const FLUX = /* glsl */`
+  precision highp float;
+  varying vec2 vP;
+  uniform float uTemps, uForce;
+  uniform vec3 uViolet, uJade;
+
+  float hache(vec2 p) {
+    vec3 q = fract(vec3(p.xyx) * 0.1031);
+    q += dot(q, q.yzx + 33.33);
+    return fract((q.x + q.y) * q.z);
+  }
+  float bruit(vec2 p) {
+    vec2 i = floor(p), f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hache(i), hache(i + vec2(1.0, 0.0)), f.x),
+               mix(hache(i + vec2(0.0, 1.0)), hache(i + vec2(1.0, 1.0)), f.x), f.y);
+  }
+  float fbm(vec2 p) {
+    return bruit(p) * 0.54 + bruit(p * 2.1 + 7.3) * 0.29 + bruit(p * 4.3 - 3.1) * 0.17;
+  }
+
+  void main() {
+    float r = length(vP);
+    if (r > 1.0) discard;
+    float a = atan(vP.y, vP.x);
+
+    /* Le cisaillement du vortex. Le 0,17 empeche la vitesse de partir a
+       l'infini au centre exact, ou l'angle n'est pas defini. */
+    float tour = a + 1.45 / (r + 0.17) - uTemps * 0.62;
+
+    /* Les veines, lues dans le repere enroule.
+
+       QUATRE OCTAVES ET NON TROIS, ET PLUS FIN. Le disque fait cinq unites de
+       large et la camera le traverse : a un metre de distance, une cellule de
+       bruit couvre le quart de l'ecran et l'interpolation bilineaire se voit,
+       en FACETTES anguleuses. Le remede n'est pas de lisser, c'est d'avoir du
+       detail a l'echelle ou on regarde. Un effet qu'on traverse doit tenir a
+       toutes les distances, pas seulement a celle ou on l'a regle. */
+    vec2 q = vec2(cos(tour), sin(tour)) * (0.6 + r * 2.3) + vec2(0.0, uTemps * 0.28);
+    float v = fbm(q * 3.4) * 0.86 + bruit(q * 13.0 - uTemps * 0.4) * 0.14;
+    v = pow(v, 1.7);
+
+    /* Et des filaments francs par-dessus : le bruit seul fait de la fumee, ce
+       sont les filaments qui font de l'ENERGIE. */
+    float fil = pow(abs(sin(tour * 3.0 + v * 6.0)), 7.0);
+
+    float coeur = pow(1.0 - r, 2.2);
+    float pouls = 0.84 + 0.16 * sin(uTemps * 1.7 + r * 3.0);
+    float e = (v * 0.50 + fil * 0.85) * (0.30 + coeur * 2.0) * pouls;
+
+    /* Le bord se perd dans la pierre. Un disque a bord net poserait une
+       rondelle dans l'arche, et on verrait le truc. */
+    e *= smoothstep(1.0, 0.70, r);
+
+    /* Violet au coeur, jade sur les bords : les deux couleurs de la maison,
+       dans le seul endroit du voyage ou elles se touchent. Le violet tient les
+       deux tiers du disque : c'est la couleur qui manquait, elle n'a pas a se
+       partager l'espace a egalite avec celle qui est deja partout. */
+    vec3 col = mix(uViolet, uJade, smoothstep(0.44, 1.20, r + v * 0.30));
+    /* Et le coeur ne blanchit qu'a peine. A pleine force il faisait un point
+       blanc de dessin anime ; une source chaude garde sa teinte jusqu'au bout,
+       c'est l'oeil qui la voit blanche quand elle est assez forte. */
+    col = mix(col, vec3(0.95, 0.88, 1.0), pow(coeur, 3.0) * 0.34);
+
+    float f = e * uForce;
+    gl_FragColor = vec4(col * f, clamp(f, 0.0, 1.0));
+  }
+`;
+
 const ETALON = {
   uniforms: {
     tDiffuse: { value: null },
@@ -162,7 +250,7 @@ const ETALON = {
          de lumiere : c'est le travail de l'exposition, qui est reglee ailleurs
          et une seule fois. */
       float ombre = 1.0 - smoothstep(0.0, 0.30, l);
-      col += uOmbre * ombre * 0.12;
+      col += uOmbre * ombre * 0.17;
       col += uHaute * smoothstep(0.55, 1.0, l) * 0.08;
 
       vec2 c = vUv - 0.5;
@@ -222,12 +310,34 @@ const REPERES = [
   { t: 0.26, oeil: [ 0.00, 2.20,  3.00], vise: [ 3.20, 3.20, 16.00] },
   { t: 0.40, oeil: [ 0.60, 2.80, 12.00], vise: [ 1.40, 2.90, 26.00] },
   { t: 0.54, oeil: [ 0.20, 3.00, 24.00], vise: [ 0.40, 2.85, 42.00] },
-  { t: 0.68, oeil: [ 0.10, 2.90, 38.00], vise: [ 0.00, 2.80, 55.00] },
-  { t: 0.80, oeil: [ 0.00, 2.80, 50.00], vise: [ 0.00, 2.70, 66.00] },
-  { t: 0.90, oeil: [ 0.00, 3.30, 61.00], vise: [ 0.00, 3.30, 78.00] },
+  /* ══ ON DESCEND AVANT DE PASSER LE PORTAIL ═══════════════════════════════
+     Matheo : « quand on passe dans le portail, la camera est beaucoup trop
+     haute ; il faudrait qu'avant d'arriver elle descende un peu, ca fera un
+     mouvement de camera en plus ». La mesure lui donne raison au centimetre.
+     Le portail va de -3,91 a 4,97 en hauteur, et son OUVERTURE, relevee en
+     tirant des rayons a travers, va de -2,0 a 3,2. La camera passait a 2,80 :
+     dans le dernier cinquieme du trou, a fleurer le linteau. On ne traversait
+     pas une porte, on l'enjambait.
+
+     Elle passe desormais a -0,30, c'est-a-dire au tiers bas de l'ouverture, a
+     un metre soixante-dix au-dessus du seuil de pierre. L'arche monte alors a
+     cinq unites au-dessus de l'oeil et les piliers defilent de chaque cote :
+     c'est cette hauteur-la, et elle seule, qui fait qu'un portail se ressent
+     comme un portail.
+
+     Et le mouvement se gagne en prime, ce que Matheo avait vu aussi. Le rail
+     montait puis restait plat sur quarante unites. Il monte maintenant jusqu'a
+     l'apogee d'ou l'on decouvre l'arche entiere, PLONGE vers son ouverture, la
+     traverse au ras, et remonte de l'autre cote pour ouvrir sur le lac. Trois
+     gestes au lieu d'un, sans une seule image de plus a calculer. */
+  { t: 0.64, oeil: [ 0.10, 2.95, 34.00], vise: [ 0.00, 2.20, 51.00] },
+  { t: 0.74, oeil: [ 0.00, 1.30, 43.00], vise: [ 0.00, 0.60, 59.00] },
+  { t: 0.82, oeil: [ 0.00,-0.25, 50.50], vise: [ 0.00, 0.55, 66.00] },
+  { t: 0.88, oeil: [ 0.00,-0.30, 57.50], vise: [ 0.00, 0.90, 72.00] },
+  { t: 0.94, oeil: [ 0.00, 1.00, 63.50], vise: [ 0.00, 3.20, 79.00] },
   /* Le dernier temps leve les yeux : le sceau passe au tiers bas et le
      PAYSAGE s'ouvre derriere lui, lac, monts et ciel. */
-  { t: 1.00, oeil: [ 0.70, 6.40, 68.50], vise: [ 0.00, 6.10, 92.00] }
+  { t: 1.00, oeil: [ 0.60, 5.40, 69.00], vise: [ 0.00, 6.20, 92.00] }
 ];
 
 function courbeDe(cle) {
@@ -662,9 +772,18 @@ export async function monterLeVoyage(toile, options = {}) {
         /* La fibre module tout : le corps, le contre-jour et l'arete. Une
            tige n'est pas plus claire par endroits, elle est plus DENSE. */
         float f = 0.55 + fibre * 0.95;
+        /* ══ LE LISERE EST VIOLET ══════════════════════════════════════════
+           Matheo : « notre DA c'etait le violet et le vert ; la on a du vert
+           et tres peu de violet ». Le violet ne se rattrape pas en teintant
+           l'image, ca donne un filtre. Il se pose la ou une couleur d'appoint
+           se pose vraiment : sur les ARETES. Chaque tige du couloir prend donc
+           un lisere violet a l'endroit ou elle tourne le dos a la camera, et
+           il y en a une centaine dans le cadre. Le vert reste la couleur des
+           corps, le violet devient celle des contours : deux roles, une seule
+           image, et le violet est partout sans jamais salir un aplat. */
         vec3 col = uJadeF * 0.22 * f
                  + uJade * dos * 0.30 * grain * f
-                 + vec3(0.26, 0.40, 0.50) * fres * 0.13;
+                 + vec3(0.52, 0.34, 0.92) * fres * 0.24;
         /* Le bourgeon : la pointe qui vient de sortir est plus claire, comme
            une pousse tendre. C'est lui qui rend la croissance LISIBLE ; sans
            lui on ne voit pas que la tige avance, on voit juste qu'elle est
@@ -692,7 +811,11 @@ export async function monterLeVoyage(toile, options = {}) {
 
      On monte donc a soixante lianes, dont un tiers tres loin et tres pales :
      elles ne se lisent pas comme des objets, elles font le fond du decor. */
-  const NB_LIANES = petit ? 14 : 36;
+  /* Quarante-huit, et sur TROIS plans au lieu de deux. Le couloir avait un
+     premier plan et un fond, donc un trou au milieu, et c'est exactement la
+     que le regard va quand il cherche la distance. Matheo : « il n'y a pas
+     grand-chose avant le portail ». */
+  const NB_LIANES = petit ? 18 : 48;
   const SEG = petit ? 70 : 130;
   const RAD = petit ? 6 : 9;
 
@@ -702,14 +825,29 @@ export async function monterLeVoyage(toile, options = {}) {
        sortent du champ de la mise au point, le flou les dissout, et il reste
        une masse vegetale sans detail. C'est exactement ce qu'on veut d'un
        arriere-plan : de la presence, pas de l'information. */
-    const loin = i % 3 === 2;
+    const bande = i % 3;          /* 0 pres, 1 milieu, 2 fond */
+    const loin = bande === 2;
     /* La moitie des lianes est semee entre zero et cinquante, la ou le
        couloir etait vide entre la feuille et le portail : sans elles, on
        traverse quinze unites sans rien voir passer, et le voyage s'arrete
        alors qu'il continue. */
     const z0 = i % 2 ? alea(-4, 50) : alea(-4, 82);
-    const ecart = (loin ? alea(17, 30) : alea(4.6, 10.0)) * cote;
-    const montee = loin ? alea(16, 30) : alea(7, 17);
+    /* ══ AUCUNE LIANE DANS LE TUBE DE LA CAMERA ════════════════════════════
+       Elles pouvaient prendre racine a quatre unites et demie de l'axe, et
+       elles ondulent de deux de plus : certaines finissaient donc a deux
+       unites de l'objectif. A cette distance, une tige de vingt centimetres
+       barre le quart du cadre et son reflet speculaire la transforme en tube
+       chrome. Le dernier temps du voyage etait a moitie mange par trois
+       d'entre elles.
+
+       Un decor de premier plan est une bonne chose ; un decor DANS la lentille
+       n'en est pas une. Le rail passe par l'axe, on lui laisse donc un tube
+       libre de six unites et demie, ce qui suffit pour qu'une liane proche
+       reste au bord du cadre au lieu de le traverser. */
+    const ecart = (bande === 0 ? alea(6.5, 11.5)
+                 : bande === 1 ? alea(12.0, 17.5)
+                               : alea(19.0, 32.0)) * cote;
+    const montee = bande === 0 ? alea(7, 17) : bande === 1 ? alea(10, 21) : alea(16, 30);
     /* ══ ELLES PARTENT DU SOL, PAS DE NULLE PART ═══════════════════════════
        Elles demarraient toutes a moins trois, une hauteur inventee, dans un
        monde qui n'avait pas de sol. Maintenant qu'il y en a un, une tige qui
@@ -786,18 +924,35 @@ export async function monterLeVoyage(toile, options = {}) {
      elles disent que la plante est arrivee jusque-la. */
   for (let i = 0; i < (petit ? 6 : 14); i++) {
     const ang = (i / (petit ? 6 : 14)) * Math.PI * 2 + alea(-0.55, 0.55);
-    const r0 = alea(11.0, 24.0);
+    /* Meme regle que pour le couloir : le bosquet encadre le sceau, il ne se
+       plante pas devant l'objectif. */
+    const r0 = alea(14.0, 26.0);
     const points = [];
     const N = 32;
     const ph = alea(0, 6.283), mx = alea(0.7, 1.6);
     const montee = alea(11, 22);
     const solBosquet = hauteurSol(Math.cos(ang) * r0, 82 + Math.sin(ang) * (r0 * 0.55)) - 0.6;
+    /* ══ UN ALEA PAR LIANE, JAMAIS PAR POINT ══════════════════════════════
+       La derive en profondeur etait tiree DANS la boucle : chaque point de
+       controle recevait la sienne, independamment de ses voisins. La courbe
+       cessait d'etre une courbe et devenait un ECLAIR EN ZIGZAG, et quatorze
+       eclairs faisaient le fouillis de rubans froisses qui mangeait la moitie
+       du dernier plan.
+
+       C'est mot pour mot la faute deja corrigee sur les lianes du couloir,
+       vingt lignes plus haut, et elle avait survecu ici. Une correction ne
+       vaut que la ou on l'applique : quand un defaut vient d'un geste et non
+       d'un endroit, il faut chercher le geste PARTOUT avant de refermer.
+
+       La regle : ce qui varie d'une plante a l'autre se tire une fois, ce qui
+       varie le long d'une meme plante suit une fonction continue. */
+    const deriveBosquet = alea(-5, 5);
     for (let j = 0; j <= N; j++) {
       const u = j / N;
       points.push(new THREE.Vector3(
         Math.cos(ang) * (r0 + Math.sin(u * 2.6 * mx + ph) * 1.9),
         solBosquet + u * montee,
-        82 + Math.sin(ang) * (r0 * 0.55) + Math.cos(u * 2.1 + ph) * 2.6 + u * alea(-5, 5)
+        82 + Math.sin(ang) * (r0 * 0.55) + Math.cos(u * 2.1 + ph) * 2.6 + u * deriveBosquet
       ));
     }
     const courbe = new THREE.CatmullRomCurve3(points);
@@ -967,7 +1122,13 @@ export async function monterLeVoyage(toile, options = {}) {
      le decor et les poussieres pendant que la feuille se telecharge, et elle
      se pose dans un monde deja vivant au lieu d'ouvrir sur un ecran noir. */
   const chargeur = new GLTFLoader();
-  let feuilleGeante = null, portail = null, matiereFeuille = null;
+  let feuilleGeante = null, portail = null, matiereFeuille = null, fluxPortail = null;
+  /* L'orientation de repos de la feuille, mesuree au chargement. La derive
+     s'y AJOUTE au lieu de l'ecraser : sans elle, trois angles d'Euler ecrits
+     a chaque image effaceraient la pose choisie des la premiere. */
+  const orientFeuille = new THREE.Quaternion();
+  const deriveFeuille = new THREE.Euler();
+  const qDeriveFeuille = new THREE.Quaternion();
 
   async function poserFeuille() {
     const g = await chargeur.loadAsync('modeles/feuille-kudzu.glb');
@@ -983,22 +1144,70 @@ export async function monterLeVoyage(toile, options = {}) {
       /* three ne sait pas diffuser sous la surface. Une emission tres basse
          pilotee par la texture de base en fait autant pour ce qu'on en voit :
          le limbe s'eclaire par l'interieur avec SES nervures. */
+      /* ══ ELLE EST DANS LA NUIT, PAS DEVANT UN FOND NOIR ══════════════════
+         Vue de face, elle ressortait en vert citron sur un paysage bleu de
+         nuit : un decoupage colle sur l'image, pas un objet du lieu. Ce n'est
+         pas la faute de l'orientation, c'est que sa matiere etait reglee du
+         temps ou on la voyait de biais, ou seule une tranche recevait la
+         lumiere. De face, toute la surface la recoit d'un coup.
+
+         On rabat donc son diffus et on le refroidit : une feuille eclairee par
+         un ciel de nuit est SOMBRE et legerement bleutee, sa couleur propre ne
+         se revele qu'aux hautes lumieres. L'emission garde les nervures
+         lisibles, c'est son seul role, et elle baisse d'autant. */
+      if (mt.color) mt.color.multiply(new THREE.Color(0.32, 0.41, 0.43));
+      if ('roughness' in mt) mt.roughness = Math.min(1, (mt.roughness ?? 0.8) * 0.9 + 0.14);
       if ('emissive' in mt) {
-        mt.emissive = new THREE.Color(0x0C5540);
+        mt.emissive = new THREE.Color(0x0A3038);
         mt.emissiveMap = mt.map || null;
-        mt.emissiveIntensity = 0.62;
+        mt.emissiveIntensity = 0.24;
         matiereFeuille = mt;
       }
     });
+    /* ══ ELLE SE PRESENTE DE FACE ══════════════════════════════════════════
+       Elle etait posee de trois quarts, et l'argument ecrit ici disait : de
+       face c'est un logo, de trois quarts c'est un objet. L'argument vaut pour
+       une forme symetrique. Il ne vaut rien pour une feuille, qui n'est jamais
+       plate : sa nervure principale la plie en deux, son limbe se releve sur
+       les bords, sa pointe retombe. Tout ce dessin-la est DANS le plan du
+       limbe, donc de biais il disparait et il ne reste qu'une lame verte.
+       Matheo : « elle est un peu dans le mauvais sens, tu devrais la retourner
+       pour qu'on la voie de face ».
+
+       ON NE DEVINE PAS L'ORIENTATION DU FICHIER, ON LA MESURE. Une feuille est
+       un objet PLAT : dans sa boite englobante, son epaisseur est forcement la
+       plus petite des trois dimensions et le limbe s'etend dans les deux
+       autres. Ses axes propres se lisent donc dans la boite, sans rien savoir
+       de la facon dont le modeleur a exporte son fichier. Trois angles ajustes
+       a la main auraient marche pour ce modele-ci et pour aucun autre. */
+    const cotes = [t.x, t.y, t.z];
+    const rang = [0, 1, 2].sort((a, b) => cotes[a] - cotes[b]);
+    const unitaire = i => new THREE.Vector3(+(i === 0), +(i === 1), +(i === 2));
+    const zL = unitaire(rang[0]);   /* l'epaisseur : la normale du limbe */
+    const yL = unitaire(rang[2]);   /* la longueur : de la tige a la pointe */
+    const xL = new THREE.Vector3().crossVectors(yL, zL);
+
+    /* Ou se trouve l'oeil quand on la croise. Pris SUR LE RAIL, pas ecrit en
+       clair : si le rail change, la feuille se retourne avec lui. */
+    const POSE = new THREE.Vector3(-8.40, 4.60, 15.00);
+    const zM = railOeil.getPoint(abscisse(0.17), new THREE.Vector3()).sub(POSE).normalize();
+    /* Et sa longueur monte en diagonale : une feuille verticale fait un
+       panneau, une feuille penchee reste une feuille. */
+    const yM = new THREE.Vector3(-0.34, 0.94, 0.05);
+    yM.addScaledVector(zM, -yM.dot(zM)).normalize();
+    const xM = new THREE.Vector3().crossVectors(yM, zM);
+
+    /* La rotation qui emmene le repere du modele sur celui qu'on veut : la
+       cible multipliee par l'inverse du depart. Deux reperes orthonormes
+       directs, donc l'inverse est la transposee et rien ne se deforme. */
+    orientFeuille.setFromRotationMatrix(
+      new THREE.Matrix4().makeBasis(xM, yM, zM)
+        .multiply(new THREE.Matrix4().makeBasis(xL, yL, zL).transpose()));
+
     feuilleGeante = new THREE.Group();
     feuilleGeante.add(o);
-    /* Posee de biais, jamais de face : de face c'est un logo, de trois quarts
-       c'est un objet. */
-    /* Sa place de depart : juste devant l'oeil, de biais. De face elle serait
-       un logo, de trois quarts c'est un objet. Elle ne restera pas la : c'est
-       elle qui ouvre le voyage en s'eloignant. */
-    feuilleGeante.position.set(-8.40, 4.60, 15.00);
-    feuilleGeante.rotation.set(-0.22, 0.55, 0.12);
+    feuilleGeante.position.copy(POSE);
+    feuilleGeante.quaternion.copy(orientFeuille);
     monde.add(feuilleGeante);
 
     triFeuille = compter(o);
@@ -1141,6 +1350,99 @@ export async function monterLeVoyage(toile, options = {}) {
     portail.position.set(0, hauteurSol(0, 55) + demiHauteur - 0.55, 55);
     monde.add(portail);
 
+    /* ══ ET IL S'ALLUME ════════════════════════════════════════════════════
+       Le disque de flux se pose dans le plan de l'anneau, centre sur son trou.
+       Son rayon est mesure, pas choisi : l'ouverture releve entre -2,0 et 3,2
+       en hauteur, donc 2,6 de demi-hauteur, et on deborde d'un dixieme pour
+       que la pierre mange le bord du disque au lieu de le laisser affleurer.
+
+       Il est en melange ADDITIF et il n'ecrit pas la profondeur : c'est de la
+       lumiere, pas une surface. Il la TESTE en revanche, donc la pierre de
+       l'arche passe devant lui quand on le regarde de biais, ce qui est la
+       seule chose qui le fait exister dans l'ouverture et pas devant. */
+    fluxPortail = new THREE.Mesh(
+      new THREE.CircleGeometry(2.72, 96),
+      new THREE.ShaderMaterial({
+        uniforms: {
+          uTemps:  { value: 0 },
+          uForce:  { value: 0 },
+          uViolet: { value: new THREE.Color(0x7C4DFF) },
+          uJade:   { value: new THREE.Color(0x18D69B) }
+        },
+        vertexShader: /* glsl */`
+          varying vec2 vP;
+          void main() {
+            vP = position.xy / 2.72;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: FLUX,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        fog: false
+      })
+    );
+    fluxPortail.position.set(0, portail.position.y + 0.07, 55);
+    fluxPortail.frustumCulled = false;
+    monde.add(fluxPortail);
+
+    /* ══ L'AVENUE DE RUINES ════════════════════════════════════════════════
+       Matheo : « il n'y a pas grand-chose avant le portail ». C'etait vrai :
+       quarante unites de couloir avec des lianes et rien d'autre, donc rien
+       qui annonce ce vers quoi on va.
+
+       On ne modelise rien de neuf. Le meme portail, plus petit, penche,
+       a moitie enfonce dans la terre et pose par paires de chaque cote du
+       trajet : ce ne sont plus des portails, ce sont ses RUINES, et elles
+       racontent d'un coup deux choses qu'aucun texte ne dirait aussi vite.
+       Que le lieu a ete construit, et qu'il est vieux.
+
+       Le modele, sa geometrie et sa matiere sont partages : chaque ruine ne
+       coute qu'un appel de dessin et pas un octet de plus en memoire. La
+       mousse qui les envahit est celle du sol et de l'arche, donc elles
+       appartiennent au meme endroit sans qu'on ait rien a accorder.
+
+       Elles s'ecartent de plus en plus a mesure qu'on approche : les
+       premieres bordent le chemin de pres, les dernieres s'ouvrent en
+       eventail devant l'arche intacte, ce qui fabrique une PERSPECTIVE et
+       pousse le regard au fond. C'est le geste d'une allee de sphinx, et il
+       marche pour la meme raison depuis trois mille ans. */
+    /* Elles sont ENFONCEES, pas posees. Une ruine dont on voit encore le socle
+       est une maquette ; une ruine dont la terre a mange le tiers bas est une
+       ruine. Le tirage va de trois dixiemes a une moitie : la plus vieille est
+       la plus loin de l'arche, comme si le lieu s'etait construit en avancant.
+
+       Et elles restent TOURNEES vers le chemin, a un quart de radian pres. Ma
+       premiere version les faisait pivoter d'un demi-tour de plus : on ne
+       voyait plus que leur tranche, et cinq anneaux de pierre vus par la
+       tranche font cinq bornes de parking. Ce qui compte dans une arche est sa
+       silhouette percee, donc on la garde de face. */
+    const RUINES = [
+      { z: 14, x: -1, ech: 0.36, enfonce: 0.50, incline: 0.30 },
+      { z: 21, x:  1, ech: 0.32, enfonce: 0.46, incline: -0.24 },
+      { z: 30, x: -1, ech: 0.46, enfonce: 0.40, incline: 0.17 },
+      { z: 38, x:  1, ech: 0.42, enfonce: 0.44, incline: -0.12 },
+      { z: 45, x: -1, ech: 0.54, enfonce: 0.30, incline: 0.09 }
+    ];
+    for (const r of RUINES) {
+      const copie = o.clone();
+      const g2 = new THREE.Group();
+      g2.add(copie);
+      const haut = t.y * (9.5 / Math.max(t.x, t.y, t.z)) * r.ech;
+      /* L'ecart croit avec la distance parcourue : de sept unites au depart a
+         onze devant l'arche. Assez pour laisser le tube de la camera libre,
+         assez peu pour que les ruines tiennent dans le cadre. */
+      const ecartR = (7.0 + (r.z / 45) * 4.2) * r.x;
+      g2.scale.setScalar(r.ech);
+      g2.position.set(ecartR, hauteurSol(ecartR, r.z) + haut * (1 - r.enfonce), r.z);
+      /* Tournee vers le chemin, et penchee : une pierre qui a bouge n'a plus
+         ni son aplomb ni son orientation d'origine. */
+      g2.rotation.set(r.incline * 0.55, -r.x * (0.26 + alea(-0.12, 0.12)), r.incline);
+      monde.add(g2);
+    }
+
     triPortail = compter(o);
     poidsPortail = poidsDe('modeles/portail.glb');
   }
@@ -1197,6 +1499,11 @@ export async function monterLeVoyage(toile, options = {}) {
      camera regarde qui est net. Une mise au point fixe rendrait floue la seule
      chose qu'on veut montrer des que la camera bouge. */
   const versLumiere = new THREE.Vector3(0, 2.6, 99);
+  /* La teinte de reference des ombres. On la garde de cote parce que
+     l'etalonnage la fait varier a chaque image : sans original, un facteur
+     applique en boucle sur la meme couleur la fait deriver jusqu'au blanc en
+     quelques secondes. */
+  const OMBRE_NUIT = new THREE.Color(0x1A1533);
 
   /* ── Dimensions ─────────────────────────────────────────────────────── */
   function mesurer() {
@@ -1284,17 +1591,38 @@ export async function monterLeVoyage(toile, options = {}) {
        couloir, ce qui est aussi ce qu'on veut. */
     railOeil.getPoint(u, pOeil);
     railVise.getPoint(u, pVise);
+
+    /* ══ LA PROXIMITE DU PORTAIL, PRISE SUR LE RAIL ════════════════════════
+       Elle commande le flux, la mise au point, l'etalonnage et le recul
+       d'ecran. Ce dernier DEPLACE la camera : une valeur qui commande un
+       deplacement ne peut pas se mesurer apres lui, sinon elle se mord la
+       queue. On la prend donc sur le rail, avant tout ajustement. */
+    const dz = pOeil.z - 55;
+    const pres = Math.exp(-(dz * dz) / (2 * 13 * 13));
+
     /* Le recul se fait sur l'axe du regard : la composition ne bouge pas, elle
-       respire. Un decalage lateral, lui, changerait le cadrage. */
-    if (reculEcran > 1.001) {
-      pOeil.sub(pVise).multiplyScalar(reculEcran).add(pVise);
+       respire. Un decalage lateral, lui, changerait le cadrage.
+
+       ══ SAUF DANS LE PORTAIL ═══════════════════════════════════════════════
+       Sur un ecran vertical, le recul eloigne l'oeil de la moitie de la
+       distance au point vise, soit huit unites. Le rail entre bien dans
+       l'anneau, mais la camera restait huit unites en arriere : le telephone
+       n'a jamais traverse le portail, il l'a regarde de loin. Le plus beau
+       moment du site n'existait que sur grand ecran, et rien ne le signalait
+       puisque le cadrage restait correct.
+
+       On l'efface donc a l'approche. Le cadrage vertical se paie ailleurs, la
+       ou il n'y a rien a traverser. */
+    const reculVu = 1 + (reculEcran - 1) * (1 - 0.88 * pres);
+    if (reculVu > 1.001) {
+      pOeil.sub(pVise).multiplyScalar(reculVu).add(pVise);
       /* ══ ET ON VISE UN PEU PLUS BAS ═══════════════════════════════════
          Sur un ecran vertical, le texte occupe le tiers du bas : un sujet
          cadre au centre se retrouve DERRIERE lui. En abaissant le point vise,
          le sujet remonte dans l'image et les deux cessent de se disputer la
          meme place. C'est le meme geste qu'un cadreur qui laisse de l'air
          sous son sujet pour un bandeau. */
-      pVise.y -= (reculEcran - 1) * 4.2;
+      pVise.y -= (reculVu - 1) * 4.2;
     }
     const a2 = 1 - Math.pow(1 - 0.06, dt * 60);
     mainVue.x += (main.x - mainVue.x) * a2;
@@ -1402,9 +1730,17 @@ export async function monterLeVoyage(toile, options = {}) {
            4.40 + e * 1.30 + Math.sin(t * 0.44) * 0.16,
           15.00 + e * 8.00
         );
-        feuilleGeante.rotation.y = 0.55 + e * 1.15 + Math.sin(t * 0.13) * 0.10;
-        feuilleGeante.rotation.z = 0.12 + e * 0.55 + Math.sin(t * 0.19) * 0.07;
-        feuilleGeante.rotation.x = -0.22 + Math.sin(t * 0.23) * 0.09;
+        /* La derive tourne la feuille DEPUIS sa pose de face, elle ne la
+           remplace pas. On la croise donc de face, et elle se detourne en
+           s'eloignant : c'est le vent qui la fait pivoter, et un objet qui
+           montre son profil en partant a une raison de le montrer. */
+        deriveFeuille.set(
+          Math.sin(t * 0.23) * 0.09,
+          e * 0.95 + Math.sin(t * 0.13) * 0.10,
+          e * 0.42 + Math.sin(t * 0.19) * 0.07
+        );
+        feuilleGeante.quaternion.copy(orientFeuille)
+          .multiply(qDeriveFeuille.setFromEuler(deriveFeuille));
       }
       if (sceau) {
         sceau.rotation.y = Math.sin(t * 0.16) * 0.42;
@@ -1413,14 +1749,56 @@ export async function monterLeVoyage(toile, options = {}) {
     }
 
     /* ── La mise au point suit le regard ────────────────────────────────── */
-    flou.uniforms.focus.value = Math.max(0.6, camera.position.distanceTo(pVise));
+    /* ══ ON FAIT LE POINT SUR LE FLUX QUAND ON EST DEDANS ══════════════════
+       La mise au point suivait le point vise, a quinze unites. Pendant la
+       traversee, le flux est a deux : il etait donc flou au maximum, et un
+       flou de bokeh a noyau carre applique a une source tres lumineuse rend
+       des RECTANGLES. On les voyait courir dans le tourbillon, en damier.
+
+       C'est la troisieme fois que ce noyau carre se signale, toujours de la
+       meme facon : une chose brillante, tres floue, et des carres. La regle a
+       retenir est photographique et pas technique : ce qui remplit le cadre
+       est le sujet, et on fait le point sur le sujet. On ferme aussi
+       l'ouverture en meme temps, parce qu'un objectif qui plonge dans une
+       lumiere n'a plus besoin de la chercher. */
+    const versSujet = fluxPortail
+      ? camera.position.distanceTo(fluxPortail.position)
+      : camera.position.distanceTo(pVise);
+    const melange = Math.min(1, pres * 1.25);
+    flou.uniforms.focus.value = Math.max(0.6,
+      camera.position.distanceTo(pVise) * (1 - melange) + versSujet * melange);
     /* L'ouverture se referme quand on est loin : de pres, un fond dissous
        isole le sujet ; de loin, le meme reglage brouillerait tout le decor
        qu'on vient de traverser. */
-    flou.uniforms.aperture.value = 0.00030 * (1 - avance * 0.62) + 0.00004;
+    flou.uniforms.aperture.value = (0.00030 * (1 - avance * 0.62) + 0.00004)
+                                 * (1 - 0.88 * melange);
+
+    /* ══ LE FLUX DU PORTAIL ════════════════════════════════════════════════
+       Il s'allume en veilleuse des qu'on le voit au fond du couloir, et il
+       s'emballe au moment ou l'on entre dedans. Une gaussienne centree sur le
+       plan de l'anneau, pas un palier : dans une lumiere, rien n'a de bord.
+
+       La distance se prend sur la camera et non sur l'avancee du recit. C'est
+       la meme regle que partout ici : ce qui depend d'un LIEU se calcule avec
+       une position, sinon le reglage se defait au premier deplacement de
+       repere sur le rail. `dz` et `pres` sont calcules plus haut, avec la mise
+       au point, qui en a besoin aussi. */
+    if (fluxPortail) {
+      const uf = fluxPortail.material.uniforms;
+      uf.uTemps.value = t0;
+      uf.uForce.value = 0.34 + 2.35 * pres;
+    }
 
     /* ── Les rais partent de la lueur, quand elle est devant nous ────────── */
-    const p = versLumiere.clone().project(camera);
+    /* Ils visaient toujours la lueur d'horizon, a quatre-vingt-dix-neuf. Tant
+       que c'etait la seule source, c'etait la bonne. Depuis que le flux brule
+       dans l'anneau, la source la plus lumineuse du cadre est LUI des qu'on
+       en approche, et des rais qui partent d'ailleurs que du point le plus
+       clair se lisent comme un defaut d'optique. On change de cible avec la
+       distance, doucement. */
+    const p = versLumiere.clone()
+      .lerp(fluxPortail ? fluxPortail.position : versLumiere, pres * 0.92)
+      .project(camera);
     const devant = p.z < 1;
     rais.uniforms.uCentre.value.set(p.x * 0.5 + 0.5, 0.5 - p.y * 0.5);
     /* Ils ne s'allument que dans la seconde moitie du voyage, et s'eteignent
@@ -1441,10 +1819,30 @@ export async function monterLeVoyage(toile, options = {}) {
        Leur role est de faire sentir la lumiere qui passe par l'ouverture ;
        apres, ils n'ont plus d'ouverture a traverser et ils ne font plus que
        transformer le sceau en etoile. */
+    /* ══ ET ILS CULMINENT DANS LE PASSAGE ══════════════════════════════════
+       Ils s'eteignaient a quatre-vingts centiemes du recit, c'est-a-dire AVANT
+       le portail depuis que la camera plonge : on arrivait dans l'ouverture au
+       moment ou la lumiere s'en allait. Ils tiennent maintenant jusqu'a ce
+       qu'on soit passe, et leur force enfle quand on entre.
+
+       Le plafond reste bas. Une premiere version montait a 1,35 et tirait un
+       TRAIT VIOLET en travers du cadre : la passe prenait le lisere de pierre
+       pour une source et l'etirait sur la moitie de l'ecran. La difference
+       aujourd'hui est qu'il y a une vraie source, large et douce, donc
+       l'etirement fait un flux au lieu d'un laser. On monte a 0,78, pas plus,
+       et seulement au moment du passage. */
     const monte = Math.min(1, Math.max(0, (avance - 0.44) / 0.20));
-    const descend = 1 - Math.min(1, Math.max(0, (avance - 0.80) / 0.10));
-    const veut = dedans ? monte * descend * 0.44 * centre : 0;
+    const descend = 1 - Math.min(1, Math.max(0, (avance - 0.91) / 0.06));
+    const ampleur = 0.26 + 0.52 * Math.exp(-(dz * dz) / (2 * 9 * 9));
+    const veut = dedans ? monte * descend * ampleur * centre : 0;
     rais.uniforms.uForce.value += (veut - rais.uniforms.uForce.value) * 0.08;
+
+    /* ══ LE VIOLET MONTE AVEC LE PORTAIL ═══════════════════════════════════
+       L'etalonnage pose toujours le meme violet dans les ombres. Il en pose
+       deux fois plus a l'approche de l'anneau : la lumiere du flux se repand
+       dans l'air et teinte tout ce qui l'entoure, ce qui est ce que fait une
+       vraie source, et ce que ne fait jamais un filtre pose sur l'image. */
+    etalon.uniforms.uOmbre.value.copy(OMBRE_NUIT).multiplyScalar(1 + 1.25 * pres);
 
     if (instruments && feuilleGeante) {
       for (let i = 0; i < 2; i++) {

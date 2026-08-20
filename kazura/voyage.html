@@ -8,7 +8,7 @@
 <meta name="description" content="L’accueil de Kazura, refait en un seul plan continu : un monde traversé par le défilement.">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="css/kazura.css?v=b05341e0f3">
+<link rel="stylesheet" href="css/kazura.css?v=11c3dd11e1">
 
 <script type="importmap">
 { "imports": {
@@ -248,7 +248,7 @@
        pouvez la traverser.</p>
   </section>
 
-  <section class="acte acte--bd" data-de="0.67" data-a="0.85">
+  <section class="acte acte--bd" data-de="0.66" data-a="0.795">
     <span class="acte__num">03 · La maquette</span>
     <h2>On vous montre le site avant que vous décidiez.</h2>
     <p>Une maquette complète, à votre nom, avec vos textes et vos photos.
@@ -309,14 +309,24 @@ function avancee() {
   return course > 0 ? Math.min(1, Math.max(0, scrollY / course)) : 0;
 }
 
+let dernierEcrit = -1;
+
 function poser(t) {
   voyage?.avancer(t);
-  jauge.style.width = (t * 100).toFixed(2) + '%';
-  descendez.style.opacity = t > 0.03 ? '0' : '1';
 
-  for (const a of actes) {
-    const vu = t >= a.de && t <= a.a;
-    if ((a.e.dataset.vu === 'oui') !== vu) a.e.dataset.vu = vu ? 'oui' : 'non';
+  /* On ne touche le document que si la valeur a bouge : inutile de reecrire
+     une largeur de jauge soixante fois par seconde pour la meme valeur. Ce
+     qui suit plus bas, en revanche, avance avec le TEMPS et doit tourner a
+     chaque image, meme immobile. */
+  if (Math.abs(t - dernierEcrit) >= 0.0002) {
+    dernierEcrit = t;
+    jauge.style.width = (t * 100).toFixed(2) + '%';
+    descendez.style.opacity = t > 0.03 ? '0' : '1';
+
+    for (const a of actes) {
+      const vu = t >= a.de && t <= a.a;
+      if ((a.e.dataset.vu === 'oui') !== vu) a.e.dataset.vu = vu ? 'oui' : 'non';
+    }
   }
 
   /* ══ LE NOM SE DEFAIT PENDANT QUE LE MONDE SE FORME ════════════════════
@@ -336,20 +346,30 @@ function poser(t) {
        quelque chose de tres propre ».
 
        On borne donc la VITESSE de la consigne, pas seulement sa valeur. Quelle
-       que soit la brutalite du geste, la nuee met au moins une seconde et demie
-       a se defaire, et autant a se reformer. Le defilement dit OU l'on va ;
-       il n'a pas a dicter en combien de temps. */
+       que soit la brutalite du geste, la nuee met le meme temps a se defaire.
+       Le defilement dit OU l'on va ; il n'a pas a dicter en combien de temps.
+
+       ══ ET LES DEUX SENS N'ONT PAS LA MEME DUREE ═════════════════════════
+       Ils l'avaient, et c'etait une erreur de rythme. Une chose qui se defait
+       a le droit de prendre son temps ; une chose qui revient doit paraitre
+       DECIDEE, sinon on croit la page en panne. Matheo : « c'est beaucoup trop
+       long pour se remettre a l'original ». Le retour va donc deux fois plus
+       vite que le depart : neuf dixiemes de seconde contre une et huit. */
     const vise = 1 - Math.min(1, Math.max(0, (t - 0.075) / 0.075));
     const maintenant = performance.now();
     const dt = Math.min(0.1, (maintenant - (poser.horloge || maintenant)) / 1000);
     poser.horloge = maintenant;
-    const pas = 0.62 * dt;                       // au plus 0,62 par seconde
-    const ecart = vise - (poser.cohesion ?? vise);
-    poser.cohesion = (poser.cohesion ?? vise) + Math.max(-pas, Math.min(pas, ecart));
-    const cohesion = poser.cohesion;
-    nuee.tenir(cohesion);
-    const boite = document.querySelector('.voyage__nom');
-    boite.style.opacity = String(Math.max(0, 1 - Math.max(0, (t - 0.105) / 0.055)));
+    const courant = poser.cohesion ?? vise;
+    const ecart = vise - courant;
+    const pas = (ecart > 0 ? 1.15 : 0.55) * dt;
+    poser.cohesion = courant + Math.max(-pas, Math.min(pas, ecart));
+    nuee.tenir(poser.cohesion);
+    /* ══ PLUS D'OPACITE SUR LA BOITE ═══════════════════════════════════════
+       Elle baissait de un a zero entre deux positions de defilement, ce qui
+       eteignait le rectangle entier d'un bloc, cadre compris. Les particules
+       se dissolvent maintenant une par une, chacune a son heure : la boite n'a
+       plus rien a cacher, et deux fondus superposes n'en font pas un meilleur.
+       Le tout s'arrete de lui-meme, la nuee cesse meme de calculer. */
   }
 }
 
@@ -362,15 +382,28 @@ function poser(t) {
 
    Lire la position une fois par image regle les deux : c'est exactement une
    mesure par image affichee, jamais plus, jamais moins, et elle est toujours
-   a jour. On ne recalcule que si la valeur a bouge, pour ne pas toucher le
-   document soixante fois par seconde sans raison. */
-let derniereAvancee = -1;
+   a jour.
+
+   ══ ET ON POSE A CHAQUE IMAGE, MEME IMMOBILE ═══════════════════════════════
+   La boucle s'arretait des que la position ne bougeait plus. C'etait juste
+   tant que tout descendait de `t` et seulement de `t` : rien a recalculer si
+   `t` est le meme. Mais la dispersion de la nuee est bornee en VITESSE, donc
+   elle avance avec le temps, pas avec le defilement.
+
+   Consequence, invisible a la lecture et flagrante a l'usage : des qu'on
+   lachait la molette, la dissolution se figeait en plein milieu. Au geste
+   suivant elle repartait d'un coup. Matheo l'a decrit exactement comme ca,
+   « ca secoue, et ca secoue beaucoup trop longtemps » : ce n'etait pas une
+   oscillation, c'etait une animation qui n'avancait que par a-coups, au
+   rythme des evenements de defilement.
+
+   La regle qu'il faut en tirer : une garde qui evite un travail inutile ne
+   doit couvrir QUE ce travail-la. Ici elle avait fini par couvrir la boucle
+   entiere, temps compris. Elle est descendue d'un cran, autour des seules
+   ecritures dans le document. */
 (function battre() {
   requestAnimationFrame(battre);
-  const t = avancee();
-  if (Math.abs(t - derniereAvancee) < 0.0002) return;
-  derniereAvancee = t;
-  poser(t);
+  poser(avancee());
 })();
 
 addEventListener('resize', () => poser(avancee()), { passive: true });

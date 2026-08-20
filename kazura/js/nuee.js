@@ -156,7 +156,26 @@ void main() {
      obtenait un nuage violet de la forme du mot, mais pas le mot. Une
      particule qui rejoint sa place doit y etre RETENUE, c'est tout le role de
      l'amortissement, et c'est la moitie d'un ressort qu'on oublie. */
-  v *= pow(mix(0.55, 0.006, uCohesion), uDt);
+  /* ══ IL EST CRITIQUE, ET IL SE CALCULE ═════════════════════════════════
+     Matheo : « quand on revient, ca secoue, et ca secoue beaucoup trop
+     longtemps ». Ce n'etait pas une impression, c'etait la valeur du
+     coefficient, et un ressort amorti se regle par une formule, pas a vue.
+
+     Raideur k = 52, donc pulsation propre w = racine(52) = 7,21 par seconde.
+     Un ressort cesse d'osciller quand son taux d'amortissement g atteint
+     2 w, soit 14,4. L'ancienne valeur, 0,006 par seconde elevee a dt, valait
+     g = -ln(0,006) = 5,12 : un tiers du necessaire. Le systeme etait donc
+     franchement SOUS-AMORTI, il oscillait a 1,15 hertz et mettait pres d'une
+     seconde a s'eteindre. Trois allers-retours visibles : la secousse.
+
+     On prend 14,9, tout juste au-dela du critique : le mot rejoint sa forme
+     par le chemin le plus court et ne la depasse jamais. Ecrit en
+     exponentielle plutot qu'en puissance parce que g EST le nombre qui se
+     compare a 2 w ; sous forme de base elevee a dt, on ne peut pas le lire.
+
+     Nuee libre, on garde un frottement tres faible : elle doit pouvoir
+     deriver. C'est le meme fluide, ce n'est pas le meme regime. */
+  v *= exp(-uDt * mix(0.60, 14.9, uCohesion));
 
   p += v * uDt;
 
@@ -183,16 +202,55 @@ in vec2 aIndex;
 uniform sampler2D uPos;
 uniform sampler2D uVit;
 uniform vec2  uCadre;
+uniform vec2  uEtendue;
 uniform float uTaille;
 uniform float uCohesion;
 out float vVitesse;
 out float vProfondeur;
+out float vBord;
+out float vFondu;
 
 void main() {
   vec3 p = texture(uPos, aIndex).xyz;
-  vec3 v = texture(uVit, aIndex).xyz;
-  vVitesse = length(v);
-  vProfondeur = p.z;
+  vec4 V = texture(uVit, aIndex);
+  vVitesse = length(V.xyz);
+  float graine = V.w;
+
+  /* ══ LA NUEE SE DISSOUT, ELLE NE S'ETEINT PAS D'UN BLOC ════════════════
+     Matheo : « les boules devraient se dissoudre, tranquillement, peu importe
+     la vitesse ». Elle disparaissait par l'opacite de sa BOITE : tout le
+     rectangle baissait ensemble, ce qui se lit comme un calque qu'on efface
+     et pas comme une matiere qui s'en va.
+
+     Chaque particule a maintenant son propre moment de disparition, tire de sa
+     graine. Elles s'eteignent donc les unes apres les autres, sur un
+     intervalle de cohesion et non sur un intervalle de temps : la dissolution
+     dure exactement ce que dure la descente de la cohesion, et celle-ci est
+     bornee en vitesse. Le geste du visiteur decide OU, jamais COMBIEN DE
+     TEMPS. */
+  float seuil = graine * 0.58;
+  vFondu = smoothstep(seuil, seuil + 0.40, uCohesion);
+
+  /* ══ LE CADRE INVISIBLE ════════════════════════════════════════════════
+     Matheo : « j'ai l'impression qu'il y a un cadre invisible ». Il y en avait
+     un, et c'est le domaine periodique de la simulation : une particule qui
+     sort par la droite rentre par la gauche, donc la nuee libre dessinait le
+     RECTANGLE exact de son domaine, arete nette, dans le noir.
+
+     On ne peut pas retirer le domaine, il est ce qui empeche la nuee de se
+     vider. On rend sa couture invisible : les particules s'eteignent en
+     approchant du bord, et se rallument de l'autre cote. La teleportation a
+     toujours lieu, elle n'a plus de temoin. */
+  vec2 bord = abs(p.xy) / uEtendue;
+  vBord = max(bord.x, bord.y);
+
+  /* ══ MOT TENU, LA PROFONDEUR NE TEINTE PLUS RIEN ═══════════════════════
+     La couleur baissait de vingt pour cent avec la profondeur propre a chaque
+     particule. Sur un nuage c'est le relief ; sur un mot plat, c'est du bruit
+     de luminosite qui pique la lettre de trous sombres et brouille sa FORME,
+     qui est justement ce qu'on veut lire. Meme raison que pour la position :
+     un mot n'a pas d'epaisseur. */
+  vProfondeur = mix(p.z, 0.0, uCohesion);
 
   /* Une perspective legere, tenue a la main. Une vraie matrice n'apporterait
      rien ici et couterait un calcul de plus par particule : ce qu'on veut,
@@ -229,14 +287,21 @@ void main() {
   /* Le point grossit quand la nuee se disperse, pour que le nuage garde de la
      matiere, et MAIGRIT quand le mot est tenu : un gros point deborde la
      lettre et lui mange ses contres. A pleine cohesion on descend sous un
-     pixel et demi, ce qui donne une arete nette. */
-  gl_PointSize = uTaille * k * mix(1.90, 1.12, uCohesion);
+     pixel et demi, ce qui donne une arete nette.
+
+     ET IL CESSE DE SUIVRE LA PROFONDEUR quand le mot est tenu, pour la meme
+     raison que la couleur : des points de tailles melees sur un aplat font
+     une bouillie, des points de taille egale font une MASSE, et c'est une
+     masse qu'on lit comme une lettre. */
+  gl_PointSize = uTaille * kPos * mix(1.90, 1.12, uCohesion);
 }`;
 
 const FRAGMENT_POINTS = `#version 300 es
 precision highp float;
 in float vVitesse;
 in float vProfondeur;
+in float vBord;
+in float vFondu;
 out vec4 sortie;
 uniform float uCohesion;
 
@@ -247,6 +312,12 @@ void main() {
   vec2 c = gl_PointCoord - 0.5;
   float r = dot(c, c) * 4.0;
   float a = exp(-r * 4.4);
+
+  /* La dissolution particule par particule, et l'extinction avant la couture
+     du domaine. Les deux se posent ici, sur l'alpha, parce que les deux sont
+     des questions de PRESENCE et non de forme. */
+  a *= vFondu;
+  a *= 1.0 - smoothstep(0.58, 0.96, vBord);
   if (a < 0.004) discard;
 
   /* Le jade pour ce qui est calme, le violet pour ce qui file. La couleur
@@ -266,6 +337,11 @@ void main() {
 }`;
 
 /* ══════════════════════════════════════════════════════════════════════════ */
+
+/* Les demi-cotes du domaine periodique, en parts du cadre. Une seule source :
+   la simulation les utilise pour refermer le monde sur lui-meme, le dessin
+   pour eteindre les particules avant la couture. */
+const ETENDUE = [1.34, 1.62];
 
 export async function monterLaNuee(toile, options = {}) {
   const gl = toile.getContext('webgl2', {
@@ -290,7 +366,13 @@ export async function monterLaNuee(toile, options = {}) {
   /* 448 sur grand ecran, soit 200 704 particules. A 384 le mot ressortait
      comme un saupoudrage : lisible, mais faible. Un mot fait de points ne
      vaut que par sa DENSITE autant que par la nettete de son contour. */
-  const TAILLE = options.taille || (petit ? 288 : 448);
+  /* On remonte a 512, soit 262 144. La mesure le justifie maintenant qu'elle
+     existe : le releve compte 130 000 points d'encre sur un grand ecran, donc
+     448 n'en donnait qu'UNE ET DEMIE par point. Le compte juste est deux, et
+     il se lit dans `parPoint`. Ce que ca coute est paye ailleurs : depuis que
+     la nuee s'eteint des que le mot est parti, elle ne calcule plus rien
+     pendant les neuf dixiemes du voyage. */
+  const TAILLE = options.taille || (petit ? 320 : 512);
   const N = TAILLE * TAILLE;
 
   /* ── Compilation ────────────────────────────────────────────────────── */
@@ -323,7 +405,7 @@ export async function monterLaNuee(toile, options = {}) {
 
   const u = (p, noms) => Object.fromEntries(noms.map(n => [n, gl.getUniformLocation(p, n)]));
   const uSim = u(progSim, ['uPos', 'uVit', 'uCible', 'uCohesion', 'uDt', 'uTemps', 'uSouris', 'uEtendue']);
-  const uPts = u(progPts, ['uPos', 'uVit', 'uCadre', 'uTaille', 'uCohesion']);
+  const uPts = u(progPts, ['uPos', 'uVit', 'uCadre', 'uEtendue', 'uTaille', 'uCohesion']);
 
   /* ── Les surfaces ───────────────────────────────────────────────────── */
   function texture(donnees) {
@@ -348,9 +430,22 @@ export async function monterLaNuee(toile, options = {}) {
      chargee, puis on choisit le corps pour qu'il tienne dans le cadre. Un
      corps fixe deborde des que la fenetre change, et sur l'ecran de 3440
      pixels de Matheo il occupait le tiers de la place. */
-  function fabriquerLaCible(mot, largeurMonde, hauteurMonde) {
-    const L = petit ? 900 : 1800;
-    const Hc = Math.round(L * (hauteurMonde / largeurMonde));
+  function fabriquerLaCible(mot, mondeX, mondeY) {
+    /* ══ LE RELEVE SE CALE SUR L'ECRAN ═════════════════════════════════════
+       Il etait ecrit en dur, 1800 points de large. Ce nombre n'a de sens que
+       compare a la taille REELLE a laquelle le mot sera peint : en dessous,
+       l'arete des lettres est quantifiee par gros paliers ; au-dessus, on
+       releve un detail que personne ne verra en payant une passe sur des
+       millions de pixels.
+
+       Un point du releve vaut donc un pixel de la toile. La formule dit
+       exactement cela : la toile couvre deux fois le cadre, le releve en
+       couvre `mondeX`, le rapport donne la part de la toile qu'il occupe. Sur
+       l'ecran de Matheo, 2040 pixels de toile donnent 1673 : le 1800 d'avant
+       etait juste, mais par chance, et il ne l'etait que la. */
+    const L = Math.max(700, Math.min(petit ? 1500 : 2600,
+                       Math.round(toile.width * (mondeX / (2 * largeurMonde)))));
+    const Hc = Math.round(L * (mondeY / mondeX));
     const c = document.createElement('canvas');
     c.width = L; c.height = Hc;
     const g = c.getContext('2d', { willReadFrequently: true });
@@ -377,9 +472,6 @@ export async function monterLaNuee(toile, options = {}) {
     g.fillText(mot, L / 2, Hc / 2);
 
     const px = g.getImageData(0, 0, L, Hc).data;
-    const encre = [];
-    releve = { corps: Math.round(corps), largeurTexte: Math.round(g.measureText(mot).width), canevas: [L, Hc],
-               mondeX: +largeurMonde.toFixed(3), mondeY: +hauteurMonde.toFixed(3) };
     /* ══ ON RELEVE L'ENCRE PIXEL PAR PIXEL ═══════════════════════════════
        On la relevait un point sur deux, ce qui suffit en nombre : la lettre en
        contient plus que la nuee n'a de particules. Mais un pas de deux cree une
@@ -390,13 +482,25 @@ export async function monterLaNuee(toile, options = {}) {
        supprime donc la grille a la source plutot que de la masquer : un point
        par pixel, un tremblement bien sous le pixel, et les deux problemes
        tombent ensemble. Le releve coute une passe sur huit cent mille pixels,
-       une fois par changement de taille de fenetre. */
-    for (let y = 0; y < Hc; y++) {
+       une fois par changement de taille de fenetre.
+
+       ON COMPTE AVANT D'ECRIRE. Le releve tenait dans un tableau ordinaire
+       qu'on allongeait point par point : sur un grand ecran cela fait un
+       million d'entrees, donc autant de reallocations et huit fois la place
+       d'un tableau typé. Deux passes sur des entiers coutent moins qu'une
+       passe qui redimensionne. */
+    let nEncre = 0;
+    for (let i = 0; i < px.length; i += 4) if (px[i] > 128) nEncre++;
+    if (!nEncre) return null;
+    const encre = new Int32Array(nEncre * 2);
+    for (let y = 0, n = 0; y < Hc; y++) {
       for (let x = 0; x < L; x++) {
-        if (px[(y * L + x) * 4] > 128) encre.push(x, y);
+        if (px[(y * L + x) * 4] > 128) { encre[n++] = x; encre[n++] = y; }
       }
     }
-    if (!encre.length) return null;
+    releve = { corps: Math.round(corps), largeurTexte: Math.round(g.measureText(mot).width),
+               canevas: [L, Hc], encre: nEncre, parPoint: +(N / nEncre).toFixed(2),
+               mondeX: +mondeX.toFixed(3), mondeY: +mondeY.toFixed(3) };
 
     /* ══ ON BAT L'ENCRE AVANT DE LA DISTRIBUER ═══════════════════════════
        Le parcours regulier ci-dessous garantit une couverture uniforme, et
@@ -420,7 +524,6 @@ export async function monterLaNuee(toile, options = {}) {
     }
 
     const data = new Float32Array(N * 4);
-    const nEncre = encre.length / 2;
     for (let i = 0; i < N; i++) {
       /* ══ UN TIRAGE REPARTI, PAS UN TIRAGE AU HASARD ══════════════════
          Tirer chaque destination au hasard dans la lettre semble juste et ne
@@ -433,7 +536,20 @@ export async function monterLaNuee(toile, options = {}) {
          avec un jeu d'un intervalle pour casser la regularite visible. La
          couverture devient uniforme et la lettre prend un grain de velours
          au lieu d'un grain de sable. */
-      const k = Math.min(nEncre - 1, ((i + Math.random()) * nEncre / N) | 0);
+      /* ══ ET LE PARCOURS EST EXACT, PLUS APPROXIMATIF ═══════════════════
+         Il y avait un `+ Math.random()` dans l'indice, pose pour « casser la
+         regularite visible ». Il la cassait deux fois, puisque la liste est
+         desormais BATTUE : le desordre spatial etait deja acquis, et ce jeu ne
+         faisait plus qu'une chose, rendre le nombre de particules par point
+         d'encre ALEATOIRE. Certains points en recevaient quatre, d'autres
+         zero. C'est de la que venait le mitage de la lettre, ces trous sombres
+         qu'on voit en agrandissant le mot : pas d'un manque de particules,
+         d'un tirage inegal de celles qu'on avait.
+
+         Sans lui, chaque point d'encre recoit exactement le meme nombre de
+         particules, a une pres. La lettre devient une masse pleine, et une
+         masse pleine se lit par sa FORME, qui est tout ce qu'on lui demande. */
+      const k = Math.min(nEncre - 1, (i * nEncre / N) | 0);
       const x = encre[k * 2], y = encre[k * 2 + 1];
       /* LE JEU DOIT COUVRIR TOUT L'ECART DE LA GRILLE. L'encre est relevee un
          point sur deux ; un jeu d'un seul pixel laissait donc une ligne vide
@@ -453,8 +569,21 @@ export async function monterLaNuee(toile, options = {}) {
          est different pour chaque particule, et l'arete de la lettre redevient
          une arete. Ce qui compte pour casser une trame n'est pas l'amplitude
          du bruit, c'est qu'il soit decorrele. */
-      data[i * 4]     = ((x + Math.random() * 0.6 - 0.3) / L - 0.5) * largeurMonde;
-      data[i * 4 + 1] = (0.5 - (y + Math.random() * 0.6 - 0.3) / Hc) * hauteurMonde;
+      /* ══ IL VAUT EXACTEMENT UN PIXEL, NI PLUS NI MOINS ══════════════════
+         Six dixiemes, c'etait encore une valeur choisie a vue entre deux
+         defauts. La bonne valeur se demontre : un pixel du releve REPRESENTE
+         un carre du plan, et l'echantillon juste d'un carre est un tirage
+         uniforme DANS ce carre. Moins d'un pixel laisse des couloirs vides
+         entre les colonnes de points, et ces couloirs forment un reseau qui
+         bat avec la grille de l'ecran : c'est le tissu qu'on voyait courir
+         dans les lettres. Plus d'un pixel deborde sur le voisin, et les
+         contre-formes se bouchent.
+
+         A un pixel pile, les positions couvrent le plan sans trou ni
+         recouvrement, la trame disparait sans que l'arete bouge d'un
+         cheveu. */
+      data[i * 4]     = ((x + Math.random() - 0.5) / L - 0.5) * mondeX;
+      data[i * 4 + 1] = (0.5 - (y + Math.random() - 0.5) / Hc) * mondeY;
       data[i * 4 + 2] = (Math.random() - 0.5) * 0.55;
       data[i * 4 + 3] = 1;
     }
@@ -610,15 +739,31 @@ export async function monterLaNuee(toile, options = {}) {
   /* ── Boucle ─────────────────────────────────────────────────────────── */
   let cohesion = 0, cohesionVisee = 1, visible = true, actif = true;
   let dernier = performance.now(), temps = 0;
-  let cumul = 0, images = 0, allege = false;
+  let cumul = 0, images = 0, allege = false, dort = false;
+
+  /* La cohesion suit sa consigne avec du retard : le mot ne claque pas, il
+     se rassemble. Le retard est plus long a la dispersion qu'au rappel,
+     parce qu'une chose qui se defait doit prendre son temps et une chose
+     qui revient doit paraitre decidee.
+
+     ══ CE LISSAGE-CI EST DEVENU UN LISSAGE, PAS UNE DUREE ══════════════════
+     Il valait 0,055 et 0,030 par image, soit trois dixiemes et six dixiemes de
+     seconde de constante de temps. Or la page du voyage borne DEJA la vitesse
+     de la consigne, pour que le geste du visiteur ne decide pas de la duree.
+     Les deux retards s'ajoutaient : pres de trois secondes pour reformer le
+     mot, ce que Matheo a resume par « c'est beaucoup trop long pour se
+     remettre a l'original ».
+
+     Deux amortisseurs en serie sur le meme mouvement, c'est un de trop. Celui
+     d'ici redevient ce qu'il aurait toujours du etre : de quoi arrondir un
+     saut de consigne, un dixieme de seconde, rien de plus. La DUREE se decide
+     la ou elle se voit, chez l'appelant. */
+  function rapprocher(dt) {
+    const rappel = cohesionVisee > cohesion ? 0.13 : 0.085;
+    cohesion += (cohesionVisee - cohesion) * (1 - Math.pow(1 - rappel, dt * 60));
+  }
 
   function pas(dt) {
-    /* La cohesion suit sa consigne avec du retard : le mot ne claque pas, il
-       se rassemble. Le retard est plus long a la dispersion qu'au rappel,
-       parce qu'une chose qui se defait doit prendre son temps et une chose
-       qui revient doit paraitre decidee. */
-    const rappel = cohesionVisee > cohesion ? 0.055 : 0.030;
-    cohesion += (cohesionVisee - cohesion) * (1 - Math.pow(1 - rappel, dt * 60));
     temps += dt;
 
     gl.bindVertexArray(quad);
@@ -636,7 +781,7 @@ export async function monterLaNuee(toile, options = {}) {
     gl.uniform1f(uSim.uDt, Math.min(dt, 1 / 30));
     gl.uniform1f(uSim.uTemps, temps);
     gl.uniform3f(uSim.uSouris, souris.x, souris.y, souris.f);
-    gl.uniform2f(uSim.uEtendue, largeurMonde * 1.34, hauteurMonde * 1.62);
+    gl.uniform2f(uSim.uEtendue, ETENDUE[0] * largeurMonde, ETENDUE[1] * hauteurMonde);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 
     lu = 1 - lu;
@@ -661,6 +806,11 @@ export async function monterLaNuee(toile, options = {}) {
     gl.uniform1i(uPts.uPos, 0);
     gl.uniform1i(uPts.uVit, 1);
     gl.uniform2f(uPts.uCadre, largeurMonde, hauteurMonde);
+    /* La MEME etendue que la simulation, forcement : c'est la couture de ce
+       domaine-la qu'on eteint. Deux valeurs qui devraient etre egales et qui
+       sont ecrites a deux endroits finissent toujours par diverger, donc on
+       les prend a la source commune. */
+    gl.uniform2f(uPts.uEtendue, ETENDUE[0] * largeurMonde, ETENDUE[1] * hauteurMonde);
     gl.uniform1f(uPts.uTaille, (petit ? 1.25 : 1.5) * definition);
     gl.uniform1f(uPts.uCohesion, cohesion);
     gl.drawArrays(gl.POINTS, 0, allege ? (dessinees / 2) | 0 : dessinees);
@@ -682,6 +832,32 @@ export async function monterLaNuee(toile, options = {}) {
          c'est aussi ce qui se remarque le moins quand elle baisse. */
       if (moyenne > 0.027 && !allege) allege = true;
     }
+
+    rapprocher(dt);
+
+    /* ══ UNE NUEE ETEINTE NE SE CALCULE PAS ════════════════════════════════
+       Passe la premiere descente, la cohesion reste a zero pour les neuf
+       dixiemes du voyage. La nuee continuait a simuler deux cent mille
+       particules et a les peindre, toutes invisibles depuis qu'elles se
+       dissolvent : c'est le pire moment pour depenser, puisque c'est celui ou
+       la scene en trois dimensions demande tout.
+
+       Et c'est le regime le PLUS cher : cohesion nulle, la turbulence tourne a
+       pleine amplitude, donc les cent treize millions de sinus par image que
+       la garde plus haut evite quand le mot est tenu. On dort, et on efface
+       une fois en s'endormant pour ne pas laisser un reste a l'ecran. */
+    const eteinte = cohesion < 0.0025 && cohesionVisee < 0.0025;
+    if (eteinte) {
+      if (!dort) {
+        dort = true;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, toile.width, toile.height);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+      }
+      return;
+    }
+    dort = false;
 
     pas(dt);
     peindre();
@@ -757,7 +933,8 @@ export async function monterLaNuee(toile, options = {}) {
        ou le navigateur gele les images et ou la nuee reste figee sur son
        etat de depart. Ce qu'elle montre est donc bien ce que la page fait. */
     avancer(images = 60, dt = 1 / 60) {
-      for (let i = 0; i < images; i++) { pas(dt); }
+      dort = false;
+      for (let i = 0; i < images; i++) { rapprocher(dt); pas(dt); }
       peindre();
       return this.bilan();
     },
