@@ -7,12 +7,16 @@
 <!-- DÉMONSTRATION : à retirer le jour où le site part en ligne pour de vrai. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Prendre rendez-vous · Shiatsu Jiyū, Knœringue</title>
-<meta name="description" content="Prendre rendez-vous avec Julie Marguier, praticienne shiatsu à Knœringue (68220). Téléphone 06 17 11 14 05.">
+<meta name="description" content="Prendre rendez-vous avec Julie Marguier, praticienne shiatsu à Knœringue (68220). Téléphone 06 17 11 14 05, du jeudi au lundi.">
 <link rel="icon" href="./images/emblem.webp?v=f61fd2e6">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=634ae547">
+<!-- LES POLICES SONT CHEZ NOUS, et il faut qu'elles y restent.
+     Charger une police depuis Google transmet a Google l'adresse IP de chaque
+     visiteur. Rapatriees (voir polices.mjs), le site ne fait plus AUCUNE
+     requete hors de son domaine, et c'est ce que la politique de
+     confidentialite affirme noir sur blanc. -->
+<link rel="stylesheet" href="polices.css">
+<link rel="stylesheet" href="./styles.css?v=d7c30eff">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
 <svg class="filtres" aria-hidden="true" focusable="false"
@@ -49,7 +53,7 @@
     <div class="nav-liens">
       <a href="./index.html">Bienvenue</a>
       <a href="./le-shiatsu.html">Shiatsu</a>
-      <a href="./seances.html">Séance</a>
+      <a href="./prestations.html">Prestations &amp; Tarifs</a>
       <a href="./contact.html" class="bouton" data-aimant><span
         class="long">Prendre rendez-vous</span><span class="court">Rendez-vous</span></a>
     </div>
@@ -75,9 +79,11 @@
   <nav class="menu-liens">
     <a href="./index.html" style="--i:0">Bienvenue</a>
     <a href="./le-shiatsu.html" style="--i:1">Shiatsu</a>
-    <a href="./seances.html" style="--i:2">Séance</a>
+    <a href="./prestations.html" style="--i:2">Prestations &amp; Tarifs</a>
     <a href="./contact.html" class="ici" style="--i:3">Contact</a>
-    <a href="tel:+33617111405" class="menu-tel" style="--i:4"><span class="menu-tel-etiq">Numéro</span>06 17 11 14 05</a>
+    <!-- Le numero, et rien d'autre : pas d'etiquette « Numéro » au-dessus.
+         Ce qu'on vient chercher ici, c'est le chiffre. -->
+    <a href="tel:+33617111405" class="menu-tel" style="--i:4">06.17.11.14.05</a>
   </nav>
 </div>
 <main>
@@ -134,65 +140,442 @@
         </span>
       </div>
       <div class="coord-ligne">
+        <!-- « Retirer appelez-moi pour convenir d'un horaire » : il ne reste
+             que les jours. -->
         <span class="etiq">Sur rendez-vous</span>
-        <span class="val">du jeudi au lundi<small>appelez-moi pour convenir d'un horaire</small></span>
+        <span class="val">du jeudi au lundi</span>
       </div>
     </div>
 
-    <div class="appel-carte verre rev" data-i="1" style="margin:0">
+    <a class="plan verre rev" data-i="1" href="https://www.google.com/maps/dir/?api=1&destination=30A%20rue%20de%20B%C3%A2le%2C%2068220%20Knoeringue"
+   target="_blank" rel="noopener" aria-label="Ouvrir l'itinéraire jusqu'au cabinet">
+  <svg viewBox="0 0 100 100" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <radialGradient id="halo-plan">
+        <stop offset="0" stop-color="var(--orange)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--orange)" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <path d="M50 54 Q54 29 50 12"
+         fill="none" stroke="var(--orange)" stroke-opacity=".3" stroke-width=".7"
+         stroke-dasharray="2 2.4"/>
+    <path d="M50 54 Q67 38 76 30"
+         fill="none" stroke="var(--orange)" stroke-opacity=".3" stroke-width=".7"
+         stroke-dasharray="2 2.4"/>
+    <path d="M50 54 Q72 54 86 62"
+         fill="none" stroke="var(--orange)" stroke-opacity=".3" stroke-width=".7"
+         stroke-dasharray="2 2.4"/>
+    <path d="M50 54 Q66 65 74 84"
+         fill="none" stroke="var(--orange)" stroke-opacity=".3" stroke-width=".7"
+         stroke-dasharray="2 2.4"/>
+    <path d="M50 54 Q44 65 30 84"
+         fill="none" stroke="var(--orange)" stroke-opacity=".3" stroke-width=".7"
+         stroke-dasharray="2 2.4"/>
+    <path d="M50 54 Q36 45 14 44"
+         fill="none" stroke="var(--orange)" stroke-opacity=".3" stroke-width=".7"
+         stroke-dasharray="2 2.4"/>
+    <circle cx="50" cy="54" r="19" fill="url(#halo-plan)"/>
+    <g>
+      <circle cx="50" cy="12" r="1.5" fill="var(--encre-pale)"/>
+      <text x="50" y="8.6" text-anchor="middle" font-size="3.6"
+            fill="var(--encre-doux)">Mulhouse</text>
+    </g>
+    <g>
+      <circle cx="76" cy="30" r="1.5" fill="var(--encre-pale)"/>
+      <text x="76" y="26.6" text-anchor="middle" font-size="3.6"
+            fill="var(--encre-doux)">Sierentz</text>
+    </g>
+    <g>
+      <circle cx="86" cy="62" r="1.5" fill="var(--encre-pale)"/>
+      <text x="86" y="58.6" text-anchor="middle" font-size="3.6"
+            fill="var(--encre-doux)">Saint-Louis</text>
+    </g>
+    <g>
+      <circle cx="74" cy="84" r="1.5" fill="var(--encre-pale)"/>
+      <text x="74" y="80.6" text-anchor="middle" font-size="3.6"
+            fill="var(--encre-doux)">Bâle</text>
+    </g>
+    <g>
+      <circle cx="30" cy="84" r="1.5" fill="var(--encre-pale)"/>
+      <text x="30" y="80.6" text-anchor="middle" font-size="3.6"
+            fill="var(--encre-doux)">Ferrette</text>
+    </g>
+    <g>
+      <circle cx="14" cy="44" r="1.5" fill="var(--encre-pale)"/>
+      <text x="14" y="40.6" text-anchor="middle" font-size="3.6"
+            fill="var(--encre-doux)">Altkirch</text>
+    </g>
+    <circle cx="50" cy="54" r="3.4" fill="var(--orange)"/>
+    <circle cx="50" cy="54" r="6.2" fill="none" stroke="var(--orange)" stroke-width=".9" stroke-opacity=".55"/>
+    <text x="50" y="47.5" text-anchor="middle" font-size="4.6" font-weight="600"
+          fill="var(--encre)">Knœringue</text>
+  </svg>
+  <span class="plan-pied">Ouvrir l'itinéraire <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</a>
+  </div>
+</section>
+
+<section class="pan serree avis-zone">
+  <div class="serre">
+    <!-- UNE SEULE FOIS CINQ ETOILES, en tete, comme Julie l a demande.
+         Elles etaient repetees sur chacun des quatre avis : quatre fois la meme
+         note, ca finit par ne plus rien vouloir dire. En tete, elles portent la
+         note GLOBALE et les soixante-quatre avis, ce qui est autrement plus
+         solide que cinq etoiles sur un temoignage isole. -->
+    <div class="rev avis-tete">
+      <p class="sur-titre">Parole de clients</p>
+      <h2>Ils sont les mieux placés<br>pour en <em>parler</em>.</h2>
+      <p class="avis-note">
+        <span class="etoiles" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg></span>
+        <b>5,0</b> sur 5 &middot; 64 avis vérifiés
+      </p>
+    </div>
+
+    <div class="avis-carrousel rev" data-carrousel>
+      <div class="avis-piste">
+        <figure class="avis verre">
+          <blockquote>Julie est douce et bienveillante. Je ressors toujours apaisée de ses séances avec en bonus des petits conseils utiles. Cela fait maintenant 6 mois qu'elle m'accompagne. J'ai toujours plaisir à me rendre à ses séances.</blockquote>
+          <figcaption><span>02/07/2026</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Un pur moment de bonheur, une plénitude assurée, un lâcher-prise total, bref un instant au paradis !</blockquote>
+          <figcaption><span>16/06/2026</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Un accueil chaleureux dans un lieu calme et apaisant. Julie est très à l'écoute et a su me mettre en confiance ; sa douceur et ses doigts de fée ont soulagé mes douleurs dès la première séance, ainsi que sur la durée. Je la recommande les yeux fermés !</blockquote>
+          <figcaption><span>20/04/2026</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Très bonne expérience avec Julie. Dans son petit cocon très apaisant, elle prend bien soin de nous. Je suis arrivée avec une liste de soucis plus grande que moi et elle les gère au fil des séances avec brio. Je me sens mieux, plus apaisée, je digère mieux, je dors mieux. Je continue les séances avec plaisir au rythme de mes besoins. Merci !</blockquote>
+          <figcaption><span>14/09/2025</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Je ne connaissais pas du tout le shiatsu, mais je ne peux que recommander une séance avec Julie. Son calme et sa douceur m'ont tout de suite rassurée. Elle a su m'apaiser à un moment de ma vie où j'en avais besoin ! Même son chat a pris part à la séance. Encore merci !</blockquote>
+          <figcaption><span>03/10/2024</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Professionnelle passionnée que je recommande vivement. Pratique encore peu connue, bien dommage : les résultats sont pour ma part incontestables.</blockquote>
+          <figcaption><span>28/08/2024</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="avis-barre">
+        <div class="avis-points"></div>
+        <div class="avis-fleches">
+          <button type="button" data-avant aria-label="Avis précédent">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" data-apres aria-label="Avis suivant">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Le renvoi vers Resalib, avec le logo, demande le 20 aout. Il vaut
+         mieux qu une simple ligne de texte : le logo dit d ou vient la note,
+         et un visiteur qui doute peut aller verifier en un clic. C est
+         exactement ce qui rend un avis credible. -->
+    <a class="avis-source" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener">
+      <img src="./images/resalib.webp?v=0e8e0e60" alt="" width="120" height="120" loading="lazy">
+      <span>Tous les avis sur <b>Resalib</b></span>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path
+        d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" stroke-width="1.6"
+        stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<section class="pan tache serree">
+  <div class="serre">
+    <div class="appel-carte verre rev" style="margin:0 auto">
       <p class="sur-titre">Maintenant</p>
-      <h2 style="font-size:clamp(1.7rem,3vw,2.3rem)">Appeler</h2>
+      <h2 style="font-size:clamp(1.7rem,3vw,2.3rem)">Contacter</h2>
       <p>Si je ne réponds pas, c'est que je suis en séance. Laissez-moi un message, je
         vous recontacte au plus vite.</p>
       <div class="actions">
         <a href="tel:+33617111405" class="bouton" data-aimant>06 17 11 14 05</a>
+        <a href="sms:+33617111405" class="bouton clair" data-aimant>Envoyer un SMS</a>
+        <!-- Pas de troisieme bouton vers le formulaire : Julie avait fait
+             retirer « Écrire un message », et le formulaire est juste dessous.
+             Un bouton qui fait descendre de deux cents pixels est du bruit. -->
       </div>
     </div>
   </div>
 </section>
 
-<!--
-  La classe « fin » : cette phrase est le DERNIER bloc de la page, et c'est ce
-  qui la cassait. La plage « cover » d'une animation de defilement ne se termine
-  que lorsque l'element est ressorti par le haut. Un dernier bloc ne ressort
-  jamais : la page s'arrete avant, la course plafonne a la moitie, et les
-  derniers mots ne s'allument donc jamais. Ils restaient dans leur gris de
-  depart, ce qui se lit comme du texte transparent.
 
-  La classe bascule sur la plage « entry », qui s'acheve des que le bloc est
-  entierement visible. Ca, une derniere section l'atteint toujours.
--->
-<section class="pan eclat-zone fin serree">
+<section class="pan tache serree" id="ecrire">
   <div class="serre">
-    <!-- Les communes servent deux choses a la fois : elles disent au visiteur
-         si c'est loin de chez lui, et elles donnent au moteur de recherche les
-         noms qu'il attend. Quatre suffisent : au-dela, la phrase cesse d'etre
-         une phrase et devient une liste, et Google traite les listes de villes
-         comme du remplissage. -->
-    <p class="eclat" style="--n:15"><w style="--i:0">Vingt</w> <w style="--i:1">minutes</w> <w style="--i:2">de</w> <w style="--i:3">Saint-Louis,</w> <w style="--i:4">Bâle,</w> <w style="--i:5">Sierentz,</w> <w style="--i:6">Altkirch...</w> <w style="--i:7">et</w> <w style="--i:8">un</w> <w style="--i:9">lieu</w> <w style="--i:10">où</w> <w style="--i:11">l'on</w> <w style="--i:12">s'accorde</w> <w style="--i:13" class="chaud">du</w> <w style="--i:14" class="chaud">temps.</w></p>
+    <div class="formulaire-carte verre rev">
+      <p class="sur-titre">Ou par écrit</p>
+      <h2>Me laisser un message</h2>
+      <p class="formulaire-chapeau">Dites-moi ce qui vous amène et le moment qui vous
+        arrangerait. Je vous réponds dès que je sors de séance.</p>
+
+      <!-- « data-netlify » et le champ cache « form-name » sont ce que les
+           robots de Netlify cherchent au deploiement. Sans eux, le formulaire
+           existe mais personne ne le ramasse. Le pot de miel est notre champ
+           « site », deja en place et masque par le style.
+           PAS D'OBLIQUES DANS CE COMMENTAIRE : il vit dans un gabarit de
+           chaine, et une seule oblique le coupe en deux. -->
+      <form class="formulaire" id="form-contact" novalidate
+            name="contact" method="POST" data-netlify="true"
+            netlify-honeypot="site"
+            data-vers="netlify">
+        <input type="hidden" name="form-name" value="contact">
+        <!-- L objet du courriel qu elle recevra. Sans lui, tous les messages
+             arrivent avec le meme objet automatique et se confondent dans sa
+             boite ; avec, elle voit d ou ca vient avant d ouvrir. -->
+        <input type="hidden" name="subject" value="Message depuis le site Shiatsu Jiyū">
+        <p class="champ">
+          <label for="f-nom">Votre nom</label>
+          <input id="f-nom" name="nom" type="text" autocomplete="name"
+                 required maxlength="80" placeholder="Prénom et nom">
+          <span class="erreur" data-pour="f-nom"></span>
+        </p>
+
+        <p class="champ">
+          <label for="f-mail">Votre adresse mail</label>
+          <!-- LE NOM DU CHAMP EST « email », ET CE N EST PAS INDIFFERENT.
+               La documentation de Netlify est explicite : ce nom-la, et lui seul,
+               pose l en-tete Reply-to du courriel de notification. Avec « mail »,
+               Julie recevait le message mais repondre l aurait envoyee a Netlify. -->
+          <input id="f-mail" name="email" type="email" autocomplete="email"
+                 required maxlength="120" placeholder="pour que je puisse vous répondre">
+          <span class="erreur" data-pour="f-mail"></span>
+        </p>
+
+        <p class="champ">
+          <label for="f-tel">Votre téléphone <span class="facultatif">facultatif</span></label>
+          <input id="f-tel" name="telephone" type="tel" autocomplete="tel"
+                 maxlength="25" placeholder="si vous préférez que je vous appelle">
+        </p>
+
+        <p class="champ">
+          <label for="f-message">Votre message</label>
+          <textarea id="f-message" name="message" rows="5" required maxlength="2000"
+                    placeholder="Ce qui vous amène, et les moments qui vous arrangent"></textarea>
+          <span class="erreur" data-pour="f-message"></span>
+        </p>
+
+        <!-- Piege a robots. Cache aux yeux ET aux lecteurs d'ecran, et retire
+             du parcours au clavier : une personne ne peut pas tomber dessus. -->
+        <p class="pot-de-miel" aria-hidden="true">
+          <label for="f-site">Ne pas remplir</label>
+          <input id="f-site" name="site" type="text" tabindex="-1" autocomplete="off">
+        </p>
+
+        <p class="formulaire-mention">Vos coordonnées me servent uniquement à vous
+          répondre. Elles ne sont ni revendues ni utilisées pour autre chose.</p>
+
+        <div class="actions">
+          <button type="submit" class="bouton" data-aimant>Envoyer le message</button>
+        </div>
+
+        <p class="formulaire-etat" role="status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
 </section>
 
+<script>
+(() => {
+  const f = document.getElementById('form-contact');
+  if (!f) return;
+
+  const etat = f.querySelector('.formulaire-etat');
+  const bouton = f.querySelector('button[type=submit]');
+  const vers = f.dataset.vers;
+
+  const direErreur = (champ, texte) => {
+    const boite = f.querySelector('[data-pour=' + champ.id + ']');
+    if (boite) boite.textContent = texte;
+    champ.setAttribute('aria-invalid', texte ? 'true' : 'false');
+    return !texte;
+  };
+
+  /* Volontairement large. Un formulaire qui refuse une adresse valide coute
+     un rendez-vous ; une adresse fautive coute un courriel qui revient. */
+  const mailPlausible = (v) => /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(v.trim());
+
+  const verifier = () => {
+    const nom = f.nom, mail = f.email, message = f.message;
+    const bon = [
+      direErreur(nom, nom.value.trim().length >= 2 ? '' : 'Merci d’indiquer votre nom.'),
+      direErreur(mail, mailPlausible(mail.value) ? '' : 'Cette adresse mail semble incomplète.'),
+      direErreur(message, message.value.trim().length >= 10 ? '' : 'Merci d’écrire quelques mots.'),
+    ];
+    return bon.every(Boolean);
+  };
+
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    etat.className = 'formulaire-etat';
+    etat.textContent = '';
+
+    if (!verifier()) {
+      const premier = f.querySelector('[aria-invalid=true]');
+      if (premier) premier.focus();
+      return;
+    }
+
+    /* Robot : on ne dit rien, on n'envoie rien. Lui signaler qu'il est repere
+       ne ferait que l'aider a reessayer autrement. */
+    if (f.site.value) { etat.className = 'formulaire-etat bon'; etat.textContent = 'Message envoyé, merci.'; f.reset(); return; }
+
+    if (!vers) {
+      etat.className = 'formulaire-etat mauvais';
+      etat.textContent = 'Le formulaire n’est pas encore relié. En attendant, appelez le 06 17 11 14 05.';
+      return;
+    }
+
+    bouton.disabled = true;
+    const motInitial = bouton.textContent;
+    bouton.textContent = 'Envoi…';
+
+    try {
+      /* Netlify attend un envoi de formulaire classique, pas du JSON : le
+         type doit etre « x-www-form-urlencoded » et le champ « form-name » doit
+         etre dedans. On garde l'envoi en arriere-plan pour ne pas quitter la
+         page : la personne voit sa reponse a la place du bouton, elle ne
+         tombe pas sur un ecran de remerciement inconnu. */
+      const donnees = new URLSearchParams({
+        'form-name': 'contact',
+        nom: f.nom.value.trim(),
+        email: f.email.value.trim(),
+        telephone: f.telephone.value.trim(),
+        message: f.message.value.trim(),
+      });
+      const r = await fetch(location.pathname, {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: donnees.toString(),
+      });
+      if (!r.ok) throw new Error(r.status);
+      etat.className = 'formulaire-etat bon';
+      etat.textContent = 'Message envoyé, merci. Je vous réponds dès que possible.';
+      f.reset();
+    } catch {
+      /* On ne laisse jamais quelqu'un dans le vide : s'il y a une panne, le
+         telephone est la, et il marche toujours. */
+      etat.className = 'formulaire-etat mauvais';
+      etat.textContent = 'L’envoi n’a pas abouti. Vous pouvez m’appeler au 06 17 11 14 05.';
+    } finally {
+      bouton.disabled = false;
+      bouton.textContent = motInitial;
+    }
+  });
+})();
+</script>
+
 </main>
 <footer class="pied">
-  <div class="serre pied-haut">
-    <a href="./index.html" class="nav-marque">
-      <img src="./images/emblem.webp?v=f61fd2e6" alt="" width="120" height="105">
-      <span class="nom">Shiatsu Jiyū</span>
-    </a>
-    <div class="pied-liens">
+  <div class="serre pied-grille">
+    <div class="pied-marque">
+      <a href="./index.html" class="nav-marque">
+        <img src="./images/emblem.webp?v=f61fd2e6" alt="" width="120" height="105">
+        <span class="nom">Shiatsu Jiyū</span>
+      </a>
+      <p>Julie Marguier, praticienne shiatsu à Knœringue,<br>
+        dans le Sundgau.</p>
+      <a class="pied-note" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener">
+        <span class="etoiles" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg></span><b>5,0</b> sur 64 avis Resalib
+      </a>
+    </div>
+
+    <div class="pied-bloc">
+      <h2>Me contacter</h2>
       <a href="tel:+33617111405">06 17 11 14 05</a>
       <a href="mailto:shiatsu.jiyu@gmail.com">shiatsu.jiyu@gmail.com</a>
-      <a href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener">@shiatsu_jiyu</a>
+      <span>68220 Knœringue</span>
+      <a href="./contact.html">Prendre rendez-vous <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+
+    <div class="pied-bloc">
+      <h2>Le site</h2>
+      <a href="./index.html">Bienvenue</a>
+      <a href="./le-shiatsu.html">Shiatsu</a>
+      <a href="./prestations.html">Prestations &amp; Tarifs</a>
+      <a href="./contact.html">Contact</a>
+    </div>
+
+    <div class="pied-bloc pied-suivre">
+      <h2>Suivez-moi</h2>
+      <p>Les nouvelles du cabinet, quelques conseils d'auto-shiatsu, et les
+        moments où je peux vous recevoir.</p>
+      <div class="pied-reseaux">
+        <a class="reseau" href="https://www.instagram.com/shiatsu_jiyu" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+    <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4"/>
+    <circle cx="12" cy="12" r="4.3"/>
+    <circle cx="17.5" cy="6.5" r="1.15" fill="currentColor" stroke="none"/>
+  </svg><span>Instagram</span>
+      </a>
+        <a class="reseau" href="https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9.4"/>
+    <path d="M14.9 8.2h-1.5c-.9 0-1.4.5-1.4 1.4v1.6h2.7l-.4 2.7h-2.3v5.4"
+          stroke-linecap="round"/>
+    <path d="M9.4 11.2h2.6" stroke-linecap="round"/>
+  </svg><span>Facebook</span>
+      </a>
+      </div>
     </div>
   </div>
+
+  <div class="serre pied-logos">
+    <a href="https://www.ffst.fr" target="_blank" rel="noopener"
+       title="Fédération Française de Shiatsu Traditionnel">
+      <img src="./images/ffst.webp?v=85ed7154" alt="Fédération Française de Shiatsu Traditionnel"
+           width="320" height="320" loading="lazy">
+    </a>
+    <a href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener" title="Ma page Resalib">
+      <img src="./images/resalib.webp?v=0e8e0e60" alt="Resalib" width="340" height="340" loading="lazy">
+    </a>
+  </div>
+
   <div class="serre">
+    <!--
+      LE TEXTE D'AVERTISSEMENT.
+
+      C'est celui que Julie a recopie dans son document, mot pour mot. Il est
+      plus long que le precedent et c'est voulu : c'est la formule de la
+      Federation, celle qu'un praticien doit pouvoir montrer si on la lui
+      demande. La mention « membre de la FFST » a en revanche disparu de la
+      ligne du dessous, a sa demande : le logo la dit deja.
+    -->
     <p class="avertissement">
-      Julie Marguier, entrepreneur individuel &middot; 68220 Knœringue &middot;
-      membre de la Fédération Française de Shiatsu Traditionnel.<br>
-      Le shiatsu est une pratique de bien-être. Il ne remplace en aucun cas un avis, un
-      diagnostic ou un traitement médical, et ne se substitue pas à un suivi par un
-      professionnel de santé.
+      Le shiatsu a pour seul objectif d'optimiser le capital vitalité, le bien-être,
+      le confort et la qualité de vie des personnes qui viennent en séance.<br>
+      Il ne remplace en aucun cas un avis, un diagnostic ou un traitement médical,
+      et ne se substitue pas à un suivi par un professionnel de santé.<br>
+      Il est bien évident qu'en aucun cas, les personnes ne doivent se couper du
+      monde médical et para médical ni arrêter leurs traitements.
+    </p>
+    <p class="pied-bas">
+      Julie Marguier, Entrepreneur Individuel &middot; 68220 Knœringue
+    </p>
+    <p class="pied-legal">
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="cgv.html">Conditions générales</a>
     </p>
   </div>
 </footer>
@@ -263,6 +646,139 @@
     b.addEventListener('click', () => basculer(b.getAttribute('aria-expanded') !== 'true'));
     m.addEventListener('click', (e) => { if (e.target.tagName === 'A' || e.target.classList.contains('menu-fond')) basculer(false); });
     addEventListener('keydown', (e) => { if (e.key === 'Escape') basculer(false); });
+  }
+
+  /*
+    LA BANNIERE QU'ON PEUT POUSSER DU DOIGT.
+
+    Elle defilait par une animation CSS. C'est joli et c'est ferme : on ne
+    peut pas y toucher, et Julie voulait pouvoir la faire glisser.
+
+    Elle devient donc un vrai conteneur de defilement horizontal, ce qui
+    donne le glissement au doigt gratuitement, avec l'inertie du systeme. Le
+    defilement automatique est une simple avance de deux dixiemes de pixel
+    par image, suspendue tant qu'un doigt est pose. Le ruban contient deux
+    copies du texte : quand on depasse la premiere, on recule d'une demie et
+    personne ne voit la couture.
+  */
+  for (const boite of document.querySelectorAll('.bandeau')) {
+    const ruban = boite.querySelector('.ruban');
+    if (!ruban) continue;
+    let tenu = 0, glisse = false, depart = 0, departScroll = 0;
+    /*
+      LA POSITION EST TENUE A PART, EN NOMBRE A VIRGULE.
+
+      scrollLeft s'arrondit au pixel : on lui donne 40,35 et il rend 40.
+      Une avance de trois dixiemes de pixel par image y disparait donc
+      entierement, et le ruban ne bouge jamais. On garde la position exacte
+      dans une variable, et on ne la recopie dans le defilement qu'une fois
+      arrondie. Elle se resynchronise des que quelqu'un y touche.
+    */
+    let pos = 0;
+
+    const demi = () => ruban.scrollWidth / 2;
+    const recadrer = () => {
+      const d = demi();
+      if (d < 2) return;
+      if (pos >= d) pos -= d;
+      else if (pos < 0) pos += d;
+    };
+
+    boite.addEventListener('pointerdown', (e) => {
+      tenu = performance.now(); glisse = true;
+      depart = e.clientX; departScroll = boite.scrollLeft;
+      boite.setPointerCapture(e.pointerId);
+      boite.classList.add('tenu');
+    });
+    boite.addEventListener('pointermove', (e) => {
+      if (!glisse) return;
+      pos = departScroll - (e.clientX - depart);
+      recadrer();
+      boite.scrollLeft = pos;
+    });
+    const lacher = () => { glisse = false; tenu = performance.now(); boite.classList.remove('tenu'); };
+    boite.addEventListener('pointerup', lacher);
+    boite.addEventListener('pointercancel', lacher);
+    /* Le defilement tactile ne passe pas par pointermove : on repere le
+       toucher lui-meme pour suspendre l'avance pendant l'inertie. */
+    boite.addEventListener('touchstart', () => { tenu = performance.now(); }, { passive: true });
+    boite.addEventListener('scroll', () => {
+      /* Nos propres avances declenchent aussi cet evenement. On ne se
+         resynchronise donc que sur un ecart franc, sinon la position exacte
+         serait rabotee au pixel a chaque image et l'avance mourrait. */
+      if (glisse || Math.abs(boite.scrollLeft - pos) < 1.6) return;
+      pos = boite.scrollLeft;
+      tenu = Math.max(tenu, performance.now() - 700);
+    }, { passive: true });
+
+    if (!calme) {
+      const pas = () => {
+        if (!glisse && performance.now() - tenu > 900) {
+          pos += .5;
+          recadrer();
+          boite.scrollLeft = pos;
+        }
+        requestAnimationFrame(pas);
+      };
+      requestAnimationFrame(pas);
+    }
+  }
+
+  /*
+    LE CARROUSEL D'AVIS.
+
+    Meme principe que la banniere : un conteneur qui defile, avec accroche
+    sur chaque carte. Les deux fleches ne font qu'avancer d'une carte, et
+    les points disent ou l'on en est. Rien de tout cela n'est indispensable
+    au fonctionnement : sans JavaScript, on fait glisser au doigt et ca
+    marche quand meme.
+  */
+  for (const car of document.querySelectorAll('[data-carrousel]')) {
+    const piste = car.querySelector('.avis-piste');
+    const cartes = [...piste.children];
+    const points = car.querySelector('.avis-points');
+    if (points) {
+      cartes.forEach((_, i) => {
+        const p = document.createElement('button');
+        p.type = 'button';
+        p.setAttribute('aria-label', 'Avis ' + (i + 1));
+        p.addEventListener('click', () => cartes[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }));
+        points.append(p);
+      });
+    }
+    const majPoints = () => {
+      const milieu = piste.scrollLeft + piste.clientWidth / 2;
+      let proche = 0, ecart = Infinity;
+      cartes.forEach((c, i) => {
+        const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - milieu);
+        if (d < ecart) { ecart = d; proche = i; }
+      });
+      points?.querySelectorAll('button').forEach((b, i) => b.classList.toggle('ici', i === proche));
+      car.querySelector('[data-avant]')?.toggleAttribute('disabled', piste.scrollLeft < 8);
+      car.querySelector('[data-apres]')?.toggleAttribute('disabled',
+        piste.scrollLeft > piste.scrollWidth - piste.clientWidth - 8);
+    };
+    piste.addEventListener('scroll', majPoints, { passive: true });
+    const bouger = (sens) => piste.scrollBy({ left: sens * (cartes[0]?.offsetWidth ?? 300) * 1.06, behavior: 'smooth' });
+    car.querySelector('[data-avant]')?.addEventListener('click', () => bouger(-1));
+    car.querySelector('[data-apres]')?.addEventListener('click', () => bouger(1));
+    majPoints();
+  }
+
+  /*
+    LE CHOIX DU RESEAU.
+
+    Julie : « en cliquant, choix entre Instagram ou Facebook, souvent les
+    personnes n'ont pas les deux ». Un bouton qui ouvre deux boutons, plutot
+    que deux boutons cote a cote : ca laisse le regard sur une seule chose.
+  */
+  for (const b of document.querySelectorAll('[data-reseaux]')) {
+    const boite = document.getElementById(b.getAttribute('aria-controls'));
+    b.addEventListener('click', () => {
+      const ouvert = b.getAttribute('aria-expanded') === 'true';
+      b.setAttribute('aria-expanded', String(!ouvert));
+      boite.classList.toggle('ouvert', !ouvert);
+    });
   }
 
   /* Repli pour les navigateurs qui n'ont pas encore les minuteries de

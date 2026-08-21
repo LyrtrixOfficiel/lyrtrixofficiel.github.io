@@ -389,14 +389,8 @@ body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(
 .menu-liens a.ici { color: var(--orange); }
 /* Le numero est la seule chose qu'on vient chercher en urgence dans ce
    menu. En 1,2 rem il se lisait comme une note de bas de page. */
-/* Julie voulait « Numero » dans le menu, au meme rang que les autres entrees.
-   Le numero lui-meme reste le bouton : c'est ce sur quoi on appuie. L'etiquette
-   se pose au-dessus, petite, pour nommer la rubrique sans voler la place. */
-.menu-tel-etiq {
-  display: block;
-  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
-  font-weight: 500; opacity: .8; margin-bottom: 2px;
-}
+/* L'etiquette « Numéro » a saute : Julie ne veut que le numero, ecrit avec
+   des points. Le mot ne disait rien que le chiffre ne dise deja. */
 .menu-liens .menu-tel {
   margin-top: 30px;
   font-size: clamp(1.55rem, 7.5vw, 2rem);
@@ -492,17 +486,6 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   to   { opacity: 0; scale: .90; translate: 0 -5vh; }
 }
 
-.embleme {
-  width: clamp(88px, 10vw, 118px); height: auto;
-  margin: 0 auto 24px;
-  mix-blend-mode: multiply;
-  animation: flotter 9s ease-in-out infinite;
-}
-@keyframes flotter {
-  0%, 100% { translate: 0 0; rotate: 0deg; }
-  50%      { translate: 0 -9px; rotate: 1.4deg; }
-}
-
 /* Le titre apparait mot par mot, chacun venant de plus bas et de plus
    flou que le precedent. */
 .titre-anime .mot { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .08em; }
@@ -537,24 +520,9 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   animation: paraitre 1.1s var(--sortie) .9s both;
 }
 .entree-panneau {
-  padding: clamp(30px, 4.2vw, 50px) clamp(22px, 3.6vw, 52px);
-  width: min(100%, 780px); margin-inline: auto;
+  padding: clamp(26px, 3.4vw, 44px) clamp(22px, 3.6vw, 52px);
+  width: min(100%, 820px); margin-inline: auto;
 }
-
-/* Les trois reperes, en pastilles de verre */
-.reperes {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 11px;
-  margin-top: 24px;
-}
-.repere {
-  padding: 12px 20px; border-radius: 999px;
-  font-size: .87rem; color: var(--encre-doux);
-  animation: paraitre 1s var(--sortie) both;
-  animation-delay: calc(1.05s + var(--i) * 110ms);
-  transition: translate .4s var(--sortie);
-}
-.repere:hover { translate: 0 -3px; }
-.repere b { color: var(--encre); font-weight: 550; }
 
 /* La fleche « on continue en bas » */
 .descendre {
@@ -578,18 +546,34 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 
 /* =========================================================================
    LE BANDEAU DEFILANT
+
+   Julie voulait pouvoir le pousser du doigt en plus de le laisser tourner.
+   Une animation CSS ne se pousse pas : on ne peut pas prendre une animation
+   en main. Le bandeau devient donc un VRAI conteneur de defilement
+   horizontal, ce qui donne le glissement au doigt et son inertie sans une
+   ligne de code, et c'est le JavaScript qui avance le defilement de quelques
+   dixiemes de pixel par image quand personne n'y touche.
+
+   La barre de defilement est cachee : on la sent, on ne la voit pas.
    ========================================================================= */
 .bandeau {
   position: relative; z-index: 3;
   padding: 20px 0;
   border-block: 1px solid rgba(226,113,29,.16);
   background: linear-gradient(90deg, rgba(255,248,239,.6), rgba(255,236,214,.8), rgba(255,248,239,.6));
-  overflow: hidden;
+  overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none;
+  /* Sans ca, un glissement horizontal arrive en bout de course declenche le
+     geste « page precedente » du navigateur. */
+  overscroll-behavior-x: contain;
+  cursor: grab;
   -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
   mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
-.ruban { display: flex; width: max-content; animation: glisser 38s linear infinite; }
-.ruban:hover { animation-play-state: paused; }
+.bandeau::-webkit-scrollbar { display: none; }
+.bandeau.tenu { cursor: grabbing; }
+.bandeau:focus-visible { outline: 2px solid var(--orange); outline-offset: -2px; }
+.ruban { display: flex; width: max-content; user-select: none; }
 .ruban b {
   display: flex; align-items: center; gap: 28px;
   padding-right: 28px;
@@ -597,7 +581,6 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   white-space: nowrap;
 }
 .ruban b::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); opacity: .55; flex: none; }
-@keyframes glisser { to { translate: -50% 0; } }
 
 /* =========================================================================
    LES SECTIONS
@@ -807,7 +790,10 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 26px 54px -30px rgba(120,60,15,.5);
   color: var(--encre);
 }
-.ouverture-texte h2 { color: var(--encre); max-width: 16ch; font-size: clamp(1.5rem, 3.4vw, 2.6rem); }
+/* Vingt caracteres et non seize : la phrase de « Mon approche » est plus
+   longue que l'ancienne legende du cabinet, et a seize elle tombait sur cinq
+   lignes de tres gros corps. */
+.ouverture-texte h2 { color: var(--encre); max-width: 20ch; font-size: clamp(1.5rem, 3.4vw, 2.6rem); }
 .ouverture-texte p { color: var(--encre-doux); max-width: 46ch; }
 .ouverture-texte .sur-titre { color: var(--orange); }
 
@@ -960,16 +946,78 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   background: linear-gradient(180deg, var(--creme-fond), #f8e7d3);
   border-top: 1px solid rgba(226,113,29,.16);
 }
-.pied .serre + .serre { margin-top: 30px; }
-.pied-haut { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; justify-content: space-between; }
-.pied-liens { display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: .97rem; color: var(--encre-doux); }
-.pied-liens a { position: relative; padding-bottom: 2px; }
-.pied-liens a::after {
+.pied .serre + .serre { margin-top: 34px; }
+
+/* Quatre colonnes : la marque, les coordonnees, le plan du site, les reseaux.
+   C'est la structure du bas de page de la presidente de la Federation, que
+   Julie a donnee en exemple. */
+.pied-grille {
+  display: grid; gap: clamp(28px, 4vw, 54px);
+  grid-template-columns: 1.35fr .85fr .85fr 1.1fr;
+  align-items: start;
+}
+.pied-marque { display: grid; gap: 14px; justify-items: start; }
+.pied-marque .nav-marque { margin-right: 0; }
+.pied-marque p { font-size: .95rem; color: var(--encre-doux); line-height: 1.6; }
+
+.pied-note {
+  display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: .88rem; color: var(--encre-doux);
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(255,255,255,.5);
+  border: 1px solid rgba(226,113,29,.2);
+  transition: border-color .3s, background .3s;
+}
+.pied-note:hover { border-color: var(--orange); background: rgba(255,255,255,.8); }
+.pied-note b { color: var(--encre); font-weight: 600; }
+.etoiles { display: inline-flex; gap: 1px; color: var(--orange); line-height: 0; }
+
+.pied-bloc { display: grid; gap: 9px; justify-items: start; align-content: start; }
+.pied-bloc h2 {
+  font-size: .76rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--orange); margin-bottom: 4px;
+}
+.pied-bloc a, .pied-bloc span {
+  font-size: .95rem; color: var(--encre-doux);
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.pied-bloc a { position: relative; padding-bottom: 2px; }
+.pied-bloc a::after {
   content: ''; position: absolute; inset: auto 0 0 0; height: 1px; background: var(--orange);
   scale: 0 1; transform-origin: left; transition: scale .4s var(--sortie);
 }
-.pied-liens a:hover::after { scale: 1 1; }
+.pied-bloc a:hover { color: var(--encre); }
+.pied-bloc a:hover::after { scale: 1 1; }
+.pied-suivre p { font-size: .92rem; color: var(--encre-doux); line-height: 1.6; max-width: 34ch; }
+.pied-reseaux { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 4px; }
+/* Les pastilles de reseau n'ont pas de soulignement qui court dessous. */
+.pied-reseaux a::after { display: none; }
+
+/* Les deux logos. Ils sont en niveaux de creme au repos et reprennent leurs
+   couleurs au survol : cote a cote, le vert de Resalib et l'or de la
+   Federation se battaient avec l'orange du site. */
+.pied-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
+.pied-logos img {
+  height: 52px; width: auto;
+  /* Un gris complet les effacait : sur un fond creme, un logo desature a
+     moitie transparent ne se lit plus du tout. On les calme sans les
+     eteindre, et ils reprennent toutes leurs couleurs au survol. */
+  filter: grayscale(.55) opacity(.82);
+  transition: filter .4s var(--doux), scale .4s var(--sortie);
+}
+.pied-logos a:hover img { filter: none; scale: 1.04; }
+
 .avertissement { font-size: .82rem; line-height: 1.7; color: var(--encre-pale); max-width: 80ch; }
+.pied-bas { margin-top: 16px; font-size: .84rem; color: var(--encre-pale); }
+
+@media (max-width: 900px) {
+  .pied-grille { grid-template-columns: 1fr 1fr; }
+  .pied-marque { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .pied-grille { grid-template-columns: 1fr; gap: 26px; }
+  .pied-logos img { height: 40px; }
+}
 
 /* =========================================================================
    ADAPTATIONS
@@ -1055,54 +1103,37 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   :root { --marge: 18px; --rond: 24px; --rond-l: 30px; }
 
   /* L'ACCUEIL SUR TELEPHONE.
-     Le panneau prend forcement toute la largeur : s'il reste aussi opaque
-     que sur ordinateur, il masque le film en entier et il ne reste qu'un
-     rectangle creme. On l'allege, on le raccourcit, et la hauteur cesse
-     d'etre forcee a un ecran plein. */
-  .entree { min-height: auto; padding: 112px 0 76px; }
+
+     Julie voulait que le titre, les trois images, la citation et les deux
+     boutons tiennent ensemble sur le premier ecran, sans avoir a descendre.
+     C'est la seule contrainte de cette section, et tout y est plie : le
+     panneau perd de sa marge, les blocs perdent leurs ecarts, la citation
+     descend d'un cran. On garde `100svh` et non `100vh` : `vh` compte la
+     hauteur sans les barres du navigateur, donc le bas du bloc passait
+     dessous, et c'etaient les boutons qui disparaissaient.
+
+     Le panneau reste tres transparent : a pleine largeur, un verre aussi
+     opaque que sur ordinateur cacherait le film en entier. */
+  .entree { min-height: 100svh; padding: 96px 0 32px; align-content: center; }
   .entree-panneau {
-    padding: 28px 22px 30px;
+    padding: 22px 18px 24px;
     background: linear-gradient(150deg, rgba(255,252,246,.34), rgba(255,246,235,.16) 52%, rgba(255,238,220,.30));
     backdrop-filter: blur(26px) saturate(200%) brightness(1.05);
     -webkit-backdrop-filter: blur(26px) saturate(200%);
   }
-  .embleme { width: 74px; margin-bottom: 16px; }
-  .entree h1 { font-size: clamp(2.8rem, 15vw, 4rem); }
   .baseline { font-size: 1.02rem; margin-top: 12px; }
-  .entree .chapeau { font-size: .96rem; line-height: 1.6; margin-top: 16px; }
+  .baseline.serre-titre { font-size: .98rem; }
 
   /* Deux boutons cote a cote deviennent illisibles sous 400 pixels : on les
      empile, pleine largeur, pour qu'ils restent des cibles franches. */
   .actions { flex-direction: column; align-items: stretch; margin-top: 26px; }
   .actions .bouton { justify-content: center; padding: 16px 22px; }
+  .entree .actions { margin-top: 18px; gap: 9px; }
+  .entree .actions .bouton { padding: 13px 20px; font-size: .92rem; }
 
   /* Un lien de vingt-neuf pixels de haut se rate au pouce. On ne change pas
      sa taille de texte, on lui donne de la marge autour. */
   .suite { padding-block: 10px; }
-
-  /* LES TROIS REPERES.
-     Empiles, ils faisaient trois bandeaux pleine largeur. En rangee qui
-     glisse, c'etait pire : on en voyait un entier, un coupe en deux, et le
-     troisieme nulle part. Personne ne devine qu'il faut pousser un bandeau
-     du doigt pour lire la suite.
-     Ils tiennent maintenant dans UNE seule carte de verre, trois lignes,
-     tout est lisible d'un coup et rien ne depasse. */
-  .reperes {
-    flex-direction: column; gap: 0;
-    border-radius: var(--rond);
-    padding: 4px 18px;
-    background: linear-gradient(150deg, rgba(255,255,255,.5), rgba(255,246,235,.34));
-    backdrop-filter: blur(22px) saturate(185%);
-    -webkit-backdrop-filter: blur(22px) saturate(185%);
-    box-shadow: 0 1px 0 rgba(255,255,255,.85) inset, 0 20px 44px -28px rgba(120,60,15,.4);
-  }
-  .repere {
-    width: 100%; padding: 13px 0; border-radius: 0;
-    font-size: .87rem; text-align: left;
-    background: none; box-shadow: none; backdrop-filter: none;
-  }
-  .repere::before, .repere::after { display: none; }
-  .repere + .repere { border-top: 1px solid rgba(226,113,29,.16); }
 
   .descendre { display: none; }
   .entete { padding: 124px 0 56px; }
@@ -1158,3 +1189,582 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   .portrait .deux { grid-template-columns: 1fr; }
   .portrait-film { aspect-ratio: 4 / 3; }
 }
+
+/* =========================================================================
+   DEUXIEME SERIE DE CORRECTIONS DE JULIE (17 aout 2026)
+
+   Tout ce qui suit est ne de son document. Chaque bloc porte la demande a
+   laquelle il repond, pour qu'on sache dans six mois pourquoi il existe.
+   ========================================================================= */
+
+/* --- Un texte lu par les machines, pas par l'oeil ------------------------
+   Le titre de l'accueil est une image (le dessin de son flyer). Un moteur de
+   recherche ne lit pas les images : le mot reste donc ecrit dans la page,
+   simplement pose hors du champ de vision. `display:none` ne conviendrait
+   pas, un lecteur d'ecran l'ignorerait aussi. */
+.hors-vue {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* --- LE TITRE DU FLYER ---------------------------------------------------
+   « Titre à modifier comme sur mon flyer idéalement, Shiatsu, Harmoniser le
+   corps et l'esprit plus collé au mot shiatsu, avec le rond orange Enso et un
+   décor au bout, logo à retirer. »
+
+   Le rond, le mot et le petit epi sont un seul dessin, decoupe dans son
+   flyer : aucune police ne rendrait ce trait de pinceau, et il est a elle.
+   L'entree se joue comme un coup de pinceau qu'on pose : le dessin arrive
+   legerement tourne et se redresse. */
+.titre-bloc { width: min(100%, 560px); margin-inline: auto; }
+.titre-flyer { line-height: 0; }
+.titre-flyer img {
+  width: 100%; height: auto;
+  animation: poserEnso 1.5s var(--sortie) both;
+}
+@keyframes poserEnso {
+  from { opacity: 0; scale: .82; rotate: -8deg; }
+  to   { opacity: 1; scale: 1;   rotate: 0deg; }
+}
+/* « plus collé au mot shiatsu » : la ligne vient se poser juste sous les
+   lettres, donc PAR-DESSUS le bas du rond, exactement comme sur le flyer.
+   Le dessin garde un dixieme de sa largeur de vide sous les capitales : on
+   remonte de huit et demi pour cent, ce qui laisse un cheveu d'air, et le
+   calcul tient a toutes les tailles puisqu'il porte sur la largeur. */
+.baseline.serre-titre {
+  margin-top: -8.5%;
+  color: var(--encre);
+  position: relative; z-index: 1;
+}
+
+/* --- LES TROIS EMPLACEMENTS ---------------------------------------------
+   « Création de 3 emplacements : pour 2 photos et 1 image (celle avec les
+   mains et le cœur), des encadrements avec des courbes. »
+
+   Chaque cadre a sa propre forme, comme les taches de ses publications, et un
+   liseré orange qui suit la courbe. `outline` epouse le `border-radius`, donc
+   il n'y a pas besoin d'un deuxieme element pour dessiner le contour.
+
+   LES DEUX PHOTOS SONT PROVISOIRES. Julie doit envoyer les siennes ; d'ici
+   la ce sont deux images du site qui tiennent la place. */
+.galerie {
+  display: flex; justify-content: center; align-items: center;
+  gap: clamp(9px, 1.7vw, 20px);
+  margin-top: clamp(20px, 2.8vw, 32px);
+  animation: paraitre 1.1s var(--sortie) .62s both;
+}
+.galet {
+  position: relative; flex: none;
+  width: clamp(84px, 23vw, 180px); aspect-ratio: 1;
+  overflow: hidden;
+  background: rgba(255,255,255,.55);
+  outline: 1.5px solid rgba(226,113,29,.5);
+  outline-offset: 5px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.85) inset,
+              0 22px 44px -26px rgba(120,60,15,.55);
+  transition: translate .6s var(--sortie), outline-color .4s var(--doux);
+}
+.galet img { width: 100%; height: 100%; object-fit: cover; }
+/* Le dessin au trait est transparent : il ne se recadre pas, il se pose. */
+.galet .dessin { object-fit: contain; padding: 13%; mix-blend-mode: multiply; }
+
+.g1 { border-radius: 58% 42% 46% 54% / 48% 56% 44% 52%; translate: 0 7%; }
+.g2 { border-radius: 47% 53% 55% 45% / 52% 46% 54% 48%; width: clamp(96px, 26vw, 208px); }
+.g3 { border-radius: 52% 48% 57% 43% / 44% 53% 47% 56%; translate: 0 -7%; }
+.galet:hover { outline-color: var(--orange); }
+.g1:hover { translate: 0 4%; }
+.g3:hover { translate: 0 -10%; }
+
+/* --- LA CITATION ---------------------------------------------------------
+   « Ajouter citation : Il n'y a pas de hasard, il n'y a que des rendez-vous.
+   Paul Eluard. » Les guillemets sont dessines par le CSS pour qu'on n'ait
+   jamais a se demander lesquels ont ete tapes. */
+.citation {
+  display: grid; gap: 7px; justify-items: center;
+  margin-top: clamp(18px, 2.4vw, 28px);
+  animation: paraitre 1.1s var(--sortie) .8s both;
+}
+.citation blockquote {
+  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  font-size: clamp(1.04rem, 2.1vw, 1.52rem); line-height: 1.34;
+  color: var(--encre); max-width: 28ch;
+}
+.citation blockquote::before { content: '\00ab\00a0'; color: var(--orange); }
+.citation blockquote::after  { content: '\00a0\00bb'; color: var(--orange); }
+.citation figcaption {
+  font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--orange);
+}
+
+/* --- LES QUATRE QUESTIONS -----------------------------------------------
+   Elles remplacent le lien « Comment se passe une séance ». Toutes menent a
+   la page Shiatsu : « peu importe sur quelle question ils cliquent ». */
+.questions { display: grid; gap: 8px; margin-top: 28px; }
+.questions a {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 20px; border-radius: var(--rond);
+  background: rgba(255,255,255,.5);
+  border: 1px solid rgba(226,113,29,.16);
+  font-size: 1.01rem; font-weight: 450; color: var(--encre);
+  transition: background .3s var(--doux), border-color .3s var(--doux),
+              translate .35s var(--sortie);
+}
+.questions a:hover {
+  background: rgba(255,255,255,.86); border-color: var(--orange); translate: 4px 0;
+}
+.questions a svg { color: var(--orange); flex: none; transition: translate .35s var(--sortie); }
+.questions a:hover svg { translate: 4px 0; }
+
+/* --- LE CADRE DU DRAP ----------------------------------------------------
+   « Inclure une future vidéo de la pièce avec pour titre Le cabinet. » Le
+   cartouche est en place ; la video de la piece prendra la suite. */
+.ecran-film {
+  position: relative; overflow: hidden;
+  border-radius: var(--rond-l); aspect-ratio: 16 / 10;
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset,
+              0 40px 80px -40px rgba(120,60,15,.5);
+}
+.ecran-film video { width: 100%; height: 100%; object-fit: cover; }
+.ecran-film figcaption {
+  position: absolute; z-index: 2;
+  left: clamp(12px, 2vw, 20px); bottom: clamp(12px, 2vw, 20px);
+  padding: 9px 18px; border-radius: 999px;
+  font-size: .74rem; letter-spacing: .2em; text-transform: uppercase;
+  font-weight: 500; color: var(--encre);
+  background: rgba(255,252,246,.82);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+
+/* --- QUI JE SUIS, EN PUBLICATION ----------------------------------------
+   « Cette photo avec un contour arrondi et les annotations Julie Marguier,
+   Praticienne shiatsu, Passionnée par les pratiques naturelles et
+   holistiques, Soif d'apprendre toujours plus. Mise en page animée ? »
+
+   La photo au centre, deux annotations au-dessus, deux en dessous, reliees
+   par de petites fleches tracees a la main : c'est la mise en page de sa
+   publication. Sur telephone la grille se defait et tout se met a la suite,
+   parce qu'a 375 pixels il n'y a de place ni a gauche ni a droite. */
+.portrait-annote {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    "a1 photo a2"
+    "a3 photo a4";
+  gap: clamp(14px, 2.4vw, 30px) clamp(18px, 3vw, 44px);
+  align-items: center;
+  margin-top: clamp(26px, 3.4vw, 44px);
+}
+.portrait-photo { grid-area: photo; width: clamp(196px, 25vw, 310px); }
+.portrait-photo img {
+  /* `height: auto` n'est pas decoratif ici. Les attributs width et height de
+     la balise sont des indications de presentation : ils posent une hauteur
+     reelle de 725 pixels, et cette hauteur l'emporte sur `aspect-ratio` tant
+     qu'on ne la remet pas explicitement a `auto`. Sans cette ligne, la photo
+     s'affichait a 300 sur 725 au lieu de 300 sur 400. */
+  width: 100%; height: auto;
+  aspect-ratio: 3 / 4; object-fit: cover; object-position: center 22%;
+  /* « un contour arrondi » : une arche, ronde en haut, posee en bas. */
+  border-radius: 999px 999px var(--rond-l) var(--rond-l);
+  outline: 1.5px solid rgba(226,113,29,.45); outline-offset: 7px;
+  box-shadow: 0 30px 70px -34px rgba(120,60,15,.55);
+}
+.annot {
+  font-size: clamp(.95rem, 1.35vw, 1.1rem); line-height: 1.5;
+  color: var(--encre-doux); max-width: 24ch;
+  display: grid; gap: 2px;
+}
+.annot-nom { font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.1; }
+.annot-nom em { font-size: 1em; }
+.annot:nth-of-type(1) { grid-area: a1; justify-self: end; text-align: right; align-self: end; }
+.annot:nth-of-type(2) { grid-area: a2; justify-self: start; align-self: end; }
+.annot:nth-of-type(3) { grid-area: a3; justify-self: end; text-align: right; align-self: start; }
+.annot:nth-of-type(4) { grid-area: a4; justify-self: start; align-self: start; }
+
+.flechette { width: 56px; height: 35px; color: var(--orange); opacity: .75; }
+.f1 { justify-self: end; rotate: 8deg; margin-top: 4px; }
+.f2 { justify-self: start; scale: -1 1; rotate: 8deg; margin-top: 4px; }
+.f3 { justify-self: end; rotate: -32deg; margin-top: 8px; }
+.f4 { justify-self: start; scale: -1 1; rotate: -32deg; margin-top: 8px; }
+
+.blocs-moi {
+  grid-template-columns: 1fr 1fr;
+  margin-top: clamp(40px, 5vw, 68px);
+  align-items: stretch;
+}
+.liste-nette { display: grid; gap: 10px; list-style: none; }
+.liste-nette li {
+  position: relative; padding-left: 20px;
+  color: var(--encre-doux); font-size: .99rem; line-height: 1.62;
+}
+.liste-nette li::before {
+  content: ''; position: absolute; left: 0; top: .66em;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--orange); opacity: .6;
+}
+.liste-nette b { color: var(--encre); font-weight: 600; }
+
+/* « Bien laisser ce paragraphe entre guillemets pour montrer que c'est moi
+   qui parle. » Les guillemets sont donc dans le texte, et la signature les
+   ferme visuellement. */
+.recit { display: grid; gap: 12px; }
+.recit p { color: var(--encre-doux); font-size: .99rem; line-height: 1.68; }
+.recit .signature {
+  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  font-size: 1.4rem; color: var(--orange); margin-top: 2px;
+}
+
+/* --- LE CHOIX DU RESEAU -------------------------------------------------
+   « Bouton Me suivre sur les réseaux, en cliquant choix entre Instagram ou
+   Facebook, souvent les personnes n'ont pas les deux. » */
+.centre-bloc { text-align: center; }
+.choix-reseaux { display: grid; justify-items: center; gap: 14px; }
+.reseaux-choix {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  opacity: 0; translate: 0 -8px; pointer-events: none;
+  transition: opacity .35s var(--doux), translate .4s var(--sortie);
+}
+.reseaux-choix.ouvert { opacity: 1; translate: 0 0; pointer-events: auto; }
+.choix-reseaux .bouton svg { transition: rotate .4s var(--sortie); }
+.choix-reseaux [aria-expanded='true'] svg { rotate: 90deg; }
+
+/* --- LES BONS CADEAUX ---------------------------------------------------- */
+.cadeau { padding: clamp(30px, 4.4vw, 54px); }
+.cadeau h2 { max-width: 20ch; }
+
+/* --- LE CARROUSEL D'AVIS -------------------------------------------------
+   « Entre les 2 blocs, ajouter un carrousel avec des avis clients, un titre
+   accrocheur au-dessus, 5 étoiles, et si on clique sur Resalib ca envoie sur
+   mon lien direct. »
+
+   Les avis sont ceux de sa page Resalib publique, signes et dates. On n'en
+   ecrit jamais un : si le tableau `AVIS` du generateur est vide, la section
+   n'existe pas. */
+/* La largeur se pose sur le TITRE, pas sur son conteneur : `ch` se mesure
+   dans la police de l'element qui le porte, et le conteneur est en corps de
+   texte. Vingt-quatre `ch` y valaient deux cents pixels, et le titre tombait
+   a un mot par ligne. */
+.avis-tete h2 { max-width: 13ch; }
+.avis-carrousel { margin-top: clamp(28px, 3.6vw, 44px); }
+.avis-piste {
+  display: flex; gap: 16px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: 6px 2px 16px;
+}
+.avis-piste::-webkit-scrollbar { display: none; }
+.avis {
+  flex: none; width: min(84%, 372px);
+  scroll-snap-align: center;
+  padding: 26px 28px 24px;
+  display: grid; gap: 13px; align-content: start;
+}
+.avis blockquote { color: var(--encre-doux); font-size: 1rem; line-height: 1.66; }
+.avis figcaption { font-weight: 550; font-size: .97rem; }
+.avis figcaption span {
+  display: block; font-weight: 400; font-size: .84rem;
+  color: var(--encre-pale); margin-top: 2px;
+}
+.avis-barre { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.avis-points { display: flex; gap: 7px; }
+.avis-points button {
+  width: 7px; height: 7px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  background: rgba(169,141,120,.42);
+  transition: background .3s var(--doux), scale .3s var(--sortie);
+}
+.avis-points button.ici { background: var(--orange); scale: 1.35; }
+.avis-fleches { display: flex; gap: 8px; }
+.avis-fleches button {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  border: 1px solid rgba(226,113,29,.26);
+  background: rgba(255,255,255,.55); color: var(--encre);
+  transition: background .3s var(--doux), border-color .3s var(--doux), opacity .3s;
+}
+.avis-fleches button:hover { background: #fff; border-color: var(--orange); }
+.avis-fleches button[disabled] { opacity: .32; cursor: default; }
+.avis-source { text-align: center; margin-top: 12px; }
+.avis-source a { color: var(--orange); border-bottom: 1px solid rgba(226,113,29,.4); }
+
+/* --- LE PLAN -------------------------------------------------------------
+   « Image de plan pour cliquer dessus et obtenir un itinéraire jusqu'au
+   cabinet. »
+
+   Un vrai plan centre sur le cabinet afficherait sa maison, et son adresse
+   est privee. C'est donc un schema : sa commune au milieu, les villes autour.
+   Il repond a la seule question qu'on se pose devant un plan avant un premier
+   rendez-vous, « est-ce que c'est loin de chez moi », sans rien reveler.
+   L'adresse exacte n'apparait qu'au bout du lien, dans l'itineraire. */
+.plan { display: block; padding: 20px 20px 0; overflow: hidden; }
+.plan svg { width: 100%; height: auto; aspect-ratio: 1; }
+.plan text { font-family: inherit; }
+.plan-pied {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  margin: 4px -20px 0; padding: 17px;
+  font-size: .95rem; font-weight: 500; color: var(--orange);
+  border-top: 1px solid rgba(226,113,29,.16);
+}
+.plan-pied svg { width: 15px; height: 15px; aspect-ratio: auto; transition: translate .35s var(--sortie); }
+.plan:hover .plan-pied svg { translate: 4px 0; }
+
+/* --- ADAPTATIONS --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .blocs-moi { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  /* La publication se deplie : la photo d'abord, les annotations a la suite.
+     Les fleches n'ont plus rien a relier, elles disparaissent. */
+  .portrait-annote {
+    grid-template-columns: 1fr;
+    grid-template-areas: "photo" "a1" "a2" "a3" "a4";
+    justify-items: center; text-align: center;
+    gap: 12px;
+  }
+  .portrait-photo { width: min(74%, 260px); margin-bottom: 10px; }
+  .annot, .annot:nth-of-type(1), .annot:nth-of-type(2),
+  .annot:nth-of-type(3), .annot:nth-of-type(4) {
+    justify-self: center; text-align: center; max-width: 30ch;
+  }
+  .annot-nom { margin-bottom: 2px; }
+  .flechette { display: none; }
+}
+@media (max-width: 640px) {
+  .avis { width: min(88%, 340px); padding: 22px 22px 20px; }
+  .questions a { padding: 13px 16px; font-size: .96rem; }
+  .plan { padding: 14px 14px 0; }
+  .plan-pied { margin: 2px -14px 0; padding: 15px; }
+}
+
+/* Sans mouvement, la galerie ne flotte pas et le titre ne tourne pas. */
+@media (prefers-reduced-motion: reduce) {
+  .g1, .g3 { translate: 0 0; }
+  .titre-flyer img { animation: none; }
+}
+
+/* =========================================================================
+   LE FORMULAIRE DE CONTACT
+   Julie, 19 aout : « court, simple et intuitif ». Donc quatre champs, un
+   seul bouton, aucun mouvement inutile, et rien qui gronde pendant la frappe.
+   ========================================================================= */
+
+.formulaire-carte {
+  padding: clamp(30px, 5vw, 58px);
+  border-radius: var(--rond-l);
+  display: grid;
+  gap: 14px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.formulaire-carte h2 { font-size: clamp(1.6rem, 2.7vw, 2.1rem); }
+.formulaire-chapeau { color: var(--encre-doux); max-width: 46ch; }
+
+.formulaire { display: grid; gap: 18px; margin-top: 8px; }
+.champ { display: grid; gap: 7px; margin: 0; }
+
+.champ label {
+  font-size: .93rem;
+  font-weight: 550;
+  color: var(--encre);
+  letter-spacing: .01em;
+}
+.facultatif {
+  font-weight: 400;
+  color: var(--encre-pale);
+  font-size: .82rem;
+}
+
+.champ input,
+.champ textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--encre);
+  /* Seize pixels au minimum : en dessous, un iPhone zoome tout seul sur le
+     champ actif et la page se decale sous les doigts de la personne. */
+  padding: 14px 16px;
+  border: 1px solid rgba(169, 141, 120, .38);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .66);
+  transition: border-color .18s var(--doux), box-shadow .18s var(--doux);
+}
+.champ textarea { resize: vertical; min-height: 128px; line-height: 1.55; }
+.champ input::placeholder,
+.champ textarea::placeholder { color: var(--encre-pale); opacity: 1; }
+
+.champ input:focus-visible,
+.champ textarea:focus-visible {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(226, 113, 29, .18);
+}
+.champ input[aria-invalid='true'],
+.champ textarea[aria-invalid='true'] { border-color: var(--orange-nuit); }
+
+.erreur {
+  min-height: 0;
+  font-size: .86rem;
+  color: var(--orange-nuit);
+}
+.erreur:empty { display: none; }
+
+/* Le piege a robots. `display: none` ne suffit pas : certains robots lisent
+   la feuille de style et sautent ce qui est masque ainsi. On le sort du cadre
+   sans le retirer du document. */
+.pot-de-miel {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%);
+  white-space: nowrap; border: 0;
+}
+
+.formulaire-mention {
+  font-size: .84rem;
+  color: var(--encre-pale);
+  line-height: 1.5;
+  margin: -2px 0 0;
+}
+
+.formulaire .actions { margin-top: 4px; animation: none; }
+.formulaire button[disabled] { opacity: .6; cursor: progress; }
+
+.formulaire-etat {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.5;
+}
+.formulaire-etat:empty { display: none; }
+.formulaire-etat.bon { color: var(--orange-nuit); font-weight: 550; }
+.formulaire-etat.mauvais { color: var(--orange-nuit); }
+
+@media (max-width: 560px) {
+  .formulaire-carte { padding: 26px 20px 30px; border-radius: var(--rond); }
+  .formulaire { gap: 15px; }
+}
+
+/* =========================================================================
+   LES PAGES LEGALES
+
+   Meme matiere que le reste du site, mais aucun bandeau filme et aucune
+   grande image : ce sont des pages qu'on vient LIRE. Une colonne etroite,
+   une hierarchie franche, et rien qui distraie du texte.
+   ========================================================================= */
+
+.pan-legal {
+  padding: clamp(120px, 18vh, 190px) 0 clamp(70px, 12vh, 120px);
+}
+
+/* 68 signes par ligne : au-dela, l'oeil perd le debut de la ligne suivante,
+   et c'est precisement sur ce genre de texte qu'on decroche le plus vite. */
+.legal { max-width: 68ch; }
+.legal h1 { margin-top: 10px; }
+.legal > .chapeau { margin-top: 18px; }
+
+.legal-bloc { margin-top: clamp(34px, 5vw, 52px); }
+.legal-bloc h2 {
+  font-size: clamp(1.15rem, 2.2vw, 1.42rem);
+  letter-spacing: -.02em;
+  margin-bottom: 14px;
+}
+.legal-bloc p { margin-bottom: 12px; line-height: 1.72; }
+.legal-bloc p:last-child { margin-bottom: 0; }
+.legal-bloc a { color: var(--orange-nuit); text-underline-offset: 3px; }
+
+/* UN TROU DOIT SE VOIR. Tant qu'une information legale manque, elle apparait
+   en clair sur la page au lieu d'etre remplacee par une formule plausible.
+   Une mention legale fausse est pire qu'une mention legale incomplete : la
+   premiere trompe, la seconde signale. */
+.legal-trou {
+  background: color-mix(in srgb, var(--orange) 22%, transparent);
+  color: var(--orange-nuit);
+  font-weight: 550;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--orange-nuit) 30%, transparent);
+}
+
+.legal-verif {
+  font-size: .92rem;
+  color: var(--encre-douce, inherit);
+  opacity: .82;
+  padding-left: 16px;
+  border-left: 2px solid color-mix(in srgb, var(--orange) 45%, transparent);
+}
+
+.legal-attente {
+  margin-top: clamp(28px, 4vw, 44px);
+  padding: clamp(22px, 3vw, 34px);
+  border-radius: var(--rond);
+  background: color-mix(in srgb, var(--orange) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--orange) 28%, transparent);
+}
+.legal-attente p { margin-bottom: 12px; line-height: 1.72; }
+.legal-attente p:last-child { margin-bottom: 0; }
+
+/* Les liens legaux du pied. Discrets, mais presents sur TOUTES les pages :
+   la loi veut qu'ils soient accessibles depuis n'importe ou. */
+.pied-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin-top: 10px;
+  font-size: .88rem;
+}
+.pied-legal a { opacity: .8; text-underline-offset: 3px; }
+.pied-legal a:hover { opacity: 1; }
+
+/* =========================================================================
+   LES AVIS, APRES SA DEMANDE DU 20 AOUT
+
+   Une seule fois cinq etoiles, en tete, avec la note globale et le nombre.
+   Elles etaient repetees sur chaque carte : quatre fois la meme note finit
+   par ne plus rien dire, alors qu'une note globale sur soixante-quatre avis
+   est un fait.
+   ========================================================================= */
+
+.avis-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  font-size: .98rem;
+}
+.avis-note b { font-weight: 600; }
+
+/* Sans prenom, la date porte seule le pied de la carte : on lui donne assez
+   de presence pour ne pas ressembler a un reste. */
+.avis figcaption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .88rem;
+  opacity: .78;
+}
+.avis figcaption span { font-variant-numeric: tabular-nums; }
+
+/* Le renvoi vers Resalib. Le logo dit d'ou vient la note, et un visiteur qui
+   doute peut aller verifier en un clic : c'est ce qui rend un avis credible. */
+a.avis-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: clamp(22px, 3vw, 32px);
+  padding: 10px 18px 10px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: .92rem;
+  background: color-mix(in srgb, var(--orange) 9%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--orange) 26%, transparent);
+  transition: background-color .35s var(--sortie, ease);
+}
+a.avis-source:hover { background: color-mix(in srgb, var(--orange) 16%, transparent); }
+a.avis-source img {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+}
+a.avis-source b { font-weight: 600; }
+a.avis-source svg { opacity: .6; }
