@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Praticienne Lahochi Magnétiseuse Virginie",
+  "praticien": "Praticienne Lahochi Magnétiseuse Virginie",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 21 34 40 93",
+  "telephoneLien": "tel:+33621344093",
+  "email": "",
+  "rue": "3 avenue André Bringuier",
+  "codePostal": "34530",
+  "ville": "Montagnac",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/praticiennemagnetiseuse",
+  "resalib": "https://www.resalib.fr/praticien/105727-praticienne-lahochi-magnetiseuse-virginie-praticien-en-soins-energetiques-montagnac",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

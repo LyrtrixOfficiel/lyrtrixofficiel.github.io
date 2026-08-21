@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Frédérique Machy",
+  "praticien": "Frédérique Machy",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 79 21 59 82",
+  "telephoneLien": "tel:+33679215982",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "13600",
+  "ville": "La Ciotat",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/frederiquemachy-Lahochi-and-You-2020235121390757/?modal=admin_todo_tour",
+  "resalib": "https://www.resalib.fr/praticien/22418-frederique-machy-coach-de-vie-la-ciotat",
+  "agrement": "",
+  "siret": "88979545600017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

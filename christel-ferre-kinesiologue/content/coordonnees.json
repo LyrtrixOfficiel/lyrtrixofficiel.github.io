@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christel FERRE Kinésiologue",
+  "praticien": "Christel FERRE Kinésiologue",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 74 85 57 82",
+  "telephoneLien": "tel:+33674855782",
+  "email": "",
+  "rue": "11 RUE DES MICOCOULIERS",
+  "codePostal": "11440",
+  "ville": "Peyriac-de-Mer",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/122971-christel-ferre-kinesiologue-kinesiologue-peyriac-de-mer",
+  "agrement": "",
+  "siret": "10055903800011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

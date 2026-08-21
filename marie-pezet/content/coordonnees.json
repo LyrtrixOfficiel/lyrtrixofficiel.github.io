@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marie Pezet",
+  "praticien": "Marie Pezet",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 75 05 04 27",
+  "telephoneLien": "tel:+33675050427",
+  "email": "",
+  "rue": "17B rue Tony Ferret Les jardins de Brou Bat A3",
+  "codePostal": "01000",
+  "ville": "Bourg-en-Bresse",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/share/g/1AuWFLZxzi/",
+  "resalib": "https://www.resalib.fr/praticien/110487-marie-pezet-neurotherapeute-bourg-en-bresse",
+  "agrement": "",
+  "siret": "53061574900021",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

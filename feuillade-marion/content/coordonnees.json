@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Feuillade marion ",
+  "praticien": "Feuillade marion ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 44 90 35 34",
+  "telephoneLien": "tel:+33744903534",
+  "email": "",
+  "rue": "2 rue maréchal Joffre Cabinet oasis- 1er étage",
+  "codePostal": "06000",
+  "ville": "Nice",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/103046-feuillade-marion-therapeute-nice",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

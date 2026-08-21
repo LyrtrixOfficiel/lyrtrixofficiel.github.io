@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Douceur De l’Âme E.I. Sylvie JOUSSELIN",
+  "praticien": "Douceur De l’Âme E.I. Sylvie JOUSSELIN",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 81 78 06 83",
+  "telephoneLien": "tel:+33681780683",
+  "email": "",
+  "rue": "1 Rue Gustave Binet",
+  "codePostal": "14600",
+  "ville": "La Rivière-Saint-Sauveur",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/106425-douceur-de-l-ame-e-i-sylvie-jousselin-praticien-en-energetique-la-riviere-saint-sauveur",
+  "agrement": "",
+  "siret": "50014127000024",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

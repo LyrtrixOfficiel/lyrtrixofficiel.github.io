@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christelle Zanon",
+  "praticien": "Christelle Zanon",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 63 28 09 15",
+  "telephoneLien": "tel:+33663280915",
+  "email": "",
+  "rue": "2, avenue de boutiny Le michel Ange",
+  "codePostal": "06530",
+  "ville": "Peymeinade",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/p/Christelle-Zanon-R%C3%A9flexologie-61556670053799/?locale=fr_FR",
+  "resalib": "https://www.resalib.fr/praticien/101744-christelle-zanon-reflexologue-peymeinade",
+  "agrement": "",
+  "siret": "98538155700018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

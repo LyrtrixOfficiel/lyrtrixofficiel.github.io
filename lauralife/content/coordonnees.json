@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Lauralife ",
+  "praticien": "Lauralife ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 90 82 2179",
+  "telephoneLien": "tel:+33690822179",
+  "email": "",
+  "rue": "13 rue du Dr Hélène",
+  "codePostal": "97190",
+  "ville": "Le Gosier",
+  "region": "",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/100946-lauralife-praticien-en-drainage-lymphatique-le-gosier",
+  "agrement": "",
+  "siret": "93356439500012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

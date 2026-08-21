@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Nais’Sens De L’âme",
+  "praticien": "Nais’Sens De L’âme",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 42 57 90 17",
+  "telephoneLien": "tel:+33642579017",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "46",
+  "ville": "Gourdon",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "https://www.facebook.com/share/16TP1Tw7Mh/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/109220-nais-sens-de-l-ame-psycho-energeticien-gourdon",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

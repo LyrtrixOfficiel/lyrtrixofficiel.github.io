@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christine Defrance Sophrologue",
+  "praticien": "Christine Defrance Sophrologue",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0189470014",
+  "telephoneLien": "tel:+33189470014",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "89700",
+  "ville": "Tonnerre",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "https://www.facebook.com/ChristineDefranceSophrologue",
+  "resalib": "https://www.resalib.fr/praticien/106557-christine-defrance-sophrologue-sophrologue-tonnerre",
+  "agrement": "",
+  "siret": "52750109200011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

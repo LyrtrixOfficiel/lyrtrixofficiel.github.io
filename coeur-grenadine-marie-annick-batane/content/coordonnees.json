@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Coeur Grenadine",
+  "praticien": "Coeur Grenadine",
+  "metier": "sophrologie",
+  "metierCourt": "sophrologie",
+  "telephone": "06 88 75 09 34",
+  "telephoneLien": "tel:+33688750934",
+  "email": "",
+  "rue": "",
+  "codePostal": "11000",
+  "ville": "Carcassonne",
+  "region": "Aude",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/aude/carcassonne-11000/sophrologie/coeur-grenadine-marie-annick-batane",
+  "agrement": "",
+  "siret": "93817512200010",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

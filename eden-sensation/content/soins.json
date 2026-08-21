@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de centre de bien-être",
+      "accroche": "",
+      "resume": "Une séance de massage tantra est une expérience sensuelle et relaxante qui vise à éveiller la conscience corporelle et la connexion énergétique.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Paris",
+        "150 € à 180 €"
+      ]
+    }
+  ]
+}

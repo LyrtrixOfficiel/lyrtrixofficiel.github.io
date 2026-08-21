@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de reflexologie",
+      "accroche": "",
+      "resume": "La réflexologie se positionne comme une solution efficace contre les effets de saturation du corps.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Challans",
+        "Sur demande"
+      ]
+    }
+  ]
+}

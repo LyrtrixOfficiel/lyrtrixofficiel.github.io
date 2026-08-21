@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marie camille GERARDO",
+  "praticien": "Marie camille GERARDO",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 87 91 08 75",
+  "telephoneLien": "tel:+33687910875",
+  "email": "",
+  "rue": "39 bis avenue des pics",
+  "codePostal": "65150",
+  "ville": "Saint-Laurent-de-Neste",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/110346-marie-camille-gerardo-therapeute-saint-laurent-de-neste",
+  "agrement": "",
+  "siret": "78895332100015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

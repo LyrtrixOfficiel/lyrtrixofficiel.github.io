@@ -1491,14 +1491,97 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    « Image de plan pour cliquer dessus et obtenir un itinéraire jusqu'au
    cabinet. »
 
-   Un vrai plan centre sur le cabinet afficherait sa maison, et son adresse
-   est privee. C'est donc un schema : sa commune au milieu, les villes autour.
-   Il repond a la seule question qu'on se pose devant un plan avant un premier
-   rendez-vous, « est-ce que c'est loin de chez moi », sans rien reveler.
-   L'adresse exacte n'apparait qu'au bout du lien, dans l'itineraire. */
+   C'est la vraie geographie du Sundgau, dessinee a partir d'OpenStreetMap par
+   `plan.mjs` : les bois, les villages, le Rhin, les autoroutes, la frontiere
+   suisse. Le trace est dans la page, servi par son propre site : aucune tuile
+   n'est demandee a un serveur tiers, donc aucune adresse IP de visiteuse ne
+   part ailleurs et il n'y a rien a faire accepter. Le lien, lui, ouvre bien
+   Google Maps, mais seulement si on clique.
+
+   LE POINT ORANGE EST LE CENTRE DE LA COMMUNE, PAS SA MAISON. Son adresse
+   n'apparait qu'au bout du lien, dans l'itineraire.
+
+   Toute une couche tient dans un seul `path` : c'est pour ca que la page
+   n'explose pas malgre quatre mille traces. */
+.plan-bloc { display: block; }
 .plan { display: block; padding: 20px 20px 0; overflow: hidden; }
-.plan svg { width: 100%; height: auto; aspect-ratio: 1; }
+.plan-cadre {
+  display: block; overflow: hidden; border-radius: 18px;
+  /* Le point orange sert d origine au rapprochement : les deux nombres sont
+     calcules a la construction a partir de plan.json, donc ils suivent tout
+     seuls si le cadre de la carte change un jour. */
+  transform-origin: var(--ici-x) var(--ici-y);
+}
+.plan-carte {
+  width: 100%; height: auto; aspect-ratio: 4 / 3;
+  transform-origin: var(--ici-x) var(--ici-y);
+  transition: scale .75s var(--sortie);
+  /* Le dessin est transparent : c'est le verre qui fait le fond, et la carte
+     flotte dedans au lieu d'etre posee sur une plaque blanche. */
+  overflow: hidden;
+}
 .plan text { font-family: inherit; }
+
+/* Les masses, du fond vers la surface. */
+.p-bois     { fill: rgba(104,122,78,.17); stroke: none; }
+.p-plan-eau { fill: rgba(86,124,150,.30); stroke: none; }
+.p-cours    { fill: none; stroke: rgba(86,124,150,.5); stroke-width: 1.1; }
+.p-bati     { fill: rgba(61,34,19,.14); stroke: rgba(61,34,19,.20); stroke-width: .7; }
+
+/* Les routes, de la plus discrete a la plus forte. Les autoroutes sont
+   orange : ce sont les deux axes qu'on suit vraiment pour venir, et ca ancre
+   la carte dans ses couleurs a elle plutot que dans celles d'un atlas. */
+.p-route   { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.p-route-3 { stroke: rgba(61,34,19,.22); stroke-width: 1; }
+.p-route-2 { stroke: rgba(61,34,19,.34); stroke-width: 1.4; }
+.p-route-1 { stroke: rgba(226,113,29,.62); stroke-width: 2.1; }
+
+.p-frontiere {
+  fill: none; stroke: rgba(61,34,19,.34); stroke-width: 1;
+  stroke-dasharray: 6 3 1.6 3; stroke-linecap: round;
+}
+
+/* Tous les noms sont cernes de creme : sans ce liseré, un nom pose sur une
+   tache de bati ou sur une route devient illisible. C'est le vieux truc des
+   cartographes, et `paint-order` le rend possible en une ligne. */
+.plan text {
+  text-anchor: middle;
+  paint-order: stroke; stroke: var(--creme); stroke-width: 3.4;
+  stroke-linejoin: round; fill: var(--encre-doux);
+}
+.p-pays {
+  font-size: 10.5px; font-weight: 500; letter-spacing: 3.4px;
+  fill: rgba(61,34,19,.34); stroke-width: 3;
+}
+.p-grand { font-size: 14px;   font-weight: 600; fill: var(--encre); }
+.p-moyen { font-size: 11.5px; font-weight: 500; }
+.p-petit { font-size: 10px;   fill: var(--encre-pale); stroke-width: 3; }
+
+/* L'echelle : la reponse a « est-ce que c'est loin » sans une phrase. */
+.p-echelle path { fill: none; stroke: rgba(61,34,19,.36); stroke-width: 1; }
+.p-echelle text { font-size: 8.5px; fill: var(--encre-pale); stroke-width: 2.6; }
+
+/* Elle. */
+.p-onde {
+  fill: none; stroke: var(--orange); stroke-width: 1.3;
+  transform-box: fill-box; transform-origin: center;
+  animation: plan-onde 4.4s var(--sortie) infinite;
+}
+@keyframes plan-onde {
+  0%        { scale: .28; opacity: .6; }
+  72%, 100% { scale: 1;   opacity: 0; }
+}
+.p-point {
+  fill: var(--orange); stroke: var(--creme); stroke-width: 1.5;
+  transition: r .4s var(--sortie);
+}
+.plan:hover .p-point { r: 6; }
+.plan:hover .plan-carte { scale: 1.05; }
+.p-nom {
+  font-size: 15.5px; font-weight: 700; fill: var(--encre);
+  stroke-width: 4.2; letter-spacing: .2px;
+}
+
 .plan-pied {
   display: flex; align-items: center; justify-content: center; gap: 9px;
   margin: 4px -20px 0; padding: 17px;
@@ -1507,6 +1590,14 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 }
 .plan-pied svg { width: 15px; height: 15px; aspect-ratio: auto; transition: translate .35s var(--sortie); }
 .plan:hover .plan-pied svg { translate: 4px 0; }
+
+/* L'attribution n'est pas une politesse : la licence ODbL l'exige des qu'on
+   redessine leurs donnees. Et sur une carte, ca se fait depuis toujours. */
+.plan-credit {
+  margin: 9px 0 0; text-align: center;
+  font-size: .74rem; color: var(--encre-pale);
+}
+.plan-credit a { color: inherit; border-bottom: 1px solid rgba(169,141,120,.4); }
 
 /* --- ADAPTATIONS --------------------------------------------------------- */
 @media (max-width: 900px) {
@@ -1534,12 +1625,28 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   .questions a { padding: 13px 16px; font-size: .96rem; }
   .plan { padding: 14px 14px 0; }
   .plan-pied { margin: 2px -14px 0; padding: 15px; }
+
+  /* LES NOMS D UNE CARTE NE SE REDUISENT PAS AVEC ELLE.
+     Les tailles sont en unites du dessin, donc elles suivent la largeur : sur
+     un telephone la carte fait trois cent quarante pixels au lieu de quatre
+     cent soixante-dix, et « Sierentz » tombait sous sept pixels. On les
+     grossit d un tiers, ce qui les ramene exactement la ou ils etaient sur
+     ordinateur. Le trace, lui, ne bouge pas. */
+  .p-grand { font-size: 18.5px; }
+  .p-moyen { font-size: 15.5px; }
+  .p-petit { font-size: 13.5px; stroke-width: 4; }
+  .p-pays  { font-size: 13px; letter-spacing: 4px; }
+  .p-nom   { font-size: 21px; stroke-width: 5.5; }
+  .p-echelle text { font-size: 11.5px; stroke-width: 3.5; }
+  .plan text { stroke-width: 4.4; }
 }
 
 /* Sans mouvement, la galerie ne flotte pas et le titre ne tourne pas. */
 @media (prefers-reduced-motion: reduce) {
   .g1, .g3 { translate: 0 0; }
   .titre-flyer img { animation: none; }
+  .p-onde { animation: none; opacity: 0; }
+  .plan:hover .plan-carte { scale: 1; }
 }
 
 /* =========================================================================

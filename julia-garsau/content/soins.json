@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de psychopratique",
+      "accroche": "",
+      "resume": "La thérapie brève orientée vers les solutions nous concerne tous.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Cabestany",
+        "Sur demande"
+      ]
+    }
+  ]
+}

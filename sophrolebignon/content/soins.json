@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "Je vous accompagne sur des séances d'entraînement du corps et du mental pour développer sérénité et mieux-être, pour permettre de prendre confiance en soi et de pouvoir dépasser les freins que nous nous mettons au quotidien.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Le Bignon",
+        "Sur demande"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sonia Gasteuil Auxiliothérapeute",
+  "praticien": "Sonia Gasteuil Auxiliothérapeute",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 83 90 24 52",
+  "telephoneLien": "tel:+33683902452",
+  "email": "",
+  "rue": "47 Verdot",
+  "codePostal": "33860",
+  "ville": "Reignac",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/profile.php?id=61575552391761",
+  "resalib": "https://www.resalib.fr/praticien/108778-sonia-gasteuil-auxiliotherapeute-coach-de-vie-reignac",
+  "agrement": "",
+  "siret": "94326954800013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

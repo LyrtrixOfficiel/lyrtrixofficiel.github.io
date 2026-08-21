@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Désirée Alves Da Silva ",
+  "praticien": "Désirée Alves Da Silva ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 66 30 14 35",
+  "telephoneLien": "tel:+33766301435",
+  "email": "",
+  "rue": "07 Boulevard Carnot",
+  "codePostal": "06400",
+  "ville": "Cannes",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/102321-desiree-alves-da-silva-massotherapeute-cannes",
+  "agrement": "",
+  "siret": "92017743300017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

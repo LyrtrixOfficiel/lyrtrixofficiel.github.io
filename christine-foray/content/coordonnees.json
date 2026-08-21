@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Christine Foray",
+  "praticien": "Christine Foray",
+  "metier": "hypnose",
+  "metierCourt": "hypnose",
+  "telephone": "06 99 36 99 98",
+  "telephoneLien": "tel:+33699369998",
+  "email": "",
+  "rue": "",
+  "codePostal": "38300",
+  "ville": "Bourgoin Jallieu",
+  "region": "Isere",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/isere/bourgoin-jallieu-38300/hypnose/christine-foray",
+  "agrement": "",
+  "siret": "83965809300027",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

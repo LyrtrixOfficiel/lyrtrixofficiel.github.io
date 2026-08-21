@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Tout en Soi , Psychogénéalogie",
+  "praticien": "Tout en Soi , Psychogénéalogie",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 79 40 16 26",
+  "telephoneLien": "tel:+33679401626",
+  "email": "",
+  "rue": "17 chemin du viget",
+  "codePostal": "30340",
+  "ville": "Saint-Privat-des-Vieux",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/105916-tout-en-soi-psychogenealogie-therapeute-holistique-saint-privat-des-vieux",
+  "agrement": "",
+  "siret": "97993394200018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

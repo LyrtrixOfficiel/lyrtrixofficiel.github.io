@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Laurence Saint-Martin Bruyère",
+  "praticien": "Laurence Saint-Martin Bruyère",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.04.42.72.73",
+  "telephoneLien": "tel:+33604427273",
+  "email": "",
+  "rue": "1315 Route de Saint-Damien",
+  "codePostal": "47270",
+  "ville": "La Sauvetat-de-Savères",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/99657-laurence-saint-martin-bruyere-sophrologue-la-sauvetat-de-saveres",
+  "agrement": "",
+  "siret": "52439356800042",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

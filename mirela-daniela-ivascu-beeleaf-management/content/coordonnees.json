@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mirela Daniela IVASCU - BeeLeaf Management",
+  "praticien": "Mirela Daniela IVASCU - BeeLeaf Management",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 83 96 54 80",
+  "telephoneLien": "tel:+33783965480",
+  "email": "",
+  "rue": "1 bis rue du Marechal Joffre",
+  "codePostal": "91510",
+  "ville": "Lardy",
+  "region": "Île-de-France",
+  "facebook": "https://www.facebook.com/BeeLeafManagement",
+  "resalib": "https://www.resalib.fr/praticien/20964-mirela-daniela-ivascu-beeleaf-management-coach-en-management-lardy",
+  "agrement": "",
+  "siret": "91069565900011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

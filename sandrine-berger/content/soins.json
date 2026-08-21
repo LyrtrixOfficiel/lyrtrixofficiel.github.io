@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de dietetique et nutrition",
+      "accroche": "",
+      "resume": "Installée à Vaux Sur Mer, en Charente Maritime (17) depuis 2007 et à Saint Fort Sur Gironde depuis Juin 2020, et au 1er janvier 2026 à SEMUSSAC je vous accueille dans mes cabinets et vous propose un programme diététique personnalisé.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Saint Fort Sur Gironde",
+        "Sur demande"
+      ]
+    }
+  ]
+}

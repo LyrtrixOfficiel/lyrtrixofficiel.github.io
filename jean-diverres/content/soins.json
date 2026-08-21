@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de reiki",
+      "accroche": "",
+      "resume": "Après avoir occupé des fonctions managériales pendant plusieurs années dans un groupe international, et suivi un cursus de formation jusqu'au 3ème degré de Reiki, j'ai effectué un changement professionnel important en devenant praticien à plein temps.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Beauchamp",
+        "Sur demande"
+      ]
+    }
+  ]
+}

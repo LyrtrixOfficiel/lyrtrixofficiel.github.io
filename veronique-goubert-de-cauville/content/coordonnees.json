@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Véronique Goubert de Cauville",
+  "praticien": "Véronique Goubert de Cauville",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 19 50 46 92",
+  "telephoneLien": "tel:+33619504692",
+  "email": "",
+  "rue": "La ferme de la Drelas 41600 Chaumont-sur-Tharon CHAUMONT SUR THARONNE",
+  "codePostal": "41600",
+  "ville": "Chaumont-sur-Tharonne",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/128107-veronique-goubert-de-cauville-energeticien-chaumont-sur-tharonne",
+  "agrement": "",
+  "siret": "89235380600011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

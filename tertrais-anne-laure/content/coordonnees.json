@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Tertrais Anne-Laure",
+  "praticien": "Tertrais Anne-Laure",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 18 31 04 22",
+  "telephoneLien": "tel:+33618310422",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "35000",
+  "ville": "Rennes",
+  "region": "Bretagne",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/118879-tertrais-anne-laure-centre-de-bien-etre-rennes",
+  "agrement": "",
+  "siret": "99302149200018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

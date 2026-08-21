@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marion Rebérat",
+  "praticien": "Marion Rebérat",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 75 93 59 32",
+  "telephoneLien": "tel:+33675935932",
+  "email": "",
+  "rue": "Rue de la Gravière",
+  "codePostal": "30460",
+  "ville": "Lasalle",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/marionterrehappyuniverselle/",
+  "resalib": "https://www.resalib.fr/praticien/89219-marion-reberat-therapeute-holistique-lasalle",
+  "agrement": "",
+  "siret": "80120638400027",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

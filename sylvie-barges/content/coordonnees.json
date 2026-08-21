@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sylvie BARGES",
+  "praticien": "Sylvie BARGES",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 17 29 91 72",
+  "telephoneLien": "tel:+33617299172",
+  "email": "",
+  "rue": "2 Allée des Vignes",
+  "codePostal": "21800",
+  "ville": "Neuilly-Crimolois",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "https://www.facebook.com/sylvie.bargesprofilpro/about?locale=fr_FR",
+  "resalib": "https://www.resalib.fr/praticien/119275-sylvie-barges-sophrologue-neuilly-crimolois",
+  "agrement": "",
+  "siret": "94485317500015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

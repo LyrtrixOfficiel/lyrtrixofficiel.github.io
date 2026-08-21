@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de massage bien etre",
+      "accroche": "",
+      "resume": "\"Bonjour, Je suis Marie, j'ai été formée à la méthode Renata França (méthode brésilienne) par Nathalie Duarte (seule formatrice en France) pour vous proposer les meilleurs soins du corps, autant d'un point de vue physique, psychique, qu'émotionnelle.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Lyon",
+        "Sur demande"
+      ]
+    }
+  ]
+}

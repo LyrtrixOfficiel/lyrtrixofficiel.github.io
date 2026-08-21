@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Anne Maksud",
+  "praticien": "Anne Maksud",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 81 33 20 85",
+  "telephoneLien": "tel:+33681332085",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "77210",
+  "ville": "Avon",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/94030-anne-maksud-kinesiologue-avon",
+  "agrement": "",
+  "siret": "79081654000013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

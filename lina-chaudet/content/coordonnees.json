@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Lina Chaudet ",
+  "praticien": "Lina Chaudet ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0778954604",
+  "telephoneLien": "tel:+33778954604",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "14000",
+  "ville": "Caen",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/97518-lina-chaudet-sexotherapeute-caen",
+  "agrement": "",
+  "siret": "93379682300013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

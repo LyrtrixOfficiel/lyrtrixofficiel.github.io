@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mathilde Massages ",
+  "praticien": "Mathilde Massages ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 70 50 76 10",
+  "telephoneLien": "tel:+33670507610",
+  "email": "",
+  "rue": "13 rue Félix Martin",
+  "codePostal": "83120",
+  "ville": "Sainte-Maxime",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/114458-mathilde-massages-praticien-en-drainage-lymphatique-sainte-maxime",
+  "agrement": "",
+  "siret": "92337696600019",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Michel kerdraon",
+  "praticien": "Michel kerdraon",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 60 73 56 26",
+  "telephoneLien": "tel:+33660735626",
+  "email": "",
+  "rue": "38 rue du pont",
+  "codePostal": "29470",
+  "ville": "Plougastel-Daoulas",
+  "region": "Bretagne",
+  "facebook": "https://www.facebook.com/p/Michel-Kerdraon-Magnetiseur",
+  "resalib": "https://www.resalib.fr/praticien/110821-michel-kerdraon-praticien-en-soins-energetiques-plougastel-daoulas",
+  "agrement": "",
+  "siret": "91100124600014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

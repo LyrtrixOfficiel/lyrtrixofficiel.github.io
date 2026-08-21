@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Maiwenn Colombelli",
+  "praticien": "Maiwenn Colombelli",
+  "metier": "dietetique et nutrition",
+  "metierCourt": "dietetique et nutrition",
+  "telephone": "06 74 15 06 53",
+  "telephoneLien": "tel:+33674150653",
+  "email": "",
+  "rue": "",
+  "codePostal": "33290",
+  "ville": "Parempuyre",
+  "region": "Gironde",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/gironde/parempuyre-33290/dietetique-et-nutrition/colombelli-maiwenn",
+  "agrement": "",
+  "siret": "47980143300075",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

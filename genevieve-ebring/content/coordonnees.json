@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Geneviève Ebring",
+  "praticien": "Geneviève Ebring",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 90 59 36 15",
+  "telephoneLien": "tel:+33690593615",
+  "email": "",
+  "rue": "ROUTE FIRMIN RAGHOUMANDAN SAINT ALBAN LA RETRAITE BAIE MAHAULT",
+  "codePostal": "97122",
+  "ville": "Baie-Mahault",
+  "region": "",
+  "facebook": "https://www.facebook.com/share/18WXqK1T2A/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/103085-genevieve-ebring-reflexologue-baie-mahault",
+  "agrement": "",
+  "siret": "94981686200013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

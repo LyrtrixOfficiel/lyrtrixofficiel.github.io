@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Colette CASTRUCCI",
+  "praticien": "Colette CASTRUCCI",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 71 21 77 22",
+  "telephoneLien": "tel:+33771217722",
+  "email": "",
+  "rue": "42 rue des Trois Frères Barthélémy",
+  "codePostal": "13006",
+  "ville": "Marseille",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/124716-colette-castrucci-psychanalyste-marseille",
+  "agrement": "",
+  "siret": "84531670200016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Body Industry",
+  "praticien": "Body Industry",
+  "metier": "dermatologie",
+  "metierCourt": "dermatologie",
+  "telephone": "06 59 32 56 13",
+  "telephoneLien": "tel:+33659325613",
+  "email": "",
+  "rue": "",
+  "codePostal": "94600",
+  "ville": "Choisy Le Roi",
+  "region": "Val De Marne",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/val-de-marne/choisy-le-roi-94600/dermatologie/body-industry",
+  "agrement": "",
+  "siret": "91437920100025",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

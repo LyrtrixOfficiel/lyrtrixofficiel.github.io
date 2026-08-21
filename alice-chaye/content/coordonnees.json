@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Alice Chaye",
+  "praticien": "Alice Chaye",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0766354835",
+  "telephoneLien": "tel:+33766354835",
+  "email": "",
+  "rue": "980 route du rouergue",
+  "codePostal": "12200",
+  "ville": "Toulonjac",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/98399-alice-chaye-hypnotherapeute-toulonjac",
+  "agrement": "",
+  "siret": "85408501600003",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

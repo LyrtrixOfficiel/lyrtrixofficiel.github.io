@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Aline Valentin",
+  "praticien": "Aline Valentin",
+  "metier": "dietetique et nutrition",
+  "metierCourt": "dietetique et nutrition",
+  "telephone": "06 49 83 68 37",
+  "telephoneLien": "tel:+33649836837",
+  "email": "",
+  "rue": "",
+  "codePostal": "63400",
+  "ville": "Chamalieres",
+  "region": "Puy De Dome",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/puy-de-dome/chamalieres-63400/dietetique-et-nutrition/aline-valentin",
+  "agrement": "",
+  "siret": "83347020600024",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

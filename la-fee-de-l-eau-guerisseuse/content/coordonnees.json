@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "La fée de l’eau guerisseuse",
+  "praticien": "La fée de l’eau guerisseuse",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 12 11 31 30",
+  "telephoneLien": "tel:+33612113130",
+  "email": "",
+  "rue": "15 jeansannes",
+  "codePostal": "23240",
+  "ville": "Le Grand-Bourg",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/share/g/1GLSqDfwv6/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/105542-la-fee-de-l-eau-guerisseuse-praticien-en-soins-energetiques-le-grand-bourg",
+  "agrement": "",
+  "siret": "81512431800016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

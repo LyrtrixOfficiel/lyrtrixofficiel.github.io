@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Emilie Rambu",
+  "praticien": "Emilie Rambu",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 16 20 12 27",
+  "telephoneLien": "tel:+33616201227",
+  "email": "",
+  "rue": "11 rue de la Mare d'ovillers",
+  "codePostal": "60570",
+  "ville": "Mortefontaine-en-Thelle",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/share/161FVVszGv/",
+  "resalib": "https://www.resalib.fr/praticien/104772-emilie-rambu-praticien-en-bien-etre-mortefontaine-en-thelle",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

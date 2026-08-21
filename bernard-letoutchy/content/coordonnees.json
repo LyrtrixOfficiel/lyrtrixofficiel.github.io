@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Bernard  Letoutchy",
+  "praticien": "Bernard  Letoutchy",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 51 60 96 42",
+  "telephoneLien": "tel:+33651609642",
+  "email": "",
+  "rue": "5 rue Le Dantec",
+  "codePostal": "75013",
+  "ville": "Paris",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/90675-bernard-letoutchy-reflexologue-paris",
+  "agrement": "",
+  "siret": "98030827400011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

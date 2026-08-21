@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Le Cocon d’Aurélie ",
+  "praticien": "Le Cocon d’Aurélie ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 08 57 26 67",
+  "telephoneLien": "tel:+33608572667",
+  "email": "",
+  "rue": "144 rue de la cité fleurie",
+  "codePostal": "71680",
+  "ville": "Crêches-sur-Saône",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/129213-le-cocon-d-aurelie-sophrologue-creches-sur-saone",
+  "agrement": "",
+  "siret": "88431941900013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

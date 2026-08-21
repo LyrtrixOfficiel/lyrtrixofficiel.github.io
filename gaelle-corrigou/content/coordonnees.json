@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Gaelle Corrigou ",
+  "praticien": "Gaelle Corrigou ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 10 49 77 15",
+  "telephoneLien": "tel:+33610497715",
+  "email": "",
+  "rue": "4 Place Crottigné",
+  "codePostal": "53150",
+  "ville": "Montsûrs",
+  "region": "Pays de la Loire",
+  "facebook": "https://www.facebook.com/profile.php?id=61551581482176",
+  "resalib": "https://www.resalib.fr/praticien/109902-gaelle-corrigou-psychopedagogue-montsurs",
+  "agrement": "",
+  "siret": "52358279900012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

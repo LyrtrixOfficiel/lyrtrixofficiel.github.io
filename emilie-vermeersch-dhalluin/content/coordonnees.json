@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "EMILIE VERMEERSCH DHALLUIN",
+  "praticien": "EMILIE VERMEERSCH DHALLUIN",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 71 37 69 33",
+  "telephoneLien": "tel:+33671376933",
+  "email": "",
+  "rue": "30 rue des Près",
+  "codePostal": "59290",
+  "ville": "Wasquehal",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/profile.php?id=61554121678318",
+  "resalib": "https://www.resalib.fr/praticien/118204-emilie-vermeersch-dhalluin-coach-parental-et-familial-wasquehal",
+  "agrement": "",
+  "siret": "41854155300032",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

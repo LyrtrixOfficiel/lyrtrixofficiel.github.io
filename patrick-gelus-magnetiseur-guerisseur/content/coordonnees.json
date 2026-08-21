@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Patrick gélus magnétiseur,guérisseur ",
+  "praticien": "Patrick gélus magnétiseur,guérisseur ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 88 31 59 68",
+  "telephoneLien": "tel:+33788315968",
+  "email": "",
+  "rue": "34 Rue des Rosiers",
+  "codePostal": "11400",
+  "ville": "Saint-Martin-Lalande",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/101368-patrick-gelus-magnetiseur-guerisseur-energeticien-saint-martin-lalande",
+  "agrement": "",
+  "siret": "97745188900017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

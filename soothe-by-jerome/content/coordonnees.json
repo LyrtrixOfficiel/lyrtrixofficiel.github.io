@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Soothe by Jerome ",
+  "praticien": "Soothe by Jerome ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 65 58 91 64",
+  "telephoneLien": "tel:+33665589164",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "77160",
+  "ville": "Provins",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/125925-soothe-by-jerome-praticien-en-soins-energetiques-provins",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

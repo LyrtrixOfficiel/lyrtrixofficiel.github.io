@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Emilie AMBERG - Kinésiologie60",
+  "praticien": "Emilie AMBERG - Kinésiologie60",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 22 92 02 11",
+  "telephoneLien": "tel:+33622920211",
+  "email": "",
+  "rue": "11 rue Jean Mazille au Cabinet Paramédical du Jeu de Paume",
+  "codePostal": "60000",
+  "ville": "Beauvais",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/share/17eoG7sjX8/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/118466-emilie-amberg-kinesiologie60-kinesiologue-beauvais",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

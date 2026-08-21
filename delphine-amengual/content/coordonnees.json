@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Delphine Amengual",
+  "praticien": "Delphine Amengual",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 82 36 51 08",
+  "telephoneLien": "tel:+33782365108",
+  "email": "",
+  "rue": "108 bis avenue des Minimes",
+  "codePostal": "31200",
+  "ville": "Toulouse",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/delphine.amengual/",
+  "resalib": "https://www.resalib.fr/praticien/111376-delphine-amengual-reflexologue-toulouse",
+  "agrement": "",
+  "siret": "97972356600019",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

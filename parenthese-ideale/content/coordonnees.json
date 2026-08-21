@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Parenthèse Idéale",
+  "praticien": "Parenthèse Idéale",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 66 14 83 00",
+  "telephoneLien": "tel:+33766148300",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "76270",
+  "ville": "Neufchâtel-en-Bray",
+  "region": "Normandie",
+  "facebook": "https://www.facebook.com/alexandra.panthou.39",
+  "resalib": "https://www.resalib.fr/praticien/100837-parenthese-ideale-praticien-en-massage-bien-etre-neufchatel-en-bray",
+  "agrement": "",
+  "siret": "84862653700015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

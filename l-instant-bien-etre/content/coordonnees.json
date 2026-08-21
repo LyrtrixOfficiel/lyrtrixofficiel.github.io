@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "L’instant Bien Etre",
+  "praticien": "L’instant Bien Etre",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 47 14 01 77",
+  "telephoneLien": "tel:+33647140177",
+  "email": "",
+  "rue": "20 Rue du 11 Novembre",
+  "codePostal": "06370",
+  "ville": "Mouans-Sartoux",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/107801-l-instant-bien-etre-praticien-en-bien-etre-mouans-sartoux",
+  "agrement": "",
+  "siret": "90428146600030",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

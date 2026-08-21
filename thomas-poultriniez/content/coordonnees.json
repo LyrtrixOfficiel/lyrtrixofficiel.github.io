@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Thomas POULTRINIEZ",
+  "praticien": "Thomas POULTRINIEZ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 98 71 97 97",
+  "telephoneLien": "tel:+33698719797",
+  "email": "",
+  "rue": "359 rue Saint Joseph",
+  "codePostal": "83400",
+  "ville": "Hyères",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/100023-thomas-poultriniez-sexologue-clinicien-hyeres",
+  "agrement": "",
+  "siret": "91183197200011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

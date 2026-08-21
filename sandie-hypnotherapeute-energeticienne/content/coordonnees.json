@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sandie Hypnothérapeute & énérgeticienne",
+  "praticien": "Sandie Hypnothérapeute & énérgeticienne",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 30 05 80 85",
+  "telephoneLien": "tel:+33630058085",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "90800",
+  "ville": "Bavilliers",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "https://www.facebook.com/share/1GJxxBLG1E/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/127216-sandie-hypnotherapeute-energeticienne-praticien-en-bien-etre-bavilliers",
+  "agrement": "",
+  "siret": "10280211300013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

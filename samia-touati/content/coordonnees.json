@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Samia Touati ",
+  "praticien": "Samia Touati ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 25 20 56 00",
+  "telephoneLien": "tel:+33625205600",
+  "email": "",
+  "rue": "51 Rue du Dr Goldstein",
+  "codePostal": "95410",
+  "ville": "Groslay",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/26990-samia-touati-kinesiologue-groslay",
+  "agrement": "",
+  "siret": "53399192300012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Céline GOJET HUILLERY",
+  "praticien": "Céline GOJET HUILLERY",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 67 21 94 67",
+  "telephoneLien": "tel:+33767219467",
+  "email": "",
+  "rue": "65 Avenue de Toulouse Centre Pamarédical \"Coustayrac\"",
+  "codePostal": "31820",
+  "ville": "Pibrac",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/profile.php?id=61590232418214",
+  "resalib": "https://www.resalib.fr/praticien/128243-celine-gojet-huillery-reflexologue-pibrac",
+  "agrement": "",
+  "siret": "89374734500021",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

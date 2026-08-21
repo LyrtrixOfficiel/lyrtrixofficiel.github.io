@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Emmanuel scotto",
+  "praticien": "Emmanuel scotto",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 80 45 90 26",
+  "telephoneLien": "tel:+33680459026",
+  "email": "",
+  "rue": "Maison de santé d'Agliani 755 chemin d agliani 1er etage ascenceur",
+  "codePostal": "20600",
+  "ville": "Bastia",
+  "region": "Corse",
+  "facebook": "https://www.facebook.com/profile.php?id=61565718555155",
+  "resalib": "https://www.resalib.fr/praticien/96975-emmanuel-scotto-osteotherapeute-bastia",
+  "agrement": "",
+  "siret": "47823881900039",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

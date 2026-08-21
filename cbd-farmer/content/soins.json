@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de dietetique et nutrition",
+      "accroche": "",
+      "resume": "Le cbd provenant de plant de chanvre cannabis sativa L est principalement utilisé pour ses vertus relaxantes mais cette molécule en possède bien d'autres.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Bordeaux",
+        "Sur demande"
+      ]
+    }
+  ]
+}

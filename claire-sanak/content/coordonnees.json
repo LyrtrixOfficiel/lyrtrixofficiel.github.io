@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Claire SANAK",
+  "praticien": "Claire SANAK",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0670471009",
+  "telephoneLien": "tel:+33670471009",
+  "email": "",
+  "rue": "20 Rue de la Minoterie Espace de la Minoterie",
+  "codePostal": "74940",
+  "ville": "Annecy",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/100646-claire-sanak-praticien-en-medecine-chinoise-annecy",
+  "agrement": "",
+  "siret": "93794968300018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Massagyi",
+  "praticien": "Massagyi",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 17 72 09 63",
+  "telephoneLien": "tel:+33617720963",
+  "email": "",
+  "rue": "1 Impasse du Dambec, 76270 Saint-Saire ST SAIRE",
+  "codePostal": "76270",
+  "ville": "Saint-Saire",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/122511-massagyi-praticien-en-massage-bien-etre-saint-saire",
+  "agrement": "",
+  "siret": "99143802900019",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

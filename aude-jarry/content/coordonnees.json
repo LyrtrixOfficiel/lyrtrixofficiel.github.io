@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Aude JARRY",
+  "praticien": "Aude JARRY",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07.44.57.08.50",
+  "telephoneLien": "tel:+33744570850",
+  "email": "",
+  "rue": "21 RUE DU STADE",
+  "codePostal": "54380",
+  "ville": "Dieulouard",
+  "region": "Grand Est",
+  "facebook": "https://www.facebook.com/reflexologieeft",
+  "resalib": "https://www.resalib.fr/praticien/105941-aude-jarry-reflexologue-dieulouard",
+  "agrement": "",
+  "siret": "87782052400017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

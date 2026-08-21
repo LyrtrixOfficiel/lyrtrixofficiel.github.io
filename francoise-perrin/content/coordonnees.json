@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Françoise PERRIN",
+  "praticien": "Françoise PERRIN",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 65 24 29 95",
+  "telephoneLien": "tel:+33665242995",
+  "email": "",
+  "rue": "22 rue de Chavril",
+  "codePostal": "69110",
+  "ville": "Sainte-Foy-lès-Lyon",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/101376-francoise-perrin-praticien-en-therapies-breves-sainte-foy-les-lyon",
+  "agrement": "",
+  "siret": "93159012900017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

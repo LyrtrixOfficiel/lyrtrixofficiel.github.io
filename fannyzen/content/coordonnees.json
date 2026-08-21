@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "FannyZen",
+  "praticien": "FannyZen",
+  "metier": "reiki",
+  "metierCourt": "reiki",
+  "telephone": "06 01 77 91 14",
+  "telephoneLien": "tel:+33601779114",
+  "email": "",
+  "rue": "",
+  "codePostal": "38420",
+  "ville": "Domene",
+  "region": "Isere",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/isere/domene-38420/reiki/fannyzen",
+  "agrement": "",
+  "siret": "89258901100022",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

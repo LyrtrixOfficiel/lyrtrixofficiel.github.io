@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mélanie - NAMASME",
+  "praticien": "Mélanie - NAMASME",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 73 30 20 55",
+  "telephoneLien": "tel:+33673302055",
+  "email": "",
+  "rue": "3 route de Brasparts",
+  "codePostal": "29590",
+  "ville": "Lopérec",
+  "region": "Bretagne",
+  "facebook": "https://www.facebook.com/share/16kecPSNuv/",
+  "resalib": "https://www.resalib.fr/praticien/107509-melanie-namasme-praticien-en-energetique-loperec",
+  "agrement": "",
+  "siret": "92260322000026",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

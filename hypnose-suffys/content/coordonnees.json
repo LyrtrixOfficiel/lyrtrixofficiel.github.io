@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Hypnose Suffys",
+  "praticien": "Hypnose Suffys",
+  "metier": "hypnose",
+  "metierCourt": "hypnose",
+  "telephone": "06 26 01 49 54",
+  "telephoneLien": "tel:+33626014954",
+  "email": "",
+  "rue": "",
+  "codePostal": "37000",
+  "ville": "Tours",
+  "region": "Indre Et Loire",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/indre-et-loire/tours-37000/hypnose/hypnose-suffys",
+  "agrement": "",
+  "siret": "91398411800012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

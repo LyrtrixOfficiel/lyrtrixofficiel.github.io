@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de psychotherapie",
+      "accroche": "",
+      "resume": "Je me réfère principalement aux theories freudiennes et lacaniennes, mais je m'adapte aussi aux besoins et aux demandes de chaque patient.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Paris 13",
+        "Sur demande"
+      ]
+    }
+  ]
+}

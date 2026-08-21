@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de naturopathie",
+      "accroche": "",
+      "resume": "Je suis conseillère en naturopathie spécialisée dans les troubles féminins.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Soisy Sur Seine",
+        "Sur demande"
+      ]
+    }
+  ]
+}

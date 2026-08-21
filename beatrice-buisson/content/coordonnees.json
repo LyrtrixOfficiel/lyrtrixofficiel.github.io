@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Beatrice BUISSON",
+  "praticien": "Beatrice BUISSON",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 72 85 84 66",
+  "telephoneLien": "tel:+33672858466",
+  "email": "",
+  "rue": "24 rue du commerce",
+  "codePostal": "81100",
+  "ville": "Castres",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/share/1BJXVa1J8b/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/127118-beatrice-buisson-praticien-en-soins-energetiques-castres",
+  "agrement": "",
+  "siret": "94487063300012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

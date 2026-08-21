@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Magali Bonnafous",
+  "praticien": "Magali Bonnafous",
+  "metier": "sophrologie",
+  "metierCourt": "sophrologie",
+  "telephone": "06 02 55 16 42",
+  "telephoneLien": "tel:+33602551642",
+  "email": "",
+  "rue": "",
+  "codePostal": "31140",
+  "ville": "Montberon",
+  "region": "Haute Garonne",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/haute-garonne/montberon-31140/sophrologie/magali-bonnafous",
+  "agrement": "",
+  "siret": "89299892300023",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

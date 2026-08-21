@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "ASET THERAPIE STEPHANIE ",
+  "praticien": "ASET THERAPIE STEPHANIE ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 86 63 64 19",
+  "telephoneLien": "tel:+33686636419",
+  "email": "",
+  "rue": "4 rue Germaine Tillion Le Vendemiaire 1",
+  "codePostal": "34230",
+  "ville": "Plaissan",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/share/1D1LfCqHMj/",
+  "resalib": "https://www.resalib.fr/praticien/130453-aset-therapie-stephanie-praticien-en-soins-energetiques-plaissan",
+  "agrement": "",
+  "siret": "99036176800015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

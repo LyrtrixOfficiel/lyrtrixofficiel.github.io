@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sahra  benzine sophrologue ",
+  "praticien": "Sahra  benzine sophrologue ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0692699018",
+  "telephoneLien": "tel:+33692699018",
+  "email": "",
+  "rue": "Sainte suzanne 0692699018 reunion",
+  "codePostal": "97441",
+  "ville": "Sainte-Suzanne",
+  "region": "",
+  "facebook": "https://www.facebook.com/profile.php?id=61558055143436",
+  "resalib": "https://www.resalib.fr/praticien/92531-sahra-benzine-sophrologue-sophrologue-sainte-suzanne",
+  "agrement": "",
+  "siret": "75403140900024",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

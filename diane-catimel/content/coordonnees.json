@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Diane CATIMEL",
+  "praticien": "Diane CATIMEL",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 65 64 60 29",
+  "telephoneLien": "tel:+33765646029",
+  "email": "",
+  "rue": "43 PLACE DES BASSES BAROLLES",
+  "codePostal": "69230",
+  "ville": "Saint-Genis-Laval",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/diane.catimel.5/",
+  "resalib": "https://www.resalib.fr/praticien/99039-diane-catimel-praticien-en-therapies-breves-saint-genis-laval",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

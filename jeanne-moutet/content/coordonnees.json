@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Jeanne MOUTET",
+  "praticien": "Jeanne MOUTET",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 83 15 77 37",
+  "telephoneLien": "tel:+33683157737",
+  "email": "",
+  "rue": "18 rue Eugène et Marie-Louise CORNET Espace santé Hugo Cornet Bâtiment C",
+  "codePostal": "93500",
+  "ville": "Pantin",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/111317-jeanne-moutet-kinesiologue-pantin",
+  "agrement": "",
+  "siret": "94407881500015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

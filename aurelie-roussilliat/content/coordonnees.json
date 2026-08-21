@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Aurélie ROUSSILLIAT",
+  "praticien": "Aurélie ROUSSILLIAT",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 17 91 65 97",
+  "telephoneLien": "tel:+33617916597",
+  "email": "",
+  "rue": "La Sansonnerie",
+  "codePostal": "18380",
+  "ville": "Ivoy-le-Pré",
+  "region": "Centre-Val de Loire",
+  "facebook": "https://www.facebook.com/share/17m2VcFJwV/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/118284-aurelie-roussilliat-coach-de-vie-ivoy-le-pre",
+  "agrement": "",
+  "siret": "91911935400018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

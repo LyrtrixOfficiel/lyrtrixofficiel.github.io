@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Adeline Guyon",
+  "praticien": "Adeline Guyon",
+  "metier": "psychopratique",
+  "metierCourt": "psychopratique",
+  "telephone": "06 17 17 60 91",
+  "telephoneLien": "tel:+33617176091",
+  "email": "",
+  "rue": "",
+  "codePostal": "07200",
+  "ville": "Aubenas",
+  "region": "Ardeche",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/ardeche/aubenas-07200/psychopratique/adeline-guyon",
+  "agrement": "",
+  "siret": "88525047200028",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

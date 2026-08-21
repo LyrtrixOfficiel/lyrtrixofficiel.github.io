@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Institut Body Bien Etre",
+  "praticien": "Institut Body Bien Etre",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0603111487",
+  "telephoneLien": "tel:+33603111487",
+  "email": "",
+  "rue": "1 impasse de la colline",
+  "codePostal": "16160",
+  "ville": "Gond-Pontouvre",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/778266852187198?ref=NONE_xav_ig_profile_page_web",
+  "resalib": "https://www.resalib.fr/praticien/126694-institut-body-bien-etre-praticien-en-digitopuncture-gond-pontouvre",
+  "agrement": "",
+  "siret": "40394265900034",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

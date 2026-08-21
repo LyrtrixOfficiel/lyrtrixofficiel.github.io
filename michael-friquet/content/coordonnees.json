@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Michaël Friquet",
+  "praticien": "Michaël Friquet",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 63 58 83 73",
+  "telephoneLien": "tel:+33763588373",
+  "email": "",
+  "rue": "9 rue Campion",
+  "codePostal": "14000",
+  "ville": "Caen",
+  "region": "Normandie",
+  "facebook": "https://www.facebook.com/profile.php?id=61567290907336",
+  "resalib": "https://www.resalib.fr/praticien/100430-michael-friquet-sophrologue-caen",
+  "agrement": "",
+  "siret": "930 758 560 00",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

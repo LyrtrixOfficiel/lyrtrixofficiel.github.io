@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Hajara Poulioglou",
+  "praticien": "Hajara Poulioglou",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 10 76 24 86",
+  "telephoneLien": "tel:+33610762486",
+  "email": "",
+  "rue": "32 Rue de la République",
+  "codePostal": "76810",
+  "ville": "Luneray",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/96663-hajara-poulioglou-therapeute-familial-luneray",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Andréa WOEHREL - EI",
+  "praticien": "Andréa WOEHREL - EI",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 25 57 08 12",
+  "telephoneLien": "tel:+33625570812",
+  "email": "",
+  "rue": "11 rue du Chêne",
+  "codePostal": "67100",
+  "ville": "Strasbourg",
+  "region": "Grand Est",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/122640-andrea-woehrel-ei-maitre-reiki-strasbourg",
+  "agrement": "",
+  "siret": "43526874300034",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

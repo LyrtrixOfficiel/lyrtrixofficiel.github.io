@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Alain CAMPOVECCHIO",
+  "praticien": "Alain CAMPOVECCHIO",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 81 43 86 33",
+  "telephoneLien": "tel:+33681438633",
+  "email": "",
+  "rue": "247 rue François perrin Groupe pluridisciplinaire des 3 chènes 2eme Etage (avec ascenseur)",
+  "codePostal": "87000",
+  "ville": "Limoges",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/93718-alain-campovecchio-praticien-emdr-limoges",
+  "agrement": "",
+  "siret": "37907944500043",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "SANTE NEURO-FIBRO BIEN-ETRE  NATUROPATHE ",
+  "praticien": "SANTE NEURO-FIBRO BIEN-ETRE  NATUROPATHE ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 71 94 92 95",
+  "telephoneLien": "tel:+33671949295",
+  "email": "",
+  "rue": "4 RUE DE LA CONGREGATION APPARTEMENT  RDC D001",
+  "codePostal": "02000",
+  "ville": "Laon",
+  "region": "Hauts-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/112180-sante-neuro-fibro-bien-etre-naturopathe-naturopathe-laon",
+  "agrement": "",
+  "siret": "50418420100029",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

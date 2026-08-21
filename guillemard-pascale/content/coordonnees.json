@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "GUILLEMARD Pascale",
+  "praticien": "GUILLEMARD Pascale",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 81 74 15 95",
+  "telephoneLien": "tel:+33681741595",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "45160",
+  "ville": "Olivet",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/14345-guillemard-pascale-sophrologue-olivet",
+  "agrement": "",
+  "siret": "52243935500051",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

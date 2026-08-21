@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "L’atelier Reiki | La lumière de Meïa",
+  "praticien": "L’atelier Reiki | La lumière de Meïa",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 45 64 42 55",
+  "telephoneLien": "tel:+33645644255",
+  "email": "",
+  "rue": "15 route du Bois de Créon (Médoc)",
+  "codePostal": "33250",
+  "ville": "Saint-Sauveur",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/share/1GMYKG7HKk/",
+  "resalib": "https://www.resalib.fr/praticien/126116-l-atelier-reiki-la-lumiere-de-meia-praticien-reiki-saint-sauveur-medoc",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

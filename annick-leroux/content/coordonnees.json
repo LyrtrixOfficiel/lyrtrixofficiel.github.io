@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Annick Leroux",
+  "praticien": "Annick Leroux",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 35 41 67 90",
+  "telephoneLien": "tel:+33635416790",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "31000",
+  "ville": "Toulouse",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/128720-annick-leroux-therapeute-toulouse",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

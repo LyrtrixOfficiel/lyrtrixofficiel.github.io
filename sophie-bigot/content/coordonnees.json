@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sophie bigot",
+  "praticien": "Sophie bigot",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 22 40 10 89",
+  "telephoneLien": "tel:+33622401089",
+  "email": "",
+  "rue": "11 rue de beaumont",
+  "codePostal": "18000",
+  "ville": "Bourges",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/110179-sophie-bigot-psychopraticien-bourges",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

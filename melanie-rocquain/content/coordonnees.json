@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mélanie Rocquain",
+  "praticien": "Mélanie Rocquain",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 74 92 88 67",
+  "telephoneLien": "tel:+33674928867",
+  "email": "",
+  "rue": "181 bis rue de Lille",
+  "codePostal": "59223",
+  "ville": "Roncq",
+  "region": "Hauts-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/101654-melanie-rocquain-praticien-shiatsu-roncq",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

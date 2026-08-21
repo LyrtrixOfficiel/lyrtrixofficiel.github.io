@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Lisa Sun",
+  "praticien": "Lisa Sun",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0766132110",
+  "telephoneLien": "tel:+33766132110",
+  "email": "",
+  "rue": "23 Rue du Château",
+  "codePostal": "68110",
+  "ville": "Illzach",
+  "region": "Grand Est",
+  "facebook": "https://www.facebook.com/share/1MJhSDE1LL/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/107523-lisa-sun-energeticien-illzach",
+  "agrement": "",
+  "siret": "88952905300023",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

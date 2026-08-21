@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Stéphanie Giroux - Renouv’elles",
+  "praticien": "Stéphanie Giroux - Renouv’elles",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 14 73 45 51",
+  "telephoneLien": "tel:+33614734551",
+  "email": "",
+  "rue": "10 rue Agnès Sorel RDC Interphone",
+  "codePostal": "94130",
+  "ville": "Nogent-sur-Marne",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/108215-stephanie-giroux-renouv-elles-praticien-en-massage-bien-etre-nogent-sur-marne",
+  "agrement": "",
+  "siret": "94908065900012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Franck CHEVREUL",
+  "praticien": "Franck CHEVREUL",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 95 25 43 77",
+  "telephoneLien": "tel:+33695254377",
+  "email": "",
+  "rue": "42 Boulevard CLEMENCEAU Saint Brieuc",
+  "codePostal": "22000",
+  "ville": "Saint-Brieuc",
+  "region": "Bretagne",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/130872-franck-chevreul-sophrologue-saint-brieuc",
+  "agrement": "",
+  "siret": "42451518700021",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

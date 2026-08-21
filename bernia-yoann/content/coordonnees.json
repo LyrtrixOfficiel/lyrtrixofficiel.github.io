@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "BERNIA Yoann",
+  "praticien": "BERNIA Yoann",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 52 45 10 27",
+  "telephoneLien": "tel:+33652451027",
+  "email": "",
+  "rue": "9 bis rue de Larrey Bâtiment A",
+  "codePostal": "21000",
+  "ville": "Dijon",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/108985-bernia-yoann-therapeute-conjugal-et-familial-dijon",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

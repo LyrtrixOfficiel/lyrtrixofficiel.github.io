@@ -1,0 +1,17 @@
+{
+  "paiement": "Paiement en espèces ou par chèque.",
+  "note": "Dix-sept mutuelles participent au remboursement des séances de réflexologie. Demandez-moi la liste, ou vérifiez auprès de la vôtre.",
+  "bonsCadeaux": "",
+  "groupes": [
+    {
+      "titre": "À la séance",
+      "lignes": [
+        {
+          "label": "Réflexologie plantaire",
+          "prix": "sur demande",
+          "soin": "soin1"
+        }
+      ]
+    }
+  ]
+}

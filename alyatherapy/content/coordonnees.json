@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Alyatherapy",
+  "praticien": "Alyatherapy",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 12 16 76 07",
+  "telephoneLien": "tel:+33612167607",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "13100",
+  "ville": "Aix-en-Provence",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/share/1KoYkiKD5G/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/124939-alyatherapy-therapeute-aix-en-provence",
+  "agrement": "",
+  "siret": "10124674200015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

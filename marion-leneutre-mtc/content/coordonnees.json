@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marion LENEUTRE  - MTC",
+  "praticien": "Marion LENEUTRE  - MTC",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 50 06 13 86",
+  "telephoneLien": "tel:+33650061386",
+  "email": "",
+  "rue": "26 rue de la Thibaudière",
+  "codePostal": "69007",
+  "ville": "Lyon",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/129943-marion-leneutre-mtc-praticien-en-energetique-chinoise-lyon",
+  "agrement": "",
+  "siret": "88846217300020",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

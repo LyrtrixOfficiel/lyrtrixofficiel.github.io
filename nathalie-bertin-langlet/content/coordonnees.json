@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "NATHALIE BERTIN LANGLET",
+  "praticien": "NATHALIE BERTIN LANGLET",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 50 45 11 42",
+  "telephoneLien": "tel:+33650451142",
+  "email": "",
+  "rue": "12 avenue du 170e regiment d infanterie ATTICHY",
+  "codePostal": "60350",
+  "ville": "Attichy",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/share/1A5phTJBpw/",
+  "resalib": "https://www.resalib.fr/praticien/128233-nathalie-bertin-langlet-praticien-en-massage-bien-etre-attichy",
+  "agrement": "",
+  "siret": "82428490500026",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "YANNICK FRIEH",
+  "praticien": "YANNICK FRIEH",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 71 30 24 72",
+  "telephoneLien": "tel:+33671302472",
+  "email": "",
+  "rue": "5 RUE DES VEAUX",
+  "codePostal": "67000",
+  "ville": "Strasbourg",
+  "region": "Grand Est",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/17430-yannick-frieh-psychopraticien-strasbourg",
+  "agrement": "",
+  "siret": "40794515300093",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

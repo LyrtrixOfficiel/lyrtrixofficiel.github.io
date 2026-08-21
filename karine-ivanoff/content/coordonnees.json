@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "KARINE IVANOFF",
+  "praticien": "KARINE IVANOFF",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 28 61 03 34",
+  "telephoneLien": "tel:+33628610334",
+  "email": "",
+  "rue": "32 Chemin de la digue Espace des cimes",
+  "codePostal": "73200",
+  "ville": "Albertville",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/33139-karine-ivanoff-naturopathe-albertville",
+  "agrement": "",
+  "siret": "88076642300011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

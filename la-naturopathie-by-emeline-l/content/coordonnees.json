@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "La Naturopathie by Emeline.L",
+  "praticien": "La Naturopathie by Emeline.L",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 87 72 90 60",
+  "telephoneLien": "tel:+33687729060",
+  "email": "",
+  "rue": "17 résidence des hêtres",
+  "codePostal": "76210",
+  "ville": "Nointot",
+  "region": "Normandie",
+  "facebook": "https://www.facebook.com/profile.php?id=61581913880211",
+  "resalib": "https://www.resalib.fr/praticien/129185-la-naturopathie-by-emeline-l-naturopathe-nointot",
+  "agrement": "",
+  "siret": "52805517100045",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

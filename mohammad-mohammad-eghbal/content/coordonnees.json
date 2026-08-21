@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mohammad Mohammad EGHBAL",
+  "praticien": "Mohammad Mohammad EGHBAL",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 68 35 46 21",
+  "telephoneLien": "tel:+33768354621",
+  "email": "",
+  "rue": "7 square du Diapason 7 square du Diapason CERGY",
+  "codePostal": "95000",
+  "ville": "Cergy",
+  "region": "Île-de-France",
+  "facebook": "https://www.facebook.com/centrehypnotherapie",
+  "resalib": "https://www.resalib.fr/praticien/26683-mohammad-mohammad-eghbal-hypnotherapeute-cergy",
+  "agrement": "",
+  "siret": "84152476200017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

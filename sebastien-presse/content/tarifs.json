@@ -1,0 +1,18 @@
+{
+  "_source": "Fourchette publiee par le praticien sur Resalib. Aucun prix devine.",
+  "paiement": "",
+  "note": "",
+  "bonsCadeaux": "",
+  "groupes": [
+    {
+      "titre": "À la séance",
+      "lignes": [
+        {
+          "label": "Séance de therapeute",
+          "prix": "Sur demande",
+          "soin": "soin1"
+        }
+      ]
+    }
+  ]
+}

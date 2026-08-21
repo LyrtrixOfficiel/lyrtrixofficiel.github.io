@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mélanie Siliveri",
+  "praticien": "Mélanie Siliveri",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 03 48 95 30",
+  "telephoneLien": "tel:+33603489530",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "38500",
+  "ville": "Voiron",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/share/17C8tCQ6Bu/",
+  "resalib": "https://www.resalib.fr/praticien/112264-melanie-siliveri-praticien-en-bien-etre-voiron",
+  "agrement": "",
+  "siret": "84441187600031",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

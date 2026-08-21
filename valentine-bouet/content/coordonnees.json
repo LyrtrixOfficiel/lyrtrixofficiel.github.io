@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Valentine Bouet",
+  "praticien": "Valentine Bouet",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.08.72.27.00",
+  "telephoneLien": "tel:+33608722700",
+  "email": "",
+  "rue": "Auria Yoga - 46 Rue du Chemin de Fer",
+  "codePostal": "77400",
+  "ville": "Lagny-sur-Marne",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/93981-valentine-bouet-kinesiologue-lagny-sur-marne",
+  "agrement": "",
+  "siret": "93101935000012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

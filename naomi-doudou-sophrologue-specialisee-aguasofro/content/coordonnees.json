@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Naomi Doudou - Sophrologue spécialisée Aguasofro",
+  "praticien": "Naomi Doudou - Sophrologue spécialisée Aguasofro",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 52 83 44 36",
+  "telephoneLien": "tel:+33652834436",
+  "email": "",
+  "rue": "11bis rue de la Mairie Saint-Cyr",
+  "codePostal": "86130",
+  "ville": "Beaumont Saint-Cyr",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/people/Naomi-Doudou-Sophrologue/61556661444261/",
+  "resalib": "https://www.resalib.fr/praticien/91011-naomi-doudou-sophrologue-specialisee-aguasofro-sophrologue-beaumont-saint-cyr",
+  "agrement": "",
+  "siret": "87951152500021",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

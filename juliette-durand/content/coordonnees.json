@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Juliette Durand",
+  "praticien": "Juliette Durand",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 59 66 59 69",
+  "telephoneLien": "tel:+33759665969",
+  "email": "",
+  "rue": "2 Avenue de Nice Immeuble LE COROT RDC",
+  "codePostal": "06800",
+  "ville": "Cagnes-sur-Mer",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/124970-juliette-durand-etiopathe-cagnes-sur-mer",
+  "agrement": "",
+  "siret": "51413793400014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

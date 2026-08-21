@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Julie Michelin",
+  "praticien": "Julie Michelin",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07.69.05.35.36",
+  "telephoneLien": "tel:+33769053536",
+  "email": "",
+  "rue": "13 Chemin de la Peradere",
+  "codePostal": "31620",
+  "ville": "Castelnau-d'Estrétefonds",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/1475-julie-michelin",
+  "agrement": "",
+  "siret": "44954655500052",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

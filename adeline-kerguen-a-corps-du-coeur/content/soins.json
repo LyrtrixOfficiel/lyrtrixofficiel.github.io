@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de kinesiologie",
+      "accroche": "",
+      "resume": "Chaque séance est unique et laisse parler le corps via le test musculaire que je pratique.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Fougeres",
+        "Sur demande"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "Sophrologue certifiée RNCP Je vous aide à (re)prendre le pouvoir et à cheminer vers Votre « Conquête Personnelle ».",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Torsac",
+        "Sur demande"
+      ]
+    }
+  ]
+}

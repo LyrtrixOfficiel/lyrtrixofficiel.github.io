@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Nabila MECHAIRI",
+  "praticien": "Nabila MECHAIRI",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 16 52 36 70",
+  "telephoneLien": "tel:+33616523670",
+  "email": "",
+  "rue": "25 rue Adolphe Thiers L arbre bleu",
+  "codePostal": "13001",
+  "ville": "Marseille",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/100301-nabila-mechairi-psychopraticien-marseille",
+  "agrement": "",
+  "siret": "93447076600015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

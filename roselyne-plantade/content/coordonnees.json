@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Roselyne PLANTADE",
+  "praticien": "Roselyne PLANTADE",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 79 97 46 88",
+  "telephoneLien": "tel:+33679974688",
+  "email": "",
+  "rue": "",
+  "codePostal": "31250",
+  "ville": "Revel",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/114839-roselyne-plantade-graphologue-revel",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

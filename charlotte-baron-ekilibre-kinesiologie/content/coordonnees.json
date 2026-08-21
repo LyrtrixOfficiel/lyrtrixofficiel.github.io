@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Charlotte Baron Ekilibre Kinesiologie",
+  "praticien": "Charlotte Baron Ekilibre Kinesiologie",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 63 15 81 46",
+  "telephoneLien": "tel:+33663158146",
+  "email": "",
+  "rue": "2 bis rue du Dr Merry Delabost",
+  "codePostal": "76360",
+  "ville": "Barentin",
+  "region": "Normandie",
+  "facebook": "https://www.facebook.com/ekilibrekinesiologie",
+  "resalib": "https://www.resalib.fr/praticien/108229-charlotte-baron-ekilibre-kinesiologie-kinesiologue-barentin",
+  "agrement": "",
+  "siret": "88799386300018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Cécile Valtat",
+  "praticien": "Cécile Valtat",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 12 45 17 83",
+  "telephoneLien": "tel:+33612451783",
+  "email": "",
+  "rue": "4A rue de l'Ecole Normale",
+  "codePostal": "45000",
+  "ville": "Orléans",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/34036-cecile-valtat-art-therapeute-orleans",
+  "agrement": "",
+  "siret": "43750589400034",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "LEGRAND Laetitia",
+  "praticien": "LEGRAND Laetitia",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 07 54 00 61",
+  "telephoneLien": "tel:+33607540061",
+  "email": "",
+  "rue": "467 rue des boulans",
+  "codePostal": "62840",
+  "ville": "Neuve-Chapelle",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/aromanezsens?",
+  "resalib": "https://www.resalib.fr/praticien/122513-legrand-laetitia-phytotherapeute-neuve-chapelle",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

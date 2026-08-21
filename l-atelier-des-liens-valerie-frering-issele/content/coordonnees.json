@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "L’atelier des liens Valerie Frering-Issele",
+  "praticien": "L’atelier des liens Valerie Frering-Issele",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 60 04 73 60",
+  "telephoneLien": "tel:+33660047360",
+  "email": "",
+  "rue": "1 Rue du Stade L'atelier des liens",
+  "codePostal": "68720",
+  "ville": "Luemschwiller",
+  "region": "Grand Est",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/121964-l-atelier-des-liens-valerie-frering-issele-therapeute-conjugal-et-familial-luemschwiller",
+  "agrement": "",
+  "siret": "82473656500014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sarah Tissot",
+  "praticien": "Sarah Tissot",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 68 32 73 30",
+  "telephoneLien": "tel:+33768327330",
+  "email": "",
+  "rue": "13 rue du lieutenant Paul Delpech",
+  "codePostal": "09000",
+  "ville": "Foix",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/127692-sarah-tissot-praticien-en-medecine-chinoise-foix",
+  "agrement": "",
+  "siret": "10315678200015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

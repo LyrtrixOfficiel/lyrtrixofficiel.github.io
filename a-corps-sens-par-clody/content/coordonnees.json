@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "À Corps & Sens par Clody",
+  "praticien": "À Corps & Sens par Clody",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 29 43 21 81",
+  "telephoneLien": "tel:+33629432181",
+  "email": "",
+  "rue": "864 chemin des cigales",
+  "codePostal": "34560",
+  "ville": "Poussan",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/AFleurdeClo",
+  "resalib": "https://www.resalib.fr/praticien/106011-a-corps-sens-par-clody-praticien-en-massage-bien-etre-poussan",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

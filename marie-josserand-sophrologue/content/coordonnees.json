@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marie Josserand Sophrologue ",
+  "praticien": "Marie Josserand Sophrologue ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 84 21 84 32",
+  "telephoneLien": "tel:+33684218432",
+  "email": "",
+  "rue": "1574 route des Grandes Alpes",
+  "codePostal": "74430",
+  "ville": "Saint-Jean-d'Aulps",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/profile.php?id=61564569737678",
+  "resalib": "https://www.resalib.fr/praticien/99084-marie-josserand-sophrologue-sophrologue-saint-jean-d-aulps",
+  "agrement": "",
+  "siret": "92946431100018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

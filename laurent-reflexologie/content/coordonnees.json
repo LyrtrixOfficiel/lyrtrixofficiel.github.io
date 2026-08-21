@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Laurent Réflexologie ",
+  "praticien": "Laurent Réflexologie ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 63 96 71 96",
+  "telephoneLien": "tel:+33763967196",
+  "email": "",
+  "rue": "119 rue de Châteaudun Mairie",
+  "codePostal": "83700",
+  "ville": "Saint-Raphaël",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/laurentreflexologie",
+  "resalib": "https://www.resalib.fr/praticien/105471-laurent-reflexologie-reflexologue-saint-raphael",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

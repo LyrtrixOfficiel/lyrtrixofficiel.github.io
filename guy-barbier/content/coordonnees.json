@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Guy Barbier",
+  "praticien": "Guy Barbier",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 76 12 24 66",
+  "telephoneLien": "tel:+33676122466",
+  "email": "",
+  "rue": "27 rue Pierre Dupont",
+  "codePostal": "92150",
+  "ville": "Suresnes",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/30951-guy-barbier-fasciapulsologue-suresnes",
+  "agrement": "",
+  "siret": "50835106100017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

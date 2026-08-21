@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de therapeute",
+      "accroche": "",
+      "resume": "Je t' aide à comprendre les messages de ton corps ; à réguler tes émotions pour retrouver une harmonie intérieure.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Angers",
+        "Sur demande"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance d'osteopathie",
+      "accroche": "",
+      "resume": "Diplômée de l'École d'Ostéopathie de Paris, établissement agréé par le Ministère de la Santé, je vous accueille dans mon cabinet à Versailles, à la limite du Chesnay et à proximité de la place de la Loi, au sein du Cabinet du Roi situé au 40 boulevard du Roi.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Versailles",
+        "Sur demande"
+      ]
+    }
+  ]
+}

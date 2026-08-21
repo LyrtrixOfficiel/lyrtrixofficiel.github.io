@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de massage bien etre",
+      "accroche": "",
+      "resume": "Je prends un temps pour échanger sur les raisons pour lesquelles vous venez me voir.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Herbiers",
+        "Sur demande"
+      ]
+    }
+  ]
+}

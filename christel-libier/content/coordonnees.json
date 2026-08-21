@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christel LIBIER",
+  "praticien": "Christel LIBIER",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 44 18 52 95",
+  "telephoneLien": "tel:+33644185295",
+  "email": "",
+  "rue": "91 Avenue du Colonel Kw Rozanoff 1er étage MONT-DE-MARSAN",
+  "codePostal": "40000",
+  "ville": "Mont-de-Marsan",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/profile.php?id=100091585740799",
+  "resalib": "https://www.resalib.fr/praticien/90478-christel-libier-praticien-en-therapies-breves-mont-de-marsan",
+  "agrement": "",
+  "siret": "921866372 0003",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

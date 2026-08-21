@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christina SHEN",
+  "praticien": "Christina SHEN",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 58 46 02 80",
+  "telephoneLien": "tel:+33758460280",
+  "email": "",
+  "rue": "13B chemin du levant 3eme etage Nord",
+  "codePostal": "01210",
+  "ville": "Ferney-Voltaire",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/131178-christina-shen-praticien-en-medecine-chinoise-ferney-voltaire",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

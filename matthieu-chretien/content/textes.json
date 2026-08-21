@@ -1,0 +1,131 @@
+{
+  "commun": {
+    "avertissement": "La réflexologie et les Fleurs de Bach accompagnent une routine de bien-être. Elles ne remplacent en aucun cas un avis, un diagnostic ou un traitement médical."
+  },
+  "accueil": {
+    "heroBadge": "sur rendez-vous",
+    "heroTitre": "Une pause de douceur et d’apaisement.",
+    "heroSous": "Je suis réflexologue et conseiller agréé en Fleurs de Bach au Faou, entre Quimper et Brest. Je vous accueille au cabinet pour retrouver mieux-être et sérénité.",
+    "bienvenueTitre": "Mon approche est holistique : je fais toujours le lien entre un symptôme et le vécu émotionnel de la personne que je reçois.",
+    "propositions": [
+      "la réflexologie plantaire, quarante-cinq minutes sur table, du pied jusqu’au-dessus du genou",
+      "un entretien conseil en Fleurs de Bach, avec le flacon que vous élaborez avec moi",
+      "la réflexologie avancée, pour une action ciblée sur un motif diagnostiqué"
+    ],
+    "photoCitation": "Je fais le lien entre un symptôme, une gêne physique ou un état psychique et les événements de vie de chaque personne.",
+    "photoSignature": "Matthieu Chrétien",
+    "soinsTitre": "Ce que je propose",
+    "citation": "« Au fur et à mesure des séances, le corps reprend un fonctionnement physiologique naturel. L’état émotionnel s’équilibre et devient de plus en plus stable. Certains symptômes disparaissent, l’état de bien-être s’améliore. »",
+    "citationAuteur": "Matthieu Chrétien",
+    "citationNote": "J’aime également faire le lien avec vos habitudes de vie — alimentation, travail, rythme de vie, loisirs — afin de personnaliser au maximum la prise en charge.",
+    "tarifsTitre": "Mes tarifs",
+    "ctaTitre": "Le cabinet est au Faou, place de l’église.",
+    "ctaTexte": "Du lundi au mercredi, de 9h30 à 19h. Pour convenir d’un rendez-vous, appelez-moi au"
+  },
+  "reflexologie": {
+    "heroBadge": "Soin du corps · 45 minutes",
+    "heroTitre": "Réflexologie plantaire",
+    "heroSous": "Après un entretien préliminaire pour mieux comprendre vos besoins et vos attentes, la séance se déroule sur une table de massage, avec ou sans musique selon votre choix.",
+    "titre": "En fin de séance, nous échangeons sur ce que j’ai trouvé à la lecture du pied.",
+    "paragraphes": [
+      "Prévoyez un pantalon ample et confortable : le massage s’effectue du pied jusqu’au-dessus du genou.",
+      "Pour les petits, j’adapte la durée de la séance en fonction de l’enfant.",
+      "Dix-sept mutuelles participent au remboursement des séances de réflexologie. Demandez-moi la liste, ou vérifiez auprès de la vôtre."
+    ],
+    "legendePhoto": "",
+    "ctaTitre": "Quarante-cinq minutes pour vous.",
+    "ctaTexte": "Pour convenir d’un rendez-vous, appelez-moi au"
+  },
+  "bach": {
+    "heroBadge": "Accompagnement · 1 heure",
+    "heroTitre": "Fleurs de Bach",
+    "heroSous": "En tant que conseiller agréé, je vous accompagne au cours d’un entretien personnalisé d’une heure, pour identifier les émotions en déséquilibre dans le présent.",
+    "titre": "Vous repartez avec votre flacon, que nous élaborons ensemble.",
+    "paragraphes": [
+      "L’entretien sert à identifier les émotions en déséquilibre dans le présent, afin d’utiliser les fleurs les plus appropriées.",
+      "En fin de séance, nous élaborons ensemble votre préparation florale personnalisée, avec laquelle vous repartez."
+    ],
+    "objectif": "Agrément de conseiller en Fleurs de Bach n° FRA-2024-1003M, délivré en 2024.",
+    "noteTarif": "L’entretien dure une heure, flacon compris.",
+    "legendePhoto": "",
+    "processusTitre": "Une heure, en trois temps.",
+    "etapes": [
+      {
+        "titre": "Écouter",
+        "texte": "Une heure d’entretien personnalisé, pour comprendre ce qui vous amène aujourd’hui."
+      },
+      {
+        "titre": "Identifier",
+        "texte": "Repérer les émotions en déséquilibre dans le présent, afin d’utiliser les fleurs les plus appropriées."
+      },
+      {
+        "titre": "Préparer",
+        "texte": "Élaborer ensemble votre flacon de préparation florale, avec lequel vous repartez."
+      }
+    ],
+    "seanceTitre": "Ce que vous emportez en partant.",
+    "seance": [
+      {
+        "titre": "Un entretien personnalisé",
+        "texte": "Une heure d’échange, pour comprendre ce qui vous amène et repérer les émotions en déséquilibre dans le présent."
+      },
+      {
+        "titre": "Un conseil agréé",
+        "texte": "Je suis conseiller agréé en Fleurs de Bach, agrément n° FRA-2024-1003M délivré en 2024."
+      },
+      {
+        "titre": "Votre préparation florale",
+        "texte": "En fin de séance, nous élaborons ensemble votre flacon de préparation florale personnalisée, avec lequel vous repartez."
+      }
+    ],
+    "note": "Les Fleurs de Bach accompagnent un équilibre émotionnel. Elles ne remplacent ni un avis, ni un traitement médical.",
+    "ctaTitre": "Identifier ce qui déséquilibre, puis avancer.",
+    "ctaTexte": "Pour convenir d’un rendez-vous, appelez-moi au"
+  },
+  "avancee": {
+    "heroBadge": "Suivi · plusieurs mois",
+    "heroTitre": "Réflexologie avancée",
+    "heroSous": "Un ensemble de techniques complémentaires à la réflexologie plantaire, qui permettent une action ciblée pour des problèmes bien définis.",
+    "titre": "Le motif de consultation doit obligatoirement avoir été diagnostiqué par un médecin.",
+    "paragraphes": [
+      "Une anamnèse est réalisée lors de la première séance."
+    ],
+    "legendePhoto": "",
+    "citation": "« Le suivi en réflexologie avancée est une démarche longue de plusieurs mois, pendant lesquels vous pourrez être amené à traverser des périodes difficiles liées à la libération de votre vécu émotionnel et au rééquilibrage énergétique de votre corps. »",
+    "citationAuteur": "Matthieu Chrétien",
+    "ouvragesTitre": "Ma formation, et ce qui la certifie",
+    "ouvrages": [
+      "Certificat « Mettre en œuvre des techniques de réflexologie », délivré le 1ᵉʳ octobre 2022 par l’école Métaréflexologie (Arlette Lefebvre).",
+      "Certification enregistrée auprès de France Compétences — code RS5311.",
+      "Réflexologie avancée et prénatothérapie, 2024.",
+      "Conseiller agréé en Fleurs de Bach, agrément n° FRA-2024-1003M, 2024."
+    ],
+    "ctaTitre": "Une démarche longue, qui commence par un échange.",
+    "ctaTexte": "Pour en parler avant de vous engager, appelez-moi au"
+  },
+  "tarifs": {
+    "heroTitre": "Mes tarifs",
+    "ctaTitre": "Un appel, et c’est réservé.",
+    "ctaTexte": "Appelez-moi au"
+  },
+  "contact": {
+    "heroBadge": "Sur rendez-vous",
+    "heroTitre": "Me contacter",
+    "appelTitre": "Un appel suffit.",
+    "appelTexte": "Je réponds moi-même. Dites-moi ce qui vous amène, et nous trouvons ensemble le créneau qui vous convient. Le cabinet est ouvert du lundi au mercredi, de 9h30 à 19h.",
+    "bonsCadeaux": "",
+    "confidentialite": "Vos coordonnées personnelles ne sont pas collectées et ne seront en aucun cas diffusées.",
+    "formulaireTitre": "Dites-moi ce qui vous amène."
+  },
+  "indications": {
+    "titre": "Pour quels problèmes, gênes ou troubles consulter ?",
+    "liste": [
+      "Soulager les douleurs musculaires et articulaires.",
+      "Améliorer le sommeil et la digestion.",
+      "Apporter une profonde détente et un regain d’énergie.",
+      "Rééquilibrer les différentes énergies selon les techniques de la Médecine Traditionnelle Chinoise.",
+      "Rééquilibrage émotionnel, gestion du stress, troubles hormonaux, burnout."
+    ],
+    "publics": "Enfants, adultes, futures mamans. Au cabinet et en EHPAD."
+  }
+}

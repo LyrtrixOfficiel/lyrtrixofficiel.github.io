@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Pure Alchimie ",
+  "praticien": "Pure Alchimie ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 88 64 26 19",
+  "telephoneLien": "tel:+33688642619",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "69400",
+  "ville": "Villefranche-sur-Saône",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/128894-pure-alchimie-praticien-en-energetique-villefranche-sur-saone",
+  "agrement": "",
+  "siret": "10234971900017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

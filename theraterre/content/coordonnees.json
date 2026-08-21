@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "TheraTerre ",
+  "praticien": "TheraTerre ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 44 19 55 67",
+  "telephoneLien": "tel:+33644195567",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "94700",
+  "ville": "Maisons-Alfort",
+  "region": "Île-de-France",
+  "facebook": "https://www.facebook.com/theraterre00/",
+  "resalib": "https://www.resalib.fr/praticien/123834-theraterre-praticien-en-bien-etre-maisons-alfort",
+  "agrement": "",
+  "siret": "91745283100014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

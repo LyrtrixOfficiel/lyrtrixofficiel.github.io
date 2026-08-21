@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Anne-Marie JACOB",
+  "praticien": "Anne-Marie JACOB",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 63 63 17 97",
+  "telephoneLien": "tel:+33663631797",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "22200",
+  "ville": "Plouisy",
+  "region": "Bretagne",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/129253-anne-marie-jacob-sophrologue-plouisy",
+  "agrement": "",
+  "siret": "93858499200011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

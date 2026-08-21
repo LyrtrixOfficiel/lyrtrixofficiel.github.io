@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sophie Pigeon ",
+  "praticien": "Sophie Pigeon ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 20 74 26 01",
+  "telephoneLien": "tel:+33620742601",
+  "email": "",
+  "rue": "145 rue de la Chocolaterie Maison de santé et de bien-être",
+  "codePostal": "26290",
+  "ville": "Donzère",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/share/1CvF84Df9W/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/129220-sophie-pigeon-neurotherapeute-donzere",
+  "agrement": "",
+  "siret": "53204864200039",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

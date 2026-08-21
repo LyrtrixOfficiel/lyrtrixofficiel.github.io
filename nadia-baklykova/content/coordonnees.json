@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Nadia Baklykova ",
+  "praticien": "Nadia Baklykova ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 11 08 05 16",
+  "telephoneLien": "tel:+33611080516",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "95130",
+  "ville": "Franconville",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/126656-nadia-baklykova-coach-en-developpement-personnel-franconville",
+  "agrement": "",
+  "siret": "10249846600014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

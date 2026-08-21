@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Isabelle Michelet",
+  "praticien": "Isabelle Michelet",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 59 95 06 95",
+  "telephoneLien": "tel:+33759950695",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "38090",
+  "ville": "Roche",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/133027-isabelle-michelet-naturopathe-roche",
+  "agrement": "",
+  "siret": "10603534800015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Nathalie Gauthier",
+  "praticien": "Nathalie Gauthier",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 83 16 03 87",
+  "telephoneLien": "tel:+33783160387",
+  "email": "",
+  "rue": "44 rue des frères Voirin",
+  "codePostal": "54000",
+  "ville": "Nancy",
+  "region": "Grand Est",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/112734-nathalie-gauthier-sophrologue-nancy",
+  "agrement": "",
+  "siret": "10183535300018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

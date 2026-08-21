@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Renaissance soins de l’âme",
+  "praticien": "Renaissance soins de l’âme",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07.81.68.14.80",
+  "telephoneLien": "tel:+33781681480",
+  "email": "",
+  "rue": "120 rue du Palais Gallien",
+  "codePostal": "33000",
+  "ville": "Bordeaux",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/110280-renaissance-soins-de-l-ame-therapeute-quantique-bordeaux",
+  "agrement": "",
+  "siret": "93116828000010",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

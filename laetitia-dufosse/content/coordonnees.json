@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Laëtitia DUFOSSE",
+  "praticien": "Laëtitia DUFOSSE",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.95.68.52.24",
+  "telephoneLien": "tel:+33695685224",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "62360",
+  "ville": "Baincthun",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/laetitia.coaching.guidance/",
+  "resalib": "https://www.resalib.fr/praticien/92057-laetitia-dufosse-coach-professionnel-certifie-baincthun",
+  "agrement": "",
+  "siret": "84310168400010",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Frédéric HONORE",
+  "praticien": "Frédéric HONORE",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07.81.29.11.85",
+  "telephoneLien": "tel:+33781291185",
+  "email": "",
+  "rue": "13 rue Jean GIONO",
+  "codePostal": "42100",
+  "ville": "Saint-Étienne",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/profile.php?id=61577799930546&sk=followers&notif_ids[0]=61562298515747&notif_ids[1]=1752541804&notif_ids[2]=61573506098165&notif_id=1750921255569674&notif_t=follow_profile&ref=notif",
+  "resalib": "https://www.resalib.fr/praticien/105552-frederic-honore-therapeute-conjugal-et-familial-saint-etienne",
+  "agrement": "",
+  "siret": "42264162100046",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Jean-Marie Martineau",
+  "praticien": "Jean-Marie Martineau",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 67 80 70 50",
+  "telephoneLien": "tel:+33767807050",
+  "email": "",
+  "rue": "2 Rue victor hugo Immeuble l'Euryale MENTON",
+  "codePostal": "06500",
+  "ville": "Menton",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/share/16FWh3GYh4/",
+  "resalib": "https://www.resalib.fr/praticien/110251-jean-marie-martineau-magnetiseur-menton",
+  "agrement": "",
+  "siret": "51759953600029",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Charlotte jamain",
+  "praticien": "Charlotte jamain",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 90 77 8899",
+  "telephoneLien": "tel:+33690778899",
+  "email": "",
+  "rue": "N°40 HOWELL CENTER Marigot Saint-Martin",
+  "codePostal": "97150",
+  "ville": "Marigot",
+  "region": "",
+  "facebook": "https://www.facebook.com/people/Charlotte-Jamain/61567520165910/",
+  "resalib": "https://www.resalib.fr/praticien/104983-charlotte-jamain-therapeute-holistique-marigot",
+  "agrement": "",
+  "siret": "80881528600030",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

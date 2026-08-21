@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Houria ALLAL",
+  "praticien": "Houria ALLAL",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 64 35 75 59",
+  "telephoneLien": "tel:+33664357559",
+  "email": "",
+  "rue": "3bis place Aristide Briand",
+  "codePostal": "33140",
+  "ville": "Villenave-d'Ornon",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/109550-houria-allal-sophrologue-villenave-d-ornon",
+  "agrement": "",
+  "siret": "87989890600018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

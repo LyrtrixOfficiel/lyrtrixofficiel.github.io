@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Céline Grevillot",
+  "praticien": "Céline Grevillot",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 30 40 91 62",
+  "telephoneLien": "tel:+33630409162",
+  "email": "",
+  "rue": "13 Rue du Général Roussel",
+  "codePostal": "90000",
+  "ville": "Belfort",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "https://www.facebook.com/profile.php?id=61566019539272",
+  "resalib": "https://www.resalib.fr/praticien/98075-celine-grevillot-conseiller-en-nutrition-belfort",
+  "agrement": "",
+  "siret": "93161519900011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

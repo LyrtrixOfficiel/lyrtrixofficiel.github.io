@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Le chemin des femmes",
+  "praticien": "Le chemin des femmes",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 86 64 39 14",
+  "telephoneLien": "tel:+33786643914",
+  "email": "",
+  "rue": "2 rue des écoles",
+  "codePostal": "89450",
+  "ville": "Vézelay",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/95074-le-chemin-des-femmes-centre-de-bien-etre-vezelay",
+  "agrement": "",
+  "siret": "88027145700017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

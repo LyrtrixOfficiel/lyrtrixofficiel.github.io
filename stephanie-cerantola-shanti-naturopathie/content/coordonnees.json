@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Stéphanie Cerantola - Shanti Naturopathie",
+  "praticien": "Stéphanie Cerantola - Shanti Naturopathie",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 19 38 38 77",
+  "telephoneLien": "tel:+33619383877",
+  "email": "",
+  "rue": "Mairie Villa Medica",
+  "codePostal": "84000",
+  "ville": "Châteaurenard",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/114510-stephanie-cerantola-shanti-naturopathie-naturopathe-avignon",
+  "agrement": "",
+  "siret": "94433400200010",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

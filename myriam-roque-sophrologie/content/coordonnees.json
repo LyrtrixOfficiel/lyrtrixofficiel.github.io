@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Myriam Roque",
+  "praticien": "Myriam Roque",
+  "metier": "sophrologie",
+  "metierCourt": "sophrologie",
+  "telephone": "06 90 68 65 78",
+  "telephoneLien": "tel:+33690686578",
+  "email": "",
+  "rue": "",
+  "codePostal": "97139",
+  "ville": "Abymes",
+  "region": "Guadeloupe",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/guadeloupe/abymes-97139/sophrologie/myriam-roque-sophrologie",
+  "agrement": "",
+  "siret": "90319823200014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

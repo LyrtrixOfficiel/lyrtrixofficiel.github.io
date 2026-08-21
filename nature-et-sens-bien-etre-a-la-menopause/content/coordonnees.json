@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Nature et Sens - Bien être à la ménopause",
+  "praticien": "Nature et Sens - Bien être à la ménopause",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 75 73 64 15",
+  "telephoneLien": "tel:+33675736415",
+  "email": "",
+  "rue": "5 av Chanzy Petite Maison Chanzy",
+  "codePostal": "17500",
+  "ville": "Jonzac",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/share/1ArNtfXWgq/",
+  "resalib": "https://www.resalib.fr/praticien/118650-nature-et-sens-bien-etre-a-la-menopause-centre-de-bien-etre-jonzac",
+  "agrement": "",
+  "siret": "84111824300044",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

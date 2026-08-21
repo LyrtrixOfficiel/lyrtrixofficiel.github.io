@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Corinne Cardot",
+  "praticien": "Corinne Cardot",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 12 65 37 06",
+  "telephoneLien": "tel:+33612653706",
+  "email": "",
+  "rue": "6 rue Clément Ader ",
+  "codePostal": "51100",
+  "ville": "Reims",
+  "region": "Grand Est",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/32120-corinne-cardot-art-therapeute-reims",
+  "agrement": "",
+  "siret": "44151554100023",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

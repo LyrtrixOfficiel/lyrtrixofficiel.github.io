@@ -1,0 +1,15 @@
+{
+  "_source": "Palette choisie d'apres le metier, fond choisi d'apres la famille de pratique, mise en page tiree du nom de dossier.",
+  "nom": "terre",
+  "clair": false,
+  "fond": "#080605",
+  "fondDoux": "#110d0a",
+  "fondCarte": "#1a1310",
+  "accent": "#d09a72",
+  "accentDoux": "#f2dcc9",
+  "accentFonce": "#9c6a45",
+  "texte": "#f8f4f0",
+  "video": "pierre",
+  "secteur": "pierre",
+  "mise": "gauche"
+}

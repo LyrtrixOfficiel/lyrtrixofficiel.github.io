@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Loetitia RIVIERA - Psychanalyste",
+  "praticien": "Loetitia RIVIERA - Psychanalyste",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 27 09 78 90",
+  "telephoneLien": "tel:+33627097890",
+  "email": "",
+  "rue": "55 allée du roucas Lot. Roque Puech",
+  "codePostal": "13270",
+  "ville": "Fos-sur-Mer",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/114434-loetitia-riviera-psychanalyste-psychanalyste-fos-sur-mer",
+  "agrement": "",
+  "siret": "94836431000029",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

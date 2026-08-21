@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mudita",
+  "praticien": "Mudita",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 20 61 10 25",
+  "telephoneLien": "tel:+33620611025",
+  "email": "",
+  "rue": "14 chemin du payssa",
+  "codePostal": "65130",
+  "ville": "Asque",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/132176-mudita-praticien-en-therapies-breves-asque",
+  "agrement": "",
+  "siret": "50296280600027",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

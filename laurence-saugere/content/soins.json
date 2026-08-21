@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de magnetisme",
+      "accroche": "",
+      "resume": "À propos de moi Je suis quelqu'un qui aime et qui met tout son cœur à aider l'être humain à trouver sa place,à s’éveiller et à se trouver ou se retrouver..",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Capbreton",
+        "Sur demande"
+      ]
+    }
+  ]
+}

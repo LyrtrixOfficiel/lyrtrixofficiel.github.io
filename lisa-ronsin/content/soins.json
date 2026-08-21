@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de naturopathie",
+      "accroche": "",
+      "resume": "La naturopathie prends compte l’individu dans sa globalité, ses spécificités, chaque conseil est personnalisé avec des techniques simples et efficaces pour prendre votre santé en main.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Fort De France",
+        "Sur demande"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Anton GAUTIER",
+  "praticien": "Anton GAUTIER",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 82 95 20 69",
+  "telephoneLien": "tel:+33682952069",
+  "email": "",
+  "rue": "114 Rue Rivay",
+  "codePostal": "92300",
+  "ville": "Levallois-Perret",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/126279-anton-gautier-bioenergeticien-levallois-perret",
+  "agrement": "",
+  "siret": "83853035000035",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

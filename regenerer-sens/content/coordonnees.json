@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "REGENERER SENS",
+  "praticien": "REGENERER SENS",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0749886084",
+  "telephoneLien": "tel:+33749886084",
+  "email": "",
+  "rue": "5B RUE MAURICE LAISNEY",
+  "codePostal": "92600",
+  "ville": "Asnières-sur-Seine",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/109287-regenerer-sens-reflexologue-asnieres-sur-seine",
+  "agrement": "",
+  "siret": "00000000000000",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

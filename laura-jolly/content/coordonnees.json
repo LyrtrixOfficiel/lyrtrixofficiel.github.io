@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Laura JOLLY",
+  "praticien": "Laura JOLLY",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07.43.34.35.00",
+  "telephoneLien": "tel:+33743343500",
+  "email": "",
+  "rue": "15 rue pasteur Dans le renfoncement de SYNERGIE",
+  "codePostal": "44110",
+  "ville": "Châteaubriant",
+  "region": "Pays de la Loire",
+  "facebook": "https://www.facebook.com/profile.php?id=61576176753876",
+  "resalib": "https://www.resalib.fr/praticien/93297-laura-jolly-etiopathe-chateaubriant",
+  "agrement": "",
+  "siret": "87899648700046",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

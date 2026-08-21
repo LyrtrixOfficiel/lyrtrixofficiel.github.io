@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Cécile Contenssou",
+  "praticien": "Cécile Contenssou",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 63 86 04 68",
+  "telephoneLien": "tel:+33663860468",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "77000",
+  "ville": "Melun",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/97023-cecile-contenssou-sophrologue-melun",
+  "agrement": "",
+  "siret": "51282092900028",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

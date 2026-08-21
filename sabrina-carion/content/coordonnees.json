@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sabrina Carion",
+  "praticien": "Sabrina Carion",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 03 68 52 51",
+  "telephoneLien": "tel:+33603685251",
+  "email": "",
+  "rue": "26 rue aristide Briand",
+  "codePostal": "59680",
+  "ville": "Ferrière-la-Grande",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/share/1B6KaNdp68/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/114442-sabrina-carion-hypnotherapeute-ferriere-la-grande",
+  "agrement": "",
+  "siret": "53865900400021",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

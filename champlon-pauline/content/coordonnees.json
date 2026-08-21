@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Champlon Pauline ",
+  "praticien": "Champlon Pauline ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 70 24 54 61",
+  "telephoneLien": "tel:+33670245461",
+  "email": "",
+  "rue": "10 chemin du Felsberg",
+  "codePostal": "57500",
+  "ville": "Saint-Avold",
+  "region": "Grand Est",
+  "facebook": "https://www.facebook.com/share/1aXxEqTcB4/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/126394-champlon-pauline-naturopathe-saint-avold",
+  "agrement": "",
+  "siret": "88150796600037",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

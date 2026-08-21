@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Les petites mains de jade ",
+  "praticien": "Les petites mains de jade ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.82.89.61.77",
+  "telephoneLien": "tel:+33682896177",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "93160",
+  "ville": "Noisy-le-Grand",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/105647-les-petites-mains-de-jade-praticien-en-drainage-lymphatique-noisy-le-grand",
+  "agrement": "",
+  "siret": "51461707500023",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

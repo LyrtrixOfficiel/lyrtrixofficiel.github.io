@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Stéphane Laval ",
+  "praticien": "Stéphane Laval ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 95 81 87 84",
+  "telephoneLien": "tel:+33695818784",
+  "email": "",
+  "rue": "2, rue Charles Corbeau",
+  "codePostal": "27000",
+  "ville": "Évreux",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/122269-stephane-laval-praticien-emdr-evreux",
+  "agrement": "",
+  "siret": "99307843500019",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

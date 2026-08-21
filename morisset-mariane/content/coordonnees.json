@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "MORISSET Mariane",
+  "praticien": "MORISSET Mariane",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 78 99 22 11",
+  "telephoneLien": "tel:+33678992211",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "85390",
+  "ville": "Cheffois",
+  "region": "Pays de la Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/129178-morisset-mariane-reflexologue-cheffois",
+  "agrement": "",
+  "siret": "99138112000013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

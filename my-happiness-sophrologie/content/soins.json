@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "Je suis devenue sophrologue car je suis de nature empathique et de ce fait j'aime apporter aide et conseils aux gens qui en ont besoin, la sophrologie convient à toute personne dès l'âge de 4-5 ans et sans condition physique particulière.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Fresnoy Les Roye",
+        "Sur demande"
+      ]
+    }
+  ]
+}

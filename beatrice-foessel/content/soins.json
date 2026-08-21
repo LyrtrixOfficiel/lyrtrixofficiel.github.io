@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de massage bien etre",
+      "accroche": "",
+      "resume": "Praticienne en Thérapies énergétiques et quantiques, je suis également Praticienne et Formatrice en massage bien-être du ventre Belly Révolution .",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Lyon",
+        "Sur demande"
+      ]
+    }
+  ]
+}

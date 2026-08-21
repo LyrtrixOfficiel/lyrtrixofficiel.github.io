@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Jérôme Juan",
+  "praticien": "Jérôme Juan",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.18.94.05.76",
+  "telephoneLien": "tel:+33618940576",
+  "email": "",
+  "rue": "4 rue de la gare Maison de santé pluridisciplinaire",
+  "codePostal": "13520",
+  "ville": "Maussane-les-Alpilles",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/Sophrologie.JuanJerome",
+  "resalib": "https://www.resalib.fr/praticien/99594-jerome-juan-sophrologue-maussane-les-alpilles",
+  "agrement": "",
+  "siret": "53935623800045",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

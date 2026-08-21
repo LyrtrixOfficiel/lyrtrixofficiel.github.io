@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "GIL Florence",
+  "praticien": "GIL Florence",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 74 39 42 11",
+  "telephoneLien": "tel:+33674394211",
+  "email": "",
+  "rue": "53 rue royale",
+  "codePostal": "47270",
+  "ville": "Puymirol",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/111822-gil-florence-praticien-en-bien-etre-puymirol",
+  "agrement": "",
+  "siret": "82894054400020",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

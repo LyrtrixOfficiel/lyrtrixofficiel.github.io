@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Emma Riouall thérapeute holistique ",
+  "praticien": "Emma Riouall thérapeute holistique ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 98 94 86 81",
+  "telephoneLien": "tel:+33698948681",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "34980",
+  "ville": "Montferrier-sur-Lez",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/94442-emma-riouall-therapeute-holistique-therapeute-holistique-montferrier-sur-lez",
+  "agrement": "",
+  "siret": "92843455400020",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

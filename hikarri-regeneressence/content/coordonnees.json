@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Hikarri",
+  "praticien": "Hikarri",
+  "metier": "techniques energetiques",
+  "metierCourt": "techniques energetiques",
+  "telephone": "06 27 38 70 13",
+  "telephoneLien": "tel:+33627387013",
+  "email": "",
+  "rue": "",
+  "codePostal": "64100",
+  "ville": "Bayonne",
+  "region": "Pyrenees Atlantiques",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/pyrenees-atlantiques/bayonne-64100/techniques-energetiques/hikarri-regeneressence",
+  "agrement": "",
+  "siret": "98399768500018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

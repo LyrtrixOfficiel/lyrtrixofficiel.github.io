@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marie-Paule Amiel ",
+  "praticien": "Marie-Paule Amiel ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 28 03 24 56",
+  "telephoneLien": "tel:+33628032456",
+  "email": "",
+  "rue": "40 route de Labarthe",
+  "codePostal": "31800",
+  "ville": "Estancarbon",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/csm.coach?mibextid=wwXIfr&rdid=poOCgvbRIeL4F0bv&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F15MHvVyZzK%2F%3Fmibextid%3DwwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/110016-marie-paule-amiel-hypnotherapeute-estancarbon",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

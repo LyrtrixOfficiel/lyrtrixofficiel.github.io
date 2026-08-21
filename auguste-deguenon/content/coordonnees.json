@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Auguste DEGUENON",
+  "praticien": "Auguste DEGUENON",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 22 19 24 93",
+  "telephoneLien": "tel:+33622192493",
+  "email": "",
+  "rue": "Lieu dit Bareille",
+  "codePostal": "65130",
+  "ville": "Bulan",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/89480-auguste-deguenon-praticien-en-soins-energetiques-bulan",
+  "agrement": "",
+  "siret": "52927490400026",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+import { resolve } from 'node:path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+const page = (name: string) => resolve(import.meta.dirname, `${name}.html`);
+
+// Site multipage : une vraie URL par prestation (SEO local Houssen / Colmar).
+export default defineConfig({
+  base: './',
+  plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      input: {
+        accueil: page('index'),
+        soin1: page('soin-1'),
+        soin2: page('soin-2'),
+        soin3: page('soin-3'),
+        tarifs: page('tarifs'),
+        contact: page('contact'),
+        mentions: page('mentions-legales'),
+        admin: page('admin'),
+      },
+    },
+  },
+});

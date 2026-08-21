@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Hélène Jaffeux - Médium & énergeticienne",
+  "praticien": "Hélène Jaffeux - Médium & énergeticienne",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 71 68 58 77",
+  "telephoneLien": "tel:+33671685877",
+  "email": "",
+  "rue": "29 AVENUE DE LA REPUBLIQUE",
+  "codePostal": "63800",
+  "ville": "Cournon-d'Auvergne",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/helenejaffeuxpageprofessionnelle",
+  "resalib": "https://www.resalib.fr/praticien/108626-helene-jaffeux-medium-energeticienne-praticien-en-energetique-cournon-d-auvergne",
+  "agrement": "",
+  "siret": "94438663000015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

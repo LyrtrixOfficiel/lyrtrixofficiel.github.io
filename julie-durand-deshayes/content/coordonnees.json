@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Julie Durand",
+  "praticien": "Julie Durand",
+  "metier": "shiatsu",
+  "metierCourt": "shiatsu",
+  "telephone": "06 03 03 56 08",
+  "telephoneLien": "tel:+33603035608",
+  "email": "",
+  "rue": "",
+  "codePostal": "91680",
+  "ville": "Bruyeres Le Chatel",
+  "region": "Essonne",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/essonne/bruyeres-le-chatel-91680/shiatsu/julie-durand-deshayes",
+  "agrement": "",
+  "siret": "9228945400015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

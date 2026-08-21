@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Les mains de charline",
+  "praticien": "Les mains de charline",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 52 70 86 08",
+  "telephoneLien": "tel:+33652708608",
+  "email": "",
+  "rue": "28 Place Georges Pironnet",
+  "codePostal": "86500",
+  "ville": "Montmorillon",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/share/17VLNPi5d4/",
+  "resalib": "https://www.resalib.fr/praticien/119425-les-mains-de-charline-kinesiologue-montmorillon",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

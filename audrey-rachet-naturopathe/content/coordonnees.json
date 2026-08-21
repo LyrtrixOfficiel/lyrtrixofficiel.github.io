@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Audrey Rachet Naturopathe",
+  "praticien": "Audrey Rachet Naturopathe",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 50 21 83 64",
+  "telephoneLien": "tel:+33650218364",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "31120",
+  "ville": "Roquettes",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/108965-audrey-rachet-naturopathe-naturopathe-roquettes",
+  "agrement": "",
+  "siret": "93461403300017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

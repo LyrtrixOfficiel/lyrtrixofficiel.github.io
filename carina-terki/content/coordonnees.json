@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Carina Terki",
+  "praticien": "Carina Terki",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 33 09 08 37",
+  "telephoneLien": "tel:+33633090837",
+  "email": "",
+  "rue": "7 bd Victor hugo Cabinet paramédical",
+  "codePostal": "78300",
+  "ville": "Poissy",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/95090-carina-terki-therapeute-psychocorporel-poissy",
+  "agrement": "",
+  "siret": "94871040700014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

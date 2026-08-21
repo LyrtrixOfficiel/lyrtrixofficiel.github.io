@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Bryan Azpurua Rebouteux",
+  "praticien": "Bryan Azpurua Rebouteux",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 83 27 10 01",
+  "telephoneLien": "tel:+33783271001",
+  "email": "",
+  "rue": "2 rue de Glandelle",
+  "codePostal": "77460",
+  "ville": "Souppes-sur-Loing",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/110453-bryan-azpurua-rebouteux-praticien-en-bien-etre-souppes-sur-loing",
+  "agrement": "",
+  "siret": "8014485490002",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

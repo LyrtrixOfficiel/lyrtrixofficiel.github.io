@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Julien",
+  "praticien": "Julien",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 64 56 21 77",
+  "telephoneLien": "tel:+33764562177",
+  "email": "",
+  "rue": "3 rue Romarin",
+  "codePostal": "69001",
+  "ville": "Lyon",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/94997-julien-psychopraticien-lyon",
+  "agrement": "",
+  "siret": "98341627200018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

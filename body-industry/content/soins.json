@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de dermatologie",
+      "accroche": "",
+      "resume": "Vous cherchez à faire des séances de cryolipolyse à Choisy-le-Roi, dans le département du Val-de-Marne ?",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Choisy Le Roi",
+        "Sur demande"
+      ]
+    }
+  ]
+}

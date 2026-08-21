@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "AUDERIC - REBOUTEUX / MAGNETISEUR",
+  "praticien": "AUDERIC - REBOUTEUX / MAGNETISEUR",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 43 25 21 22",
+  "telephoneLien": "tel:+33743252122",
+  "email": "",
+  "rue": "15 bis rue de la Chapelle",
+  "codePostal": "88160",
+  "ville": "Le Thillot",
+  "region": "le",
+  "facebook": "https://www.facebook.com/profile.php?id=61572717008944",
+  "resalib": "https://www.resalib.fr/praticien/104273-auderic-rebouteux-magnetiseur-osteotherapeute-le-thillot",
+  "agrement": "",
+  "siret": "81824874200038",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

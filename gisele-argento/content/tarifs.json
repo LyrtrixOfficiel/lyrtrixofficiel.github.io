@@ -1,0 +1,18 @@
+{
+  "_source": "Fourchette publiee par le praticien sur Resalib. Aucun prix devine.",
+  "paiement": "Paiement : espèces, chèque.",
+  "note": "",
+  "bonsCadeaux": "",
+  "groupes": [
+    {
+      "titre": "À la séance",
+      "lignes": [
+        {
+          "label": "Séance de sophrologie",
+          "prix": "35 € à 80 €",
+          "soin": "soin1"
+        }
+      ]
+    }
+  ]
+}

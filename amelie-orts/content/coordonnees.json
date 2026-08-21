@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Amélie Orts ",
+  "praticien": "Amélie Orts ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 19 61 58 75",
+  "telephoneLien": "tel:+33619615875",
+  "email": "",
+  "rue": "2 rue des lavandes",
+  "codePostal": "13220",
+  "ville": "Châteauneuf-les-Martigues",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/122514-amelie-orts-praticien-en-integration-des-reflexes-archaiques-chateauneuf-les-martigues",
+  "agrement": "",
+  "siret": "98862015900018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

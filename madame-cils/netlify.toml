@@ -1,0 +1,31 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Page unique, sans formulaire ni espace d'edition : aucune fonction Netlify.
+# La reservation part vers Planity, on ne la remplace pas.
+
+# Medias generes et photos : ils ne changent jamais, cache long.
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# DEMO DE PROSPECTION — tant que Laura n'a pas donne son accord, le site ne doit
+# etre ni indexe, ni reference : il porterait le nom de son etablissement dans
+# les resultats de recherche sans qu'elle l'ait demande. Le `noindex` est aussi
+# dans le <head> et dans public/robots.txt. Les trois se retirent ensemble.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

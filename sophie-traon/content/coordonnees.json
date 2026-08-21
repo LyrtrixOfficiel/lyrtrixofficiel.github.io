@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sophie TRAON",
+  "praticien": "Sophie TRAON",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 62 08 31 20",
+  "telephoneLien": "tel:+33662083120",
+  "email": "",
+  "rue": "205 rue des Artisans",
+  "codePostal": "44420",
+  "ville": "Mesquer",
+  "region": "Pays de la Loire",
+  "facebook": "https://www.facebook.com/profile.php?id=61559978824003",
+  "resalib": "https://www.resalib.fr/praticien/91139-sophie-traon-reflexologue-mesquer",
+  "agrement": "",
+  "siret": "75158118200027",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

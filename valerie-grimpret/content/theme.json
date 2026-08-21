@@ -1,0 +1,14 @@
+{
+  "_source": "Palette choisie d'apres le metier, fond choisi d'apres la famille de pratique.",
+  "nom": "prune",
+  "clair": false,
+  "fond": "#0a0509",
+  "fondDoux": "#120a10",
+  "fondCarte": "#1a0f18",
+  "accent": "#c08fb8",
+  "accentDoux": "#ecd6e8",
+  "accentFonce": "#8a5a83",
+  "texte": "#f7f2f6",
+  "video": "fleurs",
+  "secteur": null
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Karine QUINIOU Étiopathe ",
+  "praticien": "Karine QUINIOU Étiopathe ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 63 12 05 97",
+  "telephoneLien": "tel:+33663120597",
+  "email": "",
+  "rue": "35, rue Brizeux",
+  "codePostal": "29270",
+  "ville": "Carhaix-Plouguer",
+  "region": "Bretagne",
+  "facebook": "https://www.facebook.com/profile.php?id=61567922462135",
+  "resalib": "https://www.resalib.fr/praticien/100483-karine-quiniou-etiopathe-etiopathe-carhaix-plouguer",
+  "agrement": "",
+  "siret": "80110256700022",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

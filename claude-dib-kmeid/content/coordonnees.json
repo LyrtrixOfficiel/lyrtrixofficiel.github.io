@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Claude dib kmeid",
+  "praticien": "Claude dib kmeid",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 85 97 28 46",
+  "telephoneLien": "tel:+33685972846",
+  "email": "",
+  "rue": "82 avenue stalingrad 3eme étage",
+  "codePostal": "94120",
+  "ville": "Fontenay-sous-Bois",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/100205-claude-dib-kmeid-praticien-en-hypnose-fontenay-sous-bois",
+  "agrement": "",
+  "siret": "41877244800035",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

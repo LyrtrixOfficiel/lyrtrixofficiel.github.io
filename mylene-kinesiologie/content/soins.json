@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de kinésiologie",
+      "accroche": "",
+      "resume": "Une séance en kinésiologie débute par une conversation entre le client et le thérapeute afin de cerner la problématique .Puis nous allons chercher , via les réactions du corps, par quels procédés nous pouvons rééquilibrer les blocages ou tensions.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Virandeville",
+        "40 € à 70 €"
+      ]
+    }
+  ]
+}

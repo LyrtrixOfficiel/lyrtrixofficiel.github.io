@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Naturo Natura Natureza",
+  "praticien": "Naturo Natura Natureza",
+  "metier": "naturopathie",
+  "metierCourt": "naturopathie",
+  "telephone": "07 56 13 68 81",
+  "telephoneLien": "tel:+33756136881",
+  "email": "",
+  "rue": "",
+  "codePostal": "91450",
+  "ville": "Soisy Sur Seine",
+  "region": "Essonne",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/essonne/soisy-sur-seine-91450/naturopathie/naturo-natura-natureza",
+  "agrement": "",
+  "siret": "91442274600018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Nadine morillon",
+  "praticien": "Nadine morillon",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 84 48 29 63",
+  "telephoneLien": "tel:+33684482963",
+  "email": "",
+  "rue": "12 rue des hautes guignières tavers",
+  "codePostal": "45190",
+  "ville": "Tavers",
+  "region": "Centre-Val de Loire",
+  "facebook": "https://www.facebook.com/profile_status/",
+  "resalib": "https://www.resalib.fr/praticien/124131-nadine-morillon-hypnotherapeute-tavers",
+  "agrement": "",
+  "siret": "85280032500015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

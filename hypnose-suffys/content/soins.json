@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance d'hypnose",
+      "accroche": "",
+      "resume": "Je vous propose un suivi pour retrouver votre équilibre intérieure.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Tours",
+        "Sur demande"
+      ]
+    }
+  ]
+}

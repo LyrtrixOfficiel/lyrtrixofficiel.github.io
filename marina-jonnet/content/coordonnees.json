@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Marina Jonnet",
+  "praticien": "Marina Jonnet",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 29 92 83 44",
+  "telephoneLien": "tel:+33629928344",
+  "email": "",
+  "rue": "2 Rue Vernoux",
+  "codePostal": "26000",
+  "ville": "Valence",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/123029-marina-jonnet-psychopraticien-valence",
+  "agrement": "",
+  "siret": "99957518600013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

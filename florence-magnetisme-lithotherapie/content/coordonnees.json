@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Florence magnétisme lithothérapie ",
+  "praticien": "Florence magnétisme lithothérapie ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.15.42.45.89",
+  "telephoneLien": "tel:+33615424589",
+  "email": "",
+  "rue": "2 rue Corneille",
+  "codePostal": "66280",
+  "ville": "Saleilles",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/share/15uxzKWnfi/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/112507-florence-magnetisme-lithotherapie-magnetiseur-saleilles",
+  "agrement": "",
+  "siret": "90108222200018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

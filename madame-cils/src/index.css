@@ -1,0 +1,244 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Palette — mesuree sur les 12 visuels de @madamecils67                */
+/* fond   #0D0A08  noir chaud des ombres et des cils                    */
+/* accent #D9A277  moyenne des deux clusters dominants de la grille     */
+/*                 (#E0A080 peau chaude, #C08060 cuivre)                */
+/* Contrastes verifies : texte 17.33:1 · accent 8.82:1 · muted 7.23:1   */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  --color-bg: #0d0a08;
+  --color-surface: #191310;
+  --color-text: #f6efe9;
+  --color-muted: #a99a8d;
+  --color-accent: #d9a277;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+}
+
+:root {
+  --pad-x: clamp(1.25rem, 4.5vw, 5rem);
+  --pad-y: clamp(1rem, 3vh, 4rem);
+  --h1: clamp(3rem, 9vw + 0.5rem, 9.5rem);
+  --h2: clamp(1.5rem, 2.2vw + 0.6rem, 2.75rem);
+  --body: clamp(0.85rem, 0.35vw + 0.7rem, 1rem);
+  --micro: clamp(0.65rem, 0.25vw + 0.55rem, 0.8rem);
+  --btn-px: clamp(1.15rem, 1.4vw, 1.75rem);
+  --btn-py: clamp(0.7rem, 0.9vh, 0.95rem);
+  --section-gap: clamp(3rem, 8vh, 7rem);
+
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #0d0a08;
+  color: #f6efe9;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #d9a277;
+  color: #0d0a08;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid #d9a277;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.font-display {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* --- Marques de fabrique ------------------------------------------- */
+
+/* 1. Numerotation des sections */
+.numero {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-size: var(--micro);
+  letter-spacing: 0.3em;
+  color: #d9a277;
+}
+
+/* 2. Etiquette verticale en marge */
+.label-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: var(--micro);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(169, 154, 141, 0.85);
+}
+
+/* --- Utilitaires de mise en page ----------------------------------- */
+
+.pad-x {
+  padding-inline: var(--pad-x);
+}
+
+.section {
+  padding-block: var(--section-gap);
+}
+
+.mesure {
+  max-width: 62ch;
+}
+
+/* Voile de lisibilite sur les photos — jamais de texte blanc a nu */
+.voile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#0000 45%, #0009 100%);
+  pointer-events: none;
+}
+
+/* Etiquette posee sur une photo — elle vit au-dessus du voile */
+.label-plat {
+  font-size: var(--micro);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #f6efe9;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+
+/* --- Effets : etat de depart, neutralise sans JS -------------------- */
+
+/* Scroll Reveal — baseOpacity 0.1, baseRotation 3, blurStrength 4 */
+.reveal {
+  opacity: 0.1;
+  filter: blur(4px);
+  transform: rotate(3deg) translateY(12px);
+  transform-origin: 0% 50%;
+}
+
+.reveal.vu {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* Split Text — les mots partent de dessous */
+.split-mot {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .split-mot {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: opacity 200ms linear;
+  }
+}
+
+/* --- Bandeau defilant — marque de fabrique n3 ----------------------- */
+
+.bandeau {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, #0000 0%, #000 8%, #000 92%, #0000 100%);
+  -webkit-mask-image: linear-gradient(90deg, #0000 0%, #000 8%, #000 92%, #0000 100%);
+}
+
+.bandeau-piste {
+  display: flex;
+  width: max-content;
+  animation: bandeau-defile 38s linear infinite;
+}
+
+.bandeau-groupe {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-inline: 0.75rem;
+  margin: 0;
+  list-style: none;
+  color: rgba(169, 154, 141, 0.9);
+}
+
+@keyframes bandeau-defile {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.bandeau:hover .bandeau-piste,
+.bandeau:focus-within .bandeau-piste {
+  animation-play-state: paused;
+}
+
+/* --- Reveal par masque — l'entree du titre -------------------------- */
+
+.masque-mot {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+/* --- Parallaxe de galerie ------------------------------------------ */
+
+.parallaxe {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bandeau-piste {
+    animation: none;
+    transform: none;
+  }
+
+  .parallaxe {
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
+/* --- CTA : un liseré de lumière qui balaie le bouton ---------------- */
+/* Pas de box-shadow diffus pour simuler la lumière (liste NEVER) :     */
+/* c'est un dégradé net qui traverse, borné au bouton par overflow.     */
+
+.cta-lueur {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.cta-lueur::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, #0000 38%, #fff6 50%, #0000 62%);
+  transform: translate3d(-120%, 0, 0);
+  animation: cta-balaye 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes cta-balaye {
+  0%   { transform: translate3d(-120%, 0, 0); }
+  38%  { transform: translate3d(120%, 0, 0); }
+  100% { transform: translate3d(120%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-lueur::after {
+    animation: none;
+    opacity: 0;
+  }
+}

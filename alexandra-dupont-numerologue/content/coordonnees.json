@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Alexandra DUPONT - Numérologue",
+  "praticien": "Alexandra DUPONT - Numérologue",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 85 87 89 56",
+  "telephoneLien": "tel:+33785878956",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "37400",
+  "ville": "Amboise",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/118569-alexandra-dupont-numerologue-praticien-en-relation-d-aide-amboise",
+  "agrement": "",
+  "siret": "85016691900033",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

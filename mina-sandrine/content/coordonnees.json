@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mina sandrine",
+  "praticien": "Mina sandrine",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0782974853",
+  "telephoneLien": "tel:+33782974853",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "79290",
+  "ville": "Brion-prés-Thouet",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/96411-mina-sandrine-praticien-en-bien-etre-brion-pres-thouet",
+  "agrement": "",
+  "siret": "89432033200014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

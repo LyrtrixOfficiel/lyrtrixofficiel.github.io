@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Sarah Jacob",
+  "praticien": "Sarah Jacob",
+  "metier": "astrologue",
+  "metierCourt": "astrologue",
+  "telephone": "06 84 55 30 76",
+  "telephoneLien": "tel:+33684553076",
+  "email": "",
+  "rue": "",
+  "codePostal": "75018",
+  "ville": "Paris 18",
+  "region": "Paris",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/paris/paris-18-75018/astrologue/sarah-jacob",
+  "agrement": "",
+  "siret": "89919617400010",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Rouguy COULIBALY",
+  "praticien": "Rouguy COULIBALY",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 33 63 52 42",
+  "telephoneLien": "tel:+33633635242",
+  "email": "",
+  "rue": "4 rue du marais",
+  "codePostal": "78700",
+  "ville": "Conflans-Sainte-Honorine",
+  "region": "Île-de-France",
+  "facebook": "https://www.facebook.com/profile.php?id=61565049782930",
+  "resalib": "https://www.resalib.fr/praticien/95512-rouguy-coulibaly-hypnotherapeute-conflans-sainte-honorine",
+  "agrement": "",
+  "siret": "931 083 729 00",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

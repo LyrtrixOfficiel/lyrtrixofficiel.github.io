@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sylvie Leriche Psychanalyste",
+  "praticien": "Sylvie Leriche Psychanalyste",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 88 33 80 95",
+  "telephoneLien": "tel:+33688338095",
+  "email": "",
+  "rue": "9 rue Joliot Curie",
+  "codePostal": "91600",
+  "ville": "Savigny-sur-Orge",
+  "region": "Île-de-France",
+  "facebook": "www.facebook.com/psychanalyste91",
+  "resalib": "https://www.resalib.fr/praticien/97007-sylvie-leriche-psychanalyste-psychanalyste-savigny-sur-orge",
+  "agrement": "",
+  "siret": "89796366600028",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Antoine PEDRONO",
+  "praticien": "Antoine PEDRONO",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 28 64 78 00",
+  "telephoneLien": "tel:+33628647800",
+  "email": "",
+  "rue": "4 Place de la Mairie",
+  "codePostal": "56880",
+  "ville": "Ploeren",
+  "region": "Bretagne",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/95762-antoine-pedrono-etiopathe-ploeren",
+  "agrement": "",
+  "siret": "91012106000016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

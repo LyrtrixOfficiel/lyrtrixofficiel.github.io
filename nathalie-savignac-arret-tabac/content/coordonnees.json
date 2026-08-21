@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "NATHALIE SAVIGNAC - ARRET TABAC",
+  "praticien": "NATHALIE SAVIGNAC - ARRET TABAC",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 75 25 07 95",
+  "telephoneLien": "tel:+33775250795",
+  "email": "",
+  "rue": "10 rue du Maréchal Foch",
+  "codePostal": "33260",
+  "ville": "La Teste-de-Buch",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/nathaliesavignac.reflexologieauriculairelaser/",
+  "resalib": "https://www.resalib.fr/praticien/128405-nathalie-savignac-arret-tabac-centre-de-bien-etre-la-teste-de-buch",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

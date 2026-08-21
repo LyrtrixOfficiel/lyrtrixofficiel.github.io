@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Dominique Pépin",
+  "praticien": "Dominique Pépin",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 81 06 97 77",
+  "telephoneLien": "tel:+33681069777",
+  "email": "",
+  "rue": "Maison de l'Harmonie 41 rue du Guidon",
+  "codePostal": "71500",
+  "ville": "Louhans",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/91409-dominique-pepin-praticien-en-bioresonance-louhans",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

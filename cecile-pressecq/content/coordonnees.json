@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Cécile Pressecq",
+  "praticien": "Cécile Pressecq",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 72 53 54 24",
+  "telephoneLien": "tel:+33672535424",
+  "email": "",
+  "rue": "8 chemin du Tucol",
+  "codePostal": "31140",
+  "ville": "Montberon",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/126940-cecile-pressecq-conseiller-en-nutrition-montberon",
+  "agrement": "",
+  "siret": "82218544300048",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

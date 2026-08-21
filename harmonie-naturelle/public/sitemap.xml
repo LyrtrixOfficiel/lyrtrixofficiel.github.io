@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Vide tant que la demo n'est pas validee : un sitemap invite les moteurs a
+  indexer, ce qui est exactement ce qu'on ne veut pas ici.
+  A remplir avec le vrai domaine le jour de la mise en ligne.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>

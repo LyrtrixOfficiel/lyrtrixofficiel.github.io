@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Les bols de Mél",
+  "praticien": "Les bols de Mél",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07.68.76.28.62",
+  "telephoneLien": "tel:+33768762862",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "80690",
+  "ville": "Ailly-le-Haut-Clocher",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/people/Les-bols-de-Mél/100082843706800/",
+  "resalib": "https://www.resalib.fr/praticien/109137-les-bols-de-mel-sonotherapeute-ailly-le-haut-clocher",
+  "agrement": "",
+  "siret": "81046513800024",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Estelle Mahdessian",
+  "praticien": "Estelle Mahdessian",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 75 72 21 62",
+  "telephoneLien": "tel:+33775722162",
+  "email": "",
+  "rue": "47 chemin des petits cadeneaux",
+  "codePostal": "13170",
+  "ville": "Les Pennes-Mirabeau",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/103086-estelle-mahdessian-accompagnant-perinatal-les-pennes-mirabeau",
+  "agrement": "",
+  "siret": "92904767800016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

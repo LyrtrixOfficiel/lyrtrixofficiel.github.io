@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Volta Marie-Claire",
+  "praticien": "Volta Marie-Claire",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 16 11 38 83",
+  "telephoneLien": "tel:+33616113883",
+  "email": "",
+  "rue": "L'Ecloserie 1 rue Henri Duverdin",
+  "codePostal": "78200",
+  "ville": "Soindres",
+  "region": "Île-de-France",
+  "facebook": "https://www.facebook.com/marieclaire.volta",
+  "resalib": "https://www.resalib.fr/praticien/97594-volta-marie-claire-praticien-shiatsu-soindres",
+  "agrement": "",
+  "siret": "52428678800038",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

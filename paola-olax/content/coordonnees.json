@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Paola Olax",
+  "praticien": "Paola Olax",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 08 80 85 58",
+  "telephoneLien": "tel:+33608808558",
+  "email": "",
+  "rue": "22 rue des Canettes",
+  "codePostal": "75006",
+  "ville": "Paris",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/117819-paola-olax-psychopraticien-paris",
+  "agrement": "",
+  "siret": "85294909800010",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

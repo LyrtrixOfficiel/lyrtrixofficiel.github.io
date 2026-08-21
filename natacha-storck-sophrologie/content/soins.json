@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "J ai un parcours peu commun et très atypique puisque lorsque j ai commencé ma carrière professionnelle, je travaillais pour différentes grandes entreprises dans le secteur tertiaire.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Saverne",
+        "Sur demande"
+      ]
+    }
+  ]
+}

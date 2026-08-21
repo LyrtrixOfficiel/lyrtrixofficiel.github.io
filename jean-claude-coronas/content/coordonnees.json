@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "JEAN CLAUDE CORONAS",
+  "praticien": "JEAN CLAUDE CORONAS",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 74 87 66 13",
+  "telephoneLien": "tel:+33674876613",
+  "email": "",
+  "rue": "27 Bd Pierre Renaudet",
+  "codePostal": "65000",
+  "ville": "Tarbes",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/34572-jean-claude-coronas-praticien-en-energetique-tarbes",
+  "agrement": "",
+  "siret": "32361988200083",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

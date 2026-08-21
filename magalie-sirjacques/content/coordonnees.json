@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Magalie Sirjacques",
+  "praticien": "Magalie Sirjacques",
+  "metier": "art therapie",
+  "metierCourt": "art therapie",
+  "telephone": "06 37 00 36 60",
+  "telephoneLien": "tel:+33637003660",
+  "email": "",
+  "rue": "",
+  "codePostal": "47000",
+  "ville": "Agen",
+  "region": "Lot Et Garonne",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/lot-et-garonne/agen-47000/art-therapie/magalie-sirjacques",
+  "agrement": "",
+  "siret": "90431586800011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "La douceur de la Naturopathie",
+  "praticien": "La douceur de la Naturopathie",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.76.91.58.16",
+  "telephoneLien": "tel:+33676915816",
+  "email": "",
+  "rue": "10 La Bresselais MONTERREIN",
+  "codePostal": "56800",
+  "ville": "Ploërmel",
+  "region": "Bretagne",
+  "facebook": "https://www.facebook.com/people/La-douceur-de-la-Naturopathie/61554160706897/",
+  "resalib": "https://www.resalib.fr/praticien/117549-la-douceur-de-la-naturopathie-naturopathe-ploermel",
+  "agrement": "",
+  "siret": "98192563900016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

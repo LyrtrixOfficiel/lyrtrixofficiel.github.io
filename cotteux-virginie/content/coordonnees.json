@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Cotteux Virginie ",
+  "praticien": "Cotteux Virginie ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 77 28 33 61",
+  "telephoneLien": "tel:+33777283361",
+  "email": "",
+  "rue": "7 les Ajeaux",
+  "codePostal": "44440",
+  "ville": "Joué-sur-Erdre",
+  "region": "Pays de la Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/128897-cotteux-virginie-reflexologue-joue-sur-erdre",
+  "agrement": "",
+  "siret": "8079159960035",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

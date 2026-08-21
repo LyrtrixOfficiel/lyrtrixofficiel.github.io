@@ -1,0 +1,15 @@
+{
+  "_source": "Palette choisie d'apres le metier, fond choisi d'apres la famille de pratique, mise en page tiree du nom de dossier.",
+  "nom": "ambre-chaud",
+  "clair": false,
+  "fond": "#0b0705",
+  "fondDoux": "#140d09",
+  "fondCarte": "#1c130d",
+  "accent": "#cf8f5e",
+  "accentDoux": "#efd3b4",
+  "accentFonce": "#9a6438",
+  "texte": "#f8f3ee",
+  "video": "plantes",
+  "secteur": "plantes",
+  "mise": "miroir"
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Camille Le Jallé",
+  "praticien": "Camille Le Jallé",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 07 78 86 88",
+  "telephoneLien": "tel:+33607788688",
+  "email": "",
+  "rue": "2 rue de Candé",
+  "codePostal": "49370",
+  "ville": "Bécon-les-Granits",
+  "region": "Pays de la Loire",
+  "facebook": "https://www.facebook.com/share/1AQkjF3A4K/",
+  "resalib": "https://www.resalib.fr/praticien/110524-camille-le-jalle-etiopathe-becon-les-granits",
+  "agrement": "",
+  "siret": "93114815900011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

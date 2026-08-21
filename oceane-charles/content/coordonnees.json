@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Océane CHARLES ",
+  "praticien": "Océane CHARLES ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 71 41 55 16",
+  "telephoneLien": "tel:+33671415516",
+  "email": "",
+  "rue": "18 rue Hector Berlioz",
+  "codePostal": "50270",
+  "ville": "Barneville-Carteret",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/105658-oceane-charles-kinesiologue-barneville-carteret",
+  "agrement": "",
+  "siret": "52532585800039",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

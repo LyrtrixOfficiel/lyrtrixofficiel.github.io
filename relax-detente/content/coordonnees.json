@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Relax Détente ",
+  "praticien": "Relax Détente ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 20 47 77 53",
+  "telephoneLien": "tel:+33620477753",
+  "email": "",
+  "rue": "46 rue aux fourneaux",
+  "codePostal": "25310",
+  "ville": "Meslières",
+  "region": "Bourgogne-Franche-Comté",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/125443-relax-detente-praticien-en-massage-bien-etre-meslieres",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

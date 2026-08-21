@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Corinne CAMPOY",
+  "praticien": "Corinne CAMPOY",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 82 12 62 12",
+  "telephoneLien": "tel:+33782126212",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "13780",
+  "ville": "Cuges-les-Pins",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/107145-corinne-campoy-praticien-en-soins-energetiques-cuges-les-pins",
+  "agrement": "",
+  "siret": "94099094800017",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

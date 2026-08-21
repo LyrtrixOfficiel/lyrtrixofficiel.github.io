@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Valentin Guison",
+  "praticien": "Valentin Guison",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.62.44.17.23",
+  "telephoneLien": "tel:+33662441723",
+  "email": "",
+  "rue": "2 Rue du Port Cordon",
+  "codePostal": "37520",
+  "ville": "La Riche",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/131919-valentin-guison-psychopraticien-la-riche",
+  "agrement": "",
+  "siret": "10508445300015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de soin infirmier",
+      "accroche": "",
+      "resume": "L'engagement et le professionnalisme définissent notre service d'infirmière à domicile à Vitry-sur-Seine, offrant un accompagnement personnalisé pour une convalescence sereine.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Vitry Sur Seine",
+        "Sur demande"
+      ]
+    }
+  ]
+}

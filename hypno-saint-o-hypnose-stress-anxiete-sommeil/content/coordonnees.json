@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Hypno Saint’O -Hypnose -Stress, Anxiété, Sommeil",
+  "praticien": "Hypno Saint’O -Hypnose -Stress, Anxiété, Sommeil",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 52 05 04 61",
+  "telephoneLien": "tel:+33752050461",
+  "email": "",
+  "rue": "14 A avenue de Gameville Résidence Le Millésime APPT111(entre Appt 11 et Appt 12)",
+  "codePostal": "31650",
+  "ville": "Saint-Orens-de-Gameville",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/HypnoSaintO",
+  "resalib": "https://www.resalib.fr/praticien/116853-hypno-saint-o-hypnose-stress-anxiete-sommeil-hypnotherapeute-saint-orens-de-gameville",
+  "agrement": "",
+  "siret": "93832617000033",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

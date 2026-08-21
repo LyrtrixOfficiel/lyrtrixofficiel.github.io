@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "SADKI Sophia",
+  "praticien": "SADKI Sophia",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "08 86 46 97 33",
+  "telephoneLien": "tel:+33886469733",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "66000",
+  "ville": "Perpignan",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/share/1E5AhfDMFT/",
+  "resalib": "https://www.resalib.fr/praticien/127248-sadki-sophia-praticien-en-energetique-perpignan",
+  "agrement": "",
+  "siret": "10096102800014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

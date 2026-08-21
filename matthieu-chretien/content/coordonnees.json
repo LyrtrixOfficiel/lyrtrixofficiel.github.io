@@ -1,0 +1,30 @@
+{
+  "marque": "Matthieu Chrétien",
+  "praticien": "Matthieu Chrétien",
+  "metier": "Réflexologue et conseiller agréé en Fleurs de Bach",
+  "telephone": "06 99 24 60 85",
+  "telephoneLien": "tel:+33699246085",
+  "email": "mchretien.reflexo@gmail.com",
+  "rue": "8 place de l’église",
+  "codePostal": "29590",
+  "ville": "Le Faou",
+  "region": "Finistère, Bretagne",
+  "facebook": "https://www.facebook.com/profile.php?id=100087913548017",
+  "resalib": "https://www.resalib.fr/praticien/109732-matthieu-chretien-reflexologie-et-fleurs-de-bach-reflexologue-le-faou",
+  "agrement": "FRA-2024-1003M",
+  "siret": "533 305 843 00047",
+  "ape": "8690F",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Lundi au mercredi",
+      "creneau": "9h30 – 19h00"
+    },
+    {
+      "jour": "Jeudi au dimanche",
+      "creneau": "Fermé"
+    }
+  ],
+  "formeJuridique": "Entrepreneur individuel",
+  "dateCreation": "2 novembre 2022"
+}

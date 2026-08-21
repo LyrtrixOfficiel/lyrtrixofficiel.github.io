@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sophie Morillon ",
+  "praticien": "Sophie Morillon ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 20 98 63 31",
+  "telephoneLien": "tel:+33620986331",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "38490",
+  "ville": "Les Abrets en Dauphiné",
+  "region": "Hauts-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/93653-sophie-morillon-bioenergeticien-les-abrets-en-dauphine",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

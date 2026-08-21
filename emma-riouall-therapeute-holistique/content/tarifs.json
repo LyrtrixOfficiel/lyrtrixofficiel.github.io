@@ -1,0 +1,18 @@
+{
+  "_source": "Ses prix EXACTS. S'il ne publie qu'une fourchette, mettre « sur demande » — jamais un prix devine. C'est la phrase « je n'ai pas inventé vos tarifs » qui prouve le serieux.",
+  "paiement": "",
+  "note": "",
+  "bonsCadeaux": "",
+  "groupes": [
+    {
+      "titre": "À la séance",
+      "lignes": [
+        {
+          "label": "",
+          "prix": "sur demande",
+          "soin": "soin-1"
+        }
+      ]
+    }
+  ]
+}

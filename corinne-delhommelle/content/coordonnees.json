@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Corinne Delhommelle",
+  "praticien": "Corinne Delhommelle",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 45 52 22 43",
+  "telephoneLien": "tel:+33645522243",
+  "email": "",
+  "rue": "23 rue voltaire",
+  "codePostal": "60930",
+  "ville": "Bailleul-sur-Thérain",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/share/15jqShA2NS/",
+  "resalib": "https://www.resalib.fr/praticien/99929-corinne-delhommelle-hypnotherapeute-bailleul-sur-therain",
+  "agrement": "",
+  "siret": "42495028500033",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

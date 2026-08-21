@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Juliette Chartier",
+  "praticien": "Juliette Chartier",
+  "metier": "sophrologie",
+  "metierCourt": "sophrologie",
+  "telephone": "07 49 69 03 58",
+  "telephoneLien": "tel:+33749690358",
+  "email": "",
+  "rue": "",
+  "codePostal": "33140",
+  "ville": "Villenave D Ornon",
+  "region": "Gironde",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/gironde/villenave-d-ornon-33140/sophrologie/juliette-chartier",
+  "agrement": "",
+  "siret": "92055579400014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

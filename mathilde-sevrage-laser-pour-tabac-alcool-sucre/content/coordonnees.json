@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Mathilde sevrage laser pour tabac alcool sucre",
+  "praticien": "Mathilde sevrage laser pour tabac alcool sucre",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 15 23 21 29",
+  "telephoneLien": "tel:+33615232129",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "56230",
+  "ville": "Questembert",
+  "region": "Bretagne",
+  "facebook": "https://www.facebook.com/share/19k1U9jrwq/",
+  "resalib": "https://www.resalib.fr/praticien/109544-mathilde-sevrage-laser-pour-tabac-alcool-sucre-praticien-en-auriculotherapie-questembert",
+  "agrement": "",
+  "siret": "94363535900012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

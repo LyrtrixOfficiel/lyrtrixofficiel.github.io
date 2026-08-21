@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de massage bien etre",
+      "accroche": "",
+      "resume": "Ouverture du Salon de massage BIEN ETRE MONTOIS SALON DE MASSAGE près de chez vous, sur la commune de Saint jean de monts sur un axe principale ou à domicile, je vous propose de vous relaxer et de vous libérer de tous le stress accumulé après une journée fastidieuse de travail et de soucis.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Saint Jean De Monts",
+        "Sur demande"
+      ]
+    }
+  ]
+}

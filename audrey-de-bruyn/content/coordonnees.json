@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Audrey de Bruyn",
+  "praticien": "Audrey de Bruyn",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 73 53 17 14",
+  "telephoneLien": "tel:+33673531714",
+  "email": "",
+  "rue": "2 rue Gustave Flaubert Code porte 2486 Accès par RDJ, monter au RDC",
+  "codePostal": "95120",
+  "ville": "Ermont",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/116017-audrey-de-bruyn-magnetiseur-ermont",
+  "agrement": "",
+  "siret": "98930596600016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

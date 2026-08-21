@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Natacha Storck Sophrologie",
+  "praticien": "Natacha Storck Sophrologie",
+  "metier": "sophrologie",
+  "metierCourt": "sophrologie",
+  "telephone": "07 83 68 18 99",
+  "telephoneLien": "tel:+33783681899",
+  "email": "",
+  "rue": "",
+  "codePostal": "67700",
+  "ville": "Saverne",
+  "region": "Bas Rhin",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/bas-rhin/saverne-67700/sophrologie/natacha-storck-sophrologie",
+  "agrement": "",
+  "siret": "48126889400021",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

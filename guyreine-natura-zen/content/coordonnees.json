@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Guyreine NATURA’ZEN",
+  "praticien": "Guyreine NATURA’ZEN",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 68 20 92 00",
+  "telephoneLien": "tel:+33768209200",
+  "email": "",
+  "rue": "36 rue du Maréchal Leclerc",
+  "codePostal": "52310",
+  "ville": "Bologne",
+  "region": "Grand Est",
+  "facebook": "https://www.facebook.com/guyreineadtnaturopathe",
+  "resalib": "https://www.resalib.fr/praticien/95896-guyreine-natura-zen-naturopathe-bologne",
+  "agrement": "",
+  "siret": "88321865300029",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

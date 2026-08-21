@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Elisabeth Rupp Girard ",
+  "praticien": "Elisabeth Rupp Girard ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 80 85 31 71",
+  "telephoneLien": "tel:+33680853171",
+  "email": "",
+  "rue": "18 allée des acacias",
+  "codePostal": "35220",
+  "ville": "Châteaubourg",
+  "region": "Bretagne",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/119791-elisabeth-rupp-girard-praticien-shiatsu-chateaubourg",
+  "agrement": "",
+  "siret": "35214589000062",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

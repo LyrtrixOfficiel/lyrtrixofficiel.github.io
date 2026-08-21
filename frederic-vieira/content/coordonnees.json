@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Frédéric VIEIRA",
+  "praticien": "Frédéric VIEIRA",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 57 87 36 77",
+  "telephoneLien": "tel:+33757873677",
+  "email": "",
+  "rue": "266 route de Caussade",
+  "codePostal": "82240",
+  "ville": "Puylaroque",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/89252-frederic-vieira-hypnotherapeute-puylaroque",
+  "agrement": "",
+  "siret": "52278786000041",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

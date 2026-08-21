@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "Avant toutes séances que ce soit en Sophrologie ou en Reiki Soins Energétiques, nous prenons un temps d' échange et d'écoute en toute confidentialité et bienveilance pour mieux comprendre ce que vous souhaitez améliorer dans une vision de .et de bien être.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Saint-Laurent-Blangy",
+        "35 € à 80 €"
+      ]
+    }
+  ]
+}

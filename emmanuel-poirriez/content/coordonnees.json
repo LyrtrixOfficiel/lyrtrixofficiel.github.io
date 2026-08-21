@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Emmanuel Poirriez",
+  "praticien": "Emmanuel Poirriez",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 35 56 53 55",
+  "telephoneLien": "tel:+33635565355",
+  "email": "",
+  "rue": "17 rue Gueymard",
+  "codePostal": "13600",
+  "ville": "La Ciotat",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/94514-emmanuel-poirriez-praticien-en-energetique-la-ciotat",
+  "agrement": "",
+  "siret": "40120794900066",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

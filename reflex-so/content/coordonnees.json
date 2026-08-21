@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Reflex’So",
+  "praticien": "Reflex’So",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 32 67 20 57",
+  "telephoneLien": "tel:+33632672057",
+  "email": "",
+  "rue": "15 AVENUE DU 8 MAI 1945",
+  "codePostal": "18100",
+  "ville": "Vierzon",
+  "region": "Centre-Val de Loire",
+  "facebook": "https://www.facebook.com/profile.php?id=61570392316391#",
+  "resalib": "https://www.resalib.fr/praticien/102010-reflex-so-reflexologue-vierzon",
+  "agrement": "",
+  "siret": "88511283900026",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

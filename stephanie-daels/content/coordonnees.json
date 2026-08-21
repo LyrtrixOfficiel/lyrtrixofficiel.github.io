@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Stéphanie Daels",
+  "praticien": "Stéphanie Daels",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 86 58 57 28",
+  "telephoneLien": "tel:+33686585728",
+  "email": "",
+  "rue": "5 rue du col de Dyane",
+  "codePostal": "78180",
+  "ville": "Montigny-le-Bretonneux",
+  "region": "Île-de-France",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/116631-stephanie-daels-kinesiologue-montigny-le-bretonneux",
+  "agrement": "",
+  "siret": "98868868500011",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

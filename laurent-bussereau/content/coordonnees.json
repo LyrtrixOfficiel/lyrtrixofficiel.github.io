@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Laurent BUSSEREAU",
+  "praticien": "Laurent BUSSEREAU",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 11 63 61 66",
+  "telephoneLien": "tel:+33611636166",
+  "email": "",
+  "rue": "9, route de Nieuil magnétiseur sophrologue",
+  "codePostal": "86340",
+  "ville": "Gizay",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/114194-laurent-bussereau-sophrologue-gizay",
+  "agrement": "",
+  "siret": "51799971000026",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

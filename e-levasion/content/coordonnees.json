@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "E’lévasion",
+  "praticien": "E’lévasion",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 46 02 48 61",
+  "telephoneLien": "tel:+33646024861",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "17700",
+  "ville": "La Devise",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/share/1B6SMCB9dU/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/113544-e-levasion-praticien-en-massage-bien-etre-la-devise",
+  "agrement": "",
+  "siret": "94129417500018",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

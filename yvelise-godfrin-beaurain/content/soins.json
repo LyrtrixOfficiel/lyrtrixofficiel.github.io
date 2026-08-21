@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "Les séances se déroulent habillés, sur une table de massage, sans huile, et ne nécessite aucune manipulation.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Nuisement Sur Coole",
+        "40 € à 100 €"
+      ]
+    }
+  ]
+}

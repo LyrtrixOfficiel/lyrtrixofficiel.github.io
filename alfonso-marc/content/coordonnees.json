@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Alfonso Marc",
+  "praticien": "Alfonso Marc",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 80 06 82 98",
+  "telephoneLien": "tel:+33680068298",
+  "email": "",
+  "rue": "10 Avenue des causses Maison médicale",
+  "codePostal": "12520",
+  "ville": "Aguessac",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/107507-alfonso-marc-fasciatherapeute-aguessac",
+  "agrement": "",
+  "siret": "38500001300024",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

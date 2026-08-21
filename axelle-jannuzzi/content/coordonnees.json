@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Axelle JANNUZZI ",
+  "praticien": "Axelle JANNUZZI ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0769805004",
+  "telephoneLien": "tel:+33769805004",
+  "email": "",
+  "rue": "856 rue d'Alco Résidence les Pyramides d'Alco",
+  "codePostal": "34080",
+  "ville": "Montpellier",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/118209-axelle-jannuzzi-kinesiologue-montpellier",
+  "agrement": "",
+  "siret": "99948854700012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

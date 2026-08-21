@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Régine Ferrand Réflexologue",
+  "praticien": "Régine Ferrand Réflexologue",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 77 45 20 62",
+  "telephoneLien": "tel:+33677452062",
+  "email": "",
+  "rue": "Avenue des Granges Blanches",
+  "codePostal": "42540",
+  "ville": "Saint-Just-la-Pendue",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/regine.ferrand.904",
+  "resalib": "https://www.resalib.fr/praticien/112133-regine-ferrand-reflexologue-reflexologue-saint-just-la-pendue",
+  "agrement": "",
+  "siret": "83389589900015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

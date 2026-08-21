@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Amandine Gros ",
+  "praticien": "Amandine Gros ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06.15.26.45.34",
+  "telephoneLien": "tel:+33615264534",
+  "email": "",
+  "rue": "7 avenue Brillat Savarin Espace Thérapeutique \"A la Belley'Toile\"",
+  "codePostal": "01300",
+  "ville": "Belley",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "https://www.facebook.com/share/16aFUWwpqK/",
+  "resalib": "https://www.resalib.fr/praticien/91715-amandine-gros-reflexologue-belley",
+  "agrement": "",
+  "siret": "90211713400012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

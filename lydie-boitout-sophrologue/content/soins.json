@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de sophrologie",
+      "accroche": "",
+      "resume": "Boulonnaise et diplômée de l'Institut de sophrologie de Paris, je suis sophrologue certifiée RNCP, titre de niveau 3, depuis 2016 Je suis membre de la Société française de sophrologie (SFS) et du syndicat des sophrologues indépendants (SSI).",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Boulogne Billancourt",
+        "Sur demande"
+      ]
+    }
+  ]
+}

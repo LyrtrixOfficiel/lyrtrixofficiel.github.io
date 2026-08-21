@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Bulle de plénitude by Isa",
+  "praticien": "Bulle de plénitude by Isa",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 92 56 35 82",
+  "telephoneLien": "tel:+33692563582",
+  "email": "",
+  "rue": "2 Allée des lianes poc poc Saint Denis",
+  "codePostal": "97400",
+  "ville": "Saint-Denis",
+  "region": "",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/92699-bulle-de-plenitude-by-isa-praticien-en-bien-etre-saint-denis",
+  "agrement": "",
+  "siret": "91839905600012",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Élodie Amiel Fourtas",
+  "praticien": "Élodie Amiel Fourtas",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 01 26 11 52",
+  "telephoneLien": "tel:+33601261152",
+  "email": "",
+  "rue": "13 rue Sainte Barbe",
+  "codePostal": "34290",
+  "ville": "Servian",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/elodie.manzanares.5",
+  "resalib": "https://www.resalib.fr/praticien/98861-elodie-amiel-fourtas-therapeute-servian",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

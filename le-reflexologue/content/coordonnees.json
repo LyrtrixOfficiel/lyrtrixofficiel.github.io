@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Le Reflexologue",
+  "praticien": "Le Reflexologue",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 30 28 86 14",
+  "telephoneLien": "tel:+33630288614",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "14860",
+  "ville": "Amfreville",
+  "region": "Normandie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/96185-le-reflexologue-reflexologue-amfreville",
+  "agrement": "",
+  "siret": "93107639200014",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

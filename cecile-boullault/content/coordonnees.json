@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Cécile Boullault",
+  "praticien": "Cécile Boullault",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 02 13 99 68",
+  "telephoneLien": "tel:+33602139968",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "81100",
+  "ville": "Castres",
+  "region": "Occitanie",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/116055-cecile-boullault-fasciatherapeute-castres",
+  "agrement": "",
+  "siret": "52341087600057",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

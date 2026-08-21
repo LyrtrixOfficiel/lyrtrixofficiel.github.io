@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib. Contenu compose automatiquement depuis DOSSIER.md par remplir-auto.mjs — chaque phrase publiee est de la main du praticien.",
+  "marque": "Laura Hasmasan",
+  "praticien": "Laura Hasmasan",
+  "metier": "psychotherapie",
+  "metierCourt": "psychotherapie",
+  "telephone": "06 46 02 39 99",
+  "telephoneLien": "tel:+33646023999",
+  "email": "",
+  "rue": "",
+  "codePostal": "75013",
+  "ville": "Paris 13",
+  "region": "Paris",
+  "facebook": "",
+  "resalib": "https://www.annuaire-sante-bien-etre.fr/professionnel-de-sante/paris/paris-13-75013/psychotherapie/laura-hasmasan",
+  "agrement": "",
+  "siret": "79180913000036",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "Sur rendez-vous",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "soins": [
+    {
+      "route": "reflexologie",
+      "titre": "Réflexologie plantaire",
+      "accroche": "Quarante-cinq minutes, du pied jusqu’au-dessus du genou",
+      "resume": "Après un entretien préliminaire pour mieux comprendre vos besoins et vos attentes, la séance se déroule sur une table de massage, avec ou sans musique selon votre choix. En fin de séance, nous échangeons sur ce que j’ai trouvé à la lecture du pied.",
+      "etiquettes": [
+        "45 minutes",
+        "Enfants acceptés",
+        "Médecine chinoise"
+      ]
+    },
+    {
+      "route": "bach",
+      "titre": "Fleurs de Bach",
+      "accroche": "Un entretien d’une heure, et votre flacon repart avec vous",
+      "resume": "En tant que conseiller agréé, je vous accompagne au cours d’un entretien personnalisé d’une heure, pour identifier les émotions en déséquilibre dans le présent afin d’utiliser les fleurs les plus appropriées.",
+      "etiquettes": [
+        "1 heure",
+        "Conseiller agréé",
+        "Préparation personnalisée"
+      ]
+    },
+    {
+      "route": "avancee",
+      "titre": "Réflexologie avancée",
+      "accroche": "Une action ciblée, sur un motif diagnostiqué par un médecin",
+      "resume": "Un ensemble de techniques complémentaires à la réflexologie plantaire, qui permettent une action ciblée pour des problèmes bien définis. Une anamnèse est réalisée lors de la première séance.",
+      "etiquettes": [
+        "Suivi long",
+        "Sur diagnostic médical",
+        "Prénatothérapie"
+      ]
+    }
+  ]
+}

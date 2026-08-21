@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Catherine GUILLAUME",
+  "praticien": "Catherine GUILLAUME",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 44 73 86 85",
+  "telephoneLien": "tel:+33744738685",
+  "email": "",
+  "rue": "22 quai Louis Durand la Vie au Centre Résidence La Corvette",
+  "codePostal": "17000",
+  "ville": "La Rochelle",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/126173-catherine-guillaume-coach-en-developpement-personnel-la-rochelle",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

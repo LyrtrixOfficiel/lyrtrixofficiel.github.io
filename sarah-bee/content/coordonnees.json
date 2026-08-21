@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Sarah Bee",
+  "praticien": "Sarah Bee",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 32 27 32 45",
+  "telephoneLien": "tel:+33632273245",
+  "email": "",
+  "rue": "85 Place de L'Eglise",
+  "codePostal": "60230",
+  "ville": "Chambly",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/profile.php?id=61575030746497&locale=fr_FR",
+  "resalib": "https://www.resalib.fr/praticien/108222-sarah-bee-kinesiologue-chambly",
+  "agrement": "",
+  "siret": "837 863 216 00",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

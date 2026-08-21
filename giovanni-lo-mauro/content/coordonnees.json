@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Giovanni LO MAURO",
+  "praticien": "Giovanni LO MAURO",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 26 30 77 88",
+  "telephoneLien": "tel:+33626307788",
+  "email": "",
+  "rue": "8 Av. de la Liberté",
+  "codePostal": "06270",
+  "ville": "Villeneuve-Loubet",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.facebook.com/share/18yBQvkdBd/&ved=2ahUKEwi3-uSXyP-TAxUkOPsDHYE3CAgQgU96BAgXEBA&usg=AOvVaw3-2KwfPZcTKoaCVeYzt1td",
+  "resalib": "https://www.resalib.fr/praticien/109763-giovanni-lo-mauro-kinesiologue-villeneuve-loubet",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

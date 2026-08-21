@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de dietetique et nutrition",
+      "accroche": "",
+      "resume": "En tant que Diététicienne Nutritionniste DE et praticienne en naturopathie je prends en charge autant la partie nutritionnelle et diététique que les aspects émotionnels et physiques de mes patients.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Saint Marcellin",
+        "Sur demande"
+      ]
+    }
+  ]
+}

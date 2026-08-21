@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christine CHATAIGNER",
+  "praticien": "Christine CHATAIGNER",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 03 02 87 36",
+  "telephoneLien": "tel:+33603028736",
+  "email": "",
+  "rue": "lieux dit La Brousse 1 rue des Etangs",
+  "codePostal": "79370",
+  "ville": "Prailles-La Couarde",
+  "region": "Nouvelle-Aquitaine",
+  "facebook": "https://www.facebook.com/christine.chataigner.3979",
+  "resalib": "https://www.resalib.fr/praticien/113622-christine-chataigner-praticien-en-hypnose-prailles-la-couarde",
+  "agrement": "",
+  "siret": "88983176200013",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Anne LEMARE",
+  "praticien": "Anne LEMARE",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 71 89 65 98",
+  "telephoneLien": "tel:+33671896598",
+  "email": "",
+  "rue": "81 rue de l'école maternelle",
+  "codePostal": "60000",
+  "ville": "Beauvais",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/P%C3%A9dagogieconseil-76-100067619600367/",
+  "resalib": "https://www.resalib.fr/praticien/104795-anne-lemare-orthopedagogue-beauvais",
+  "agrement": "",
+  "siret": "89842165600015",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

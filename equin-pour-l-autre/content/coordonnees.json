@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Equin pour l’autre",
+  "praticien": "Equin pour l’autre",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "0683764100",
+  "telephoneLien": "tel:+33683764100",
+  "email": "",
+  "rue": "754 chemin des  COUTURES",
+  "codePostal": "37130",
+  "ville": "Langeais",
+  "region": "Centre-Val de Loire",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/105257-equin-pour-l-autre-equitherapeute-langeais",
+  "agrement": "",
+  "siret": "85047054300024",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

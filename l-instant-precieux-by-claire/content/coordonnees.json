@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "L’instant précieux by Claire ",
+  "praticien": "L’instant précieux by Claire ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "07 60 78 81 74",
+  "telephoneLien": "tel:+33760788174",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "06740",
+  "ville": "Châteauneuf-Grasse",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/share/19UaYXd8rR/",
+  "resalib": "https://www.resalib.fr/praticien/107078-l-instant-precieux-by-claire-praticien-en-massage-bien-etre-chateauneuf-grasse",
+  "agrement": "",
+  "siret": "88154551100019",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de psychotherapie",
+      "accroche": "",
+      "resume": "Je suis Psychopraticienne-Coach de vie, je suis titulaire d'un master en Sciences Humaines et d'une certification en thérapie brève systémique et intégrative.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Clamart",
+        "Sur demande"
+      ]
+    }
+  ]
+}

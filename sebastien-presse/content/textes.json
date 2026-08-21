@@ -1,0 +1,128 @@
+{
+  "_source": "Ses mots a lui, repris de sa fiche. Corriger l'orthographe, jamais le fond.",
+  "commun": {
+    "avertissement": ""
+  },
+  "accueil": {
+    "heroBadge": "sur rendez-vous",
+    "heroTitre": "",
+    "heroSous": "",
+    "bienvenueTitre": "",
+    "propositions": [
+      "La séance"
+    ],
+    "photoCitation": "",
+    "photoSignature": "",
+    "soinsTitre": "Ce que je propose",
+    "citation": "",
+    "citationAuteur": "",
+    "citationNote": "",
+    "tarifsTitre": "Mes tarifs",
+    "ctaTitre": "",
+    "ctaTexte": ""
+  },
+  "tarifs": {
+    "heroTitre": "Mes tarifs",
+    "ctaTitre": "",
+    "ctaTexte": "Appelez-moi au"
+  },
+  "contact": {
+    "heroBadge": "Sur rendez-vous",
+    "heroTitre": "Me contacter",
+    "appelTitre": "",
+    "appelTexte": "",
+    "bonsCadeaux": "",
+    "confidentialite": "Vos coordonnées personnelles ne sont pas collectées et ne seront en aucun cas diffusées.",
+    "formulaireTitre": ""
+  },
+  "indications": {
+    "titre": "",
+    "liste": [
+      "",
+      "",
+      ""
+    ],
+    "publics": ""
+  },
+  "soin-1": {
+    "heroBadge": "",
+    "heroTitre": "",
+    "heroSous": "",
+    "titre": "",
+    "paragraphes": [
+      "",
+      ""
+    ],
+    "legendePhoto": "",
+    "objectif": "",
+    "noteTarif": "",
+    "processusTitre": "",
+    "etapes": [
+      {
+        "titre": "",
+        "texte": ""
+      }
+    ],
+    "seanceTitre": "",
+    "seance": [
+      {
+        "titre": "",
+        "texte": ""
+      }
+    ],
+    "note": "",
+    "citation": "",
+    "citationAuteur": "",
+    "ouvragesTitre": "",
+    "ouvrages": [
+      ""
+    ],
+    "ctaTitre": "",
+    "ctaTexte": ""
+  },
+  "soin-2": {
+    "heroBadge": "",
+    "heroTitre": "",
+    "heroSous": "",
+    "titre": "",
+    "paragraphes": [
+      "",
+      ""
+    ],
+    "legendePhoto": "",
+    "objectif": "",
+    "noteTarif": "",
+    "processusTitre": "",
+    "etapes": [
+      {
+        "titre": "",
+        "texte": ""
+      }
+    ],
+    "seanceTitre": "",
+    "seance": [
+      {
+        "titre": "",
+        "texte": ""
+      }
+    ],
+    "note": "",
+    "citation": "",
+    "citationAuteur": "",
+    "ouvragesTitre": "",
+    "ouvrages": [
+      ""
+    ],
+    "ctaTitre": "",
+    "ctaTexte": ""
+  },
+  "soin1": {
+    "titre": "La séance"
+  },
+  "soin2": {
+    "titre": "La séance"
+  },
+  "soin3": {
+    "titre": "La séance"
+  }
+}

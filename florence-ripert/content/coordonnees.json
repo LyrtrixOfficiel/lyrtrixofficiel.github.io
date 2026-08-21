@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Florence RIPERT",
+  "praticien": "Florence RIPERT",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 36 36 30 23",
+  "telephoneLien": "tel:+33636363023",
+  "email": "",
+  "rue": "4 Rue De Saint-Louis",
+  "codePostal": "68128",
+  "ville": "Rosenau",
+  "region": "Grand Est",
+  "facebook": "https://www.facebook.com/ripertflore",
+  "resalib": "https://www.resalib.fr/praticien/111109-florence-ripert-hypnotherapeute-rosenau",
+  "agrement": "",
+  "siret": "75065613400053",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

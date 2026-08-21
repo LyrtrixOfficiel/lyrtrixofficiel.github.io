@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de psychologie",
+      "accroche": "",
+      "resume": "\"Je reçois en consultation, adolescents et adultes, dans le cadre de prise en charge de difficultés personnelles , professionnelles, ou de troubles psychologiques.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Toulouse",
+        "Sur demande"
+      ]
+    }
+  ]
+}

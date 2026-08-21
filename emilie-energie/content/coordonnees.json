@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Emilie_énergie ",
+  "praticien": "Emilie_énergie ",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 12 41 94 31",
+  "telephoneLien": "tel:+33612419431",
+  "email": "",
+  "rue": "Mairie",
+  "codePostal": "84120",
+  "ville": "Pertuis",
+  "region": "Provence-Alpes-Côte d'Azur",
+  "facebook": "https://www.facebook.com/profile.php?id=61571918201004",
+  "resalib": "https://www.resalib.fr/praticien/108907-emilie-energie-praticien-en-energetique-pertuis",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

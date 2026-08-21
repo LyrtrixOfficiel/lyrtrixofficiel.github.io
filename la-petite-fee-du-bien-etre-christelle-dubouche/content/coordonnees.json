@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "La petite fée du bien être - Christelle DUBOUCHET",
+  "praticien": "La petite fée du bien être - Christelle DUBOUCHET",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 32 51 46 83",
+  "telephoneLien": "tel:+33632514683",
+  "email": "",
+  "rue": "147 Rue du Mont Rond",
+  "codePostal": "01630",
+  "ville": "Saint-Genis-Pouilly",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/129541-la-petite-fee-du-bien-etre-christelle-dubouchet-energeticien-saint-genis-pouilly",
+  "agrement": "",
+  "siret": "81432565000020",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

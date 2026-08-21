@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Jess’institut",
+  "praticien": "Jess’institut",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 90 33 44 20",
+  "telephoneLien": "tel:+33690334420",
+  "email": "",
+  "rue": "les surettiers",
+  "codePostal": "97160",
+  "ville": "Le Moule",
+  "region": "",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/113222-jess-institut-praticien-en-massage-bien-etre-le-moule",
+  "agrement": "",
+  "siret": "93835481800016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

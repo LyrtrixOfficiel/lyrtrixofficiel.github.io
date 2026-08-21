@@ -1,0 +1,27 @@
+{
+  "_source": "Un objet par soin. 2 a 4 soins ; en dessous le site sonne vide, au-dela la navigation deborde. `route` sert d'identifiant d'URL et doit rester en minuscules sans accent.",
+  "soins": [
+    {
+      "route": "soin-1",
+      "titre": "",
+      "accroche": "",
+      "resume": "",
+      "etiquettes": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "route": "soin-2",
+      "titre": "",
+      "accroche": "",
+      "resume": "",
+      "etiquettes": [
+        "",
+        "",
+        ""
+      ]
+    }
+  ]
+}

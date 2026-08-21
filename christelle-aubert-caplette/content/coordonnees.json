@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Christelle Aubert-Caplette",
+  "praticien": "Christelle Aubert-Caplette",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 31 95 86 46",
+  "telephoneLien": "tel:+33631958646",
+  "email": "",
+  "rue": "27 rue saint louis",
+  "codePostal": "62520",
+  "ville": "Le Touquet-Paris-Plage",
+  "region": "Hauts-de-France",
+  "facebook": "https://www.facebook.com/HautCoeurDuBienEtre/timeline",
+  "resalib": "https://www.resalib.fr/praticien/166-christelle-aubert-caplette-reflexologue-le-touquet-paris-plage",
+  "agrement": "",
+  "siret": "79424565400023",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

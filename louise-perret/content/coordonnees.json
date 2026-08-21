@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Louise Perret",
+  "praticien": "Louise Perret",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 31 59 75 46",
+  "telephoneLien": "tel:+33631597546",
+  "email": "",
+  "rue": "148 rue des combes",
+  "codePostal": "01640",
+  "ville": "Jujurieux",
+  "region": "Auvergne-Rhône-Alpes",
+  "facebook": "",
+  "resalib": "https://www.resalib.fr/praticien/127222-louise-perret-reflexologue-jujurieux",
+  "agrement": "",
+  "siret": "10132613000016",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

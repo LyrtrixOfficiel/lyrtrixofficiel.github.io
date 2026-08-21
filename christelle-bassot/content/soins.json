@@ -1,0 +1,16 @@
+{
+  "_source": "Une entree par prestation reellement distincte. Trois volets d'un meme texte ne font pas trois soins.",
+  "soins": [
+    {
+      "route": "soin1",
+      "titre": "Séance de naturopathie",
+      "accroche": "",
+      "resume": "La séance se passe en premier lieu autour d un anamnèse et d un bilan de vitalité afin de déterminer les besoins d harmonisation.",
+      "etiquettes": [
+        "Sur rendez-vous",
+        "Ormoy",
+        "80 €"
+      ]
+    }
+  ]
+}

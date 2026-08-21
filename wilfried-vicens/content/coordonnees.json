@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "Wilfried VICENS",
+  "praticien": "Wilfried VICENS",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 58 87 40 39",
+  "telephoneLien": "tel:+33658874039",
+  "email": "",
+  "rue": "221 Rue Claude Nicolas Ledoux Espace Santé Valmédica",
+  "codePostal": "30900",
+  "ville": "Nîmes",
+  "region": "Occitanie",
+  "facebook": "https://www.facebook.com/share/16Gnzhfpew/?mibextid=wwXIfr",
+  "resalib": "https://www.resalib.fr/praticien/105308-wilfried-vicens-sophrologue-nimes",
+  "agrement": "",
+  "siret": "98494929700035",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}

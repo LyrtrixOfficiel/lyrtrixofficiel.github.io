@@ -1,0 +1,26 @@
+{
+  "_source": "Fiche Resalib du praticien. NE RIEN INVENTER : un tarif ou un horaire faux tue la credibilite au premier controle.",
+  "marque": "LA FABRIK’À SOI - LE BERRE A-MARIE",
+  "praticien": "LA FABRIK’À SOI - LE BERRE A-MARIE",
+  "metier": "",
+  "metierCourt": "",
+  "telephone": "06 14 42 28 50",
+  "telephoneLien": "tel:+33614422850",
+  "email": "",
+  "rue": "13 RUE DES RUISSEAUX",
+  "codePostal": "53000",
+  "ville": "Laval",
+  "region": "Pays de la Loire",
+  "facebook": "https://www.facebook.com/profile.php?id=61568533386266",
+  "resalib": "https://www.resalib.fr/praticien/100016-la-fabrik-a-soi-le-berre-a-marie-praticien-emdr-laval",
+  "agrement": "",
+  "siret": "",
+  "ape": "",
+  "hebergeur": "Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis",
+  "horaires": [
+    {
+      "jour": "",
+      "creneau": ""
+    }
+  ]
+}
