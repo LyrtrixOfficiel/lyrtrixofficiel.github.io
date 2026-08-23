@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fdf2e4">
+<!-- DÉMONSTRATION : à retirer le jour où le site part en ligne pour de vrai. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Shiatsu Jiyū · Julie Marguier, praticienne shiatsu à Knœringue (68)</title>
+<meta name="description" content="Julie Marguier, praticienne shiatsu à Knœringue, dans le Sundgau, à vingt minutes de Saint-Louis, Bâle, Sierentz et Altkirch. Séances de 30 à 90 minutes, sur rendez-vous.">
+<link rel="icon" href="./images/emblem.webp?v=f61fd2e6">
+<!-- LES POLICES SONT CHEZ NOUS, et il faut qu'elles y restent.
+     Charger une police depuis Google transmet a Google l'adresse IP de chaque
+     visiteur. Rapatriees (voir polices.mjs), le site ne fait plus AUCUNE
+     requete hors de son domaine, et c'est ce que la politique de
+     confidentialite affirme noir sur blanc. -->
+<link rel="stylesheet" href="polices.css">
+<link rel="stylesheet" href="./styles.css?v=3f66f564">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
+</head>
+<body>
+<svg class="filtres" aria-hidden="true" focusable="false"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <filter id="refraction" x="0%" y="0%" width="100%" height="100%"
+            color-interpolation-filters="sRGB">
+      <feImage href="./images/refraction.png?v=2e4d90e3" preserveAspectRatio="none" result="carte"/>
+      <feDisplacementMap in="SourceGraphic" in2="carte" scale="42"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="refraction-barre" x="0%" y="0%" width="100%" height="100%"
+            color-interpolation-filters="sRGB">
+      <feImage href="./images/refraction-barre.png?v=235b5058" preserveAspectRatio="none" result="carte"/>
+      <feDisplacementMap in="SourceGraphic" in2="carte" scale="26"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="refraction-haut" x="0%" y="0%" width="100%" height="100%"
+            color-interpolation-filters="sRGB">
+      <feImage href="./images/refraction-haut.png?v=404663b0" preserveAspectRatio="none" result="carte"/>
+      <feDisplacementMap in="SourceGraphic" in2="carte" scale="38"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+<div class="jauge" aria-hidden="true"></div>
+<div class="halo" aria-hidden="true"></div>
+<nav class="nav">
+  <div class="nav-boite verre barre">
+    <a href="./index.html" class="nav-marque">
+      <img src="./images/emblem.webp?v=f61fd2e6" alt="" width="120" height="105">
+      <span class="nom">Shiatsu Jiyū</span>
+    </a>
+    <div class="nav-liens">
+      <a href="./index.html" class="ici">Bienvenue</a>
+      <a href="./le-shiatsu.html">Shiatsu</a>
+      <a href="./prestations.html">Prestations &amp; Tarifs</a>
+      <a href="./contact.html" class="bouton" data-aimant><span
+        class="long">Prendre rendez-vous</span><span class="court">Rendez-vous</span></a>
+    </div>
+    <button class="burger" type="button" aria-label="Ouvrir le menu"
+            aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!--
+  LE MENU DU TELEPHONE.
+
+  Il y avait avant une barre posee en bas de l'ecran. Elle etait juste, et
+  invisible : a quatorze pixels du bord, elle passait DERRIERE la barre
+  d'outils de Safari sur iPhone. Un menu qu'on ne voit pas n'existe pas.
+
+  On revient donc la ou les gens le cherchent, en haut a droite, avec le
+  dessin que tout le monde reconnait.
+-->
+<div class="menu" id="menu" hidden>
+  <div class="menu-fond" aria-hidden="true"></div>
+  <nav class="menu-liens">
+    <a href="./index.html" class="ici" style="--i:0">Bienvenue</a>
+    <a href="./le-shiatsu.html" style="--i:1">Shiatsu</a>
+    <a href="./prestations.html" style="--i:2">Prestations &amp; Tarifs</a>
+    <a href="./contact.html" style="--i:3">Contact</a>
+    <!-- Le numero, et rien d'autre : pas d'etiquette « Numéro » au-dessus.
+         Ce qu'on vient chercher ici, c'est le chiffre. -->
+    <a href="tel:+33617111405" class="menu-tel" style="--i:4">06.17.11.14.05</a>
+  </nav>
+</div>
+<main>
+
+<!--
+  L'ECRAN D'ACCUEIL.
+
+  Julie voulait que le titre, les trois images, la citation et les deux
+  boutons tiennent ensemble sur le premier ecran d'un telephone, sans avoir a
+  descendre. C'est ce qui commande tout le reste : l'embleme a disparu (il est
+  deja dans la barre et dans le pied), le paragraphe sur l'acupuncture aussi,
+  et les trois pastilles de reperes ont ete retirees.
+
+  Le titre est celui de son flyer, decoupe dedans : le rond Enso, le mot en
+  capitales fines et le petit epi. Il est en image parce que ce dessin lui
+  appartient et qu'aucune police ne le rendrait ; le vrai titre reste ecrit
+  pour les moteurs de recherche, simplement cache a l'oeil.
+-->
+<header class="entree">
+  <div class="film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="./images/encre.webp?v=97d09dcd">
+      <source src="./images/encre.mp4?v=2d611722" type="video/mp4">
+    </video>
+  </div>
+  <div class="voile" aria-hidden="true"></div>
+  <div class="serre entree-bloc">
+    <div class="entree-panneau verre sur-film">
+      <!--
+        Le titre et sa ligne forment un bloc a part, de la largeur exacte du
+        dessin. C'est ce qui permet de remonter la ligne d'un pourcentage :
+        une marge en pourcentage se calcule sur la LARGEUR du parent, et la
+        hauteur du dessin depend de sa largeur. Les deux varient donc
+        ensemble, et la ligne reste collee au mot a toutes les tailles, comme
+        sur le flyer.
+      -->
+      <div class="titre-bloc">
+        <h1 class="titre-flyer">
+          <img src="./images/titre-flyer.webp?v=1c55fc00" alt="Shiatsu" width="1500" height="620">
+          <span class="hors-vue">Shiatsu</span>
+        </h1>
+        <span class="baseline serre-titre">Harmoniser le corps et l'esprit</span>
+      </div>
+
+      <!--
+        LES TROIS EMPLACEMENTS.
+
+        Deux photos et le dessin des mains au coeur, dans des cadres courbes
+        comme sur ses publications. Les deux photos sont PROVISOIRES : Julie
+        doit nous envoyer les siennes. Les remplacer se fait ici, et nulle
+        part ailleurs.
+      -->
+      <div class="galerie">
+        <figure class="galet g1">
+          <img src="./images/soie.webp?v=05ad6740" alt="" width="800" height="450" loading="eager">
+        </figure>
+        <figure class="galet g2">
+          <img class="dessin" src="./images/coeur.webp?v=98c8095f" alt="Deux mains et un cœur"
+               width="600" height="600" loading="eager">
+        </figure>
+        <figure class="galet g3">
+          <img src="./images/bougies.webp?v=83ce2a0b" alt="" width="800" height="450" loading="eager">
+        </figure>
+      </div>
+
+      <figure class="citation">
+        <blockquote>Il n'y a pas de hasard, il n'y a que des rendez-vous.</blockquote>
+        <figcaption>Paul Éluard</figcaption>
+      </figure>
+
+      <div class="actions">
+        <a href="./contact.html" class="bouton" data-aimant>Prendre rendez-vous <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="./prestations.html" class="bouton clair" data-aimant>Prestations &amp; Tarifs</a>
+      </div>
+    </div>
+  </div>
+
+  <span class="descendre" aria-hidden="true"><i></i>Knœringue</span>
+</header>
+
+<div class="bandeau" tabindex="0" role="group" aria-label="En bref">
+  <div class="ruban" aria-hidden="true">
+    <b>Shiatsu traditionnel</b><b>Habillé, sur table</b><b>Pratique naturelle et holistique</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b><b>Shiatsu traditionnel</b><b>Habillé, sur table</b><b>Pratique naturelle et holistique</b><b>30 à 90 minutes</b><b>Knœringue, Haut-Rhin</b><b>Sur rendez-vous</b><b>Adultes et enfants</b>
+  </div>
+</div>
+
+<section class="pan tache">
+  <div class="serre deux">
+    <div class="colle"><div class="rev">
+      <p class="sur-titre">Shiatsu</p>
+      <h2>Des mains,<br>du temps,<br><em>du calme</em>.</h2>
+
+      <!--
+        LES QUATRE QUESTIONS.
+
+        Elles remplacent le lien « Comment se passe une séance ». Toutes les
+        quatre mènent à la page Shiatsu : Julie a demandé que le clic y renvoie
+        quelle que soit la question, parce que c'est là que tout est détaillé.
+      -->
+      <!-- TROIS QUESTIONS, ET CHACUNE TOMBE SUR SA REPONSE.
+
+           « Ces 3 questions, ça serait top de les renvoyer sur l'onglet shiatsu
+           à l'endroit exact de la réponse à la question cliquée. » Elles y
+           menaient bien, mais en haut de la page : il fallait ensuite chercher
+           soi-meme, ce qui annule l'interet d'avoir pose la question.
+
+           Elles etaient aussi quatre alors qu'elle en demande trois : « le
+           shiatsu, c'est quoi » et « pour qui » se sont rejointes, comme elle
+           les a ecrites. -->
+      <div class="questions">
+        <a href="./le-shiatsu.html#c-est-quoi"><span>Le shiatsu, c'est quoi et pour qui ?</span><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="./le-shiatsu.html#une-seance"><span>Comment se déroule une séance ?</span><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="./le-shiatsu.html#quand-venir"><span>Quand venir ?</span><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div></div>
+
+    <div>
+      <!--
+        LE CADRE DU DRAP, ET LA VIDEO DE LA PIECE.
+
+        Julie a filme son cabinet et envoye DEUX prises, une en paysage et une
+        en portrait, pour choisir. Le reglage « cabinet » decide laquelle est
+        posee, et le cadre s'adapte tout seul : le format n'est pas ecrit deux
+        fois.
+
+        Le son est retire des deux fichiers a l'encodage. Ce n'est pas un
+        oubli : un navigateur n'autorise la lecture automatique que si la video
+        est muette, donc le son n'aurait jamais ete entendu et il aurait pese
+        pour rien.
+      -->
+      <figure class="ecran-film rev paysage">
+        <video autoplay muted loop playsinline preload="metadata"
+               poster="./images/cabinet-paysage.webp?v=7a99988e" aria-hidden="true">
+          <source src="./images/cabinet-paysage.mp4?v=593ab609" type="video/mp4">
+        </video>
+        <figcaption>Le cabinet</figcaption>
+      </figure>
+
+      <p class="chapeau rev" data-i="1" style="margin-top:30px">
+        Séances à Knœringue, dans le Sundgau, à vingt minutes de Saint-Louis,
+        Bâle, Sierentz, Altkirch...
+      </p>
+      <!-- « Ajouter un petit Y aller sous cette phrase permettant d'obtenir
+           l'itinéraire, sans carte. » Sans carte, donc : un lien, rien de plus.
+           Il mene a la meme destination que le plan de la page Contact, et
+           l'adresse n'est toujours ecrite nulle part. -->
+      <p class="rev" data-i="2" style="margin-top:12px">
+        <a class="lien-itineraire" href="https://www.google.com/maps/dir/?api=1&destination=30A%20rue%20de%20B%C3%A2le%2C%2068220%20Knoeringue" target="_blank" rel="noopener">
+          Y aller <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="pan eclat-zone serree">
+  <div class="serre">
+    <p class="eclat" style="--n:7"><w style="--i:0">Un</w> <w style="--i:1">lieu</w> <w style="--i:2">où</w> <w style="--i:3">l'on</w> <w style="--i:4" class="chaud">prend</w> <w style="--i:5" class="chaud">le</w> <w style="--i:6" class="chaud">temps.</w></p>
+  </div>
+</section>
+
+<!--
+  QUI JE SUIS.
+
+  Ce bloc vient de la page Shiatsu, où il faisait doublon avec le reste. Julie
+  voulait le voir arriver ici, juste après « un lieu où l'on prend le temps ».
+  La mise en page reprend celle de sa publication : la photo au centre, quatre
+  annotations tout autour, reliées par de petites flèches tracées à la main.
+-->
+<section class="pan tache presentation">
+  <div class="serre">
+    <!-- Le sur-titre se centre avec le bloc : cale a gauche de la page alors
+         que le nom et la photo sont au milieu, il restait tout seul dans son
+         coin. -->
+    <p class="sur-titre centre rev">Qui je suis</p>
+
+    <!-- DEUX ANNOTATIONS, PLUS QUATRE.
+
+         Julie a fait retirer « Soif d'apprendre toujours plus » et « Passionnée
+         par les pratiques naturelles », et rapprocher « Praticienne shiatsu »
+         de son nom. Les deux qui restent tiennent donc ensemble, d'un seul
+         cote, relies par une seule flechette : deux annotations posees aux
+         quatre coins d'une photo ne sont plus une composition, ce sont deux
+         mots qui flottent. -->
+    <div class="portrait-annote portrait-duo">
+      <div class="annot annot-nom rev" data-i="0">
+        <em class="annot-julie">Julie Marguier</em>
+        <span class="annot-role">Praticienne shiatsu</span>
+        <svg class="flechette f1" viewBox="0 0 64 40" fill="none"
+  aria-hidden="true" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+  stroke-linejoin="round">
+  <path d="M5 9c15-2 29 5 39 19" opacity=".9"/>
+  <path d="M44 28L34 25M44 28L41 18" opacity=".9"/>
+</svg>
+      </div>
+
+      <figure class="portrait-photo rev">
+        <img src="./images/julie.webp?v=3a6e31cd" alt="Julie Marguier"
+             width="543" height="725" loading="lazy">
+      </figure>
+    </div>
+
+    <!-- MA FORMATION reste une carte : c'est une liste de faits verifiables,
+         et une liste veut un cadre. -->
+    <div class="bloc-formation">
+      <div class="carte verre haut rev">
+        <p class="sur-titre">Ma formation</p>
+        <ul class="liste-nette">
+          <li>École Énergie Shiatsu, à Yutz.</li>
+          <li>Certificat délivré par la <b>Fédération Française de Shiatsu
+            Traditionnel</b> en décembre 2022.</li>
+          <li>Membre de la FFST, qui garantit un cursus complet et une pratique
+            encadrée.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
+  MON HISTOIRE, SORTIE DE SON CADRE.
+
+  « Ma formation et mon histoire, c'est dans le même bloc. Est-ce qu'il y aurait
+  moyen de présenter ça différemment, un des deux, pour qu'au niveau de l'œil ça
+  soit moins redondant ? » Puis, plus bas : « Centrer le texte et le mettre en
+  italique. Modifier l'encadrement mon histoire, pas d'encadrement. »
+
+  Deux cartes de verre cote a cote, c'est deux fois la meme chose : l'oeil lit
+  un tableau, pas deux voix differentes. Une liste de diplomes et un souvenir
+  d'adolescence n'ont AUCUNE raison de se ressembler. Celui-ci sort donc du
+  cadre, se centre, passe en italique et s'ecarte du reste : c'est elle qui
+  parle, et on l'entend a la mise en page avant de lire un mot.
+
+  Les guillemets restent dans le texte, comme elle l'a demande : « bien laisser
+  ce paragraphe entre guillemets pour montrer que c'est moi qui parle ».
+-->
+<section class="pan histoire-pan">
+  <!-- SA TACHE ORANGE, CELLE DE SON FLYER, COUPEE PAR LE BORD.
+
+       « Les tâches oranges au choix, les voir entièrement ou coupées comme sur
+       mon flyer, à voir. » Coupée : entière au milieu d'une page, une tache
+       devient une forme posée là et on cherche ce qu'elle représente ; coupée
+       par le bord, elle devient un fond qui continue hors de l'écran, ce qui
+       est exactement son rôle sur le flyer.
+
+       UNE SEULE, et sur CETTE section. C'est la plus nue du site, un texte
+       centré sur du crème vide. Deux taches se seraient disputé l'attention
+       avec le cadre des avis juste dessous. -->
+  <img class="tache-flyer" src="./images/tache-flyer.webp?v=db245c26" alt="" aria-hidden="true"
+       width="300" height="404" loading="lazy">
+  <div class="serre">
+    <p class="sur-titre centre rev">Mon histoire</p>
+    <blockquote class="histoire rev" data-i="1">
+      <p>« Le shiatsu est entré dans ma vie à l'âge de 14 ans, période clé
+        durant laquelle ma scoliose évoluait rapidement.</p>
+      <p>Grâce à des séances régulières et aux conseils que j'appliquais au
+        quotidien, ma scoliose s'est stabilisée, évitant de peu le port d'un
+        corset.</p>
+      <p>Tombée dans la marmite des pratiques naturelles dès l'adolescence,
+        j'en ai fait le fil conducteur de mon parcours personnel et
+        professionnel.</p>
+      <p>À mon tour, je serai heureuse de vous accompagner sur votre chemin
+        vers un meilleur équilibre. »</p>
+      <footer class="histoire-nom">Julie</footer>
+    </blockquote>
+  </div>
+</section>
+
+<!--
+  LES AVIS PRENNENT LA PLACE DE « MON APPROCHE » ET DE « ME SUIVRE ».
+
+  Julie : « Supprimer mon approche et me suivre sur les réseaux, et insérer les
+  avis ici à la place d'être dans la section contact, ça me semble plus
+  logique. » Elle a raison : on convainc quelqu'un AVANT qu'il cherche le
+  numéro, pas une fois qu'il l'a trouvé.
+
+  CE QU'ON PERD, ET COMMENT ON LE REMPLACE. « Mon approche » était le film qui
+  s'ouvrait en plein écran, donc l'une des deux seules ruptures visuelles de la
+  page. La retirer sans rien mettre à la place aurait aggravé exactement ce
+  qu'elle décrit dans son vocal : « c'est comme si l'œil voyait partout la même
+  chose ». Les avis arrivent donc sur un bandeau orange pleine largeur, qu'elle
+  a demandé par ailleurs. On échange une rupture contre une autre.
+
+  « Me suivre sur les réseaux » n'est pas perdu non plus : les deux logos sont
+  au pied de page, sur chaque page du site, à côté de Resalib.
+-->
+<section class="pan serree avis-zone avis-bandeau">
+  <div class="serre">
+    <!-- UNE SEULE FOIS CINQ ETOILES, en tete, comme Julie l a demande.
+         Elles etaient repetees sur chacun des quatre avis : quatre fois la meme
+         note, ca finit par ne plus rien vouloir dire. En tete, elles portent la
+         note GLOBALE et les soixante-quatre avis, ce qui est autrement plus
+         solide que cinq etoiles sur un temoignage isole. -->
+    <div class="rev avis-tete">
+      <p class="sur-titre">Parole de clients</p>
+      <h2>Ils sont les mieux placés<br>pour en <em>parler</em>.</h2>
+      <p class="avis-note">
+        <span class="etoiles" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg></span>
+        <b>5,0</b> sur 5 &middot; plus de 60 avis vérifiés
+      </p>
+    </div>
+
+    <div class="avis-carrousel rev" data-carrousel>
+      <div class="avis-piste">
+        <figure class="avis verre">
+          <blockquote>Julie est douce et bienveillante. Je ressors toujours apaisée de ses séances avec en bonus des petits conseils utiles. Cela fait maintenant 6 mois qu'elle m'accompagne. J'ai toujours plaisir à me rendre à ses séances.</blockquote>
+          <figcaption><span>02/07/2026</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Un pur moment de bonheur, une plénitude assurée, un lâcher-prise total, bref un instant au paradis !</blockquote>
+          <figcaption><span>16/06/2026</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Un accueil chaleureux dans un lieu calme et apaisant. Julie est très à l'écoute et a su me mettre en confiance ; sa douceur et ses doigts de fée ont soulagé mes douleurs dès la première séance, ainsi que sur la durée. Je la recommande les yeux fermés !</blockquote>
+          <figcaption><span>20/04/2026</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Très bonne expérience avec Julie. Dans son petit cocon très apaisant, elle prend bien soin de nous. Je suis arrivée avec une liste de soucis plus grande que moi et elle les gère au fil des séances avec brio. Je me sens mieux, plus apaisée, je digère mieux, je dors mieux. Je continue les séances avec plaisir au rythme de mes besoins. Merci !</blockquote>
+          <figcaption><span>14/09/2025</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Je ne connaissais pas du tout le shiatsu, mais je ne peux que recommander une séance avec Julie. Son calme et sa douceur m'ont tout de suite rassurée. Elle a su m'apaiser à un moment de ma vie où j'en avais besoin ! Même son chat a pris part à la séance. Encore merci !</blockquote>
+          <figcaption><span>03/10/2024</span></figcaption>
+        </figure>
+        <figure class="avis verre">
+          <blockquote>Professionnelle passionnée que je recommande vivement. Pratique encore peu connue, bien dommage : les résultats sont pour ma part incontestables.</blockquote>
+          <figcaption><span>28/08/2024</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="avis-barre">
+        <div class="avis-points"></div>
+        <div class="avis-fleches">
+          <button type="button" data-avant aria-label="Avis précédent">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" data-apres aria-label="Avis suivant">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Le renvoi vers Resalib, avec le logo, demande le 20 aout. Il vaut
+         mieux qu une simple ligne de texte : le logo dit d ou vient la note,
+         et un visiteur qui doute peut aller verifier en un clic. C est
+         exactement ce qui rend un avis credible. -->
+    <a class="avis-source" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener">
+      <img src="./images/resalib.webp?v=0e8e0e60" alt="" width="120" height="120" loading="lazy">
+      <span>Tous les avis sur <b>Resalib</b></span>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path
+        d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" stroke-width="1.6"
+        stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<section class="appel">
+  <div class="film" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" poster="./images/bougies.webp?v=83ce2a0b">
+      <source src="./images/bougies.mp4?v=257b525e" type="video/mp4">
+    </video>
+  </div>
+  <div class="voile court" aria-hidden="true"></div>
+  <div class="serre">
+    <div class="appel-carte verre sur-film rev">
+      <p class="sur-titre">Rendez-vous</p>
+      <h2>Prendre rendez-vous</h2>
+      <p>Dites-moi simplement ce qui vous amène et le moment qui vous arrange, on trouve un créneau ensemble.</p>
+      <div class="actions">
+        <a href="tel:+33617111405" class="bouton" data-aimant>06 17 11 14 05</a>
+        <a href="./contact.html#ecrire" class="bouton clair"
+          data-aimant data-ouvre-formulaire>Formulaire de contact</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="pied">
+  <div class="serre pied-grille">
+    <div class="pied-marque">
+      <a href="./index.html" class="nav-marque">
+        <img src="./images/emblem.webp?v=f61fd2e6" alt="" width="120" height="105">
+        <span class="nom">Shiatsu Jiyū</span>
+      </a>
+      <p>Julie Marguier, praticienne shiatsu, 68220 Knœringue.</p>
+      <a class="pied-note" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener">
+        <span class="etoiles" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg></span><b>5,0</b> sur plus de 60 avis Resalib
+      </a>
+    </div>
+
+    <!--
+      DEUX COLONNES RETIREES, A SA DEMANDE : « Me contacter » et « Le site ».
+
+      Elle a raison et ce n'est pas qu'une question de gout. Les deux ne
+      faisaient que repeter ce qui est deja partout : le numero est dans la
+      barre du haut sur toutes les pages, et le plan du site refait la
+      navigation trois centimetres plus bas. Un pied de page qui repete est un
+      pied de page qu'on ne lit pas, et il noyait la seule chose qu'il a
+      vraiment a dire ici, ou la suivre.
+    -->
+    <div class="pied-bloc pied-suivre">
+      <h2>Suivez-moi</h2>
+      <p>Infos, thèmes, évènements, places de dernière minute, photos, avis…</p>
+      <div class="pied-reseaux">
+        <a class="reseau-icone" href="https://www.instagram.com/shiatsu_jiyu"
+        target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+    <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4"/>
+    <circle cx="12" cy="12" r="4.3"/>
+    <circle cx="17.5" cy="6.5" r="1.15" fill="currentColor" stroke="none"/>
+  </svg></a>
+        <a class="reseau-icone" href="https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/"
+        target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
+    stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9.4"/>
+    <path d="M14.5 7.5h-1.4c-1.2 0-2 .8-2 2v9.2"/>
+    <path d="M9 12.3h4.9"/>
+  </svg></a>
+        <!-- LE PICTOGRAMME SEUL, PAS LE LOGO ENTIER. Le logo Resalib est un
+             carre qui contient le personnage ET le mot « RESALIB » : reduit a
+             vingt-deux pixels, le mot devient une tache et le personnage
+             disparait avec lui. On garde donc leur pictogramme, recadre a la
+             construction depuis leur logo, qui reste lisible tout petit. -->
+        <a class="reseau-icone reseau-resalib" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener"
+           aria-label="Ma page Resalib" title="Ma page Resalib">
+          <img src="./images/resalib-marque.webp?v=72b76909" alt="" width="256" height="225" loading="lazy">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="serre">
+    <!--
+      LE TEXTE D'AVERTISSEMENT.
+
+      C'est celui que Julie a recopie dans son document, mot pour mot. Il est
+      plus long que le precedent et c'est voulu : c'est la formule de la
+      Federation, celle qu'un praticien doit pouvoir montrer si on la lui
+      demande. La mention « membre de la FFST » a en revanche disparu de la
+      ligne du dessous, a sa demande : le logo la dit deja.
+    -->
+    <p class="avertissement">
+      Le shiatsu a pour seul objectif d'optimiser le capital vitalité, le bien-être,
+      le confort et la qualité de vie des personnes qui viennent en séance.<br>
+      Il ne remplace en aucun cas un avis, un diagnostic ou un traitement médical,
+      et ne se substitue pas à un suivi par un professionnel de santé.<br>
+      Il est bien évident qu'en aucun cas, les personnes ne doivent se couper du
+      monde médical et para médical ni arrêter leurs traitements.
+    </p>
+
+    <!-- Le logo de la Federation est descendu ICI, contre l'avertissement et
+         la ligne d'identite : c'est ce texte-la qu'il accompagne, c'est la
+         Federation qui en donne la formule, et il ne partage plus sa ligne
+         avec Resalib, remonte avec les reseaux. -->
+    <p class="pied-bas">
+      <a class="pied-ffst" href="https://www.ffst.fr" target="_blank" rel="noopener"
+         title="Fédération Française de Shiatsu Traditionnel">
+        <img src="./images/ffst.webp?v=85ed7154" alt="Fédération Française de Shiatsu Traditionnel"
+             width="320" height="320" loading="lazy">
+      </a>
+      <span>Julie Marguier, Entrepreneur Individuel</span>
+    </p>
+    <p class="pied-legal">
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+      <a href="cgv.html">Médiation, CGV et CGU</a>
+    </p>
+    <!-- « Ajouter le Web Designer ? » : oui, et merci. Une ligne discrete,
+         sous les liens legaux, qui ne prend rien a personne.
+
+         C'EST LE STUDIO QUI SIGNE, PAS LA PERSONNE. Une signature sert a ce
+         qu'on clique dessus, et ce qui se vend porte un nom de marque : sur
+         le site d'une cliente, « Kazura » renvoie a un studio qu'on peut aller
+         voir, la ou un nom propre ne renvoie a rien. -->
+    <p class="pied-signature">Site conçu par
+      <a href="https://lyrtrixofficiel.github.io/kazura/" target="_blank" rel="noopener">Kazura</a></p>
+  </div>
+</footer>
+<script>
+(() => {
+  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finPointeur = matchMedia('(hover: hover)').matches;
+
+  /* Le halo qui suit la souris. */
+  if (finPointeur && !calme) {
+    const halo = document.querySelector('.halo');
+    let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, tourne = false;
+    addEventListener('pointermove', (e) => {
+      x = e.clientX; y = e.clientY;
+      document.body.classList.add('pointe');
+      if (!tourne) { tourne = true; requestAnimationFrame(suivre); }
+    }, { passive: true });
+    function suivre() {
+      cx += (x - cx) * .12; cy += (y - cy) * .12;
+      halo.style.setProperty('--sx', cx + 'px');
+      halo.style.setProperty('--sy', cy + 'px');
+      if (Math.hypot(x - cx, y - cy) > .5) requestAnimationFrame(suivre); else tourne = false;
+    }
+  }
+
+  /* Les boutons aimantes : ils viennent un peu vers le pointeur. */
+  if (finPointeur && !calme) {
+    for (const b of document.querySelectorAll('[data-aimant]')) {
+      b.addEventListener('pointermove', (e) => {
+        const r = b.getBoundingClientRect();
+        b.style.setProperty('--tx', ((e.clientX - r.left - r.width / 2) * .22).toFixed(1) + 'px');
+        b.style.setProperty('--ty', ((e.clientY - r.top - r.height / 2) * .3).toFixed(1) + 'px');
+      });
+      b.addEventListener('pointerleave', () => {
+        b.style.setProperty('--tx', '0px'); b.style.setProperty('--ty', '0px');
+      });
+    }
+  }
+
+  /* Les cartes s'inclinent sous le pointeur. Trois degres, pas plus : au
+     dela ca devient un gadget et le texte devient penible a lire. */
+  if (finPointeur && !calme) {
+    for (const c of document.querySelectorAll('[data-incline]')) {
+      c.addEventListener('pointermove', (e) => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 6).toFixed(2) + 'deg');
+        c.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 6).toFixed(2) + 'deg');
+      });
+      c.addEventListener('pointerleave', () => {
+        c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg');
+      });
+    }
+  }
+
+  /* Le menu du telephone. */
+  {
+    const b = document.querySelector('.burger');
+    const m = document.getElementById('menu');
+    const basculer = (ouvert) => {
+      b.setAttribute('aria-expanded', String(ouvert));
+      b.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
+      if (ouvert) m.hidden = false;
+      requestAnimationFrame(() => document.body.classList.toggle('menu-ouvert', ouvert));
+      /* On attend la fin de la transition avant de retirer le menu du flux,
+         sinon il disparait d'un coup au lieu de s'effacer. */
+      if (!ouvert) setTimeout(() => { if (!document.body.classList.contains('menu-ouvert')) m.hidden = true; }, 420);
+    };
+    b.addEventListener('click', () => basculer(b.getAttribute('aria-expanded') !== 'true'));
+    m.addEventListener('click', (e) => { if (e.target.tagName === 'A' || e.target.classList.contains('menu-fond')) basculer(false); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') basculer(false); });
+  }
+
+  /*
+    LA BANNIERE QU'ON PEUT POUSSER DU DOIGT.
+
+    Elle defilait par une animation CSS. C'est joli et c'est ferme : on ne
+    peut pas y toucher, et Julie voulait pouvoir la faire glisser.
+
+    Elle devient donc un vrai conteneur de defilement horizontal, ce qui
+    donne le glissement au doigt gratuitement, avec l'inertie du systeme. Le
+    defilement automatique est une simple avance de deux dixiemes de pixel
+    par image, suspendue tant qu'un doigt est pose. Le ruban contient deux
+    copies du texte : quand on depasse la premiere, on recule d'une demie et
+    personne ne voit la couture.
+  */
+  for (const boite of document.querySelectorAll('.bandeau')) {
+    const ruban = boite.querySelector('.ruban');
+    if (!ruban) continue;
+    let tenu = 0, glisse = false, depart = 0, departScroll = 0;
+    /*
+      LA POSITION EST TENUE A PART, EN NOMBRE A VIRGULE.
+
+      scrollLeft s'arrondit au pixel : on lui donne 40,35 et il rend 40.
+      Une avance de trois dixiemes de pixel par image y disparait donc
+      entierement, et le ruban ne bouge jamais. On garde la position exacte
+      dans une variable, et on ne la recopie dans le defilement qu'une fois
+      arrondie. Elle se resynchronise des que quelqu'un y touche.
+    */
+    let pos = 0;
+
+    const demi = () => ruban.scrollWidth / 2;
+    const recadrer = () => {
+      const d = demi();
+      if (d < 2) return;
+      if (pos >= d) pos -= d;
+      else if (pos < 0) pos += d;
+    };
+
+    boite.addEventListener('pointerdown', (e) => {
+      tenu = performance.now(); glisse = true;
+      depart = e.clientX; departScroll = boite.scrollLeft;
+      boite.setPointerCapture(e.pointerId);
+      boite.classList.add('tenu');
+    });
+    boite.addEventListener('pointermove', (e) => {
+      if (!glisse) return;
+      pos = departScroll - (e.clientX - depart);
+      recadrer();
+      boite.scrollLeft = pos;
+    });
+    const lacher = () => { glisse = false; tenu = performance.now(); boite.classList.remove('tenu'); };
+    boite.addEventListener('pointerup', lacher);
+    boite.addEventListener('pointercancel', lacher);
+    /* Le defilement tactile ne passe pas par pointermove : on repere le
+       toucher lui-meme pour suspendre l'avance pendant l'inertie. */
+    boite.addEventListener('touchstart', () => { tenu = performance.now(); }, { passive: true });
+    boite.addEventListener('scroll', () => {
+      /* Nos propres avances declenchent aussi cet evenement. On ne se
+         resynchronise donc que sur un ecart franc, sinon la position exacte
+         serait rabotee au pixel a chaque image et l'avance mourrait. */
+      if (glisse || Math.abs(boite.scrollLeft - pos) < 1.6) return;
+      pos = boite.scrollLeft;
+      tenu = Math.max(tenu, performance.now() - 700);
+    }, { passive: true });
+
+    if (!calme) {
+      const pas = () => {
+        if (!glisse && performance.now() - tenu > 900) {
+          pos += .5;
+          recadrer();
+          boite.scrollLeft = pos;
+        }
+        requestAnimationFrame(pas);
+      };
+      requestAnimationFrame(pas);
+    }
+  }
+
+  /*
+    LE CARROUSEL D'AVIS.
+
+    Meme principe que la banniere : un conteneur qui defile, avec accroche
+    sur chaque carte. Les deux fleches ne font qu'avancer d'une carte, et
+    les points disent ou l'on en est. Rien de tout cela n'est indispensable
+    au fonctionnement : sans JavaScript, on fait glisser au doigt et ca
+    marche quand meme.
+  */
+  for (const car of document.querySelectorAll('[data-carrousel]')) {
+    const piste = car.querySelector('.avis-piste');
+    const cartes = [...piste.children];
+    const points = car.querySelector('.avis-points');
+    if (points) {
+      cartes.forEach((_, i) => {
+        const p = document.createElement('button');
+        p.type = 'button';
+        p.setAttribute('aria-label', 'Avis ' + (i + 1));
+        p.addEventListener('click', () => cartes[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }));
+        points.append(p);
+      });
+    }
+    const majPoints = () => {
+      const milieu = piste.scrollLeft + piste.clientWidth / 2;
+      let proche = 0, ecart = Infinity;
+      cartes.forEach((c, i) => {
+        const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - milieu);
+        if (d < ecart) { ecart = d; proche = i; }
+      });
+      points?.querySelectorAll('button').forEach((b, i) => b.classList.toggle('ici', i === proche));
+      car.querySelector('[data-avant]')?.toggleAttribute('disabled', piste.scrollLeft < 8);
+      car.querySelector('[data-apres]')?.toggleAttribute('disabled',
+        piste.scrollLeft > piste.scrollWidth - piste.clientWidth - 8);
+    };
+    piste.addEventListener('scroll', majPoints, { passive: true });
+    const bouger = (sens) => piste.scrollBy({ left: sens * (cartes[0]?.offsetWidth ?? 300) * 1.06, behavior: 'smooth' });
+    car.querySelector('[data-avant]')?.addEventListener('click', () => bouger(-1));
+    car.querySelector('[data-apres]')?.addEventListener('click', () => bouger(1));
+    majPoints();
+  }
+
+  /*
+    LE CHOIX DU RESEAU.
+
+    Julie : « en cliquant, choix entre Instagram ou Facebook, souvent les
+    personnes n'ont pas les deux ». Un bouton qui ouvre deux boutons, plutot
+    que deux boutons cote a cote : ca laisse le regard sur une seule chose.
+  */
+  for (const b of document.querySelectorAll('[data-reseaux]')) {
+    const boite = document.getElementById(b.getAttribute('aria-controls'));
+    b.addEventListener('click', () => {
+      const ouvert = b.getAttribute('aria-expanded') === 'true';
+      b.setAttribute('aria-expanded', String(!ouvert));
+      boite.classList.toggle('ouvert', !ouvert);
+    });
+  }
+
+  /* Repli pour les navigateurs qui n'ont pas encore les minuteries de
+     defilement : on retombe sur un observateur d'intersection. */
+  if (!CSS.supports('animation-timeline', 'view()')) {
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) { e.target.classList.add('vu'); io.unobserve(e.target); }
+    }, { threshold: .1, rootMargin: '0px 0px -70px' });
+    document.querySelectorAll('.rev').forEach((el) => io.observe(el));
+  }
+})();
+</script>
+
+<style id="apercu-barre">
+  /* Elle est en bas et non en haut : la barre de navigation du site est deja
+     fixee en haut, et deux bandeaux superposes se cachent l'un l'autre. */
+  #apercu { position: fixed; z-index: 99; left: 50%; bottom: 18px; translate: -50% 0;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;
+    padding: 11px 18px; border-radius: 999px; max-width: calc(100% - 24px);
+    font: 500 .86rem/1.3 'Inter', system-ui, sans-serif; color: #3d2213;
+    background: rgba(255,252,246,.9); backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(226,113,29,.3);
+    box-shadow: 0 20px 40px -22px rgba(120,60,15,.6); }
+  #apercu b { color: #a8480c; }
+  #apercu a { color: #a8480c; text-decoration: underline; text-underline-offset: 3px; }
+  /* La page reçoit de la place en bas pour que la barre ne masque jamais le
+     pied de page. */
+  body { padding-bottom: 84px; }
+</style>
+<div id="apercu">
+  <span>Vidéo du cabinet, <b>version paysage</b></span>
+  <a href="./cabinet-b.html">voir la version portrait</a>
+</div></body>
+</html>
