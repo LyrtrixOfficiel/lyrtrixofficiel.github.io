@@ -1527,18 +1527,34 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    contre le bord droit : le nom finissait tout seul au milieu de nulle part.
    On borne donc l'ensemble et on le centre, pour que le nom et la photo se
    fassent vraiment face. */
+/* CENTRER LE CONTENEUR NE CENTRE PAS LE CONTENU.
+
+   Premiere version : deux colonnes `1fr` et `290px`, le tout borne a 720 px et
+   centre. Mesure : le conteneur tombait bien au milieu, a 966 px, mais ce
+   qu'on VOIT etait centre sur 1084. La colonne de gauche faisait 370 px pour
+   un nom qui en occupe 172 : deux cent dix-sept pixels de vide a gauche, rien
+   a droite, donc un bloc qui penche.
+
+   `auto auto` plus `justify-content: center` : chaque colonne prend la largeur
+   de son contenu, et c'est la PAIRE qui se centre. Le vide se repartit alors
+   des deux cotes, ce qui est la definition de centrer.
+
+   Et la photo reprend sa largeur ICI : `.portrait-photo` en impose une de
+   310 px qui l'emportait sur la colonne de 290 et la faisait deborder de vingt
+   pixels vers la droite. Une largeur fixe posee ailleurs gagne toujours contre
+   une colonne de grille : on la redit plutot que de croire la grille. */
 .portrait-duo {
-  grid-template-columns: 1fr minmax(200px, 290px);
+  grid-template-columns: auto auto;
   grid-template-areas: 'a1 photo';
   align-items: center;
-  gap: clamp(16px, 3vw, 40px);
-  max-width: 720px; margin-inline: auto;
+  justify-content: center;
+  gap: clamp(16px, 3vw, 44px);
 }
 .portrait-duo .annot {
   grid-area: a1; justify-self: end; text-align: right;
   max-width: 18ch; align-self: center;
 }
-.portrait-duo .portrait-photo { grid-area: photo; }
+.portrait-duo .portrait-photo { grid-area: photo; width: clamp(196px, 22vw, 292px); }
 /* La flechette part du nom vers la photo : elle descend legerement, comme une
    main la tracerait. */
 .portrait-duo .flechette { justify-self: end; rotate: 4deg; margin-top: 10px; }
