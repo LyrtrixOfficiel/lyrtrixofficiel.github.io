@@ -1467,6 +1467,19 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
               0 40px 80px -40px rgba(120,60,15,.5);
 }
 .ecran-film video { width: 100%; height: 100%; object-fit: cover; }
+
+/* LE CADRE SUIT LE FORMAT DE LA PRISE, il ne le contraint pas.
+
+   Le cadre etait en 16/10 en dur. Une video verticale posee dedans en
+   `object-fit: cover` n'aurait montre qu'une bande horizontale d'un tiers de
+   sa hauteur : on aurait perdu la piece pour garder le plafond. Chaque format
+   a donc son rapport, et le portrait se borne en largeur pour ne pas devenir
+   une colonne de mille pixels de haut a cote du texte. */
+.ecran-film.paysage { aspect-ratio: 16 / 9; }
+.ecran-film.portrait {
+  aspect-ratio: 3 / 4;
+  width: min(100%, 380px); margin-inline: auto;
+}
 .ecran-film figcaption {
   position: absolute; z-index: 2;
   left: clamp(12px, 2vw, 20px); bottom: clamp(12px, 2vw, 20px);
@@ -1820,22 +1833,41 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    Le fond reste, tres pale, parce qu'un cadre sans fond flotte : c'est le
    leger changement de teinte qui fait que l'oeil comprend qu'il entre dans une
    zone, et le trait qui lui en donne les limites. */
-/* LE CADRE VA SUR LA COLONNE, PAS SUR LA SECTION.
+/* --- LA BANDE DES AVIS, SANS CADRE ET COURBEE ---------------------------
 
-   Premiere pose : bordure et fond sur le `<section>`. Or une section fait
-   TOUTE la largeur de la page : ses bords gauche et droit tombaient hors de
-   l'ecran, on ne voyait qu'un bandeau qui traverse, et la derniere carte etait
-   coupee par la fenetre au lieu de l'etre par le cadre. C'est la colonne
-   centrale qu'il faut encadrer, celle qui est deja bornee et centree. */
-.avis-bandeau { --bord: clamp(20px, 3.5vw, 44px); margin-block: clamp(30px, 5vw, 60px); }
-.avis-bandeau > .serre {
-  isolation: isolate;
-  padding: clamp(34px, 4.5vw, 56px) var(--bord);
-  border-radius: var(--rond-l);
-  border: 1.5px solid rgba(226,113,29,.42);
-  background:
-    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.5), transparent 64%),
-    linear-gradient(180deg, rgba(251,227,198,.7), rgba(250,222,190,.55));
+   Julie, deuxieme vocal : « ce grand cadre principal à l'arrière orange
+   m'embête. Je trouve qu'il y a trop de cadres dans mon site. » Et pour le
+   reste : « tout est gardé, paroles de clients, les étoiles, les avis dans les
+   encadrés avec la petite touche dans les angles, tous les avis sur Resalib.
+   Juste le fond à changer. » Puis : « une bande sans cadre, idéalement orangée
+   plus foncée sans être agressive, encore plus foncée, et idéalement en haut
+   et en bas des courbes, pas quelque chose de droit. »
+
+   Trois choses, donc, et rien d'autre ne bouge.
+
+   PLUS DE CADRE. La bordure et le rayon disparaissent : c'est une bande qui
+   traverse, pas une boite posee au milieu. Elle avait raison sur le fond, ce
+   site accumulait les rectangles.
+
+   PLUS FONCE. On passe d'un creme a peine teinte a un vrai orange. Il reste
+   doux parce qu'il est DESATURE : c'est la saturation qui agresse, pas la
+   valeur. Le texte reste sur l'encre du site, verifie au contraste.
+
+   ET COURBEE. Le fond est un element plus LARGE que la page, 148 %, a qui on
+   donne un rayon elliptique enorme. Sa courbe s'etale donc sur toute cette
+   largeur, et l'ecran n'en montre que la partie centrale : un arc doux au lieu
+   d'un demi-cercle. C'est ce qui separe une courbe d'une bosse. */
+.avis-bandeau {
+  --bord: 0px;
+  position: relative; isolation: isolate;
+  padding-block: clamp(66px, 8.5vw, 124px);
+  margin-block: clamp(16px, 2.6vw, 40px);
+}
+.avis-bandeau::before {
+  content: ''; position: absolute; z-index: -1;
+  inset-block: 0; left: 50%; width: 148%; translate: -50% 0;
+  border-radius: 50% / clamp(46px, 6.5vw, 104px);
+  background: linear-gradient(180deg, #f6c496 0%, #f0ac6d 52%, #f5bd88 100%);
 }
 
 /* LE CARROUSEL VA JUSQU'AU BORD DU CADRE, ET S'Y EFFACE.
@@ -1849,29 +1881,67 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    dernier centimetre. Une carte qui s'efface dit qu'elle continue ; une carte
    coupee au couteau dit qu'elle est cassee. Le fondu est pose sur les DEUX
    bords, sinon revenir en arriere donnerait le meme defaut a gauche. */
+/* Le carrousel deborde de la colonne jusqu'aux bords de l'ecran et s'y efface.
+   Sans cadre, il n'y a plus de trait ou s'arreter : les cartes glissent sous
+   le bord de la fenetre, et le fondu dit qu'il y en a d'autres. */
 .avis-bandeau .avis-carrousel {
-  margin-inline: calc(-1 * var(--bord));
+  margin-inline: calc(50% - 50vw);
 }
 .avis-bandeau .avis-piste {
-  padding-inline: var(--bord);
-  mask-image: linear-gradient(90deg, transparent, #000 28px,
-              #000 calc(100% - 28px), transparent);
+  padding-inline: max(var(--marge), calc(50vw - var(--serre) / 2));
+  mask-image: linear-gradient(90deg, transparent, #000 40px,
+              #000 calc(100% - 40px), transparent);
 }
-/* La barre de navigation, elle, reste dans la marge du cadre. */
-.avis-bandeau .avis-barre { margin-inline: var(--bord); }
-/* Le cadre est deja la : les cartes n'ont plus besoin d'un deuxieme trait
-   orange, deux contours emboites se battent. Elles gardent un liseré tres
-   discret pour se detacher du fond chaud, et un verre plus blanc. */
+/* La barre de navigation, elle, revient dans la colonne. */
+.avis-bandeau .avis-barre { margin-inline: max(var(--marge), calc(50vw - var(--serre) / 2)); }
+/* SUR UN ORANGE FRANC, LE VERRE DOIT REDEVENIR BLANC.
+   Les cartes etaient a 66 % de blanc : sur un creme a peine teinte ca passait,
+   sur ce fond-la elles prenaient l'orange et se fondaient dedans. C'est le
+   contraire de ce qu'elle demande, « pour que les avis ressortent mieux ». On
+   les remonte a 88 %, et le liseré orange autour d'elles disparait : sur un
+   fond orange, un trait orange ne detache rien. Les petites touches dans les
+   angles restent, elle y tient et elles font le charme de la carte. */
 .avis-bandeau .avis {
-  background: rgba(255,255,255,.66);
-  border-color: rgba(226,113,29,.2);
+  background: rgba(255,255,255,.88);
+  border-color: rgba(255,255,255,.5);
+  box-shadow: 0 18px 36px -22px rgba(140,70,20,.45);
 }
-.avis-bandeau .avis-fleches button { background: rgba(255,255,255,.72); }
+.avis-bandeau .avis-fleches button {
+  background: rgba(255,255,255,.86); border-color: rgba(255,255,255,.6);
+}
+/* CE QUI ETAIT ORANGE SUR CREME NE PEUT PAS RESTER ORANGE SUR ORANGE.
 
-/* Sur telephone, un cadre a bords arrondis colle aux bords de l'ecran perd
-   son sens : on lui rend sa marge et on adoucit le rayon. */
-@media (max-width: 640px) {
-  .avis-bandeau { padding: 26px 14px 22px; border-radius: var(--rond); }
+   Mesure, pas impression : l'orange du site donne 2,00 de contraste sur le
+   haut de la bande et 1,64 au milieu. Il en faut 4,5 pour du petit texte. Le
+   sur-titre « PAROLE DE CLIENTS » etait donc a peu pres invisible, et je ne
+   l'aurais pas vu a l'oeil parce qu'on devine un texte qu'on a soi-meme ecrit.
+   L'encre du site, elle, donne 9,23 et 7,54. */
+.avis-bandeau .sur-titre { color: var(--encre); }
+
+/* Les etoiles et la note passent sur une pastille blanche, comme au pied de
+   page. Julie veut garder les etoiles, et une etoile orange sur un fond orange
+   n'est plus une etoile. La pastille les rend, sans ajouter de « cadre » au
+   sens ou elle l'entend : c'est la meme forme que celle qui existe deja. */
+.avis-bandeau .avis-note {
+  /* `align-self` ne retrecit pas un conteneur flex de niveau bloc : la
+     pastille s'etirait sur toute la colonne et devenait une barre. Il lui faut
+     `inline-flex`, qui la fait tenir a la largeur de son contenu. */
+  display: inline-flex; width: fit-content;
+  padding: 9px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.86);
+  border: 1px solid rgba(255,255,255,.6);
+  color: var(--encre);
+  box-shadow: 0 12px 26px -18px rgba(140,70,20,.5);
+}
+
+/* Les pastilles sont des `button`, et l'active porte la classe `.ici` : sur
+   l'orange, l'orange de l'active ne se voyait plus, elle passe au blanc. */
+.avis-bandeau .avis-points button { background: rgba(255,255,255,.5); }
+.avis-bandeau .avis-points button.ici { background: #fff; }
+/* Le renvoi Resalib est lui-meme le lien, pas un lien dedans. */
+.avis-bandeau .avis-source {
+  background: rgba(255,255,255,.86);
+  border-color: rgba(255,255,255,.6);
 }
 .avis blockquote { color: var(--encre-doux); font-size: 1rem; line-height: 1.66; }
 .avis figcaption { font-weight: 550; font-size: .97rem; }
