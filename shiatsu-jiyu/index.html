@@ -15,7 +15,7 @@
      requete hors de son domaine, et c'est ce que la politique de
      confidentialite affirme noir sur blanc. -->
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=def2548c">
+<link rel="stylesheet" href="./styles.css?v=fdc9065f">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
@@ -244,7 +244,10 @@
 -->
 <section class="pan tache presentation">
   <div class="serre">
-    <p class="sur-titre rev">Qui je suis</p>
+    <!-- Le sur-titre se centre avec le bloc : cale a gauche de la page alors
+         que le nom et la photo sont au milieu, il restait tout seul dans son
+         coin. -->
+    <p class="sur-titre centre rev">Qui je suis</p>
 
     <!-- DEUX ANNOTATIONS, PLUS QUATRE.
 
@@ -259,8 +262,10 @@
         <em class="annot-julie">Julie Marguier</em>
         <span class="annot-role">Praticienne shiatsu</span>
         <svg class="flechette f1" viewBox="0 0 64 40" fill="none"
-  aria-hidden="true" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-  <path d="M3 6c14 0 26 6 34 17M52 20c-4 1-8 2-11 4M52 20c-1 4-1 8 0 12" opacity=".9"/>
+  aria-hidden="true" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+  stroke-linejoin="round">
+  <path d="M5 9c15-2 29 5 39 19" opacity=".9"/>
+  <path d="M44 28L34 25M44 28L41 18" opacity=".9"/>
 </svg>
       </div>
 
@@ -482,15 +487,19 @@
   </svg></a>
         <a class="reseau-icone" href="https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/"
         target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none"
-    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="9.4"/>
-    <path d="M14.9 8.2h-1.5c-.9 0-1.4.5-1.4 1.4v1.6h2.7l-.4 2.7h-2.3v5.4"
-          stroke-linecap="round"/>
-    <path d="M9.4 11.2h2.6" stroke-linecap="round"/>
+    <path d="M14.5 7.5h-1.4c-1.2 0-2 .8-2 2v9.2"/>
+    <path d="M9 12.3h4.9"/>
   </svg></a>
-        <a class="reseau-icone" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener"
+        <!-- LE PICTOGRAMME SEUL, PAS LE LOGO ENTIER. Le logo Resalib est un
+             carre qui contient le personnage ET le mot « RESALIB » : reduit a
+             vingt-deux pixels, le mot devient une tache et le personnage
+             disparait avec lui. On garde donc leur pictogramme, recadre a la
+             construction depuis leur logo, qui reste lisible tout petit. -->
+        <a class="reseau-icone reseau-resalib" href="https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue" target="_blank" rel="noopener"
            aria-label="Ma page Resalib" title="Ma page Resalib">
-          <img src="./images/resalib.webp?v=0e8e0e60" alt="" width="340" height="340" loading="lazy">
+          <img src="./images/resalib-marque.webp?v=72b76909" alt="" width="256" height="225" loading="lazy">
         </a>
       </div>
     </div>
@@ -533,9 +542,14 @@
       <a href="cgv.html">Médiation, CGV et CGU</a>
     </p>
     <!-- « Ajouter le Web Designer ? » : oui, et merci. Une ligne discrete,
-         sous les liens legaux, qui ne prend rien a personne. -->
+         sous les liens legaux, qui ne prend rien a personne.
+
+         C'EST LE STUDIO QUI SIGNE, PAS LA PERSONNE. Une signature sert a ce
+         qu'on clique dessus, et ce qui se vend porte un nom de marque : sur
+         le site d'une cliente, « Kazura » renvoie a un studio qu'on peut aller
+         voir, la ou un nom propre ne renvoie a rien. -->
     <p class="pied-signature">Site conçu par
-      <a href="https://lyrtrixofficiel.github.io/" target="_blank" rel="noopener">Matheo Schmitt</a></p>
+      <a href="https://lyrtrixofficiel.github.io/kazura/" target="_blank" rel="noopener">Kazura</a></p>
   </div>
 </footer>
 <script>

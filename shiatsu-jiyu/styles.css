@@ -1044,7 +1044,16 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .reseau-icone:hover {
   border-color: var(--orange); background: #fff; translate: 0 -2px;
 }
-.reseau-icone img { width: 22px; height: 22px; object-fit: contain; }
+/* UN SVG EN LIGNE SE POSE SUR LA LIGNE DE BASE, pas au milieu de sa boite :
+   meme centre par la grille, il gardait le creux reserve aux jambages sous
+   lui et paraissait remonte de deux pixels. `display:block` supprime ce
+   creux. C'est ce decalage que Matheo a vu. */
+.reseau-icone svg, .reseau-icone img { display: block; }
+/* Le pictogramme de Resalib est en trait fin et dans un bleu pale, la ou les
+   deux autres sont des contours nets en orange : a taille egale il paraissait
+   plus petit et plus faible. On le monte de deux pixels pour que les trois
+   pesent pareil. */
+.reseau-resalib img { width: 24px; height: auto; object-fit: contain; }
 
 /* Le logo de la Federation, contre la ligne d'identite qu'il accompagne. */
 .pied-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
@@ -1457,16 +1466,29 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 }
 
 /* DEUX ANNOTATIONS AU LIEU DE QUATRE : la photo n'a plus besoin de quatre
-   coins, elle a besoin d'un vis-a-vis. Le nom se pose a gauche, la photo a
-   droite, et la flechette relie l'un a l'autre. */
+   coins, elle a besoin d'un vis-a-vis.
+
+   ET LE BLOC SE RESSERRE. La grille d'origine etait taillee pour quatre
+   annotations reparties sur toute la largeur de la page. Avec deux elements,
+   elle laissait un vide de six cents pixels a gauche et poussait la photo
+   contre le bord droit : le nom finissait tout seul au milieu de nulle part.
+   On borne donc l'ensemble et on le centre, pour que le nom et la photo se
+   fassent vraiment face. */
 .portrait-duo {
-  grid-template-columns: 1fr minmax(240px, 340px);
+  grid-template-columns: 1fr minmax(200px, 290px);
   grid-template-areas: 'a1 photo';
   align-items: center;
-  gap: clamp(18px, 4vw, 54px);
+  gap: clamp(16px, 3vw, 40px);
+  max-width: 720px; margin-inline: auto;
 }
-.portrait-duo .annot { grid-area: a1; justify-self: end; text-align: right; max-width: 20ch; }
+.portrait-duo .annot {
+  grid-area: a1; justify-self: end; text-align: right;
+  max-width: 18ch; align-self: center;
+}
 .portrait-duo .portrait-photo { grid-area: photo; }
+/* La flechette part du nom vers la photo : elle descend legerement, comme une
+   main la tracerait. */
+.portrait-duo .flechette { justify-self: end; rotate: 4deg; margin-top: 10px; }
 
 .annot:nth-of-type(1) { grid-area: a1; justify-self: end; text-align: right; align-self: end; }
 .annot:nth-of-type(2) { grid-area: a2; justify-self: start; align-self: end; }
@@ -1633,43 +1655,66 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   border: 1px solid rgba(226,113,29,.34);
 }
 
-/* --- LE BANDEAU ORANGE DERRIERE LES AVIS ---------------------------------
-   « Est-ce qu'il n'est pas possible de mettre un bandeau orange plus foncé à
-   l'arrière pour que les avis ressortent mieux ? »
+/* --- LE CADRE ORANGE AUTOUR DES AVIS -------------------------------------
+   Julie proposait deux choses : « un bandeau orange plus foncé à l'arrière »
+   OU « un bandeau orange sur le contour du cadre du moins ». Matheo a tranche
+   pour le contour, et il a raison sur ce bloc-la.
 
-   Il court sur toute la largeur, bord à bord, et c'est ce qui fait l'effet :
-   un rectangle orange centré dans la page se lit comme une carte de plus,
-   alors qu'une bande qui touche les deux bords coupe vraiment la page en deux.
-   C'est la rupture que son vocal demande, celle qui « réveille l'œil ».
+   La grande bande pleine largeur marchait, mais elle en faisait trop ICI : les
+   avis sont deja six cartes claires alignees, poser dessous un aplat orange
+   sur toute la largeur donnait un encart publicitaire. Le cadre, lui, dit la
+   meme chose plus bas : « ceci est un bloc a part », sans crier.
 
-   Il reste PALE : sur ce fond, un orange soutenu écraserait le verre des
-   cartes, qui n'aurait plus rien à filtrer. On monte la saturation, pas la
-   valeur. */
+   Le fond reste, tres pale, parce qu'un cadre sans fond flotte : c'est le
+   leger changement de teinte qui fait que l'oeil comprend qu'il entre dans une
+   zone, et le trait qui lui en donne les limites. */
 .avis-bandeau {
+  --bord: clamp(20px, 3.5vw, 44px);
   position: relative; isolation: isolate;
-  padding-block: clamp(54px, 7vw, 92px);
-  margin-block: clamp(30px, 5vw, 64px);
-}
-.avis-bandeau::before {
-  content: ''; position: absolute; inset: 0; z-index: -1;
+  padding: clamp(34px, 4.5vw, 56px) var(--bord);
+  margin-block: clamp(30px, 5vw, 60px);
+  border-radius: var(--rond-l);
+  border: 1.5px solid rgba(226,113,29,.42);
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.55), transparent 62%),
-    linear-gradient(180deg, #fbe3c6, #f7d3ab 52%, #fbe3c6);
+    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.5), transparent 64%),
+    linear-gradient(180deg, rgba(251,227,198,.7), rgba(250,222,190,.55));
 }
-/* Deux filets aux deux bords : sans eux, la bande flotte et l'oeil cherche ou
-   elle commence. */
-.avis-bandeau::after {
-  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  border-top: 1px solid rgba(226,113,29,.28);
-  border-bottom: 1px solid rgba(226,113,29,.28);
+
+/* LE CARROUSEL VA JUSQU'AU BORD DU CADRE, ET S'Y EFFACE.
+
+   Dans le cadre, la piste s'arretait sur la marge interieure : la troisieme
+   carte etait tranchee net en plein milieu d'une phrase, a trois centimetres
+   du trait orange. On lit ca comme un defaut d'affichage, pas comme « il y en
+   a d'autres a droite ».
+
+   Elle deborde donc jusqu'au trait, et un fondu de vingt-huit pixels mange le
+   dernier centimetre. Une carte qui s'efface dit qu'elle continue ; une carte
+   coupee au couteau dit qu'elle est cassee. Le fondu est pose sur les DEUX
+   bords, sinon revenir en arriere donnerait le meme defaut a gauche. */
+.avis-bandeau .avis-carrousel {
+  margin-inline: calc(-1 * var(--bord));
 }
-/* Sur le bandeau, le verre des cartes devient plus blanc : sur un fond deja
-   chaud, un verre creme se confondrait avec lui. */
+.avis-bandeau .avis-piste {
+  padding-inline: var(--bord);
+  mask-image: linear-gradient(90deg, transparent, #000 28px,
+              #000 calc(100% - 28px), transparent);
+}
+/* La barre de navigation, elle, reste dans la marge du cadre. */
+.avis-bandeau .avis-barre { margin-inline: var(--bord); }
+/* Le cadre est deja la : les cartes n'ont plus besoin d'un deuxieme trait
+   orange, deux contours emboites se battent. Elles gardent un liseré tres
+   discret pour se detacher du fond chaud, et un verre plus blanc. */
 .avis-bandeau .avis {
-  background: rgba(255,255,255,.62);
-  border-color: rgba(226,113,29,.42);
+  background: rgba(255,255,255,.66);
+  border-color: rgba(226,113,29,.2);
 }
 .avis-bandeau .avis-fleches button { background: rgba(255,255,255,.72); }
+
+/* Sur telephone, un cadre a bords arrondis colle aux bords de l'ecran perd
+   son sens : on lui rend sa marge et on adoucit le rayon. */
+@media (max-width: 640px) {
+  .avis-bandeau { padding: 26px 14px 22px; border-radius: var(--rond); }
+}
 .avis blockquote { color: var(--encre-doux); font-size: 1rem; line-height: 1.66; }
 .avis figcaption { font-weight: 550; font-size: .97rem; }
 .avis figcaption span {
