@@ -428,6 +428,30 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   width: 100%; height: 100%; object-fit: cover; object-position: center 58%;
   filter: saturate(1.16) contrast(1.03);
 }
+
+/* LE BOUTON « LIRE » QUE JULIE A VU AU MILIEU DU FOND.
+
+   « Pourquoi y a-t-il un logo play dans le fond sans animation ? Erreur ? »
+   Oui, et le defaut est reel. Ces videos sont decoratives : pas de `controls`,
+   pas de son, elles se lancent seules. Mais quand iOS REFUSE la lecture
+   automatique, en mode economie d'energie ou en economiseur de donnees, Safari
+   dessine SON PROPRE gros bouton de lecture par-dessus l'affiche. Il n'est
+   dans aucun de nos fichiers, c'est le navigateur qui l'ajoute, et il ne mene
+   nulle part puisqu'il n'y a rien a regarder.
+
+   On le retire. Ce qui reste est l'affiche, c'est-a-dire une image tiree de la
+   video elle-meme : la page perd son mouvement, elle ne perd ni son decor ni
+   son sens. C'est exactement la degradation qu'on veut. */
+.film video::-webkit-media-controls,
+.film video::-webkit-media-controls-panel,
+.film video::-webkit-media-controls-start-playback-button,
+.film video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  opacity: 0;
+}
+
 @supports (animation-timeline: view()) {
   .film video {
     animation: derive linear both;
@@ -864,17 +888,21 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .note { font-size: .88rem; color: var(--encre-pale); margin-top: 20px; }
 .note a { color: var(--orange); }
 
-/* Le deroule numerote */
-.etapes { display: grid; margin-top: 6px; counter-reset: e; }
+/* LE DEROULE, SANS LES NUMEROS.
+   « Retirer 01, 02, 03, 04 et garder la même présentation. » Un numero devant
+   « L'accueil » et « L'échange » promet une procedure a suivre, alors qu'elle
+   decrit un moment qui se deroule. Le filet reste, il suffit a separer.
+   Un petit point orange prend la place, pour que la colonne de gauche ne
+   devienne pas un blanc sans raison. */
+.etapes { display: grid; margin-top: 6px; }
 .etape {
-  display: grid; grid-template-columns: 54px 1fr; gap: 20px; align-items: start;
+  display: grid; grid-template-columns: 22px 1fr; gap: 18px; align-items: start;
   padding: 24px 4px;
   border-top: 1px solid rgba(226,113,29,.16);
 }
 .etape::before {
-  counter-increment: e; content: counter(e, decimal-leading-zero);
-  font-size: .82rem; font-weight: 500; letter-spacing: .08em; color: var(--orange);
-  padding-top: 6px;
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--orange); opacity: .55; margin-top: .62em;
 }
 .etape h3 { margin-bottom: 7px; }
 .etape p { color: var(--encre-doux); font-size: 1rem; }
@@ -951,9 +979,13 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 /* Quatre colonnes : la marque, les coordonnees, le plan du site, les reseaux.
    C'est la structure du bas de page de la presidente de la Federation, que
    Julie a donnee en exemple. */
+/* DEUX COLONNES, PAS QUATRE. Julie a fait retirer « Me contacter » et « Le
+   site » : les deux ne faisaient que repeter la barre du haut et la
+   navigation. Restent la marque et l'invitation a la suivre, et le pied
+   respire enfin. */
 .pied-grille {
-  display: grid; gap: clamp(28px, 4vw, 54px);
-  grid-template-columns: 1.35fr .85fr .85fr 1.1fr;
+  display: grid; gap: clamp(28px, 5vw, 64px);
+  grid-template-columns: 1.35fr 1fr;
   align-items: start;
 }
 .pied-marque { display: grid; gap: 14px; justify-items: start; }
@@ -989,13 +1021,32 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .pied-bloc a:hover { color: var(--encre); }
 .pied-bloc a:hover::after { scale: 1 1; }
 .pied-suivre p { font-size: .92rem; color: var(--encre-doux); line-height: 1.6; max-width: 34ch; }
-.pied-reseaux { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 4px; }
+.pied-reseaux { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 6px; }
 /* Les pastilles de reseau n'ont pas de soulignement qui court dessous. */
 .pied-reseaux a::after { display: none; }
 
-/* Les deux logos. Ils sont en niveaux de creme au repos et reprennent leurs
-   couleurs au survol : cote a cote, le vert de Resalib et l'or de la
-   Federation se battaient avec l'orange du site. */
+/* TROIS LOGOS SUR UNE LIGNE, SANS UN MOT.
+   « Insta / Facebook possible juste le logo ? » Oui : ces marques se
+   reconnaissent a leur forme, et le nom ecrit a cote ne dit rien de plus. Il
+   reste dans `aria-label` et dans l'infobulle, donc un lecteur d'ecran et une
+   souris hesitante le trouvent tous les deux. La cible fait 44 pixels, la
+   taille minimale d'une cible au pouce : un logo de dix-neuf pixels dans une
+   pastille de quarante-quatre se rate beaucoup moins qu'un logo nu. */
+.reseau-icone {
+  display: inline-grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  color: var(--orange);
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(226,113,29,.22);
+  transition: border-color .3s var(--doux), background .3s var(--doux),
+              translate .3s var(--sortie);
+}
+.reseau-icone:hover {
+  border-color: var(--orange); background: #fff; translate: 0 -2px;
+}
+.reseau-icone img { width: 22px; height: 22px; object-fit: contain; }
+
+/* Le logo de la Federation, contre la ligne d'identite qu'il accompagne. */
 .pied-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
 .pied-logos img {
   height: 52px; width: auto;
@@ -1008,14 +1059,23 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .pied-logos a:hover img { filter: none; scale: 1.04; }
 
 .avertissement { font-size: .82rem; line-height: 1.7; color: var(--encre-pale); max-width: 80ch; }
-.pied-bas { margin-top: 16px; font-size: .84rem; color: var(--encre-pale); }
-
-@media (max-width: 900px) {
-  .pied-grille { grid-template-columns: 1fr 1fr; }
-  .pied-marque { grid-column: 1 / -1; }
+.pied-bas {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin-top: 18px; font-size: .84rem; color: var(--encre-pale);
 }
-@media (max-width: 520px) {
-  .pied-grille { grid-template-columns: 1fr; gap: 26px; }
+.pied-ffst img {
+  height: 46px; width: auto; display: block;
+  filter: grayscale(.55) opacity(.82);
+  transition: filter .4s var(--doux), scale .4s var(--sortie);
+}
+.pied-ffst:hover img { filter: none; scale: 1.04; }
+
+.pied-signature { margin-top: 10px; font-size: .78rem; color: var(--encre-pale); }
+.pied-signature a { color: inherit; border-bottom: 1px solid rgba(169,141,120,.35); }
+.pied-signature a:hover { color: var(--orange); border-color: var(--orange); }
+
+@media (max-width: 700px) {
+  .pied-grille { grid-template-columns: 1fr; gap: 30px; }
   .pied-logos img { height: 40px; }
 }
 
@@ -1377,6 +1437,37 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 }
 .annot-nom { font-size: clamp(1.5rem, 3.2vw, 2.3rem); line-height: 1.1; }
 .annot-nom em { font-size: 1em; }
+
+/* LE J DE JULIE RESSEMBLAIT A UN I, et elle a raison de l'avoir vu deux fois :
+   sous le portrait et sous son histoire. C'est l'ITALIQUE d'Instrument Serif
+   qui en est la cause, son J penche tellement que son crochet disparait. La
+   police romaine de la meme famille a un J parfaitement lisible, et elle est
+   deja chargee : on ne telecharge rien de plus, on cesse simplement de pencher
+   le seul mot ou ca posait probleme. */
+.annot-julie {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: normal; color: var(--encre);
+  display: block;
+}
+/* « Rapprocher Praticienne shiatsu de Julie Marguier » : sous le nom, colle,
+   et non de l'autre cote de la photo. */
+.annot-role {
+  display: block; margin-top: 2px;
+  font-size: .5em; color: var(--encre-doux); line-height: 1.4;
+}
+
+/* DEUX ANNOTATIONS AU LIEU DE QUATRE : la photo n'a plus besoin de quatre
+   coins, elle a besoin d'un vis-a-vis. Le nom se pose a gauche, la photo a
+   droite, et la flechette relie l'un a l'autre. */
+.portrait-duo {
+  grid-template-columns: 1fr minmax(240px, 340px);
+  grid-template-areas: 'a1 photo';
+  align-items: center;
+  gap: clamp(18px, 4vw, 54px);
+}
+.portrait-duo .annot { grid-area: a1; justify-self: end; text-align: right; max-width: 20ch; }
+.portrait-duo .portrait-photo { grid-area: photo; }
+
 .annot:nth-of-type(1) { grid-area: a1; justify-self: end; text-align: right; align-self: end; }
 .annot:nth-of-type(2) { grid-area: a2; justify-self: start; align-self: end; }
 .annot:nth-of-type(3) { grid-area: a3; justify-self: end; text-align: right; align-self: start; }
@@ -1387,6 +1478,11 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .f2 { justify-self: start; scale: -1 1; rotate: 8deg; margin-top: 4px; }
 .f3 { justify-self: end; rotate: -32deg; margin-top: 8px; }
 .f4 { justify-self: start; scale: -1 1; rotate: -32deg; margin-top: 8px; }
+
+.bloc-formation {
+  margin-top: clamp(40px, 5vw, 68px);
+  max-width: 620px; margin-inline: auto;
+}
 
 .blocs-moi {
   grid-template-columns: 1fr 1fr;
@@ -1413,6 +1509,77 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
   font-size: 1.4rem; color: var(--orange); margin-top: 2px;
 }
+
+/* « Y aller », sous la phrase des communes. Discret : c'est un service rendu
+   a qui se demande ou c'est, pas un appel a l'action de plus. */
+.lien-itineraire {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .95rem; font-weight: 500; color: var(--orange);
+  border-bottom: 1px solid rgba(226,113,29,.35); padding-bottom: 2px;
+  transition: border-color .3s var(--doux);
+}
+.lien-itineraire:hover { border-color: var(--orange); }
+.lien-itineraire svg { transition: translate .35s var(--sortie); }
+.lien-itineraire:hover svg { translate: 4px 0; }
+
+/* --- LE BON CADEAU, EN BANDEAU ------------------------------------------
+   « Présentation différente si possible, autre que dans cet encadrement. »
+   Meme principe que le bandeau des avis : ce qui detache un bloc, ce n'est
+   pas un cadre de plus, c'est une bande qui touche les deux bords. */
+.cadeau-bandeau { position: relative; isolation: isolate; }
+.cadeau-bandeau::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,.5), transparent 62%),
+    linear-gradient(180deg, #fbe3c6, #f6cfa3 55%, #fbe3c6);
+}
+.cadeau-bandeau::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  border-top: 1px solid rgba(226,113,29,.28);
+  border-bottom: 1px solid rgba(226,113,29,.28);
+}
+.cadeau-centre {
+  display: grid; gap: 14px; justify-items: center; text-align: center;
+  max-width: 62ch;
+}
+.cadeau-centre h2 { font-size: clamp(1.7rem, 3.4vw, 2.7rem); }
+.cadeau-centre .chapeau { max-width: 52ch; }
+.cadeau-centre .actions { margin-top: 10px; }
+
+/* --- MON HISTOIRE, HORS DU CADRE ----------------------------------------
+   « Pas d'encadrement, centrer le texte et le mettre en italique. »
+
+   Elle avait raison sur le fond avant meme de le formuler : une liste de
+   diplomes et un souvenir d'adolescence n'ont aucune raison de se ressembler.
+   Deux cartes de verre cote a cote, l'oeil lit un tableau ; une confidence
+   centree, sans bord, dans une colonne etroite, il lit quelqu'un qui parle.
+
+   La colonne fait 60 caracteres au maximum. Au-dela, l'oeil perd la ligne
+   suivante en revenant a gauche, et c'est exactement ce qui fatigue. */
+.histoire-pan { padding-top: 0; }
+.histoire {
+  max-width: 60ch; margin: clamp(16px, 3vw, 30px) auto 0;
+  text-align: center; display: grid; gap: 14px;
+  position: relative; padding-top: 26px;
+}
+.histoire p {
+  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+  font-size: clamp(1.06rem, 1.7vw, 1.32rem); line-height: 1.62;
+  color: var(--encre-doux);
+}
+/* Un filet orange court au-dessus, seule marque de cadre qui reste : il donne
+   un debut au texte sans l'enfermer. */
+.histoire::before {
+  content: ''; position: absolute; top: 0; left: 50%; translate: -50% 0;
+  width: 54px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+}
+.histoire-nom {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: normal;              /* le J, encore : voir .annot-julie */
+  font-size: 1.5rem; color: var(--orange); margin-top: 4px;
+}
+.sur-titre.centre { text-align: center; }
 
 /* --- LE CHOIX DU RESEAU -------------------------------------------------
    « Bouton Me suivre sur les réseaux, en cliquant choix entre Instagram ou
@@ -1459,7 +1626,50 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   scroll-snap-align: center;
   padding: 26px 28px 24px;
   display: grid; gap: 13px; align-content: start;
+  /* « Ajouter un cadre orange sur chaque contour des avis ? » Oui, mais fin et
+     franc. Un liseré d'un pixel suffit à détacher la carte du fond ; épaissi,
+     il ferait six rectangles orange alignés, ce qui est exactement l'agression
+     qu'elle ne veut pas (« un peu plus punchy, sans être agressif ni rien »). */
+  border: 1px solid rgba(226,113,29,.34);
 }
+
+/* --- LE BANDEAU ORANGE DERRIERE LES AVIS ---------------------------------
+   « Est-ce qu'il n'est pas possible de mettre un bandeau orange plus foncé à
+   l'arrière pour que les avis ressortent mieux ? »
+
+   Il court sur toute la largeur, bord à bord, et c'est ce qui fait l'effet :
+   un rectangle orange centré dans la page se lit comme une carte de plus,
+   alors qu'une bande qui touche les deux bords coupe vraiment la page en deux.
+   C'est la rupture que son vocal demande, celle qui « réveille l'œil ».
+
+   Il reste PALE : sur ce fond, un orange soutenu écraserait le verre des
+   cartes, qui n'aurait plus rien à filtrer. On monte la saturation, pas la
+   valeur. */
+.avis-bandeau {
+  position: relative; isolation: isolate;
+  padding-block: clamp(54px, 7vw, 92px);
+  margin-block: clamp(30px, 5vw, 64px);
+}
+.avis-bandeau::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.55), transparent 62%),
+    linear-gradient(180deg, #fbe3c6, #f7d3ab 52%, #fbe3c6);
+}
+/* Deux filets aux deux bords : sans eux, la bande flotte et l'oeil cherche ou
+   elle commence. */
+.avis-bandeau::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  border-top: 1px solid rgba(226,113,29,.28);
+  border-bottom: 1px solid rgba(226,113,29,.28);
+}
+/* Sur le bandeau, le verre des cartes devient plus blanc : sur un fond deja
+   chaud, un verre creme se confondrait avec lui. */
+.avis-bandeau .avis {
+  background: rgba(255,255,255,.62);
+  border-color: rgba(226,113,29,.42);
+}
+.avis-bandeau .avis-fleches button { background: rgba(255,255,255,.72); }
 .avis blockquote { color: var(--encre-doux); font-size: 1rem; line-height: 1.66; }
 .avis figcaption { font-weight: 550; font-size: .97rem; }
 .avis figcaption span {
@@ -1655,6 +1865,34 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    seul bouton, aucun mouvement inutile, et rien qui gronde pendant la frappe.
    ========================================================================= */
 
+/* LE TIROIR. « Je préfère qu'il y ait une touche formulaire de contact plutôt
+   que le formulaire en entier. Ça laisse le choix et visuellement c'est moins
+   lourd. » Un `details` : le navigateur donne le repli, le clavier, l'etat et
+   l'annonce vocale, sans une ligne de script. */
+.formulaire-tiroir { max-width: 620px; margin: 0 auto; }
+.formulaire-poignee {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin: 0 auto; cursor: pointer;
+  list-style: none;                 /* le triangle par defaut de Firefox */
+}
+.formulaire-poignee::-webkit-details-marker { display: none; }
+.formulaire-tiroir { display: grid; justify-items: center; gap: 18px; }
+.formulaire-chevron { transition: rotate .45s var(--sortie); flex: none; }
+.formulaire-tiroir[open] .formulaire-chevron { rotate: 180deg; }
+
+/* Le contenu descend au lieu d'apparaitre d'un coup. `interpolate-size` rend
+   la hauteur automatique animable ; la ou il manque, le panneau s'affiche
+   simplement, sans transition, ce qui reste correct. */
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+  .formulaire-tiroir::details-content {
+    block-size: 0; overflow: hidden; opacity: 0;
+    transition: block-size .5s var(--sortie), opacity .4s var(--doux),
+                content-visibility .5s allow-discrete;
+  }
+  .formulaire-tiroir[open]::details-content { block-size: auto; opacity: 1; }
+}
+
 .formulaire-carte {
   padding: clamp(30px, 5vw, 58px);
   border-radius: var(--rond-l);
@@ -1665,6 +1903,32 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 }
 .formulaire-carte h2 { font-size: clamp(1.6rem, 2.7vw, 2.1rem); }
 .formulaire-chapeau { color: var(--encre-doux); max-width: 46ch; }
+
+/* L'ETIQUETTE MUETTE. Retiree de l'ecran comme Julie le demande, gardee pour
+   la voix : un lecteur d'ecran annonce l'etiquette, jamais le texte gris
+   d'une case, et sans elle il ne dirait que « champ de saisie ». On ne la
+   cache donc PAS avec `display:none`, qui la retirerait aussi de la voix. */
+.etiquette-muette {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* LE REMERCIEMENT, a sa phrase exacte. Il remplace le formulaire au lieu de
+   s'ajouter dessous : des champs vides sous un « merci » donnent l'impression
+   qu'il faut peut-etre recommencer. */
+.formulaire-merci {
+  display: grid; gap: 10px; padding: 34px 30px; margin-top: 8px;
+  text-align: center; border-radius: var(--rond);
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(226,113,29,.28);
+  animation: merci-parait .6s var(--sortie) both;
+}
+.formulaire-merci p { color: var(--encre); font-size: 1.05rem; line-height: 1.7; }
+.formulaire-merci-nom { color: var(--orange); font-weight: 550; }
+.formulaire-merci:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
+@keyframes merci-parait { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0; } }
+@media (prefers-reduced-motion: reduce) { .formulaire-merci { animation: none; } }
 
 .formulaire { display: grid; gap: 18px; margin-top: 8px; }
 .champ { display: grid; gap: 7px; margin: 0; }
