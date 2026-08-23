@@ -824,10 +824,36 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 /* =========================================================================
    LES CARTES
    ========================================================================= */
+/* CINQ CARTES NE SE RANGENT PAS EN QUATRE COLONNES.
+   `auto-fit` en donnait quatre sur grand ecran, donc quatre en haut et UNE
+   toute seule en bas, collee a gauche : ca se lit comme un oubli. En bornant
+   a trois colonnes, cinq font trois puis deux, et les deux du bas se centrent
+   sous les trois du haut. Une ligne incomplete centree est une composition ;
+   une ligne incomplete alignee a gauche est un trou. */
 .grille {
   display: grid; gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(266px, 1fr));
   margin-top: clamp(38px, 5vw, 60px);
+  justify-content: center;
+}
+/* SIX COLONNES, ET CHAQUE CARTE EN OCCUPE DEUX.
+
+   Premiere tentative : trois colonnes, et la derniere ligne centree avec une
+   marge de 50 %. Ca centrait, mais une marge RETRECIT la carte : les deux du
+   bas devenaient deux fois plus etroites que celles du haut, et le texte y
+   tombait a trois mots par ligne.
+
+   Une grille de six colonnes ou chaque carte en couvre deux donne exactement
+   trois cartes par ligne, ET permet de decaler la derniere ligne d'UNE
+   colonne, soit une demi-carte. La ligne se centre sans qu'aucune carte ne
+   change de largeur. */
+@media (min-width: 1060px) {
+  .grille { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .grille > * { grid-column: span 2; }
+  /* Avant-derniere carte en tete d'une ligne incomplete de deux : on decale. */
+  .grille > :nth-last-child(2):nth-child(3n + 1) { grid-column: 2 / span 2; }
+  /* Carte seule sur sa ligne : on la met au milieu. */
+  .grille > :nth-last-child(1):nth-child(3n + 1) { grid-column: 3 / span 2; }
 }
 
 .carte {
@@ -843,19 +869,46 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
     0 1px 0 rgba(255,255,255,.95) inset,
     0 42px 80px -34px rgba(120,60,15,.5);
 }
+/* LES VIGNETTES DEVIENNENT LES BULLES DE L'ACCUEIL.
+
+   « Possible les mêmes cadres/bulles que les 3 photos de la section bienvenue
+   à la place des cadres déjà existants ? » Oui, et ça règle un autre de ses
+   reproches par la même occasion.
+
+   ELLE DEMANDAIT DE « RECENTRER » DEUX IMAGES, ET LA CAUSE N'ETAIT PAS LE
+   CADRAGE : la vignette etait en `object-fit: cover` dans un carre de
+   soixante-deux pixels. Un dessin plus haut que large y perdait sa tete et ses
+   pieds, quel que soit le recadrage du fichier. On passe en `contain` : le
+   dessin se pose au lieu de se faire tailler, et les cinq se voient en entier
+   sans avoir a retoucher une seule image.
+
+   La forme organique est celle des galets de l'accueil, et chaque carte a la
+   sienne : trois bulles identiques a la suite redeviennent des carrés. */
 .carte .vignette {
-  width: 62px; height: 62px; border-radius: 20px;
+  width: 78px; height: 78px;
+  border-radius: 58% 42% 46% 54% / 48% 56% 44% 52%;
   display: grid; place-items: center; overflow: hidden;
-  background: linear-gradient(140deg, var(--orange-clair), rgba(255,255,255,.55));
+  background: linear-gradient(140deg, var(--orange-clair), rgba(255,255,255,.6));
+  outline: 1.5px solid rgba(226,113,29,.42); outline-offset: 4px;
   box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
+  transition: outline-color .4s var(--doux);
 }
+.carte:nth-of-type(2n) .vignette { border-radius: 47% 53% 55% 45% / 52% 46% 54% 48%; }
+.carte:nth-of-type(3n) .vignette { border-radius: 52% 48% 57% 43% / 44% 53% 47% 56%; }
+.carte:hover .vignette { outline-color: var(--orange); }
+/* SES DESSINS SONT AU TRAIT GRIS CLAIR, et poses tels quels dans une bulle
+   creme ils disparaissaient : on distinguait une tache, pas un nuage ni une
+   silhouette. `multiply` n'y pouvait rien, un gris clair multiplie par un
+   creme reste un gris clair. On les FONCE, ce qui epaissit le trait a l'oeil
+   sans y toucher, et on les tire vers l'encre du site plutot que vers le noir
+   pur : c'est un dessin a elle, pas un pictogramme d'interface. */
 .carte .vignette img {
-  width: 100%; height: 100%; object-fit: cover;
-  mix-blend-mode: multiply;
+  width: 100%; height: 100%; object-fit: contain; padding: 13%;
+  filter: brightness(.42) sepia(.35) saturate(1.4) hue-rotate(-12deg);
   transition: scale .6s var(--sortie);
 }
-.carte:hover .vignette img { scale: 1.12; }
+.carte:hover .vignette img { scale: 1.1; }
 .carte p { color: var(--encre-doux); font-size: .99rem; line-height: 1.62; }
 
 /* Les tarifs */
@@ -1532,6 +1585,31 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   font-size: 1.4rem; color: var(--orange); margin-top: 2px;
 }
 
+/* UNE ANCRE DOIT S'ARRETER SOUS LA BARRE, PAS DESSOUS.
+   La barre de navigation est fixe en haut de l'ecran. Sans cette marge, un
+   lien qui pointe sur une section amene son titre EXACTEMENT sous la barre,
+   qui le recouvre : on arrive au bon endroit et on croit s'etre trompe. */
+.ancre { scroll-margin-top: 96px; }
+@media (max-width: 700px) { .ancre { scroll-margin-top: 78px; } }
+
+/* --- L'INTRODUCTION DU SHIATSU, ET LA FILE DES AGES --------------------- */
+.intro-shiatsu {
+  display: grid; gap: clamp(22px, 4vw, 50px);
+  grid-template-columns: 1.1fr .9fr; align-items: center;
+}
+.intro-shiatsu .chapeau { max-width: 46ch; }
+/* Le dessin est au trait et transparent : il se pose sur le fond, il ne se
+   met pas dans une boite. Un cadre autour l'aurait transforme en illustration
+   de catalogue, alors que c'est une respiration. */
+.ages img {
+  width: 100%; height: auto; display: block;
+  filter: brightness(.55) sepia(.3) saturate(1.3) hue-rotate(-12deg);
+}
+@media (max-width: 860px) {
+  .intro-shiatsu { grid-template-columns: 1fr; }
+  .ages img { max-width: 420px; margin-inline: auto; }
+}
+
 /* « Y aller », sous la phrase des communes. Discret : c'est un service rendu
    a qui se demande ou c'est, pas un appel a l'action de plus. */
 .lien-itineraire {
@@ -1578,7 +1656,23 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 
    La colonne fait 60 caracteres au maximum. Au-dela, l'oeil perd la ligne
    suivante en revenant a gauche, et c'est exactement ce qui fatigue. */
-.histoire-pan { padding-top: 0; }
+.histoire-pan { padding-top: 0; position: relative; overflow-x: clip; }
+/* Elle sort par la gauche des deux tiers de sa largeur : ce qui reste dans le
+   cadre est une courbe, pas une forme. A moitie transparente et posee derriere
+   le texte, elle donne une couleur au fond sans jamais gener la lecture. */
+.tache-flyer {
+  position: absolute; left: 0; top: 50%;
+  translate: -62% -50%;
+  width: clamp(190px, 26vw, 330px); height: auto;
+  opacity: .42; z-index: 0; pointer-events: none;
+}
+.histoire-pan .serre { position: relative; z-index: 1; }
+/* Sous 900 px, la colonne de texte occupe toute la largeur : la tache passerait
+   dessous et brouillerait les premieres lettres de chaque ligne. Elle descend
+   dans le coin bas et s'efface encore. */
+@media (max-width: 900px) {
+  .tache-flyer { top: auto; bottom: 0; translate: -68% 30%; opacity: .3; }
+}
 .histoire {
   max-width: 60ch; margin: clamp(16px, 3vw, 30px) auto 0;
   text-align: center; display: grid; gap: 14px;
