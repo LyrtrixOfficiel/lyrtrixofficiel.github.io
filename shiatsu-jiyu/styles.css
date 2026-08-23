@@ -2467,19 +2467,21 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   font-size: .98rem;
 }
 .avis-note b { font-weight: 600; }
-.avis-note-etoiles { display: inline-flex; align-items: center; gap: 9px; flex: none; }
 
-/* SUR TELEPHONE, LA PASTILLE S'EMPILE AU LIEU DE SE CASSER.
-   « sur 5 · plus de 60 avis vérifiés » ne tient pas a cote des etoiles sur
-   390 px : le texte passait a la ligne tout seul et laissait les etoiles
-   seules a gauche, avec un mot orphelin en dessous. Deux lignes centrees, ca
-   se lit comme un badge ; deux lignes bancales, ca se lit comme un defaut. */
-@media (max-width: 560px) {
-  .avis-note {
-    flex-direction: column; gap: 4px;
-    align-items: center; text-align: center;
-  }
-  .avis-note-detail { font-size: .9rem; }
+/* UNE SEULE LIGNE, ET ON LE DIT AU NAVIGATEUR.
+   `nowrap` interdit le retour a la ligne : sans lui, le texte se recasserait
+   des qu'un mot s'allonge, par exemple le jour ou le nombre d'avis passe a
+   trois chiffres. Le texte a ete raccourci pour que ca tienne vraiment ;
+   `nowrap` est la pour que ca le reste. */
+.avis-note { white-space: nowrap; flex-wrap: nowrap; }
+.avis-note .etoiles { flex: none; }
+
+/* Sous 430 px, les etoiles et le corps se resserrent d'un cheveu. Mesure a
+   l'appui : la pastille passe de 236 a 210 px de large, pour 334 disponibles.
+   On garde donc de la marge meme sur les plus petits telephones. */
+@media (max-width: 430px) {
+  .avis-note { font-size: .92rem; gap: 8px; }
+  .avis-note .etoiles svg { width: 13px; height: 13px; }
 }
 
 /* Sans prenom, la date porte seule le pied de la carte : on lui donne assez
