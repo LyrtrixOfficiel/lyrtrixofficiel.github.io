@@ -15,7 +15,7 @@
      requete hors de son domaine, et c'est ce que la politique de
      confidentialite affirme noir sur blanc. -->
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=bf4310d8">
+<link rel="stylesheet" href="./styles.css?v=dca81488">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
@@ -261,6 +261,31 @@
   </div>
 </footer>
 <script>
+/* TROIS VIDEOS QUI DECODENT EN MEME TEMPS, C'EST TROIS DE TROP SUR UN TELEPHONE.
+
+   Une balise video en lecture automatique decode ses images tant qu'elle
+   existe, meme a deux mille pixels sous le pli, meme si personne ne la verra
+   jamais. Sur un ordinateur ca passe ; sur un telephone, trois decodages
+   simultanes plus les filtres de fond suffisent a faire declarer le navigateur
+   bloque par le systeme, et c'est le « Chrome ne repond pas » que Matheo a eu.
+
+   On ne joue donc que ce qui est a l'ecran. Le navigateur previent lui-meme
+   quand un element entre ou sort du cadre : cela ne coute rien, contrairement
+   a une surveillance du defilement. La marge de deux cents pixels lance la
+   video juste avant qu'elle arrive, pour qu'elle ne demarre pas sous les yeux
+   du visiteur. */
+(() => {
+  const films = document.querySelectorAll('video[autoplay]');
+  if (!films.length || !('IntersectionObserver' in window)) return;
+  const oeil = new IntersectionObserver((entrees) => {
+    for (const e of entrees) {
+      if (e.isIntersecting) { const p = e.target.play(); if (p) p.catch(() => {}); }
+      else e.target.pause();
+    }
+  }, { rootMargin: '200px 0px' });
+  for (const f of films) { f.pause(); oeil.observe(f); }
+})();
+
 (() => {
   const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finPointeur = matchMedia('(hover: hover)').matches;

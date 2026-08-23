@@ -15,7 +15,7 @@
      requete hors de son domaine, et c'est ce que la politique de
      confidentialite affirme noir sur blanc. -->
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=bf4310d8">
+<link rel="stylesheet" href="./styles.css?v=dca81488">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
@@ -384,14 +384,19 @@
     <div class="rev avis-tete">
       <p class="sur-titre">Parole de clients</p>
       <h2>Ils sont les mieux placés<br>pour en <em>parler</em>.</h2>
+      <!-- La note est coupee en deux morceaux nommes : sur un telephone, « sur
+           5 · plus de 60 avis vérifiés » ne tient pas sur la meme ligne que les
+           etoiles, et la pastille se cassait en un bloc bancal. Nommer les deux
+           parties permet de les empiler proprement plutot que de les laisser
+           deborder. -->
       <p class="avis-note">
-        <span class="etoiles" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
+        <span class="avis-note-etoiles"><span class="etoiles" aria-hidden="true"><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
     <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
     <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
     <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
     <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg><svg viewBox="0 0 20 20" width="15" height="15" fill="currentColor">
-    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg></span>
-        <b>5,0</b> sur 5 &middot; plus de 60 avis vérifiés
+    <path d="M10 1.6l2.5 5.3 5.7.8-4.1 4.1 1 5.8L10 14.9l-5.1 2.7 1-5.8L1.8 7.7l5.7-.8z"/></svg></span><b>5,0</b></span>
+        <span class="avis-note-detail">sur 5 &middot; plus de 60 avis vérifiés</span>
       </p>
     </div>
 
@@ -581,6 +586,31 @@
   </div>
 </footer>
 <script>
+/* TROIS VIDEOS QUI DECODENT EN MEME TEMPS, C'EST TROIS DE TROP SUR UN TELEPHONE.
+
+   Une balise video en lecture automatique decode ses images tant qu'elle
+   existe, meme a deux mille pixels sous le pli, meme si personne ne la verra
+   jamais. Sur un ordinateur ca passe ; sur un telephone, trois decodages
+   simultanes plus les filtres de fond suffisent a faire declarer le navigateur
+   bloque par le systeme, et c'est le « Chrome ne repond pas » que Matheo a eu.
+
+   On ne joue donc que ce qui est a l'ecran. Le navigateur previent lui-meme
+   quand un element entre ou sort du cadre : cela ne coute rien, contrairement
+   a une surveillance du defilement. La marge de deux cents pixels lance la
+   video juste avant qu'elle arrive, pour qu'elle ne demarre pas sous les yeux
+   du visiteur. */
+(() => {
+  const films = document.querySelectorAll('video[autoplay]');
+  if (!films.length || !('IntersectionObserver' in window)) return;
+  const oeil = new IntersectionObserver((entrees) => {
+    for (const e of entrees) {
+      if (e.isIntersecting) { const p = e.target.play(); if (p) p.catch(() => {}); }
+      else e.target.pause();
+    }
+  }, { rootMargin: '200px 0px' });
+  for (const f of films) { f.pause(); oeil.observe(f); }
+})();
+
 (() => {
   const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finPointeur = matchMedia('(hover: hover)').matches;

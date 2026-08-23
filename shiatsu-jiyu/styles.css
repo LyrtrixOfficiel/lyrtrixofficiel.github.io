@@ -209,6 +209,60 @@ body::after {
 .verre.haut::before  { backdrop-filter: url(#refraction-haut); }
 .verre.barre::before { backdrop-filter: url(#refraction-barre); }
 
+/* =========================================================================
+   LE VERRE ALLEGE SUR LES PETITS ECRANS
+
+   Matheo, sur son telephone : « le site bug de ouf », et Chrome declare ne
+   plus repondre. Ce n'etait pas une impression, c'est mesurable : la page
+   d'accueil demandait VINGT-QUATRE couches de filtre de fond.
+
+   D'ou elles viennent : chaque bloc de verre en porte DEUX. L'element
+   lui-meme, avec un flou, et son `::before`, avec un filtre SVG a carte de
+   deplacement. Ce second filtre charge une image, la lit comme une carte de
+   vecteurs, et deplace chaque pixel du fond REEL en dessous. A refaire pour
+   chaque element, a chaque image, pendant le defilement. Sur un ordinateur ca
+   tient ; sur un telephone ca ne tient pas.
+
+   CE QU'ON ENLEVE, ET POURQUOI CELUI-LA. On garde le flou et la saturation,
+   qui sont faits par le processeur graphique et coutent peu. On retire la
+   refraction, qui coute le plus et se voit le moins : c'est une deformation
+   de quelques pixels sur les bords d'une carte, invisible sur une carte de
+   trois cent quarante pixels de large. On ne perd donc presque rien a l'oeil,
+   et on divise le nombre de couches par deux.
+
+   Et le flou passe de 22 a 13 : son cout croit avec le rayon, et a cette
+   taille d'ecran la difference ne se lit pas.
+   ========================================================================= */
+@media (max-width: 900px) {
+  .verre::before { display: none; }
+  .verre {
+    backdrop-filter: blur(13px) saturate(175%) brightness(1.03);
+    -webkit-backdrop-filter: blur(13px) saturate(175%);
+  }
+  .entree-panneau, .nav, .formulaire-carte {
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+  }
+
+  /* ET ON VA PLUS LOIN LA OU LE VERRE NE SERT PLUS A RIEN.
+
+     Six des dix blocs de verre de l'accueil sont les cartes d'avis. Or elles
+     sont deja remplies a 88 % de blanc : ce qu'un flou irait chercher derriere
+     elles est presque entierement recouvert. On payait donc six floutages du
+     fond pour un effet qu'on ne voit pas. Meme chose pour les cartes de
+     contenu, posees sur du creme uni.
+
+     On leur rend un fond simple. Le verre reste la ou il travaille vraiment :
+     la barre du haut, le panneau d'accueil, la carte de rendez-vous et le
+     formulaire, tous poses sur une video ou sur une image. */
+  .avis, .carte {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .avis-bandeau .avis { background: rgba(255,255,255,.94); }
+  .carte { background: linear-gradient(150deg, rgba(255,253,249,.94), rgba(255,248,239,.9)); }
+}
+
 /* Le verre pose au-dessus d'une video : on remonte la dominante creme pour
    qu'il reste lisible sans s'alourdir. */
 .verre.sur-film {
@@ -1741,8 +1795,18 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 /* Sous 900 px, la colonne de texte occupe toute la largeur : la tache passerait
    dessous et brouillerait les premieres lettres de chaque ligne. Elle descend
    dans le coin bas et s'efface encore. */
+/* SUR TELEPHONE, ELLE DISPARAIT.
+
+   Sur un grand ecran, la tache sort par la gauche et il en reste une courbe :
+   on lit un fond. Sur 390 px, la meme forme occupe un quart de la largeur, se
+   fait couper par le bord de la section et tombe juste au-dessus de la bande
+   orange des avis : Matheo l'a signalee comme « un truc orange en haut qui est
+   coupe », et il l'a lue comme un bogue, pas comme un decor.
+
+   Une decoration qu'on prend pour un defaut vaut moins que pas de decoration.
+   Elle reste sur les ecrans ou elle fait ce qu'elle doit faire. */
 @media (max-width: 900px) {
-  .tache-flyer { top: auto; bottom: 0; translate: -68% 30%; opacity: .3; }
+  .tache-flyer { display: none; }
 }
 .histoire {
   max-width: 60ch; margin: clamp(16px, 3vw, 30px) auto 0;
@@ -2403,6 +2467,20 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   font-size: .98rem;
 }
 .avis-note b { font-weight: 600; }
+.avis-note-etoiles { display: inline-flex; align-items: center; gap: 9px; flex: none; }
+
+/* SUR TELEPHONE, LA PASTILLE S'EMPILE AU LIEU DE SE CASSER.
+   « sur 5 · plus de 60 avis vérifiés » ne tient pas a cote des etoiles sur
+   390 px : le texte passait a la ligne tout seul et laissait les etoiles
+   seules a gauche, avec un mot orphelin en dessous. Deux lignes centrees, ca
+   se lit comme un badge ; deux lignes bancales, ca se lit comme un defaut. */
+@media (max-width: 560px) {
+  .avis-note {
+    flex-direction: column; gap: 4px;
+    align-items: center; text-align: center;
+  }
+  .avis-note-detail { font-size: .9rem; }
+}
 
 /* Sans prenom, la date porte seule le pied de la carte : on lui donne assez
    de presence pour ne pas ressembler a un reste. */
