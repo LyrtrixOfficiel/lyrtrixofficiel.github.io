@@ -1862,6 +1862,19 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   position: relative; isolation: isolate;
   padding-block: clamp(66px, 8.5vw, 124px);
   margin-block: clamp(16px, 2.6vw, 40px);
+  /* CE QUI DEPASSE DOIT ETRE COUPE ICI, SINON C'EST LA PAGE QUI S'ELARGIT.
+
+     Le fond ci-dessous fait 148 % de large pour que sa courbe soit douce : il
+     sort donc de 24 % de chaque cote. Sans cette ligne, ces 24 % ne sont pas
+     decoratifs, ils AJOUTENT de la largeur au document : 345 pixels de
+     defilement horizontal sur un ecran de 1439, 116 sur un telephone. On peut
+     alors faire glisser tout le site sur le cote, et c'est exactement ce qui
+     donne l'impression d'un site pas fait pour le mobile.
+
+     `clip` et non `hidden` : `hidden` fabrique un conteneur de defilement, et
+     un conteneur de defilement casse les animations liees au defilement. Le
+     piege a deja ete paye sur ce site pour les taches d'orange. */
+  overflow-x: clip;
 }
 .avis-bandeau::before {
   content: ''; position: absolute; z-index: -1;
