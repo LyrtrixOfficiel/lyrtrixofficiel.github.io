@@ -15,7 +15,7 @@
      requete hors de son domaine, et c'est ce que la politique de
      confidentialite affirme noir sur blanc. -->
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=32a3bb02">
+<link rel="stylesheet" href="./styles.css?v=612e7073">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
@@ -287,6 +287,21 @@
    video juste avant qu'elle arrive, pour qu'elle ne demarre pas sous les yeux
    du visiteur. */
 (() => {
+  /* SUR TELEPHONE, LES FONDS FILMES SONT RETIRES DU DOCUMENT.
+
+     Pas caches : RETIRES. Un element cache par le style peut continuer a
+     decoder ses images selon le navigateur, et c'est justement le decodage
+     qu'on veut supprimer. Il reste leur affiche, la meme image, posee dans le
+     meme cadre : derriere un panneau de verre, un fond immobile ne se
+     distingue pas d'un fond qui ondule, et il coute zero.
+
+     La video de son cabinet, elle, N'EST PAS un fond : c'est ce qu'elle a
+     filme et ce qu'on vient voir. Elle reste, et l'observateur ne la joue que
+     lorsqu'elle est a l'ecran. */
+  if (matchMedia('(max-width: 900px)').matches) {
+    for (const d of document.querySelectorAll('video.film-decor')) { d.pause(); d.remove(); }
+  }
+
   const films = document.querySelectorAll('video[autoplay]');
   if (!films.length || !('IntersectionObserver' in window)) return;
   const oeil = new IntersectionObserver((entrees) => {
