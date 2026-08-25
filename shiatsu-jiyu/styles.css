@@ -722,7 +722,8 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    La phrase en gros a déjà tout l'air qu'il lui faut autour d'elle. Ce qui la
    suit n'a donc pas besoin de rouvrir la même distance : on la ramène à un
    tiers. Le mot `.pan` reste intact pour tous les autres enchaînements, c'est
-   la SUITE d'une phrase-éclat qu'on resserre, pas les sections en général. */
+   la SUITE d'une phrase-éclat qu'on resserre, pas les sections en général.
+
    ET IL FAUT LE FAIRE DES DEUX COTES, sinon on ne repare qu'a moitie. Apres
    la premiere correction, la phrase avait 280 pixels au-dessus d'elle et 88 en
    dessous : elle ne flottait plus, elle etait collee a ce qui suit. Une phrase
@@ -2672,3 +2673,87 @@ a.avis-source img {
 }
 a.avis-source b { font-weight: 600; }
 a.avis-source svg { opacity: .6; }
+
+/* =========================================================================
+   L'ALLEGEMENT DU TELEPHONE, ECRIT EN DERNIER ET C'EST VOULU
+   =========================================================================
+
+   Audit du 25 aout 2026, apres que Matheo ait signale « des qu'on descend, ca
+   galere, c'est horrible ». Trente-quatre passes de lecture, chaque trouvaille
+   soumise a un contradicteur.
+
+   POURQUOI TOUT EST DANS UN SEUL BLOC, A LA TOUTE FIN DU FICHIER.
+
+   Trois fois sur ce projet, une correction a ete posee AVANT la regle qu'elle
+   corrigeait, a specificite egale, et annulee en silence. On ne se fie plus a
+   la specificite : a la fin du fichier, le dernier ecrit gagne toujours. Les
+   selecteurs sont ecrits a la specificite exacte de leur cible, jamais plus
+   faible : « .verre.sur-film » et non « .sur-film », qui serait battu.
+
+   CE QUI A ETE MESURE, ET CE QUI NE POUVAIT PAS L'ETRE.
+
+   Aucune mesure de fluidite n'existe ici, et aucune n'etait possible : sous
+   temps virtuel, cette machine rend 0,2 a 3 images par seconde et l'observateur
+   de taches longues ne voit presque rien. Tout ce qui suit vient de la
+   STRUCTURE et de comptages exacts. LE SEUL JUGE EST LE TELEPHONE.
+   ========================================================================= */
+@media (max-width: 900px) {
+
+  /* 1. LE GRAIN. C'est la trouvaille que j'avais ratee tout seul, et c'est la
+        plus grosse. `body::after` est un plan FIXE de tout l'ecran, en
+        `mix-blend-mode: multiply`, pose au-dessus de TOUT, sur les huit pages.
+        Une fusion plein ecran oblige le navigateur a ecrire puis relire une
+        texture de la taille de l'ecran a chaque image de defilement, et un
+        telephone peint par tuiles : c'est exactement le genre de cout qui ne
+        se voit dans aucun profil d'animation parce qu'il est dans la
+        composition.
+
+        A 390 pixels et trois pixels physiques par pixel CSS, un motif de 140
+        pixels a 26 pour cent d'opacite ne se voit deja pas. Le grain avait ete
+        ajoute pour les grands aplats d'ordinateur, ou il reste. */
+  body::after { display: none; }
+
+  /* 2. LE PLUS GROS FLOU DU SITE, et il echappait a l'allegement mobile depuis
+        le debut. `.verre.sur-film` vaut 0,2,0 en specificite : la regle
+        d'allegement `.avis, .carte` ne l'atteint pas, et `.verre` non plus.
+        Il gardait donc `blur(30px)` sur 155 347 pixels carres a l'accueil,
+        soit 76 pour cent de toute la surface floutee de la page, empile au-
+        dessus d'une image qui porte deja son propre filtre.
+
+        Le flou de 30 pixels avait ete choisi pour poser du verre SUR UNE
+        VIDEO. Sous 900 pixels il n'y a plus de video, elles sont retirees du
+        document : il ne reste qu'une image fixe. Le flou n'a plus d'objet. */
+  .verre.sur-film {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(150deg, rgba(255,252,246,.93), rgba(255,244,230,.90));
+  }
+
+  /* 3. LES TACHES QUI RESPIRENT. Quatre a six couches en `filter: blur(70px)`
+        mises a l'echelle sans fin. Une mise a l'echelle est gratuite sur un
+        element ordinaire ; sur un element FILTRE elle ne l'est pas, parce que
+        le flou est rasterise dans une surface et qu'une surface dont l'echelle
+        change doit etre refaite.
+
+        On garde le decor, on arrete le mouvement : a l'arret elles sont
+        exactement dans leur pose de depart, et un halo floute a 70 pixels qui
+        cesse de bouger de cinq pour cent en dix-sept secondes ne se remarque
+        pas. */
+  .pan.tache::before,
+  .pan.tache::after { animation: none; }
+
+  /* 4. LES PROMOTIONS INUTILES. `will-change` fabrique une couche de
+        composition en permanence, et ces couches-la servent des effets de
+        survol que le script N'INSTALLE JAMAIS sur telephone : les trois blocs
+        concernes vivent derriere `matchMedia('(hover: hover)')`, faux sur un
+        ecran tactile. On payait la memoire video sans rien obtenir.
+
+        Pour `.carte` il faut annuler LES DEUX : ce n'est pas seulement le
+        `will-change` qui la promeut, c'est aussi sa perspective. */
+  .bouton { will-change: auto; }
+  .carte { will-change: auto; transform: none; }
+
+  /* 5. L'ONDE DU PLAN, sur la page de contact. Une animation SVG sans fin, non
+        compositable, et la seule source d'images permanente de cette page. */
+  .plan-onde, .p-onde { animation: none; opacity: 0; }
+}
