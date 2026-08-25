@@ -9,7 +9,7 @@
 <meta name="description" content="Julie Marguier, praticienne shiatsu à Knœringue, dans le Sundgau, à vingt minutes de Saint-Louis, Bâle, Sierentz et Altkirch. Séances de 30 à 90 minutes, sur rendez-vous.">
 <link rel="icon" href="./images/emblem.webp?v=f61fd2e6">
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=7fd7eddb">
+<link rel="stylesheet" href="./styles.css?v=19d624fa">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
@@ -133,7 +133,8 @@
     <div>
       <figure class="ecran-film rev paysage">
         <video autoplay muted loop playsinline preload="metadata"
-               poster="./images/cabinet-paysage.webp?v=e61bf42b" aria-hidden="true">
+               poster="./images/cabinet-paysage.webp?v=e61bf42b" aria-hidden="true"
+               data-petit="./images/cabinet-paysage-petit.mp4?v=e3914c5f">
           <source src="./images/cabinet-paysage.mp4?v=deb81963" type="video/mp4">
         </video>
         <figcaption>Le cabinet</figcaption>
@@ -375,6 +376,14 @@
 (() => {
   if (matchMedia('(max-width: 900px)').matches) {
     for (const d of document.querySelectorAll('video.film-decor')) { d.pause(); d.remove(); }
+
+    for (const f of document.querySelectorAll('video[data-petit]')) {
+      const petit = f.dataset.petit;
+      if (!petit) continue;
+      const source = f.querySelector('source');
+      if (source) source.src = petit; else f.src = petit;
+      f.load();
+    }
   }
 
   const films = document.querySelectorAll('video[autoplay]');
