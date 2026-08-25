@@ -1101,11 +1101,25 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 /* =========================================================================
    LE PIED
    ========================================================================= */
+/* « Mieux séparer le bas de page pour comprendre que c'est la fin : ligne
+   épaisse, léger fond de couleur… », 25 aout.
+
+   Elle a raison, et le defaut etait mesurable : le pied avait un filet d'UN
+   pixel a 16 pour cent d'opacite, et son fond partait de `--creme-fond`,
+   c'est-a-dire EXACTEMENT la couleur de la section juste au-dessus. La
+   separation existait dans le code et pas a l'oeil.
+
+   Trois choses, et il faut les trois. Le filet passe a 3 pixels en orange
+   franc, le fond demarre plus soutenu que la page au lieu de la prolonger, et
+   une lueur interieure blanche marque l'arete. UN SEUL DE CES TROIS CHANGEMENTS
+   NE SUFFIT PAS : un trait epais sur un fond identique se lit comme une
+   decoration, un fond different sans trait se lit comme une autre section. */
 .pied {
   position: relative;
   padding: clamp(52px, 6vw, 78px) 0 34px;
-  background: linear-gradient(180deg, var(--creme-fond), #f8e7d3);
-  border-top: 1px solid rgba(226,113,29,.16);
+  background: linear-gradient(180deg, #fbeada, #f6e0c8);
+  border-top: 3px solid rgba(226,113,29,.5);
+  box-shadow: 0 1px 0 rgba(255,255,255,.75) inset;
 }
 .pied .serre + .serre { margin-top: 34px; }
 
@@ -1227,6 +1241,21 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   transition: filter .4s var(--doux), scale .4s var(--sortie);
 }
 .pied-ffst:hover img { filter: none; scale: 1.04; }
+
+/* LE LOGO DE LA FEDERATION, DANS « MA FORMATION ».
+   Il ferme la liste au lieu de l'ouvrir : la liste dit les faits, le logo les
+   signe. Un filet le separe des trois lignes pour qu'il ne se lise pas comme
+   un quatrieme point. Il reste en couleur, contrairement a celui du pied :
+   ici, c'est une piece justificative, pas un ornement de bas de page. */
+.formation-ffst {
+  display: block; width: fit-content; margin: 16px auto 0;
+  padding-top: 14px; border-top: 1px solid rgba(226,113,29,.18);
+}
+.formation-ffst img {
+  height: 62px; width: auto; display: block;
+  transition: scale .4s var(--sortie);
+}
+.formation-ffst:hover img { scale: 1.05; }
 
 .pied-signature { margin-top: 10px; font-size: .78rem; color: var(--encre-pale); }
 .pied-signature a { color: inherit; border-bottom: 1px solid rgba(169,141,120,.35); }
@@ -1467,13 +1496,33 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
    la ce sont deux images du site qui tiennent la place. */
 .galerie {
   display: flex; justify-content: center; align-items: center;
-  gap: clamp(9px, 1.7vw, 20px);
+  gap: clamp(14px, 1.7vw, 20px);   /* 14 au minimum : voir .galet */
   margin-top: clamp(20px, 2.8vw, 32px);
   animation: paraitre 1.1s var(--sortie) .62s both;
 }
+/* « Les 3 bulles pour les photos, possible un peu plus grandes ? Sans abuser,
+   un peu, que l'encadrement reste visible en entier version mobile », 25 aout.
+
+   Sa condition EST la contrainte de calcul, et elle l'a formulee mieux qu'un
+   cahier des charges. Le cerclage n'est pas dans la bulle : `outline-offset`
+   le pose 5 pixels DEHORS, plus 1,5 de trait. Chaque bulle demande donc 13
+   pixels de plus que sa largeur, et les deux bulles des bords en perdent la
+   moitie hors de l'ecran si on serre trop.
+
+   MESURE A 390 : la carte offre 339 pixels utiles. Il faut y loger deux fois
+   la bulle laterale, la centrale, deux ecarts, et 6 pixels de cerclage a
+   chaque extremite.
+
+   Mon premier essai a 26 et 29 vw debordait de 7 pixels : elle aurait vu
+   exactement ce qu'elle demandait d'eviter. On tient a 24 et 27, avec 7
+   pixels de marge dans la carte.
+
+   ET L'ECART PASSE DE 9 A 14 PIXELS, ce qui corrige un defaut plus ancien :
+   a 9 pixels, deux cerclages voisins se chevauchaient de 3, et cela depuis
+   toujours. Il en reste 2 d'air entre eux. */
 .galet {
   position: relative; flex: none;
-  width: clamp(84px, 23vw, 180px); aspect-ratio: 1;
+  width: clamp(84px, 24vw, 180px); aspect-ratio: 1;
   overflow: hidden;
   background: rgba(255,255,255,.55);
   outline: 1.5px solid rgba(226,113,29,.5);
@@ -1487,7 +1536,7 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
 .galet .dessin { object-fit: contain; padding: 13%; mix-blend-mode: multiply; }
 
 .g1 { border-radius: 58% 42% 46% 54% / 48% 56% 44% 52%; translate: 0 7%; }
-.g2 { border-radius: 47% 53% 55% 45% / 52% 46% 54% 48%; width: clamp(96px, 26vw, 208px); }
+.g2 { border-radius: 47% 53% 55% 45% / 52% 46% 54% 48%; width: clamp(96px, 27vw, 208px); }
 .g3 { border-radius: 52% 48% 57% 43% / 44% 53% 47% 56%; translate: 0 -7%; }
 .galet:hover { outline-color: var(--orange); }
 .g1:hover { translate: 0 4%; }
@@ -1835,10 +1884,30 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   text-align: center; display: grid; gap: 14px;
   position: relative; padding-top: 26px;
 }
+/* « Police à changer, écriture trop ronde, difficile à lire je trouve »,
+   25 aout, et elle a mis le doigt sur trois choses a la fois.
+
+   Ce paragraphe cumulait TOUT ce qui fatigue : une serif d'affiche, en
+   ITALIQUE, a 1,06 rem, en encre douce, centree sur sept lignes. Chacun de ces
+   choix se defend seul ; ensemble ils font un texte qu'on dechiffre au lieu de
+   le lire. Et c'est le passage le plus personnel du site, celui qu'on veut
+   qu'on lise en entier.
+
+   UNE POLICE D'AFFICHE N'EST PAS UNE POLICE DE LECTURE. Instrument Serif est
+   faite pour des titres de trois mots. On repasse sur Inter, deja chargee,
+   deja lue partout ailleurs sur le site sans qu'elle s'en plaigne : pas de
+   troisieme fonte a telecharger, et une famille de moins a accorder.
+
+   Le redressement, la taille et le contraste vont ensemble : redresser sans
+   agrandir donnerait un bloc plat. La signature « Julie », elle, GARDE la
+   serif : c'est un nom, pas un texte, et c'est ce qui donne son caractere au
+   bloc une fois le corps devenu sobre. */
 .histoire p {
-  font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
-  font-size: clamp(1.06rem, 1.7vw, 1.32rem); line-height: 1.62;
-  color: var(--encre-doux);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(1.04rem, 1.55vw, 1.18rem);
+  line-height: 1.72;
+  letter-spacing: .002em;
+  color: var(--encre);
 }
 /* Un filet orange court au-dessus, seule marque de cadre qui reste : il donne
    un debut au texte sans l'enfermer. */
