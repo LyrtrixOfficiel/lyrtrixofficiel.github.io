@@ -241,8 +241,21 @@ body::after {
   }
   /* Le panneau d'accueil n'est plus une carte de verre depuis le 25 aout : il
      n'a plus rien a flouter. C'etait le plus gros filtre de fond de la page,
-     30 pixels de flou sur toute la largeur, au-dessus d'une video. */
-  .nav, .formulaire-carte {
+     30 pixels de flou sur toute la largeur, au-dessus d'une video.
+
+     ET LE FLOU ETAIT POSE SUR LA MAUVAISE BOITE : « .nav » n'est pas la
+     pastille du menu, c'est le CONTENEUR QUI PREND TOUTE LA LARGEUR de
+     l'ecran, et qui ne se voit pas parce qu'il n'a ni fond ni bordure.
+     Il portait donc un flou de quinze pixels sur toute la largeur, y compris
+     a gauche et a droite de la pastille ou il n'y a rien. Matheo l'a vu tout
+     de suite sur son telephone : « une bande qui depasse ce menu, derriere et
+     sur les cotes la ou il n'y a meme pas le menu ».
+
+     UN FILTRE DE FOND N'A PAS BESOIN D'ETRE VISIBLE POUR FLOUTER : il
+     s'applique a la boite de l'element, pas a ce qu'on y a dessine. Un
+     conteneur transparent et invisible floute tout ce qui passe dessous.
+     Le flou va desormais sur la pastille elle-meme. */
+  .nav-boite, .formulaire-carte {
     backdrop-filter: blur(15px) saturate(180%);
     -webkit-backdrop-filter: blur(15px) saturate(180%);
   }
