@@ -2757,3 +2757,50 @@ a.avis-source svg { opacity: .6; }
         compositable, et la seule source d'images permanente de cette page. */
   .plan-onde, .p-onde { animation: none; opacity: 0; }
 }
+
+/* =========================================================================
+   SUITE DE L'ALLEGEMENT, APRES ESSAI SUR LE TELEPHONE DE MATHEO
+   =========================================================================
+
+   26 aout. Quatre versions de l'accueil, une variable changee par version, et
+   son verdict au doigt :
+
+     A  temoin                              ca saccade
+     B  sans la video                       75 % mieux, mais plus de video
+     C  video gardee, cadre sans masque     ca passe, ca bogue quelques secondes
+     D  carrousel sans accrochage           ca passe, ca bogue quelques secondes
+        et dans les deux cas : « au deuxieme passage ca va mieux »
+
+   CETTE DERNIERE PHRASE EST LA PLUS UTILE DES QUATRE. Un cout qui disparait au
+   second passage n'est pas un cout par image, c'est un cout de CHARGEMENT et de
+   DECODAGE : la deuxieme fois, tout est dans le cache. C'est traite ailleurs,
+   dans construire.mjs : plus aucune video n'a d'adresse dans le HTML.
+
+   Restent ici les deux gains que C et D ont montres.
+   ========================================================================= */
+@media (max-width: 900px) {
+
+  /* C. LE CADRE DE LA VIDEO NE LA DECOUPE PLUS.
+        Le cadre avait `overflow: hidden` et un arrondi de 30 pixels. UNE VIDEO
+        DECOUPEE PAR UN MASQUE ARRONDI QUITTE LE CHEMIN MATERIEL du telephone :
+        au lieu d'etre posee telle quelle par le processeur graphique, elle doit
+        etre recomposee a travers un masque a chaque image. L'ombre de 80 pixels
+        de flou sur la meme boite n'aidait pas.
+
+        On garde un arrondi, mais porte par la VIDEO elle-meme au lieu d'etre
+        un decoupage du parent : le rendu est le meme a l'oeil, sans le masque.
+        Si ca saccade encore, c'est cette ligne qu'il faut passer a zero. */
+  .ecran-film {
+    overflow: visible;
+    box-shadow: 0 18px 34px -24px rgba(120,60,15,.42);
+  }
+  .ecran-film video { border-radius: var(--rond); }
+
+  /* D. LE CARROUSEL D'AVIS N'ACCROCHE PLUS.
+        `scroll-snap-type: x mandatory` sur un defilement horizontal IMBRIQUE
+        dans le defilement vertical de la page : a chaque geste, le navigateur
+        doit d'abord decider a qui il appartient, puis recalculer ses points
+        d'ancrage. On garde le glissement libre, qui ne coute rien. */
+  .avis-piste { scroll-snap-type: none; overscroll-behavior-x: auto; }
+  .avis { scroll-snap-align: none; }
+}

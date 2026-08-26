@@ -9,7 +9,7 @@
 <meta name="description" content="Prendre rendez-vous avec Julie Marguier, praticienne shiatsu à Knœringue (68220). Téléphone 06 17 11 14 05, du jeudi au lundi.">
 <link rel="icon" href="./images/emblem.webp?v=f61fd2e6">
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=2def4779">
+<link rel="stylesheet" href="./styles.css?v=0b6c48e3">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64}}</script>
 </head>
 <body>
@@ -72,9 +72,8 @@
   <div class="film" aria-hidden="true">
     <img class="tenant" src="./images/bougies.webp?v=83ce2a0b" alt="" loading="eager">
     <video class="film-decor" autoplay muted loop playsinline preload="metadata"
-           poster="./images/bougies.webp?v=83ce2a0b">
-      <source src="./images/bougies.mp4?v=257b525e" type="video/mp4">
-    </video>
+           poster="./images/bougies.webp?v=83ce2a0b"
+           data-film="./images/bougies.mp4?v=257b525e"></video>
   </div>
   <div class="voile court" aria-hidden="true"></div>
   <div class="serre">
@@ -414,24 +413,35 @@
 </footer>
 <script>
 (() => {
-  if (matchMedia('(max-width: 900px)').matches) {
-    for (const d of document.querySelectorAll('video.film-decor')) { d.pause(); d.remove(); }
+  const etroit = matchMedia('(max-width: 900px)').matches;
 
-    for (const f of document.querySelectorAll('video[data-petit]')) {
-      const petit = f.dataset.petit;
-      if (!petit) continue;
-      const source = f.querySelector('source');
-      if (source) source.src = petit; else f.src = petit;
-      f.load();
-    }
+  if (etroit) {
+    for (const d of document.querySelectorAll('video.film-decor')) { d.pause(); d.remove(); }
   }
 
   const films = document.querySelectorAll('video[autoplay]');
   if (!films.length || !('IntersectionObserver' in window)) return;
+
+  const prete = new WeakSet();
+  const preparer = (f) => {
+    if (prete.has(f)) return;
+    prete.add(f);
+    const url = etroit ? (f.dataset.petit || f.dataset.film)
+      : (f.dataset.grand || f.dataset.film || f.dataset.petit);
+    if (!url) return;
+    const s = f.querySelector('source') || f.appendChild(document.createElement('source'));
+    s.type = 'video/mp4';
+    s.src = url;
+    f.load();
+  };
+
   const oeil = new IntersectionObserver((entrees) => {
     for (const e of entrees) {
-      if (e.isIntersecting) { const p = e.target.play(); if (p) p.catch(() => {}); }
-      else e.target.pause();
+      if (e.isIntersecting) {
+        preparer(e.target);
+        const p = e.target.play();
+        if (p) p.catch(() => {});
+      } else e.target.pause();
     }
   }, { rootMargin: '200px 0px' });
   for (const f of films) { f.pause(); oeil.observe(f); }
