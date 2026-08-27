@@ -440,12 +440,36 @@ body.menu-ouvert .burger span:nth-child(2) { opacity: 0; }
 body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 .menu { position: fixed; inset: 0; z-index: 90; }
+/* LE FOND DU MENU N'EST PLUS DU VERRE, ET C'ETAIT LE DEFAUT LE PLUS ANCIEN.
+ *
+ * Julie, le 27 aout : « quand on clique sur les 3 tirets pour voir les
+ * sections, ca met du temps, ca bug, ca depuis le debut et c'est encore le
+ * cas ». Elle a raison sur les deux points, y compris sur « depuis le debut ».
+ *
+ * CE QUE LE NAVIGATEUR DEVAIT FAIRE EN UN SEUL CLIC. Le menu est `hidden`
+ * quand il est ferme, donc il n'existe pas. A l'ouverture il fallait, d'un
+ * coup : fabriquer un plan de TOUT L'ECRAN, 329 000 pixels carres a 390 de
+ * large, y appliquer un flou de 26 pixels en echantillonnant la page entiere
+ * derriere, puis animer son opacite pendant 400 ms, ce qui REFAIT ce flou a
+ * chaque image de la transition. Sur un telephone, ca se sent.
+ *
+ * ET CE FLOU NE SE VOYAIT PAS. Le degrade etait deja opaque a 86 et 90 pour
+ * cent : derriere un panneau presque plein, il n'y a rien a flouter. On paie
+ * un effet que personne ne peut percevoir.
+ *
+ * Le fond monte donc a 97 pour cent et le flou part. L'opacite seule se joue
+ * sur le compositeur, sans repeindre. La duree passe de 400 a 260 ms : une
+ * partie du « ca met du temps » etait le temps lui-meme, choisi quand
+ * l'animation coutait cher et qu'il fallait masquer sa lenteur.
+ *
+ * CORRIGE ICI ET PAS EN FIN DE FEUILLE : ce n'est pas une surcharge, c'est la
+ * regle d'origine qui change. Une correction posee ailleurs laisserait la
+ * mauvaise valeur lisible juste au-dessus, et quelqu'un la relirait un jour en
+ * croyant que c'est celle qui s'applique. */
 .menu-fond {
   position: absolute; inset: 0;
-  background: linear-gradient(160deg, rgba(255,248,239,.86), rgba(253,236,216,.9));
-  backdrop-filter: blur(26px) saturate(180%);
-  -webkit-backdrop-filter: blur(26px) saturate(180%);
-  opacity: 0; transition: opacity .4s var(--doux);
+  background: linear-gradient(160deg, rgba(255,249,241,.97), rgba(253,237,218,.98));
+  opacity: 0; transition: opacity .26s var(--doux);
 }
 .menu-liens {
   position: relative; height: 100%;
