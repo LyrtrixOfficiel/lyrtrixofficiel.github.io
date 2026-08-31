@@ -1,81 +1,84 @@
 <!doctype html>
-<html lang="fr" data-page="accueil" style="background:#000">
+<html lang="fr" data-page="accueil" style="background:var(--color-noir,#000)">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
-    <link rel="icon" type="image/svg+xml" href="/onde.svg" />
-    <link rel="canonical" href="https://matthieu-chretien.netlify.app/" />
-    <!-- DEMO DE PROSPECTION : a retirer le jour ou il dit oui -->
+    <link rel="icon" type="image/svg+xml" href="./onde.svg" />
+    <link rel="canonical" href="https://lyrtrixofficiel.github.io/david-geldreich/" />
+    <!-- DEMO DE PROSPECTION : a retirer le jour ou le client dit oui -->
     <meta name="robots" content="noindex, nofollow" />
 
-    <title>Réflexologue au Faou — réflexologie plantaire et Fleurs de Bach | Matthieu Chrétien</title>
-    <meta name="description" content="Matthieu Chrétien, réflexologue et conseiller agréé en Fleurs de Bach au Faou (29), entre Quimper et Brest. Séance de 45 min sur rendez-vous, du lundi au mercredi. 5/5 sur 23 avis." />
+    <title>Praticien en reiki à Regny | David Geldreich</title>
+    <meta name="description" content="David Geldreich, praticien en reiki à Regny." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
-    <meta property="og:site_name" content="Matthieu Chrétien — Réflexologie et Fleurs de Bach" />
-    <meta property="og:title" content="Matthieu Chrétien — Réflexologue au Faou" />
-    <meta property="og:description" content="Matthieu Chrétien, réflexologue et conseiller agréé en Fleurs de Bach au Faou (29), entre Quimper et Brest. Séance de 45 min sur rendez-vous, du lundi au mercredi. 5/5 sur 23 avis." />
-    <meta property="og:url" content="https://matthieu-chretien.netlify.app/" />
+    <meta property="og:site_name" content="David Geldreich" />
+    <meta property="og:title" content="Praticien en reiki à Regny | David Geldreich" />
+    <meta property="og:description" content="David Geldreich, praticien en reiki à Regny." />
+    <meta property="og:url" content="https://lyrtrixofficiel.github.io/david-geldreich/" />
 
     <!-- le poster du hero est le LCP : il part avant tout le reste -->
     <link rel="preload" as="image" href="/video/hero-eau.webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- polices -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
+    <style>
+      html:root {
+        --font-display: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
+        --font-body: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      /* Le titre d'accueil est decoupe en un span par mot pour son animation,
+         et la regle `*` du gabarit reprend chaque span en fonte de texte. Le
+         plus gros texte du site n'etait donc pas dans la fonte de titre. Cette
+         ligne le repare sans reconstruire : `h1 *` pese plus que `*`. */
+      h1 *, h2 *, h3 *, .font-display * { font-family: inherit; }
+    </style>
+    <!-- /polices -->
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "HealthAndBeautyBusiness",
-        "name": "Matthieu Chrétien — Réflexologie et Fleurs de Bach",
-        "description": "Réflexologie plantaire, entretiens conseil en Fleurs de Bach et réflexologie avancée au Faou, entre Quimper et Brest.",
-        "url": "https://matthieu-chretien.netlify.app/",
-        "telephone": "+33699246085",
-        "email": "mchretien.reflexo@gmail.com",
-        "founder": { "@type": "Person", "name": "Matthieu Chrétien" },
+        "name": "David Geldreich",
+        "description": "Séance de reiki à Regny.",
+        "url": "https://lyrtrixofficiel.github.io/david-geldreich/",
+        "telephone": "+33647050539",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "8 place de l’église",
-          "postalCode": "29590",
-          "addressLocality": "Le Faou",
-          "addressRegion": "Bretagne",
+          "streetAddress": "",
+          "postalCode": "42630",
+          "addressLocality": "Regny",
           "addressCountry": "FR"
         },
-        "openingHoursSpecification": [{
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday"],
-          "opens": "09:30", "closes": "19:00"
-        }],
-        "priceRange": "35€ - 90€",
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5", "reviewCount": "23" },
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
           "name": "Prestations",
           "itemListElement": [
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Réflexologie plantaire" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Entretien conseil en Fleurs de Bach" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Réflexologie avancée" } }
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Séance de reiki" } }
           ]
         }
       }
     </script>
+    <script type="module" crossorigin src="./assets/main-C5gUagjg.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-BdeANixJ.css">
   </head>
-  <body style="background:#000">
+  <body style="background:var(--color-noir,#000)">
     <div id="racine"></div>
     <noscript>
       <div style="padding:2rem;color:#fff;font-family:sans-serif">
-        <h1>Matthieu Chrétien — Réflexologue au Faou</h1>
+        <h1>David Geldreich — Regny</h1>
         <p>
-          Réflexologie plantaire, Fleurs de Bach, réflexologie avancée.<br />
-          8 place de l’église, 29590 Le Faou — <a href="tel:+33699246085" style="color:#e0a25c">06 99 24 60 85</a>
+          Séance de reiki.<br />
+          42630 Regny —
+          <a href="tel:+33647050539" style="color:#e0a25c">06 47 05 05 39</a>
         </p>
       </div>
     </noscript>
-    <script type="module" src="/src/main.tsx"></script>
 
     <!--
       Netlify envoie ses liens d'invitation vers la RACINE du site, avec le
