@@ -469,7 +469,7 @@ body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(
 .menu-fond {
   position: absolute; inset: 0;
   background: linear-gradient(160deg, rgba(255,249,241,.97), rgba(253,237,218,.98));
-  opacity: 0; transition: opacity .26s var(--doux);
+  opacity: 0; transition: opacity .18s var(--doux);
 }
 .menu-liens {
   position: relative; height: 100%;
@@ -479,9 +479,19 @@ body.menu-ouvert .burger span:nth-child(3) { transform: translateY(-7px) rotate(
 .menu-liens a {
   font-size: clamp(1.9rem, 9vw, 2.6rem); font-weight: 500; letter-spacing: -.035em;
   padding: 10px 0;
-  opacity: 0; translate: 0 24px;
-  transition: opacity .45s var(--sortie), translate .45s var(--sortie);
-  transition-delay: calc(var(--i) * 55ms);
+  opacity: 0; translate: 0 14px;
+  /* LE MENU S'OUVRAIT EN 670 ms, ET C'ETAIT LE DEFAUT QU'ELLE DECRIT.
+
+     « Les 3 tirets, ça met du temps, on reclique et du coup ça referme les
+     sections », 3 septembre. Les liens entraient l'un apres l'autre : 55 ms
+     de decalage par lien, plus 450 ms d'animation, donc le dernier finissait
+     220 + 450 ms apres l'appui. Assez long pour croire que rien ne s'est
+     passe, appuyer une seconde fois, et refermer le menu soi-meme.
+
+     Le defile n'est pas supprime, il est ramene a ce qu'un doigt tolere :
+     le dernier lien est en place en 240 ms. */
+  transition: opacity .2s var(--sortie), translate .2s var(--sortie);
+  transition-delay: calc(var(--i) * 12ms);
 }
 .menu-liens a.ici { color: var(--orange); }
 /* Le numero est la seule chose qu'on vient chercher en urgence dans ce
@@ -2828,3 +2838,56 @@ a.avis-source svg { opacity: .6; }
   .avis-piste { scroll-snap-type: none; overscroll-behavior-x: auto; }
   .avis { scroll-snap-align: none; }
 }
+
+/* =========================================================================
+   RETOURS DE JULIE, 3 SEPTEMBRE 2026
+   ========================================================================= */
+
+/* LE PORTRAIT PASSE AU-DESSUS, LE NOM CENTRE DESSOUS.
+
+   « Agrandir la photo, version mobile trop petite. Centrer Julie Marguier et
+   Praticienne shiatsu sous la photo, retirer la flèche. »
+
+   La disposition en vis-a-vis existait deja sous 760 px : la photo, puis les
+   annotations dessous, centrees. On la generalise a toutes les largeurs au
+   lieu de la reserver au telephone, et la flechette disparait pour de bon
+   puisqu'elle n'a plus rien a relier. */
+.portrait-sous {
+  grid-template-columns: 1fr;
+  grid-template-areas: 'photo' 'a1';
+  justify-items: center;
+  text-align: center;
+  gap: clamp(14px, 2vw, 22px);
+}
+.portrait-sous .portrait-photo {
+  grid-area: photo;
+  /* 240 px au minimum : l'ancien reglage tombait a 196 px sur telephone, et
+     c'est ce qu'elle a trouve trop petit. */
+  width: clamp(240px, 30vw, 320px);
+}
+.portrait-sous .annot.annot-nom {
+  grid-area: a1;
+  justify-self: center; align-self: start; text-align: center;
+  max-width: 30ch; padding-bottom: 0;
+}
+.portrait-sous .flechette { display: none; }
+
+/* Le titre « Mon histoire » d'un cran, sans toucher aux autres sur-titres. */
+.sur-titre-grand { font-size: .92rem; letter-spacing: .2em; }
+.sur-titre-grand::before { width: 34px; }
+
+/* SON TEXTE EN ITALIQUE, ET C'EST SANS DANGER CETTE FOIS.
+
+   L'italique avait ete retire le 25 aout parce qu'elle le trouvait illisible,
+   mais c'etait l'italique d'INSTRUMENT SERIF, une serif d'affiche penchee sur
+   sept lignes. Le paragraphe est passe a Inter depuis. L'italique d'Inter est
+   une vraie italique de labeur : on peut le lui rendre sans ramener le
+   probleme. */
+.histoire p { font-style: italic; }
+
+/* La phrase « Un lieu où l'on prend le temps » vit maintenant dans la colonne
+   de droite, sous la video du cabinet. Deux fois plus etroite que la pleine
+   page, elle a besoin d'un corps plus mesure, sinon elle part sur quatre
+   lignes. */
+.eclat-cabinet { margin-top: 26px; }
+.eclat-cabinet .eclat { font-size: clamp(1.35rem, 2.5vw, 2.05rem); }
