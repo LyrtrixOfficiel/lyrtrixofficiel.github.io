@@ -287,15 +287,50 @@
   {
     const b = document.querySelector('.burger');
     const m = document.getElementById('menu');
+    let ouvertA = 0;
     const basculer = (ouvert) => {
       b.setAttribute('aria-expanded', String(ouvert));
       b.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
-      if (ouvert) m.hidden = false;
-      requestAnimationFrame(() => document.body.classList.toggle('menu-ouvert', ouvert));
-      if (!ouvert) setTimeout(() => { if (!document.body.classList.contains('menu-ouvert')) m.hidden = true; }, 220);
+      if (ouvert) {
+        m.hidden = false;
+        ouvertA = performance.now();
+        /* TOUT REPOSAIT SUR UNE SEULE IMAGE, ET C'EST LA QUE CA CASSAIT.
+
+           `requestAnimationFrame` ne se declenche pas quand l'onglet passe en
+           arriere-plan, quand le telephone economise sa batterie, ou quand le
+           navigateur est occupe ailleurs. Or c'est lui, et lui seul, qui
+           posait la classe `menu-ouvert`. Sans elle, le menu n'etait plus
+           `hidden` mais restait a opacite zero : une nappe INVISIBLE en
+           `position: fixed` sur tout l'ecran, par-dessus la page, qui avalait
+           tous les touchers. On appuie sur les trois traits, rien ne s'ouvre,
+           et plus rien ne repond en dessous.
+
+           Deux images pour laisser au navigateur le temps de voir l'etat de
+           depart, donc d'animer, et une minuterie de secours qui pose la
+           classe de toute facon si les images ne viennent pas. */
+        const poser = () => document.body.classList.add('menu-ouvert');
+        requestAnimationFrame(() => requestAnimationFrame(poser));
+        setTimeout(poser, 80);
+      } else {
+        document.body.classList.remove('menu-ouvert');
+        /* 260 et non 220 : les liens sortent en 200 ms plus 48 ms de decale,
+           donc le menu disparaissait avant la fin de sa propre animation. */
+        setTimeout(() => {
+          if (!document.body.classList.contains('menu-ouvert')) m.hidden = true;
+        }, 260);
+      }
     };
     b.addEventListener('click', () => basculer(b.getAttribute('aria-expanded') !== 'true'));
-    m.addEventListener('click', (e) => { if (e.target.tagName === 'A' || e.target.classList.contains('menu-fond')) basculer(false); });
+    m.addEventListener('click', (e) => {
+      /* LE CLIC FANTOME. Sur telephone, le toucher qui ouvre le menu fait
+         apparaitre la nappe SOUS le doigt, et le navigateur peut envoyer un
+         second clic dessus dans la foulee : le menu se refermait tout seul
+         dans l'instant. On ignore donc toute fermeture demandee dans les
+         400 ms qui suivent l'ouverture. Les liens ne sont pas penalises : un
+         lien navigue de lui-meme, sans passer par ici. */
+      if (performance.now() - ouvertA < 400) return;
+      if (e.target.tagName === 'A' || e.target.classList.contains('menu-fond')) basculer(false);
+    });
     addEventListener('keydown', (e) => { if (e.key === 'Escape') basculer(false); });
   }
 
