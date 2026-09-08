@@ -2891,3 +2891,52 @@ a.avis-source svg { opacity: .6; }
    lignes. */
 .eclat-cabinet { margin-top: 26px; }
 .eclat-cabinet .eclat { font-size: clamp(1.35rem, 2.5vw, 2.05rem); }
+
+/* --- LES CONDITIONS GENERALES DE VENTE ----------------------------------
+   Le texte de Julie, recu le 10 septembre. Douze articles, des listes et un
+   encart pour le mediateur : trois choses que les pages legales n'avaient
+   pas encore, parce qu'elles ne contenaient que des paragraphes. */
+.legal-date {
+  margin-top: 6px;
+  font-size: .92rem;
+  color: var(--encre-pale);
+}
+.legal-liste {
+  margin: 0 0 14px;
+  padding-left: 1.15em;
+  list-style: none;
+}
+.legal-liste li {
+  position: relative;
+  margin-bottom: 8px;
+  line-height: 1.72;
+  color: var(--encre-doux);
+}
+/* Une puce dessinee plutot qu'un disque : le meme orange que le reste du
+   site, et elle ne saute pas a la ligne quand l'element fait trois lignes. */
+.legal-liste li::before {
+  content: '';
+  position: absolute;
+  left: -1.15em; top: .72em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange);
+  opacity: .55;
+}
+.legal-liste li:last-child { margin-bottom: 0; }
+.legal-liste b { color: var(--encre); }
+
+/* Les coordonnees du mediateur se lisent comme une adresse a recopier, pas
+   comme une phrase : on les sort du fil du texte. */
+.legal-encart {
+  margin: 16px 0;
+  padding: 16px 18px;
+  border-radius: var(--rond-s, 14px);
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(226,113,29,.22);
+  line-height: 1.62;
+}
+
+/* Douze articles dans une seule section : sans respiration au-dessus des
+   titres, ils se collaient au paragraphe precedent. La regle d'origine ne
+   posait qu'une marge basse, parce qu'il n'y avait jamais eu qu'un titre. */
+.legal-bloc h2:not(:first-child) { margin-top: clamp(30px, 4vw, 46px); }
