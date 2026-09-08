@@ -2940,3 +2940,25 @@ a.avis-source svg { opacity: .6; }
    titres, ils se collaient au paragraphe precedent. La regle d'origine ne
    posait qu'une marge basse, parce qu'il n'y avait jamais eu qu'un titre. */
 .legal-bloc h2:not(:first-child) { margin-top: clamp(30px, 4vw, 46px); }
+
+/* UN TEXTE LEGAL NE S'ALLUME PAS AU DEFILEMENT.
+
+   Les apparitions sont pilotees par la POSITION de l'element dans la fenetre,
+   pas par une minuterie : `animation-range: entry 4% cover 27%` veut dire que
+   l'opacite monte de 0 a 1 pendant que l'element traverse l'ecran. Sur un
+   bloc court, c'est une apparition. Sur les CGV, dont le corps mesure
+   6 495 px, soit huit ecrans, la traversee dure huit ecrans de defilement :
+   le texte reste a moitie transparent, et souvent tout a fait invisible,
+   pendant des pages entieres. Mesure : opacite 0 en haut de page, encore 0
+   apres 2 500 px de descente.
+
+   Le corps legal est donc rendu opaque d'emblee. L'apparition reste sur le
+   titre et sur la date, qui sont courts et pour qui la mecanique fonctionne.
+   Une page qu'on consulte pour ses obligations doit se lire, pas se meriter. */
+.legal-bloc.rev,
+.legal-bloc.rev.vu {
+  opacity: 1;
+  translate: none;
+  animation: none;
+  transition: none;
+}
