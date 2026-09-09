@@ -1355,8 +1355,14 @@ body.menu-ouvert .menu-liens a { opacity: 1; translate: 0 0; }
   .coord-ligne { grid-template-columns: 1fr; gap: 5px; }
   .tarif { grid-template-columns: 1fr; gap: 14px; }
   .tarif-prix { justify-self: start; }
-  .etape { grid-template-columns: 1fr; gap: 6px; }
-  .etape::before { padding-top: 0; }
+  /* « Mettre les titres à côté de chaque point », 9 septembre.
+
+     La regle d'origine repliait l'etape sur UNE colonne sous 900 px : la
+     pastille orange passait alors sur sa propre ligne, au-dessus du titre, et
+     ne designait plus rien. On garde donc les deux colonnes sur telephone, en
+     resserrant la gouttiere. Le point reste a cote du titre, ce qui est tout
+     son interet. */
+  .etape { grid-template-columns: 16px 1fr; gap: 10px; }
   .pan { padding: clamp(60px, 12vw, 96px) 0; }
 
   /* LE FILM QUI S'OUVRE, SUR TELEPHONE.
