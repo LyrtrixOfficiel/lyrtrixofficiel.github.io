@@ -309,11 +309,45 @@
       return;
     }
 
+
+  /* SECOURS TANT QUE LE FORMULAIRE N'EST RELIE A RIEN.
+
+     Le site est servi par GitHub Pages, qui ne sert que des fichiers : un
+     envoi de formulaire y recoit un 405. La visiteuse remplissait donc ses
+     champs pour lire « l'envoi n'a pas abouti », et la demande etait perdue
+     sans que personne ne le sache.
+
+     Faute de mieux, on ne la laisse plus dans le vide : son message part dans
+     son propre logiciel de courrier, deja redige, adresse a Julie. Ce n'est
+     PAS la solution, c'est un filet. La vraie reponse est un hebergeur qui
+     accepte l'envoi, et elle reste a decider. */
+  const parCourriel = (f) => {
+    const corps = [
+      'Nom et prenom : ' + f.nom.value.trim(),
+      'Telephone : ' + (f.telephone.value.trim() || 'non renseigne'),
+      'Adresse mail : ' + f.email.value.trim(),
+      '',
+      f.message.value.trim(),
+    ].join(String.fromCharCode(10));
+    return 'mailto:shiatsu.jiyu@gmail.com'
+      + '?subject=' + encodeURIComponent('Demande depuis le site')
+      + '&body=' + encodeURIComponent(corps);
+  };
+  const proposerCourriel = (f, etat, phrase) => {
+    etat.className = 'formulaire-etat mauvais';
+    etat.textContent = '';
+    const p = document.createElement('span');
+    p.textContent = phrase + ' ';
+    const a = document.createElement('a');
+    a.href = parCourriel(f);
+    a.textContent = 'Envoyer par courriel';
+    etat.append(p, a);
+  };
+
     if (f.site.value) { etat.className = 'formulaire-etat bon'; etat.textContent = 'Message envoyé, merci.'; f.reset(); return; }
 
     if (!vers) {
-      etat.className = 'formulaire-etat mauvais';
-      etat.textContent = 'Le formulaire n’est pas encore relié. En attendant, appelez le 06 17 11 14 05.';
+      proposerCourriel(f, etat, 'Le formulaire n’est pas encore relié. Vous pouvez appeler le 06 17 11 14 05, ou :');
       return;
     }
 
@@ -344,8 +378,7 @@
       merci.focus();
       return;
     } catch {
-      etat.className = 'formulaire-etat mauvais';
-      etat.textContent = 'L’envoi n’a pas abouti. Vous pouvez m’appeler au 06 17 11 14 05.';
+      proposerCourriel(f, etat, 'L’envoi n’a pas abouti. Vous pouvez appeler le 06 17 11 14 05, ou :');
     } finally {
       bouton.disabled = false;
       bouton.textContent = motInitial;
