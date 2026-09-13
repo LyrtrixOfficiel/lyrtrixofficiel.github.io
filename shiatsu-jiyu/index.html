@@ -37,7 +37,7 @@
   var lignes = [];
   var panneau;
   var ecrire = function (t) {
-    lignes.push(t); if (lignes.length > 18) lignes.shift();
+    lignes.push(t); if (lignes.length > 24) lignes.shift();
     if (panneau) panneau.textContent = lignes.join(String.fromCharCode(10));
   };
   var decrire = function (el) {
@@ -60,6 +60,60 @@
       var dessus = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
       ecrire('sous le centre du bouton : ' + decrire(dessus));
     }
+    /* BANC D'ESSAI : un bouton lance une serie de mesures sur l'appareil
+       lui-meme. Chaque ligne retire un suspect et compte les images par
+       seconde. La ligne qui remonte a 60 designe le coupable. */
+    var bouton = document.createElement('button');
+    bouton.textContent = 'TESTER LA VITESSE';
+    bouton.setAttribute('style', 'position:fixed;left:50%;top:90px;translate:-50% 0;z-index:2147483647;padding:14px 22px;font:700 15px system-ui;background:#111;color:#7fff7f;border:0;border-radius:10px');
+    document.body.appendChild(bouton);
+    var styleEssai = document.createElement('style');
+    document.head.appendChild(styleEssai);
+    var T = '*,*::before,*::after{';
+    var essais = [
+      ['page seule, menu ferme', '', ''],
+      ['menu ouvert', '', 'ouvrir'],
+      ['menu ouvert, rien dessous', 'body>*:not(#menu):not(.nav):not(pre):not(button){display:none!important}', ''],
+      ['menu ferme', '', 'fermer'],
+      ['sans flous ni filtres', T + 'filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;mix-blend-mode:normal!important}', ''],
+      ['sans animations', T + 'animation:none!important;transition:none!important}', ''],
+      ['sans videos', 'video{display:none!important}', 'videos'],
+      ['sans scripts qui tournent', '', 'arret'],
+      ['sans ombres ni masques', T + 'box-shadow:none!important;mask:none!important;-webkit-mask:none!important;clip-path:none!important}', ''],
+      ['sans position fixe', '.nav,.jauge,.halo,.menu{display:none!important}', ''],
+      ['sans images', 'img,picture,video,svg{visibility:hidden!important}', ''],
+      ['sans degrades de fond', T + 'background-image:none!important}', ''],
+      ['page vide', 'body>*:not(pre):not(button){display:none!important}', '']
+    ];
+    var compter = function (fin) {
+      var n = 0, t0 = performance.now(), minuteries = 0, attenteMax = 0, dernier = t0;
+      var tic = function () { var t = performance.now(); attenteMax = Math.max(attenteMax, t - dernier); dernier = t; minuteries++; if (t - t0 < 1000) setTimeout(tic, 0); };
+      setTimeout(tic, 0);
+      var f = function () { n++; if (performance.now() - t0 < 1000) requestAnimationFrame(f); else fin(n, Math.round(attenteMax)); };
+      requestAnimationFrame(f);
+    };
+    bouton.addEventListener('click', function () {
+      bouton.disabled = true; lignes.length = 0;
+      ecrire('coeurs ' + (navigator.hardwareConcurrency || '?') + ' | pixels x' + devicePixelRatio + ' | ' + screen.width + 'x' + screen.height);
+      var i = 0, burger = document.querySelector('.burger');
+      var suivant = function () {
+        if (i >= essais.length) { styleEssai.textContent = ''; window.diagArret = false; bouton.disabled = false; ecrire('FIN, faites une capture'); return; }
+        var e = essais[i++];
+        styleEssai.textContent = e[1];
+        if (e[2] === 'ouvrir' && burger && burger.getAttribute('aria-expanded') !== 'true') burger.click();
+        if (e[2] === 'fermer' && burger && burger.getAttribute('aria-expanded') === 'true') burger.click();
+        if (e[2] === 'videos') { var v = document.querySelectorAll('video'); for (var k = 0; k < v.length; k++) v[k].pause(); }
+        window.diagArret = e[2] === 'arret';
+        setTimeout(function () {
+          compter(function (n, bloque) {
+            ecrire((n < 10 ? ' ' : '') + n + ' img/s  (blocage max ' + bloque + ' ms)  ' + e[0]);
+            if (e[2] === 'fermer') styleEssai.textContent = '';
+            setTimeout(suivant, 150);
+          });
+        }, 600);
+      };
+      suivant();
+    });
     ['touchstart', 'touchend', 'click'].forEach(function (type) {
       document.addEventListener(type, function (e) {
         var t = e.target, p = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0];

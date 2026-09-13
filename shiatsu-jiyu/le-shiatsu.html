@@ -473,6 +473,7 @@
 
     if (!calme) {
       const pas = () => {
+        if (window.diagArret) { requestAnimationFrame(pas); return; }
         if (!glisse && performance.now() - tenu > 900 && !document.documentElement.classList.contains('menu-ouvert')) {
           pos += .5;
           recadrer();
