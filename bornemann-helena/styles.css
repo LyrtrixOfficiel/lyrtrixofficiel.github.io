@@ -749,3 +749,5 @@ a.info-carte:hover { transform: translateX(6px); background: var(--sauge-pale); 
 }
 
 .fiche figure { transform: rotateX(var(--rx, 0)) rotateY(var(--ry, 0)); transition: transform .5s var(--doux-ease); }
+.bouton-nav, .marque-nom { white-space: nowrap; }
+@media (max-width: 1180px) and (min-width: 1021px) { .marque-texte { display: none; } }
