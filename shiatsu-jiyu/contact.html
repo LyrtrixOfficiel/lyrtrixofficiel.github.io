@@ -120,7 +120,23 @@
       }, 260);
     }
   };
-  b.addEventListener('click', function () { basculer(b.getAttribute('aria-expanded') !== 'true'); });
+  /* LE BOUTON NE DEPEND PLUS DU CLIC QU'IOS FABRIQUE.
+
+     Sur iPhone, un toucher ne devient un clic qu'apres une serie de controles
+     de Safari. Si l'un echoue, le clic n'arrive jamais et le bouton reste
+     muet, alors qu'Android le livre sans discuter. On ecoute donc la fin du
+     toucher elle-meme, et on annule le clic qui la suivrait pour ne pas
+     basculer deux fois. La souris et le clavier gardent le clic. */
+  var parToucher = 0;
+  b.addEventListener('touchend', function (e) {
+    e.preventDefault();
+    parToucher = maintenant();
+    basculer(b.getAttribute('aria-expanded') !== 'true');
+  }, false);
+  b.addEventListener('click', function () {
+    if (maintenant() - parToucher < 700) return;
+    basculer(b.getAttribute('aria-expanded') !== 'true');
+  });
   m.addEventListener('click', function (e) {
     if (maintenant() - ouvertA < 400) return;
     var t = e.target;

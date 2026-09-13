@@ -25,6 +25,56 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64},"@id":"https://shiatsu-jiyu.fr/#etablissement","url":"https://shiatsu-jiyu.fr","image":"https://shiatsu-jiyu.fr/images/partage.jpg","logo":"https://shiatsu-jiyu.fr/images/emblem.webp","currenciesAccepted":"EUR","paymentAccepted":"Espèces, chèque, virement","knowsLanguage":"fr","hasOfferCatalog":{"@type":"OfferCatalog","name":"Séances de shiatsu","itemListElement":[{"@type":"Offer","priceCurrency":"EUR","price":"100","itemOffered":{"@type":"Service","name":"Harmonie","description":"Plus longue et plus enveloppante, la séance Harmonie marie la profondeur de la séance Traditionnelle à la délicatesse du shiatsu Visage & Tête. Un voyage sensoriel complet pour un relâchement total et une harmonie durable. L'association parfaite : Traditionnelle + Visage & Tête.","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"60","itemOffered":{"@type":"Service","name":"Traditionnelle Adulte","description":"Accompagnement personnalisé selon vos besoins : fatigue persistante, sommeil perturbé, tensions émotionnelles, stress, anxiété, tensions physiques, raideurs, jambes lourdes, inconfort digestif, tensions liées aux cycles…","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"40","itemOffered":{"@type":"Service","name":"Traditionnelle Enfant","description":"De quelques mois à 12 ans. Une approche douce et ludique adaptée en fonction de l'âge, avec la présence d'un parent. Ce moment favorise calme, meilleure gestion des émotions, amélioration du sommeil et conscience du corps.","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"60","itemOffered":{"@type":"Service","name":"Visage &amp; Tête","description":"Shiatsu des épaules au sommet du crâne. Visage à l'huile de carotte ou jojoba. Idéal pour apaiser les inconforts tels que les tensions physiques (tête, cervicales, trapèzes, mâchoire serrée…), sinus bouchés et acouphènes.","serviceType":"Shiatsu"}}]}}</script>
 </head>
 <body>
+<script>
+/* MODE DIAGNOSTIC, invisible tant qu'on n'ajoute pas ?diag a l'adresse.
+
+   Le menu marche sur Android et sur tous nos tests, et pas sur l'iPhone de
+   Julie. Plutot que de deviner, ce panneau affiche sur SON ecran ce que fait
+   son Safari : version, erreurs de script, element reellement touche, clic
+   recu ou non, etat du menu. Une capture d'ecran suffit a trancher. */
+(function () {
+  if (!/[?&#]diag/.test(location.href)) return;
+  var lignes = [];
+  var panneau;
+  var ecrire = function (t) {
+    lignes.push(t); if (lignes.length > 18) lignes.shift();
+    if (panneau) panneau.textContent = lignes.join(String.fromCharCode(10));
+  };
+  var decrire = function (el) {
+    if (!el || !el.tagName) return String(el);
+    return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (el.className && el.className.baseVal === undefined ? '.' + String(el.className).split(' ').join('.') : '');
+  };
+  window.addEventListener('error', function (e) { ecrire('ERREUR ' + e.message + ' @' + (e.lineno || '?')); });
+  var sup = function (p, v) { try { return CSS.supports(p, v) ? 'oui' : 'NON'; } catch (x) { return '?'; } };
+  document.addEventListener('DOMContentLoaded', function () {
+    panneau = document.createElement('pre');
+    panneau.setAttribute('style', 'position:fixed;left:6px;right:6px;bottom:6px;z-index:2147483647;max-height:45vh;overflow:auto;margin:0;padding:8px;font:11px/1.35 monospace;background:rgba(0,0,0,.85);color:#7fff7f;border-radius:8px;white-space:pre-wrap;pointer-events:none');
+    document.body.appendChild(panneau);
+    var m = navigator.userAgent.match(/OS (\d+)_(\d+)/);
+    ecrire('iOS ' + (m ? m[1] + '.' + m[2] : 'non detecte') + ' | ' + innerWidth + 'x' + innerHeight);
+    ecrire('inset ' + sup('inset', '0') + ' | translate ' + sup('translate', '0 1px') + ' | backdrop ' + sup('-webkit-backdrop-filter', 'blur(2px)'));
+    var b = document.querySelector('.burger');
+    ecrire('bouton trouve ' + (b ? 'oui' : 'NON') + ' | menu branche ' + (b && b.getAttribute('aria-expanded') !== null ? 'oui' : 'NON'));
+    if (b) {
+      var r = b.getBoundingClientRect();
+      var dessus = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      ecrire('sous le centre du bouton : ' + decrire(dessus));
+    }
+    ['touchstart', 'touchend', 'click'].forEach(function (type) {
+      document.addEventListener(type, function (e) {
+        var t = e.target, p = e.touches && e.touches[0] || e.changedTouches && e.changedTouches[0];
+        ecrire(type + ' sur ' + decrire(t) + (p ? ' @' + Math.round(p.clientX) + ',' + Math.round(p.clientY) : ''));
+        if (type !== 'touchstart') setTimeout(function () {
+          var menu = document.getElementById('menu'), fond = document.querySelector('.menu-fond');
+          if (!menu) return;
+          var rr = menu.getBoundingClientRect();
+          ecrire('  +350ms menu hidden=' + menu.hidden + ' classe=' + document.body.classList.contains('menu-ouvert') + ' fond=' + (fond ? getComputedStyle(fond).opacity : '?') + ' taille=' + Math.round(rr.width) + 'x' + Math.round(rr.height));
+        }, 350);
+      }, true);
+    });
+  });
+})();
+</script>
 <svg class="filtres" aria-hidden="true" focusable="false"
      style="position:absolute;width:0;height:0;overflow:hidden">
   <defs>
@@ -120,7 +170,23 @@
       }, 260);
     }
   };
-  b.addEventListener('click', function () { basculer(b.getAttribute('aria-expanded') !== 'true'); });
+  /* LE BOUTON NE DEPEND PLUS DU CLIC QU'IOS FABRIQUE.
+
+     Sur iPhone, un toucher ne devient un clic qu'apres une serie de controles
+     de Safari. Si l'un echoue, le clic n'arrive jamais et le bouton reste
+     muet, alors qu'Android le livre sans discuter. On ecoute donc la fin du
+     toucher elle-meme, et on annule le clic qui la suivrait pour ne pas
+     basculer deux fois. La souris et le clavier gardent le clic. */
+  var parToucher = 0;
+  b.addEventListener('touchend', function (e) {
+    e.preventDefault();
+    parToucher = maintenant();
+    basculer(b.getAttribute('aria-expanded') !== 'true');
+  }, false);
+  b.addEventListener('click', function () {
+    if (maintenant() - parToucher < 700) return;
+    basculer(b.getAttribute('aria-expanded') !== 'true');
+  });
   m.addEventListener('click', function (e) {
     if (maintenant() - ouvertA < 400) return;
     var t = e.target;
