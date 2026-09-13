@@ -2989,3 +2989,60 @@ a.avis-source svg { opacity: .6; }
 /* iOS ne bloque pas le defilement avec `overflow: hidden` sur body, seulement
    sur la racine. La classe y est posee par le script du menu. */
 html.menu-ouvert { overflow: hidden; }
+
+/* =========================================================================
+   SAFARI : LA REFRACTION SVG EST RETIREE, ET C'ETAIT LA LENTEUR SUR IPHONE.
+
+   « Sur Xiaomi ca marche, sur iPhone c'est tres lent, comme une image par
+   seconde », et le conjoint de Julie a la meme chose.
+
+   Le verre du site pose un filtre SVG en arriere-plan :
+   `backdrop-filter: url(#refraction)`, une carte de deplacement
+   (feDisplacementMap). MESURE dans les deux moteurs, en iPhone :
+     Chromium   CSS.supports('backdrop-filter', 'url(#a)')  -> false
+     WebKit     CSS.supports('backdrop-filter', 'url(#a)')  -> true
+   Chrome REFUSE la declaration : sur Android l'effet n'a jamais existe, et
+   rien ne ralentit. Safari L'ACCEPTE : sur iPhone le filtre est reellement
+   calcule, sur le processeur, pour chaque image, sur tout ce qui passe
+   derriere la barre du haut, les cartes et les avis. Quand le menu s'anime
+   sous la barre, tout ce qui est derriere elle change a chaque image, et
+   Safari refait le filtre a chaque fois.
+
+   La condition vise exactement les moteurs qui calculent ce filtre, donc
+   Safari, sur iPhone comme sur Mac. Chrome n'entre pas dans le bloc : ce
+   qu'il affiche ne change pas d'un pixel. Et puisque Chrome n'a jamais montre
+   la refraction, Safari devient simplement identique a ce que tout le monde
+   voyait deja ailleurs.
+   ========================================================================= */
+@supports (-webkit-backdrop-filter: url(#a)) {
+  .verre::before,
+  .verre.haut::before,
+  .verre.barre::before {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Sur telephone, meme la barre perd son flou sous Safari. Un flou
+   d'arriere-plan au-dessus d'un menu plein ecran qui s'anime est recalcule a
+   chaque image de l'ouverture ; le fond du menu est de toute facon opaque a
+   97 %, il n'y a rien a voir a travers la barre pendant qu'il est ouvert. */
+@supports (-webkit-backdrop-filter: url(#a)) {
+  @media (max-width: 900px) {
+    .nav-boite,
+    .bouton {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .nav-boite { background: linear-gradient(150deg, rgba(255,252,247,.97), rgba(255,246,236,.95)); }
+  }
+}
+
+/* Menu ouvert : le contenu dessous ne se peint plus, et sur telephone le
+   fond apparait d'un coup au lieu de se fondre. Un fondu plein ecran au-dessus
+   de la page est exactement ce qu'un iPhone charge refait image par image. */
+@media (max-width: 900px) {
+  .menu-fond { transition: none; }
+}
+html.menu-pose main,
+html.menu-pose body > footer { visibility: hidden; }
