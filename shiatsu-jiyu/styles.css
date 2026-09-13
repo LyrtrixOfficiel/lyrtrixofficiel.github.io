@@ -2968,3 +2968,24 @@ a.avis-source svg { opacity: .6; }
   animation: none;
   transition: none;
 }
+
+/* LE MENU SUR LES IPHONE ANCIENS.
+
+   `inset` n'existe dans Safari que depuis iOS 14.5. Plus tot, `.menu` en
+   `position: fixed` sans aucune coordonnee se ramasse en un point de zero
+   pixel : ouvert pour le code, invisible et intouchable a l'ecran. Les quatre
+   cotes explicites disent la meme chose a tous les Safari. */
+.menu, .menu-fond { top: 0; right: 0; bottom: 0; left: 0; }
+
+/* Sur iPhone, un toucher sur un simple bloc ne produit pas de clic tant que
+   le bloc n'annonce pas qu'il en attend un. Sans ce curseur, toucher le fond
+   du menu ne le refermait jamais. */
+.menu-fond { cursor: pointer; }
+
+/* `touch-action: manipulation` coupe le delai que Safari garde pour guetter
+   un double toucher de zoom : le bouton repond au premier appui. */
+.burger { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* iOS ne bloque pas le defilement avec `overflow: hidden` sur body, seulement
+   sur la racine. La classe y est posee par le script du menu. */
+html.menu-ouvert { overflow: hidden; }

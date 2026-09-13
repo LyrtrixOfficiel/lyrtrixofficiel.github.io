@@ -21,7 +21,7 @@
 <meta property="og:image:alt" content="Le cabinet de Julie Marguier, Shiatsu Jiyū">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=874c77e5">
+<link rel="stylesheet" href="./styles.css?v=b6acf548">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64},"@id":"https://shiatsu-jiyu.fr/#etablissement","url":"https://shiatsu-jiyu.fr","image":"https://shiatsu-jiyu.fr/images/partage.jpg","logo":"https://shiatsu-jiyu.fr/images/emblem.webp","currenciesAccepted":"EUR","paymentAccepted":"Espèces, chèque, virement","knowsLanguage":"fr","hasOfferCatalog":{"@type":"OfferCatalog","name":"Séances de shiatsu","itemListElement":[{"@type":"Offer","priceCurrency":"EUR","price":"100","itemOffered":{"@type":"Service","name":"Harmonie","description":"Plus longue et plus enveloppante, la séance Harmonie marie la profondeur de la séance Traditionnelle à la délicatesse du shiatsu Visage & Tête. Un voyage sensoriel complet pour un relâchement total et une harmonie durable. L'association parfaite : Traditionnelle + Visage & Tête.","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"60","itemOffered":{"@type":"Service","name":"Traditionnelle Adulte","description":"Accompagnement personnalisé selon vos besoins : fatigue persistante, sommeil perturbé, tensions émotionnelles, stress, anxiété, tensions physiques, raideurs, jambes lourdes, inconfort digestif, tensions liées aux cycles…","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"40","itemOffered":{"@type":"Service","name":"Traditionnelle Enfant","description":"De quelques mois à 12 ans. Une approche douce et ludique adaptée en fonction de l'âge, avec la présence d'un parent. Ce moment favorise calme, meilleure gestion des émotions, amélioration du sommeil et conscience du corps.","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"60","itemOffered":{"@type":"Service","name":"Visage &amp; Tête","description":"Shiatsu des épaules au sommet du crâne. Visage à l'huile de carotte ou jojoba. Idéal pour apaiser les inconforts tels que les tensions physiques (tête, cervicales, trapèzes, mâchoire serrée…), sinus bouchés et acouphènes.","serviceType":"Shiatsu"}}]}}</script>
 </head>
 <body>
@@ -79,6 +79,56 @@
     <a href="tel:+33617111405" class="menu-tel" style="--i:4">06&nbsp;17&nbsp;11&nbsp;14&nbsp;05</a>
   </nav>
 </div>
+<script>
+/* LE MENU A SON PROPRE SCRIPT, ET IL EST ECRIT POUR LES VIEUX IPHONE.
+
+   Il vivait dans le grand script de fin de page, a cote du carrousel d'avis.
+   Ce carrousel utilise `?.` et `??`, que Safari ne comprend qu'a partir
+   d'iOS 13.4. Sur un iPhone plus ancien, Safari refuse de lire le script
+   ENTIER des la premiere de ces syntaxes : aucune ligne ne s'execute, le
+   bouton a trois traits n'est jamais branche, et on appuie dans le vide. Sur
+   un telephone recent tout marche, d'ou « chez moi c'est nickel ».
+
+   Un script separe ne peut plus etre entraine par une erreur ailleurs. Et il
+   est pose juste apres le menu : il se branche des que le bouton existe,
+   sans attendre que le reste de la page, videos comprises, soit charge. */
+(function () {
+  var b = document.querySelector('.burger');
+  var m = document.getElementById('menu');
+  if (!b || !m) return;
+  var ouvertA = 0;
+  var maintenant = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
+  var poserClasse = function (oui) {
+    document.body.classList[oui ? 'add' : 'remove']('menu-ouvert');
+    /* iOS ignore `overflow: hidden` sur body : la page defilait sous le menu
+       ouvert. Il faut le poser sur la racine. */
+    document.documentElement.classList[oui ? 'add' : 'remove']('menu-ouvert');
+  };
+  var basculer = function (ouvert) {
+    b.setAttribute('aria-expanded', String(ouvert));
+    b.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
+    if (ouvert) {
+      m.hidden = false;
+      ouvertA = maintenant();
+      var poser = function () { poserClasse(true); };
+      requestAnimationFrame(function () { requestAnimationFrame(poser); });
+      setTimeout(poser, 80);
+    } else {
+      poserClasse(false);
+      setTimeout(function () {
+        if (!document.body.classList.contains('menu-ouvert')) m.hidden = true;
+      }, 260);
+    }
+  };
+  b.addEventListener('click', function () { basculer(b.getAttribute('aria-expanded') !== 'true'); });
+  m.addEventListener('click', function (e) {
+    if (maintenant() - ouvertA < 400) return;
+    var t = e.target;
+    if (t.tagName === 'A' || (t.classList && t.classList.contains('menu-fond'))) basculer(false);
+  });
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') basculer(false); });
+})();
+</script>
 <main>
 <header class="entete">
   <div class="film" aria-hidden="true">
@@ -266,7 +316,7 @@
   for (const b of document.querySelectorAll('[data-ouvre-formulaire]')) {
     b.addEventListener('click', () => {
       tiroir.open = true;
-      setTimeout(() => document.getElementById('f-nom')?.focus({ preventScroll: true }), 550);
+      setTimeout(() => { const n = document.getElementById('f-nom'); if (n) n.focus({ preventScroll: true }); }, 550);
     });
   }
 })();
@@ -539,55 +589,6 @@
     }
   }
 
-  {
-    const b = document.querySelector('.burger');
-    const m = document.getElementById('menu');
-    let ouvertA = 0;
-    const basculer = (ouvert) => {
-      b.setAttribute('aria-expanded', String(ouvert));
-      b.setAttribute('aria-label', ouvert ? 'Fermer le menu' : 'Ouvrir le menu');
-      if (ouvert) {
-        m.hidden = false;
-        ouvertA = performance.now();
-        /* TOUT REPOSAIT SUR UNE SEULE IMAGE, ET C'EST LA QUE CA CASSAIT.
-
-           `requestAnimationFrame` ne se declenche pas quand l'onglet passe en
-           arriere-plan, quand le telephone economise sa batterie, ou quand le
-           navigateur est occupe ailleurs. Or c'est lui, et lui seul, qui
-           posait la classe `menu-ouvert`. Sans elle, le menu n'etait plus
-           `hidden` mais restait a opacite zero : une nappe INVISIBLE en
-           `position: fixed` sur tout l'ecran, par-dessus la page, qui avalait
-           tous les touchers. On appuie sur les trois traits, rien ne s'ouvre,
-           et plus rien ne repond en dessous.
-
-           Deux images pour laisser au navigateur le temps de voir l'etat de
-           depart, donc d'animer, et une minuterie de secours qui pose la
-           classe de toute facon si les images ne viennent pas. */
-        const poser = () => document.body.classList.add('menu-ouvert');
-        requestAnimationFrame(() => requestAnimationFrame(poser));
-        setTimeout(poser, 80);
-      } else {
-        document.body.classList.remove('menu-ouvert');
-        /* 260 et non 220 : les liens sortent en 200 ms plus 48 ms de decale,
-           donc le menu disparaissait avant la fin de sa propre animation. */
-        setTimeout(() => {
-          if (!document.body.classList.contains('menu-ouvert')) m.hidden = true;
-        }, 260);
-      }
-    };
-    b.addEventListener('click', () => basculer(b.getAttribute('aria-expanded') !== 'true'));
-    m.addEventListener('click', (e) => {
-      /* LE CLIC FANTOME. Sur telephone, le toucher qui ouvre le menu fait
-         apparaitre la nappe SOUS le doigt, et le navigateur peut envoyer un
-         second clic dessus dans la foulee : le menu se refermait tout seul
-         dans l'instant. On ignore donc toute fermeture demandee dans les
-         400 ms qui suivent l'ouverture. Les liens ne sont pas penalises : un
-         lien navigue de lui-meme, sans passer par ici. */
-      if (performance.now() - ouvertA < 400) return;
-      if (e.target.tagName === 'A' || e.target.classList.contains('menu-fond')) basculer(false);
-    });
-    addEventListener('keydown', (e) => { if (e.key === 'Escape') basculer(false); });
-  }
 
   for (const boite of document.querySelectorAll('.bandeau')) {
     const ruban = boite.querySelector('.ruban');
@@ -658,15 +659,14 @@
         const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - milieu);
         if (d < ecart) { ecart = d; proche = i; }
       });
-      points?.querySelectorAll('button').forEach((b, i) => b.classList.toggle('ici', i === proche));
-      car.querySelector('[data-avant]')?.toggleAttribute('disabled', piste.scrollLeft < 8);
-      car.querySelector('[data-apres]')?.toggleAttribute('disabled',
-        piste.scrollLeft > piste.scrollWidth - piste.clientWidth - 8);
+      if (points) points.querySelectorAll('button').forEach((b, i) => b.classList.toggle('ici', i === proche));
+      { const av = car.querySelector('[data-avant]'); if (av) av.toggleAttribute('disabled', piste.scrollLeft < 8); }
+      { const ap = car.querySelector('[data-apres]'); if (ap) ap.toggleAttribute('disabled', piste.scrollLeft > piste.scrollWidth - piste.clientWidth - 8); }
     };
     piste.addEventListener('scroll', majPoints, { passive: true });
-    const bouger = (sens) => piste.scrollBy({ left: sens * (cartes[0]?.offsetWidth ?? 300) * 1.06, behavior: 'smooth' });
-    car.querySelector('[data-avant]')?.addEventListener('click', () => bouger(-1));
-    car.querySelector('[data-apres]')?.addEventListener('click', () => bouger(1));
+    const bouger = (sens) => piste.scrollBy({ left: sens * ((cartes[0] ? cartes[0].offsetWidth : 300)) * 1.06, behavior: 'smooth' });
+    { const av = car.querySelector('[data-avant]'); if (av) av.addEventListener('click', () => bouger(-1)); }
+    { const ap = car.querySelector('[data-apres]'); if (ap) ap.addEventListener('click', () => bouger(1)); }
     majPoints();
   }
 
