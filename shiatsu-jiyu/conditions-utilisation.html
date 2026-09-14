@@ -143,7 +143,31 @@
   m.addEventListener('click', function (e) {
     if (maintenant() - ouvertA < 400) return;
     var t = e.target;
-    if (t.tagName === 'A' || (t.classList && t.classList.contains('menu-fond'))) basculer(false);
+    /* UN LIEN VERS UNE AUTRE PAGE LAISSE LE MENU OUVERT.
+
+       Julie, sur iPhone : en touchant un lien, on revoyait un instant la page
+       qu'on quittait avant la nouvelle. Le menu se refermait tout de suite,
+       la page dessous reapparaissait, et Safari ne l'effacait qu'une fois la
+       suivante prete. Le menu reste donc en place jusqu'a ce que la nouvelle
+       page le remplace. Il ne se ferme que pour un lien qui ne quitte pas la
+       page : le telephone, ou la page ou l'on est deja. */
+    if (t.tagName === 'A') {
+      var sansIndex = function (p) { return p.replace(/index[.]html$/, ''); };
+      var ailleurs = t.protocol.indexOf('http') === 0 && sansIndex(t.pathname) !== sansIndex(location.pathname);
+      if (!ailleurs) basculer(false);
+      return;
+    }
+    if (t.classList && t.classList.contains('menu-fond')) basculer(false);
+  });
+  /* Retour arriere : Safari ressert la page gardee en memoire, menu ouvert
+     compris. On la rend fermee, sans animation. */
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted || b.getAttribute('aria-expanded') !== 'true') return;
+    b.setAttribute('aria-expanded', 'false');
+    b.setAttribute('aria-label', 'Ouvrir le menu');
+    poserClasse(false);
+    document.documentElement.classList.remove('menu-pose');
+    m.hidden = true;
   });
   window.addEventListener('keydown', function (e) { if (e.key === 'Escape') basculer(false); });
 })();
