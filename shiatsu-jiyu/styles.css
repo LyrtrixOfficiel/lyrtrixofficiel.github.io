@@ -3038,28 +3038,37 @@ html.menu-ouvert { overflow: hidden; }
   }
 }
 
-/* Menu ouvert : le contenu dessous ne se peint plus, et sur telephone le
-   fond apparait d'un coup au lieu de se fondre. Un fondu plein ecran au-dessus
-   de la page est exactement ce qu'un iPhone charge refait image par image. */
-@media (max-width: 900px) {
-  .menu-fond { transition: none; }
-}
+/* Menu ouvert et fondu termine : le contenu dessous ne se peint plus. */
 html.menu-pose main,
 html.menu-pose body > footer { visibility: hidden; }
 
 /* =========================================================================
-   MENU SANS FONDU. Sur iPhone l'ouverture tournait a 2 images par seconde.
-   Le menu s'affiche d'un coup, opaque, et tout le reste de la page est
-   masque tant qu'il est ouvert : plus rien a composer dessous.
+   MENU LENT SUR IPHONE : LES FLOUS PEINTS SOUS LE MENU.
+
+   2 images par seconde a l'ouverture chez Julie et son conjoint, 60 sur
+   Android. Sous le menu, la page porte de grands calques en
+   `filter: blur(70px)` (les taches orange, jusqu'a 390 x 1014 points, soit
+   plus de trois millions de pixels a la densite d'un iPhone) et un filtre
+   de couleur sur l'image plein ecran de l'accueil. Chrome confie ces
+   filtres a la carte graphique. Safari iOS les calcule sur le processeur, et
+   des qu'un calque plein ecran s'anime par-dessus, il repeint ce qui est
+   dessous a chaque image : un flou de 210 pixels de rayon, recalcule vingt
+   fois, ce sont les dix secondes qu'elle decrit.
+
+   Sur telephone, le flou n'est plus calcule : le degrade radial est deja
+   doux par nature, on l'etale jusqu'au bord pour obtenir le meme halo sans
+   aucun filtre. L'animation du menu reste exactement la meme.
    ========================================================================= */
-.menu-fond { background: #fdf3e7; transition: none; }
-.menu-liens a { transition: none; }
-html.menu-ouvert, body.menu-ouvert { overflow: visible; }
-html.menu-pose main,
-html.menu-pose body > footer,
-html.menu-pose .halo,
-html.menu-pose .jauge,
-html.menu-pose body::after { visibility: hidden; }
-html.menu-pose body > *:not(.menu):not(.nav):not(script) { visibility: hidden; }
-html.menu-pose .nav-boite,
-html.menu-pose .nav-boite::before { backdrop-filter: none; -webkit-backdrop-filter: none; }
+@media (max-width: 900px) {
+  .pan.tache::before,
+  .pan.tache::after { filter: none; }
+  .pan.tache::before {
+    background: radial-gradient(circle, rgba(242,145,60,.30), rgba(242,145,60,.14) 40%, rgba(242,145,60,0) 72%);
+    scale: 1.5;
+  }
+  .pan.tache::after {
+    background: radial-gradient(circle, rgba(251,217,180,.5), rgba(251,217,180,.22) 40%, rgba(251,217,180,0) 72%);
+    scale: 1.5;
+  }
+  .film video, .film img.tenant { filter: none; }
+}
