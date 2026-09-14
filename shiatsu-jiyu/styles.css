@@ -3046,3 +3046,20 @@ html.menu-ouvert { overflow: hidden; }
 }
 html.menu-pose main,
 html.menu-pose body > footer { visibility: hidden; }
+
+/* =========================================================================
+   MENU SANS FONDU. Sur iPhone l'ouverture tournait a 2 images par seconde.
+   Le menu s'affiche d'un coup, opaque, et tout le reste de la page est
+   masque tant qu'il est ouvert : plus rien a composer dessous.
+   ========================================================================= */
+.menu-fond { background: #fdf3e7; transition: none; }
+.menu-liens a { transition: none; }
+html.menu-ouvert, body.menu-ouvert { overflow: visible; }
+html.menu-pose main,
+html.menu-pose body > footer,
+html.menu-pose .halo,
+html.menu-pose .jauge,
+html.menu-pose body::after { visibility: hidden; }
+html.menu-pose body > *:not(.menu):not(.nav):not(script) { visibility: hidden; }
+html.menu-pose .nav-boite,
+html.menu-pose .nav-boite::before { backdrop-filter: none; -webkit-backdrop-filter: none; }
