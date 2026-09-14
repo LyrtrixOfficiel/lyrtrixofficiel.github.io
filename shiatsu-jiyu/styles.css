@@ -3093,3 +3093,13 @@ html { background: var(--creme-fond); }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
+
+/* LE MENU EST DESSINE DES LE CHARGEMENT, PAS A LA PREMIERE OUVERTURE.
+
+   Ferme, il etait `hidden`, donc absent : au premier appui Safari devait le
+   construire, calculer ses textes, ses polices et son plan, pendant que le
+   fondu demarrait. D'ou l'accroc de la premiere fois seulement. Il est
+   maintenant construit d'avance, invisible et intouchable, et l'ouverture
+   n'a plus qu'a le montrer. `visibility: hidden` le retire aussi des
+   lecteurs d'ecran, comme `hidden` le faisait. */
+.menu[hidden] { display: block; visibility: hidden; pointer-events: none; }
