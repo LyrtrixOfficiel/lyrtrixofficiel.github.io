@@ -21,7 +21,7 @@
 <meta property="og:image:alt" content="Le cabinet de Julie Marguier, Shiatsu Jiyū">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="polices.css">
-<link rel="stylesheet" href="./styles.css?v=119f1529">
+<link rel="stylesheet" href="./styles.css?v=aca62ae4">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthAndBeautyBusiness","name":"Shiatsu Jiyū, Julie Marguier","description":"Séances de shiatsu traditionnel à Knœringue, dans le Sundgau.","telephone":"+33617111405","email":"shiatsu.jiyu@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Knœringue","postalCode":"68220","addressRegion":"Haut-Rhin","addressCountry":"FR"},"areaServed":["Knœringue","Saint-Louis","Bâle","Sierentz","Altkirch","Sundgau","Haut-Rhin"],"priceRange":"40 - 100 EUR","openingHours":"Th-Mo","sameAs":["https://www.instagram.com/shiatsu_jiyu","https://www.facebook.com/p/Marguier-Julie-Shiatsu-Jiyu-61572387491724/","https://www.resalib.fr/praticien/90791-julie-marguier-ei-praticien-shiatsu-kn-ringue"],"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":64},"@id":"https://shiatsu-jiyu.fr/#etablissement","url":"https://shiatsu-jiyu.fr","image":"https://shiatsu-jiyu.fr/images/partage.jpg","logo":"https://shiatsu-jiyu.fr/images/emblem.webp","currenciesAccepted":"EUR","paymentAccepted":"Espèces, chèque, virement","knowsLanguage":"fr","hasOfferCatalog":{"@type":"OfferCatalog","name":"Séances de shiatsu","itemListElement":[{"@type":"Offer","priceCurrency":"EUR","price":"100","itemOffered":{"@type":"Service","name":"Harmonie","description":"Plus longue et plus enveloppante, la séance Harmonie marie la profondeur de la séance Traditionnelle à la délicatesse du shiatsu Visage & Tête. Un voyage sensoriel complet pour un relâchement total et une harmonie durable. L'association parfaite : Traditionnelle + Visage & Tête.","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"60","itemOffered":{"@type":"Service","name":"Traditionnelle Adulte","description":"Accompagnement personnalisé selon vos besoins : fatigue persistante, sommeil perturbé, tensions émotionnelles, stress, anxiété, tensions physiques, raideurs, jambes lourdes, inconfort digestif, tensions liées aux cycles…","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"40","itemOffered":{"@type":"Service","name":"Traditionnelle Enfant","description":"De quelques mois à 12 ans. Une approche douce et ludique adaptée en fonction de l'âge, avec la présence d'un parent. Ce moment favorise calme, meilleure gestion des émotions, amélioration du sommeil et conscience du corps.","serviceType":"Shiatsu"}},{"@type":"Offer","priceCurrency":"EUR","price":"60","itemOffered":{"@type":"Service","name":"Visage &amp; Tête","description":"Shiatsu des épaules au sommet du crâne. Visage à l'huile de carotte ou jojoba. Idéal pour apaiser les inconforts tels que les tensions physiques (tête, cervicales, trapèzes, mâchoire serrée…), sinus bouchés et acouphènes.","serviceType":"Shiatsu"}}]}}</script>
 </head>
 <body>
@@ -351,31 +351,60 @@
     f.load();
   };
 
-  /* LECTURE REFUSEE : ON MONTRE UNE IMAGE, PAS UN BOUTON.
+  /* LECTURE REFUSEE : L'IMAGE EN ATTENDANT, ET LA VIDEO AU PREMIER TOUCHER.
 
-     Sur iPad, « des logos play sur toutes les videos ». Quand l'appareil
-     refuse la lecture automatique (economie d'energie, economiseur de
-     donnees), Safari pose son bouton de lecture sur chaque video, et les
-     versions recentes ne le laissent plus masquer par la feuille de style.
-     On retire donc la video elle-meme : un fond garde l'image posee dessous,
-     et la video du cabinet est remplacee par son affiche. */
-  const renoncer = (f) => {
-    if (!f.isConnected) return;
-    f.pause();
-    if (f.classList.contains('film-decor') || !f.poster) { f.remove(); return; }
-    const img = document.createElement('img');
-    img.src = f.poster; img.alt = ''; img.setAttribute('aria-hidden', 'true');
-    img.className = f.className;
-    f.replaceWith(img);
+     Sur iPad, « des logos play sur toutes les videos ». En economie
+     d'energie ou en economiseur de donnees, l'appareil refuse toute lecture
+     automatique et Safari pose son bouton de lecture sur chaque video. Ce
+     qu'il accepte toujours, c'est une lecture demandee pendant un geste de la
+     personne. Donc :
+     1. tant que c'est refuse, la video est invisible : dessous, l'image du
+        fond, et pour le cabinet son affiche. Plus aucun bouton ;
+     2. au premier toucher n'importe ou sur la page (un defilement du doigt
+        suffit), toutes les videos sont lancees dans ce geste. Safari les
+        considere alors comme autorisees, et elles apparaissent en tournant.
+        Celles qui sont hors de l'ecran sont remises en pause aussitot, et
+        repartiront seules en arrivant a l'ecran. */
+  const visibles = new Set();
+  const enAttente = new Set();
+  const attendre = (f) => {
+    if (!f.isConnected || enAttente.has(f)) return;
+    enAttente.add(f);
+    f.classList.add('film-attente');
+    if (!f.classList.contains('film-decor') && f.poster) {
+      const img = document.createElement('img');
+      img.src = f.poster; img.alt = ''; img.setAttribute('aria-hidden', 'true');
+      img.className = 'affiche-attente';
+      f.after(img);
+      f.affiche = img;
+    }
   };
+  const liberer = (f) => {
+    enAttente.delete(f);
+    f.classList.remove('film-attente');
+    if (f.affiche) { f.affiche.remove(); f.affiche = null; }
+  };
+  const lancer = (f) => {
+    const p = f.play();
+    if (!p) return;
+    p.then(() => { liberer(f); if (!visibles.has(f)) f.pause(); })
+     .catch((err) => { if (err && err.name === 'NotAllowedError') attendre(f); });
+  };
+  const debloquer = () => {
+    if (!enAttente.size) return;
+    for (const f of films) { if (f.isConnected) { preparer(f); lancer(f); } }
+  };
+  for (const type of ['touchend', 'click', 'keydown']) {
+    addEventListener(type, debloquer, { capture: true, passive: true });
+  }
 
   const oeil = new IntersectionObserver((entrees) => {
     for (const e of entrees) {
       if (e.isIntersecting) {
+        visibles.add(e.target);
         preparer(e.target);
-        const p = e.target.play();
-        if (p) p.catch((err) => { if (err && err.name === 'NotAllowedError') renoncer(e.target); });
-      } else e.target.pause();
+        lancer(e.target);
+      } else { visibles.delete(e.target); e.target.pause(); }
     }
   }, { rootMargin: '200px 0px' });
   for (const f of films) { f.pause(); oeil.observe(f); }

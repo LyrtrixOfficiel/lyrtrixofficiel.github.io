@@ -3116,5 +3116,11 @@ video::-webkit-media-controls-play-button {
   appearance: none;
   opacity: 0;
 }
-.ecran-film > img { display: block; width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 900px) { .ecran-film > img { border-radius: var(--rond); } }
+/* Video en attente du premier toucher : invisible, donc sans le bouton de
+   lecture de Safari. Le fond garde son image, le cabinet montre son affiche. */
+video.film-attente { opacity: 0; }
+.ecran-film > img.affiche-attente {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; border-radius: inherit; pointer-events: none;
+}
+@media (max-width: 900px) { .ecran-film > img.affiche-attente { border-radius: var(--rond); } }
