@@ -3072,3 +3072,24 @@ html.menu-pose body > footer { visibility: hidden; }
   }
   .film video, .film img.tenant { filter: none; }
 }
+
+/* =========================================================================
+   PASSAGE D'UNE PAGE A L'AUTRE SANS COUPURE.
+
+   Julie, sur iPhone, apres le clic dans le menu : « mieux mais pas propre ».
+   Le menu restait bien en place, mais la page suivante tombait d'un coup,
+   parfois apres un blanc. Deux causes :
+   1. La racine n'avait pas de couleur : entre deux pages, Safari montre le
+      blanc par defaut avant que le fond creme du body soit peint.
+   2. Le changement de page etait une coupure seche.
+   La racine prend le creme du site, et le navigateur fond l'ancienne page
+   dans la nouvelle (Safari 18.2 et plus, Chrome 126 et plus). Ailleurs, la
+   regle est ignoree et rien ne change.
+   ========================================================================= */
+html { background: var(--creme-fond); }
+@view-transition { navigation: auto; }
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: .22s; animation-timing-function: ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
