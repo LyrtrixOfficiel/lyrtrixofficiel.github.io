@@ -3103,3 +3103,18 @@ html { background: var(--creme-fond); }
    n'a plus qu'a le montrer. `visibility: hidden` le retire aussi des
    lecteurs d'ecran, comme `hidden` le faisait. */
 .menu[hidden] { display: block; visibility: hidden; pointer-events: none; }
+
+/* Le bouton de lecture de Safari, masque sur TOUTES les videos du site et
+   plus seulement celles des fonds : la video du cabinet l'affichait aussi. */
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  opacity: 0;
+}
+.ecran-film > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 900px) { .ecran-film > img { border-radius: var(--rond); } }
