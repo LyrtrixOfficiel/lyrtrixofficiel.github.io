@@ -290,7 +290,7 @@ h3 { font-size: clamp(1.35rem, 1.2vw + 1rem, 1.7rem); line-height: 1.2; font-var
 .chemin-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--doux-ease); }
 .chemin:hover .chemin-image img { transform: scale(1.06); }
 .chemin-corps { padding: 28px 8px 0; }
-.chemin-num { font: italic 400 1rem var(--titre); color: var(--argile); margin-bottom: .3rem; }
+.chemin-num { font: 600 .74rem var(--corps); letter-spacing: .14em; text-transform: uppercase; color: var(--argile-fonce); margin-bottom: .5rem; }
 .chemin h3 { font-size: clamp(1.8rem, 2vw + 1rem, 2.5rem); margin-bottom: 1rem; }
 
 /* bandeau defilant */
@@ -469,7 +469,7 @@ h3 { font-size: clamp(1.35rem, 1.2vw + 1rem, 1.7rem); line-height: 1.2; font-var
 
 /* ateliers */
 .sommaire { padding: 10px 0 30px; position: relative; }
-.sommaire-liste { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.sommaire-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
 .sommaire a { display: flex; gap: 12px; align-items: baseline; padding: 18px 20px; border-radius: 18px; background: var(--lin); text-decoration: none; color: var(--encre); font: 400 1.05rem/1.25 var(--titre); border: 1px solid var(--sable); transition: transform .4s var(--rebond), background-color .3s, color .3s; }
 .sommaire a span { font: italic 1rem var(--titre); color: var(--argile); }
 .sommaire a:hover { transform: translateY(-4px); background: var(--foret); color: var(--creme); }
@@ -639,7 +639,7 @@ a.info-carte:hover { transform: translateX(6px); background: var(--sauge-pale); 
    ========================================================================== */
 
 .pied { background: var(--foret); color: #cfd7c4; padding: clamp(64px, 8vw, 100px) 0 28px; position: relative; }
-.pied-grille { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr 1fr; gap: 40px; padding-bottom: 50px; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+.pied-grille { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.3fr 1fr; gap: 40px; padding-bottom: 50px; border-bottom: 1px solid rgba(255, 255, 255, .12); }
 .pied-marque img { width: 110px; margin-bottom: 14px; background: var(--lin); border-radius: 50%; padding: 18px; aspect-ratio: 1; object-fit: contain; }
 .pied-nom { font: 400 1.6rem/1.1 var(--titre); color: #fbfaf3; margin-bottom: 4px; }
 .pied-sous { font-size: .9rem; }
@@ -702,7 +702,7 @@ a.info-carte:hover { transform: translateX(6px); background: var(--sauge-pale); 
   .chiffres-grille { grid-template-columns: 1fr 1fr; row-gap: 40px; }
   .chiffre:nth-child(3)::before { display: none; }
   .cartes-3 { grid-template-columns: 1fr; }
-  .sommaire-liste, .diplomes, .galerie { grid-template-columns: 1fr 1fr; }
+  .diplomes, .galerie { grid-template-columns: 1fr 1fr; }
   .fiche:nth-child(3n+2) { margin-top: 0; }
   .fiche:nth-child(even) { margin-top: 50px; }
   .contact-infos { position: static; }
@@ -751,3 +751,27 @@ a.info-carte:hover { transform: translateX(6px); background: var(--sauge-pale); 
 .fiche figure { transform: rotateX(var(--rx, 0)) rotateY(var(--ry, 0)); transition: transform .5s var(--doux-ease); }
 .bouton-nav, .marque-nom { white-space: nowrap; }
 @media (max-width: 1180px) and (min-width: 1021px) { .marque-texte { display: none; } }
+
+/* --- Menu par public : deux groupes deroulants ------------------------------ */
+
+.deroulant { position: relative; }
+.deroulant-bouton { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 0; border-radius: 99px; background: none; font: 500 .92rem var(--corps); color: var(--texte); cursor: pointer; white-space: nowrap; transition: background-color .25s, color .25s; }
+.deroulant-bouton svg { width: 10px; height: 8px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .35s var(--doux-ease); }
+.deroulant-bouton:hover, .deroulant.ouvert .deroulant-bouton { background: rgba(158, 174, 143, .22); color: var(--encre); }
+.deroulant.ouvert .deroulant-bouton svg { transform: rotate(180deg); }
+.deroulant.ici .deroulant-bouton { color: var(--encre); position: relative; }
+.deroulant.ici .deroulant-bouton::after { content: ''; position: absolute; left: 50%; bottom: 2px; width: 5px; height: 5px; border-radius: 50%; background: var(--argile); translate: -50% 0; }
+.deroulant-panneau { position: absolute; top: calc(100% + 14px); left: 50%; width: 320px; padding: 10px; border-radius: 22px; background: var(--creme); border: 1px solid var(--sable); box-shadow: var(--ombre-forte); opacity: 0; visibility: hidden; transform: translate(-50%, 8px) scale(.98); transform-origin: top center; transition: opacity .25s, transform .35s var(--doux-ease), visibility 0s .35s; }
+.deroulant-panneau::before { content: ''; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
+.deroulant.ouvert .deroulant-panneau { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); transition: opacity .25s, transform .35s var(--doux-ease), visibility 0s; }
+.deroulant-titre { margin: 4px 12px 8px; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--argile-fonce); font-weight: 600; line-height: 1.4; }
+.deroulant-panneau a { display: flex; flex-direction: column; gap: 1px; padding: 10px 12px; border-radius: 14px; text-decoration: none; transition: background-color .2s, transform .3s var(--doux-ease); }
+.deroulant-panneau a:hover, .deroulant-panneau a:focus-visible { background: var(--sauge-pale); transform: translateX(3px); }
+.deroulant-panneau strong { font: 500 1.05rem var(--titre); color: var(--encre); font-variation-settings: 'SOFT' 100; }
+.deroulant-panneau span { font-size: .82rem; color: var(--doux); }
+
+.menu-liens .menu-groupe { margin: 1.1rem 0 .1rem; font: 600 .75rem var(--corps); letter-spacing: .14em; text-transform: uppercase; color: var(--argile-fonce); opacity: 0; transform: translateY(24px); transition: opacity .5s, transform .6s var(--doux-ease); }
+.menu.ouvert .menu-liens .menu-groupe { opacity: 1; transform: none; transition-delay: calc(.12s + var(--i) * .05s); }
+.menu-liens a.menu-sous { font-size: clamp(1.5rem, 6vw, 2.1rem); padding-left: 14px; border-left: 2px solid var(--sauge-clair); }
+@media (max-height: 700px) { .menu { align-items: flex-start; } }
+.menu-liens a.menu-sous + a:not(.menu-sous) { margin-top: 1rem; }

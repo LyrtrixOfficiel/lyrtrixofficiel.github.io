@@ -217,6 +217,30 @@
   }
 
   /* ---------------------------------------------------------------------- */
+  /* Menus deroulants « Pour les humains » / « Pour les animaux »            */
+  /* ---------------------------------------------------------------------- */
+
+  const deroulants = $$('[data-deroulant]');
+  const fermerTout = (sauf) => deroulants.forEach((d) => {
+    if (d === sauf) return;
+    d.classList.remove('ouvert');
+    d.querySelector('button').setAttribute('aria-expanded', 'false');
+  });
+  deroulants.forEach((d) => {
+    const b = d.querySelector('button');
+    const ouvrir = (oui) => { if (oui) fermerTout(d); d.classList.toggle('ouvert', oui); b.setAttribute('aria-expanded', String(oui)); };
+    let minuteur;
+    b.addEventListener('click', () => ouvrir(!d.classList.contains('ouvert')));
+    if (pointeurFin) {
+      d.addEventListener('pointerenter', () => { clearTimeout(minuteur); ouvrir(true); });
+      d.addEventListener('pointerleave', () => { minuteur = setTimeout(() => ouvrir(false), 180); });
+    }
+    d.addEventListener('focusout', (e) => { if (!d.contains(e.relatedTarget)) ouvrir(false); });
+    d.addEventListener('keydown', (e) => { if (e.key === 'Escape') { ouvrir(false); b.focus(); } });
+  });
+  document.addEventListener('click', (e) => { if (!e.target.closest('[data-deroulant]')) fermerTout(); });
+
+  /* ---------------------------------------------------------------------- */
   /* Boutons aimantes et portraits qui s'inclinent                           */
   /* ---------------------------------------------------------------------- */
 
