@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr" data-page="accueil" style="background:var(--color-noir,#000)">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/svg+xml" href="./onde.svg" />
+    <link rel="canonical" href="https://lyrtrixofficiel.github.io/anne-celine/" />
+    <!-- DEMO DE PROSPECTION : a retirer le jour ou le client dit oui -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <title>DELCLAUX Valérie   Nos Terres Intérieures   Praticien en EFT Clinique, Conseillère agréée en Fleurs de Bach à Launaguet | Anne Céline</title>
+    <meta name="description" content="Anne Céline, delclaux valérie   nos terres intérieures   praticien en eft clinique, conseillère agréée en fleurs de bach à Launaguet." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Anne Céline" />
+    <meta property="og:title" content="DELCLAUX Valérie   Nos Terres Intérieures   Praticien en EFT Clinique, Conseillère agréée en Fleurs de Bach à Launaguet | Anne Céline" />
+    <meta property="og:description" content="Anne Céline, delclaux valérie   nos terres intérieures   praticien en eft clinique, conseillère agréée en fleurs de bach à Launaguet." />
+    <meta property="og:url" content="https://lyrtrixofficiel.github.io/anne-celine/" />
+
+    <!-- le poster du hero est le LCP : il part avant tout le reste -->
+    <link rel="preload" as="image" href="/video/hero-eau.webp" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- polices -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html:root {
+        --font-display: 'Playfair Display', 'Iowan Old Style', Georgia, serif;
+        --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      /* Le titre d'accueil est decoupe en un span par mot pour son animation,
+         et la regle `*` du gabarit reprend chaque span en fonte de texte. Le
+         plus gros texte du site n'etait donc pas dans la fonte de titre. Cette
+         ligne le repare sans reconstruire : `h1 *` pese plus que `*`. */
+      h1 *, h2 *, h3 *, .font-display * { font-family: inherit; }
+    </style>
+    <!-- /polices -->
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HealthAndBeautyBusiness",
+        "name": "Anne Céline",
+        "description": "La séance à Launaguet.",
+        "url": "https://lyrtrixofficiel.github.io/anne-celine/",
+        "telephone": "+33649436533",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "",
+          "postalCode": "",
+          "addressLocality": "Launaguet",
+          "addressCountry": "FR"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Prestations",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "La séance" } }
+          ]
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/main-IdnPax1s.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-BdeANixJ.css">
+  </head>
+  <body style="background:var(--color-noir,#000)">
+    <div id="racine"></div>
+    <noscript>
+      <div style="padding:2rem;color:#fff;font-family:sans-serif">
+        <h1>Anne Céline — Launaguet</h1>
+        <p>
+          La séance.<br />
+           Launaguet —
+          <a href="tel:+33649436533" style="color:#e0a25c">0649436533</a>
+        </p>
+      </div>
+    </noscript>
+
+    <!--
+      Netlify envoie ses liens d'invitation vers la RACINE du site, avec le
+      jeton dans le fragment d'URL (#invite_token=...). On le fait suivre tel
+      quel a l'espace d'edition, qui sait quoi en faire. Sans ce renvoi,
+      cliquer sur l'invitation n'a aucun effet visible.
+
+      Aucun script tiers : trois lignes, et rien du tout pour un visiteur
+      normal.
+    -->
+    <script>
+      (function () {
+        var h = window.location.hash || '';
+        if (/(invite_token|recovery_token)=/.test(h)) {
+          window.location.replace('/admin' + h);
+        }
+      })();
+    </script>
+  </body>
+</html>

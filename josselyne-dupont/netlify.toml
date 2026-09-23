@@ -1,0 +1,32 @@
+# Configuration du dossier DEJA CONSTRUIT, pour un depot par glisser-deposer.
+#
+# Aucune section [build] ici : ce dossier est le resultat du build, pas la
+# source. Une commande `npm run build` ferait chercher un package.json a
+# Netlify au milieu des fichiers compiles, et le depot echouerait.
+#
+# Le netlify.toml de la racine du projet, lui, garde bien sa section [build] :
+# il sert quand le site est construit depuis un depot Git.
+
+# DEMO DE PROSPECTION — tant que le praticien n'a pas donne son accord, le
+# site ne doit etre ni indexe ni reference. Le meme `noindex` est aussi dans
+# le <head> de chaque page et dans robots.txt. Les trois se retirent ensemble.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Les medias ne changent jamais : cache long.
+[[headers]]
+  for = "/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/photos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
