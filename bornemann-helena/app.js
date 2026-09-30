@@ -64,7 +64,7 @@
   /* Apparitions au defilement                                               */
   /* ---------------------------------------------------------------------- */
 
-  const cibles = '[data-reveal], [data-pop], [data-mots], [data-lettres], .puces-cascade, .telephone, .carte-boite, .appel-boite';
+  const cibles = '[data-reveal], [data-pop], [data-mots], [data-lettres], [data-trois], .puces-cascade, .appel-boite, .tete-section';
   const vu = new IntersectionObserver(
     (entrees) => entrees.forEach((e) => {
       if (!e.isIntersecting) return;
