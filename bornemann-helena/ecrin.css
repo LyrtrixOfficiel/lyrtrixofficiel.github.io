@@ -194,3 +194,9 @@
 @media (max-width: 1020px) { .pied-grille { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 720px) { .pied-grille { grid-template-columns: 1fr; } }
 .fil-horizontal.fil-deux .fil-liste::before, .fil-horizontal.fil-deux .fil-liste::after { left: calc(50% - 210px); right: calc(50% - 210px); }
+
+/* mise en valeur : un soulignement fin et doré, plus de bande surlignée */
+.accent { background: none; padding: 0; color: var(--mousse); font-style: normal; text-decoration: underline; text-decoration-color: rgba(217, 164, 65, .55); text-decoration-thickness: 1.5px; text-underline-offset: .24em; }
+.fond-sauge .accent, .fond-sombre .accent { background: none; color: #fbd99a; text-decoration-color: rgba(251, 217, 154, .5); }
+.fil-liste .accent { text-decoration: none; color: var(--encre); font-weight: 600; }
+.chemin-visuel img.sophro { object-position: center 40%; }
