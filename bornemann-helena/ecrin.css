@@ -200,3 +200,11 @@
 .fond-sauge .accent, .fond-sombre .accent { background: none; color: #fbd99a; text-decoration-color: rgba(251, 217, 154, .5); }
 .fil-liste .accent { text-decoration: none; color: var(--encre); font-weight: 600; }
 .chemin-visuel img.sophro { object-position: center 40%; }
+
+/* attestation de formation, en vignette cliquable */
+.attestation { display: block; margin-top: 16px; text-decoration: none; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: var(--ombre); transition: transform .45s var(--rebond), box-shadow .45s; }
+.attestation img { width: 100%; height: auto; display: block; }
+.attestation span { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-weight: 600; font-size: .9rem; color: var(--mousse); }
+.attestation span .ico { width: 18px; height: 18px; }
+.attestation:hover { transform: translateY(-4px) rotate(-.6deg); box-shadow: var(--ombre-forte); }
+.atelier-origine .attestation img { max-width: none; margin: 0; width: 100%; }
