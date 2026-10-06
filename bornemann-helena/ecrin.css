@@ -208,3 +208,4 @@
 .attestation span .ico { width: 18px; height: 18px; }
 .attestation:hover { transform: translateY(-4px) rotate(-.6deg); box-shadow: var(--ombre-forte); }
 .atelier-origine .attestation img { max-width: none; margin: 0; width: 100%; }
+.attestation-mediation { max-width: 420px; margin-top: 18px; }
