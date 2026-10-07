@@ -209,3 +209,22 @@
 .attestation:hover { transform: translateY(-4px) rotate(-.6deg); box-shadow: var(--ombre-forte); }
 .atelier-origine .attestation img { max-width: none; margin: 0; width: 100%; }
 .attestation-mediation { max-width: 420px; margin-top: 18px; }
+
+/* téléphone : retouches du 7 octobre 2026 */
+main { overflow-x: clip; } /* le bandeau incliné ne fait plus glisser la page de côté */
+.casse { word-break: normal; overflow-wrap: anywhere; }
+@media (max-width: 720px) {
+  .bloc { padding-block: 56px; }
+  .hero { padding-bottom: 76px; }
+  .hero-visuel { margin-top: 18px; }
+  .defile { margin-inline: 0; padding: 18px 0; }
+  .defile span { font-size: 1.6rem; }
+  .petale.f2, .petale.f3 { display: none; }
+  .petale.f1 { width: 34px; opacity: .35; }
+  .nuage { gap: 8px; }
+  .nuage li { padding: 8px 14px; font-size: .92rem; }
+  .fiche figure { aspect-ratio: 1; }
+  .citation-grande { margin-top: 40px; }
+  .formations { margin-top: 44px; }
+  .phrase-script { margin-top: 28px; }
+}

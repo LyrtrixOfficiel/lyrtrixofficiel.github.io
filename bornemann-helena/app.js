@@ -181,7 +181,11 @@
     encres.forEach((bloc) => {
       const r = bloc.getBoundingClientRect();
       const mots = bloc._mots || (bloc._mots = $$('.mot', bloc));
-      const p = doux ? 1 : Math.min(1, Math.max(0, (h * 0.88 - r.top) / (r.height + h * 0.35)));
+      /* Sur telephone la colonne est etroite et les blocs tres hauts : chaque mot
+         s'allume quand il passe le bas de l'ecran, pas au milieu, pour lire sans attendre. */
+      const p = doux ? 1 : innerWidth <= 720
+        ? Math.min(1, Math.max(0, (h * 0.9 - r.top) / r.height))
+        : Math.min(1, Math.max(0, (h * 0.88 - r.top) / (r.height + h * 0.35)));
       const n = Math.round(p * mots.length * 1.15);
       mots.forEach((m, i) => m.classList.toggle('encre-ok', i < n));
     });
