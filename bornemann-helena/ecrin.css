@@ -209,6 +209,9 @@
 .attestation:hover { transform: translateY(-4px) rotate(-.6deg); box-shadow: var(--ombre-forte); }
 .atelier-origine .attestation img { max-width: none; margin: 0; width: 100%; }
 .attestation-mediation { max-width: 420px; margin-top: 18px; }
+.attestation-bandeau { max-width: 420px; margin: 18px auto 0; }
+/* la séance avec le chat : cadrer sur Héléna et le chat, pas sur le vide de gauche */
+.parcours-grande img { object-position: 58% center; }
 
 /* téléphone : retouches du 7 octobre 2026 */
 main { overflow-x: clip; } /* le bandeau incliné ne fait plus glisser la page de côté */
